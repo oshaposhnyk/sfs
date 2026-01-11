@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Food School | Agent Hub</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* --- PALETTE: Neon Bio (Dark Mode) --- */
+            --bg-deep: #050b14;       /* Deepest Space Blue */
+            --bg-card: #151f32;       /* Lighter Blue for cards */
+
+            --neon-lime: #39ff14;     /* Action Buttons */
+            --neon-purple: #b026ff;   /* Tech/Magic */
+            --neon-blue: #00d2ff;     /* Info */
+
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Quicksand', sans-serif; /* Rounded font [cite: 154] */
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR (Dark Version) --- */
+        aside.sidebar-nav {
+            width: 80px; /* Collapsed sidebar for "Cinema" feel */
+            background: rgba(21, 31, 50, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: width 0.3s;
+        }
+
+        aside.sidebar-nav:hover { width: 240px; }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            color: var(--neon-lime);
+            margin-bottom: 40px;
+        }
+
+        .nav-text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 15px;
+            font-weight: 700;
+        }
+        aside.sidebar-nav:hover .nav-text { display: inline; }
+
+        .nav-item {
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center; /* Center icon when collapsed */
+            align-items: center;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        aside.sidebar-nav:hover .nav-item { justify-content: flex-start; padding-left: 25px; }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--neon-lime);
+            background: linear-gradient(90deg, rgba(57, 255, 20, 0.1), transparent);
+            border-left-color: var(--neon-lime);
+        }
+
+        .nav-item svg { width: 24px; height: 24px; }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            margin-left: 80px;
+            flex: 1;
+            padding: 0;
+            width: calc(100% - 80px);
+        }
+
+        /* --- 1. HEADER: AGENT PROFILE (Game Style) --- */
+        .gamified-header {
+            padding: 30px 50px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
+        /* XP Bar & Profile */
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .xp-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .xp-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--neon-lime);
+            margin-bottom: 4px;
+        }
+
+        .xp-bar-bg {
+            width: 150px;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            width: 65%;
+            height: 100%;
+            background: var(--neon-lime);
+            box-shadow: 0 0 10px var(--neon-lime);
+        }
+
+        .avatar {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            background: var(--neon-purple);
+            border: 2px solid white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        /* --- 2. HERO: VIDEO MISSION HUB (Netflix Style) --- */
+        .mission-hub {
+            padding: 20px 50px 50px;
+        }
+
+        .section-label {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-label::before {
+            content: ''; width: 4px; height: 24px; background: var(--neon-lime); border-radius: 2px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+        }
+
+        .video-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.27);
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 2;
+            border-color: var(--neon-purple);
+        }
+
+        .thumbnail-area {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fake thumbnails with gradients */
+        .thumb-1 { background: linear-gradient(45deg, #2b1055, #7597de); }
+        .thumb-2 { background: linear-gradient(45deg, #004d40, #39ff14); }
+
+        .play-icon {
+            width: 60px; height: 60px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white;
+            opacity: 0.8;
+            transition: 0.2s;
+        }
+
+        .video-card:hover .play-icon { transform: scale(1.1); background: var(--neon-lime); border-color: var(--neon-lime); color: black; opacity: 1; }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .badge-tech { background: rgba(176, 38, 255, 0.2); color: #d8b4fe; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+        .badge-social { background: rgba(57, 255, 20, 0.2); color: #86efac; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+        .video-title { font-size: 1.5rem; margin: 0 0 10px 0; }
+        .video-desc { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+
+        .progress-track {
+            width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;
+        }
+        .progress-done { height: 100%; background: var(--neon-lime); border-radius: 2px; }
+
+        /* --- 3. INTERACTIVE: DECISION POINT (Game) --- */
+        .game-section {
+            margin: 40px 50px;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2d2b42 100%);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Neon glow behind */
+        .game-section::before {
+            content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+            background: var(--neon-blue); filter: blur(100px); opacity: 0.3; pointer-events: none;
+        }
+
+        .quest-box {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .quest-title { font-size: 2rem; margin-bottom: 20px; color: white; }
+        .quest-scenario { font-size: 1.2rem; color: #cbd5e1; margin-bottom: 40px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; display: inline-block;}
+
+        .choice-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 20px 30px;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            min-width: 200px;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 210, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Correct answer state */
+        .choice-btn.correct {
+            border-color: var(--neon-lime);
+            background: var(--neon-lime);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-lime);
+        }
+
+        .feedback-msg {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--neon-lime);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.5s;
+        }
+
+        /* --- 4. FOOTER: BADGE GALLERY --- */
+        .badge-section {
+            padding: 0 50px 60px;
+        }
+
+        .badge-grid {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.5; /* Locked state */
+            transition: 0.3s;
+        }
+
+        .badge-item.unlocked { opacity: 1; }
+
+        .badge-icon {
+            width: 100px; height: 100px;
+            background: #252b3b;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 15px;
+            border: 3px solid #334155;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .badge-item.unlocked .badge-icon {
+            border-color: var(--neon-lime);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+            background: radial-gradient(circle, #1e293b, #0f172a);
+        }
+
+        .badge-name { font-weight: 700; font-size: 0.9rem; }
+
+        /* Floating particles animation for 'fun' */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .badge-item.unlocked .badge-icon { animation: float 3s ease-in-out infinite; }
+
+    </style>
+</head>
+<body>
+
+<aside class="sidebar-nav">
+    <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.75l-2.5 1zm0 2.5l-5-2.5-5 2.5L12 22l10-10.5-5-2.5-5 2.5z"/></svg>
+    </div>
+
+    <a href="./insights.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        <span class="nav-text">Insights</span>
+    </a>
+    <a href="./l4c.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+        <span class="nav-text">Student Lab</span>
+    </a>
+    <a href="./ffs.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="nav-text">Future Food</span>
+    </a>
+    <a href="./governance.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span class="nav-text">Governance</span>
+    </a>
+</aside>
+
+<main>
+    <header class="gamified-header">
+        <div class="header-title">
+            <h1>Agent Headquarters</h1>
+        </div>
+
+        <div class="agent-status">
+            <div class="xp-container">
+                <span class="xp-text">Food Safety Level: 12</span>
+                <div class="xp-bar-bg">
+                    <div class="xp-bar-fill" id="xpFill"></div>
+                </div>
+            </div>
+            <div class="avatar">AG</div>
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-weight:bold; font-size:1rem;">Agent Green</span>
+                <span style="font-size:0.7rem; color:var(--neon-lime); text-transform:uppercase;">Novice</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="mission-hub">
+        <div class="section-label">Active Missions</div>
+
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="thumbnail-area thumb-1">
+                    <div class="play-icon">▶</div>
+                    <div style="position:absolute; bottom:10px; left:20px; font-weight:bold; text-shadow:0 2px 4px black;">MISSION #1</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-tags">
+                        <span class="badge-tech">Technology</span>
+                        <span style="font-size:0.8rem; color:#aaa;">12 min</span>
+                    </div>
+                    <h3 class="video-title">Secret Journey of Food</h3>
+                    <p class="video-desc">See the world through a sensor's eyes. How do digital twins save milk from spoilage?</p>
+                    <div class="progress-track"><div class="progress-done" style="width: 100%;"></div></div>
+                    <div style="text-align:right; margin-top:5px; font-size:0.7rem; color:var(--neon-lime);">COMPLETED</div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="thumbnail-area thumb-2">
+                    <div class="play-icon">▶</div>
+                    <div style="position:absolute; bottom:10px; left:20px; font-weight:bold; text-shadow:0 2px 4px black;">MISSION #2</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-tags">
+                        <span class="badge-social">Social Impact</span>
+                        <span style="font-size:0.8rem; color:#aaa;">8 min</span>
+                    </div>
+                    <h3 class="video-title">You are the Change Agent</h3>
+                    <p class="video-desc">Your habits can change the school canteen. Learn how to influence the system.</p>
+                    <div class="progress-track"><div class="progress-done" style="width: 10%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="game-section">
+        <div class="quest-box">
+            <h2 class="quest-title">⚡ Decision Point ⚡</h2>
+            <div class="quest-scenario">
+                "The sensor in the fridge shows +12°C. The norm is +4°C. The cook misses the alert while preparing lunch. Your actions?"
+            </div>
+
+            <div class="choice-grid">
+                <button class="choice-btn" onclick="wrongChoice(this)">Ignore (not my job)</button>
+                <button class="choice-btn" id="correctBtn" onclick="correctChoice(this)">Warn the cook about the failure</button>
+                <button class="choice-btn" onclick="wrongChoice(this)">Post on TikTok</button>
+            </div>
+
+            <div class="feedback-msg" id="feedback">
+                🎉 Great! You saved the food and the students' health! <br>
+                <span style="font-size:1.5rem; display:block; margin-top:10px;">+50 XP Earned!</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="badge-section">
+        <div class="section-label">Your Trophy Case</div>
+        <div class="badge-grid">
+            <div class="badge-item unlocked">
+                <div class="badge-icon">🔍</div>
+                <span class="badge-name">Sensor Master</span>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon">🌱</div>
+                <span class="badge-name">Eco Friend</span>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon">🛡️</div>
+                <span class="badge-name">Safety Guardian</span>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon">🤝</div>
+                <span class="badge-name">Community Hero</span>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    // Simple Game Logic for Decision Point [cite: 140]
+    function correctChoice(btn) {
+        // Style the button
+        btn.classList.add('correct');
+        btn.innerHTML = "✔ CORRECT ACTION";
+
+        // Show feedback
+        const feedback = document.getElementById('feedback');
+        feedback.style.opacity = '1';
+        feedback.style.transform = 'translateY(0)';
+
+        // Update XP Bar (Visual Simulation)
+        const bar = document.getElementById('xpFill');
+        bar.style.width = '85%'; // Increase from 65%
+
+        // Disable other buttons
+        const allBtns = document.querySelectorAll('.choice-btn');
+        allBtns.forEach(b => {
+            if(b !== btn) {
+                b.style.opacity = '0.5';
+                b.disabled = true;
+            }
+        });
+    }
+
+    function wrongChoice(btn) {
+        btn.style.background = 'rgba(255, 50, 50, 0.2)';
+        btn.style.borderColor = 'red';
+        btn.innerText = "❌ Risky Choice. Try again.";
+    }
+</script>
+
+</body>
+</html>

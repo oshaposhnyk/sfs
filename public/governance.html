@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureFoodSchool | Governance</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* --- PALETTE: Neon Bio (Dark Mode) --- */
+            --bg-deep: #050b14;
+            --bg-card: #151f32;
+            --bg-glass: rgba(21, 31, 50, 0.7);
+
+            --neon-lime: #39ff14;     /* Approval / Success */
+            --neon-blue: #00d2ff;     /* Info / Docs */
+            --neon-orange: #ff9f1c;   /* Attention */
+            --neon-red: #ff3366;      /* Critical */
+
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-dim: rgba(255, 255, 255, 0.1);
+
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4 { margin-top: 0; font-weight: 700; color: white; }
+
+        /* --- SIDEBAR (Unified Style) --- */
+        aside.sidebar-nav {
+            width: 80px;
+            background: rgba(5, 11, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-dim);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        aside.sidebar-nav:hover { width: 240px; }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            color: var(--neon-lime);
+            margin-bottom: 40px;
+        }
+
+        .nav-text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 15px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        aside.sidebar-nav:hover .nav-text { display: inline; }
+
+        .nav-item {
+            width: 100%;
+            padding: 18px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        aside.sidebar-nav:hover .nav-item { justify-content: flex-start; padding-left: 25px; }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--neon-lime);
+            background: linear-gradient(90deg, rgba(57, 255, 20, 0.05), transparent);
+            border-left-color: var(--neon-lime);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+        }
+
+        .nav-item svg { width: 24px; height: 24px; }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            margin-left: 80px;
+            flex: 1;
+            padding: 40px;
+            max-width: 1600px;
+            width: calc(100% - 80px);
+        }
+
+        /* --- 1. EXECUTIVE DASHBOARD (KPIs) --- */
+        .dashboard-header {
+            margin-bottom: 40px;
+        }
+
+        .header-title-row {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 30px; border-bottom: 1px solid var(--border-dim); padding-bottom: 20px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .kpi-title { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .kpi-value { font-size: 2.5rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; }
+        .kpi-trend { font-size: 0.9rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
+        .trend-up { background: rgba(57, 255, 20, 0.1); color: var(--neon-lime); }
+        .trend-neutral { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); }
+
+        /* Progress Bar for KPI */
+        .status-bar { height: 4px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; }
+        .status-fill { height: 100%; border-radius: 2px; box-shadow: 0 0 10px currentColor; }
+
+        /* --- 2. QUICK ACTION GRID --- */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .action-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            height: 200px;
+        }
+
+        .action-card:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 210, 255, 0.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .action-icon {
+            font-size: 3rem; margin-bottom: 20px; color: var(--neon-blue);
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
+        }
+
+        .action-title { font-size: 1.2rem; margin-bottom: 5px; }
+        .action-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- 3. RESOURCE LIBRARY (Table) --- */
+        .resource-section {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 40px;
+        }
+
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-dim);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        .filter-tags button {
+            background: transparent; border: 1px solid var(--border-dim); color: var(--text-muted);
+            padding: 6px 12px; border-radius: 20px; cursor: pointer; margin-right: 5px; transition: 0.2s;
+        }
+        .filter-tags button.active, .filter-tags button:hover {
+            border-color: var(--neon-blue); color: var(--neon-blue);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px 20px; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; border-bottom: 1px solid var(--border-dim); }
+        td { padding: 15px 20px; border-bottom: 1px solid var(--border-dim); font-size: 0.95rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+
+        .doc-icon { margin-right: 10px; color: var(--neon-blue); }
+        .tag-role { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: white; }
+
+        /* --- 4. FEEDBACK LOOP --- */
+        .feedback-panel {
+            background: linear-gradient(145deg, rgba(21, 31, 50, 1), rgba(5, 11, 20, 1));
+            border: 1px solid var(--neon-blue);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.1);
+        }
+
+        .btn-validate {
+            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border-dim);
+            background: rgba(255,255,255,0.05); color: white; cursor: pointer; transition: 0.2s; font-weight: 600;
+        }
+        .btn-validate:hover { background: rgba(255,255,255,0.1); }
+        .btn-yes:hover { border-color: var(--neon-lime); color: var(--neon-lime); background: rgba(57, 255, 20, 0.1); }
+        .btn-no:hover { border-color: var(--neon-orange); color: var(--neon-orange); background: rgba(255, 159, 28, 0.1); }
+
+        .expert-contact {
+            margin-top: 30px; text-align: center; border-top: 1px solid var(--border-dim); padding-top: 20px;
+        }
+        .btn-expert {
+            display: inline-block; background: var(--neon-blue); color: #000;
+            padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 700;
+            transition: 0.3s;
+        }
+        .btn-expert:hover { box-shadow: 0 0 15px var(--neon-blue); }
+
+    </style>
+</head>
+<body>
+
+<aside class="sidebar-nav">
+    <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.75l-2.5 1zm0 2.5l-5-2.5-5 2.5L12 22l10-10.5-5-2.5-5 2.5z"/></svg>
+    </div>
+
+    <a href="./insights.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        <span class="nav-text">Insights</span>
+    </a>
+    <a href="./l4c.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+        <span class="nav-text">Student Lab</span>
+    </a>
+    <a href="./ffs.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="nav-text">Future Food</span>
+    </a>
+    <a href="./governance.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span class="nav-text">Governance</span>
+    </a>
+</aside>
+
+<main>
+    <div class="dashboard-header">
+        <div class="header-title-row">
+            <h1>Governance & Support</h1>
+            <span style="color: var(--neon-lime); font-size: 0.9rem;">● System Operational</span>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="glass-card">
+                <div class="kpi-title">Infrastructure Readiness</div>
+                <div class="kpi-value">
+                    82% <span class="kpi-trend trend-up">▲ 4%</span>
+                </div>
+                <div class="status-bar"><div class="status-fill" style="width: 82%; background: var(--neon-blue);"></div></div>
+            </div>
+
+            <div class="glass-card">
+                <div class="kpi-title">Social Acceptance Index</div>
+                <div class="kpi-value">
+                    4.2 <span class="kpi-trend trend-neutral">/ 5.0</span>
+                </div>
+                <div class="status-bar"><div class="status-fill" style="width: 84%; background: var(--neon-lime);"></div></div>
+            </div>
+
+            <div class="glass-card">
+                <div class="kpi-title">Staff Trained (L4C)</div>
+                <div class="kpi-value">
+                    145 <span class="kpi-trend trend-up">+12</span>
+                </div>
+                <div class="status-bar"><div class="status-fill" style="width: 60%; background: var(--neon-orange);"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="margin-bottom: 20px;">Management Tools</h3>
+    <div class="action-grid">
+        <div class="action-card">
+            <div class="action-icon">📋</div>
+            <div class="action-title">L4C Protocols</div>
+            <div class="action-desc">Safety standards & guidelines</div>
+        </div>
+        <div class="action-card">
+            <div class="action-icon">⚙️</div>
+            <div class="action-title">Tech Validation</div>
+            <div class="action-desc">Digital Twin setup guides</div>
+        </div>
+        <div class="action-card">
+            <div class="action-icon">👥</div>
+            <div class="action-title">Social Validation</div>
+            <div class="action-desc">Community polls & surveys</div>
+        </div>
+        <div class="action-card">
+            <div class="action-icon">⚖️</div>
+            <div class="action-title">Legal Base</div>
+            <div class="action-desc">Contracts & Regulations</div>
+        </div>
+    </div>
+
+    <div class="resource-section">
+        <div class="table-container">
+            <div class="table-header">
+                <h3>Resource Library</h3>
+                <div class="filter-tags">
+                    <button class="active">All</button>
+                    <button>For Directors</button>
+                    <button>For Suppliers</button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Document Name</th>
+                    <th>Role</th>
+                    <th>Updated</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="doc-icon">📄</span> L4C Implementation Strategy v2.pdf</td>
+                    <td><span class="tag-role">Director</span></td>
+                    <td>Jan 10, 2026</td>
+                    <td><a href="#" style="color:var(--neon-blue)">Download</a></td>
+                </tr>
+                <tr>
+                    <td><span class="doc-icon">📊</span> Cold Chain Monitoring Report.xlsx</td>
+                    <td><span class="tag-role">Tech</span></td>
+                    <td>Jan 09, 2026</td>
+                    <td><a href="#" style="color:var(--neon-blue)">Download</a></td>
+                </tr>
+                <tr>
+                    <td><span class="doc-icon">🎥</span> Staff Training: Hygiene (Video)</td>
+                    <td><span class="tag-role">All</span></td>
+                    <td>Jan 05, 2026</td>
+                    <td><a href="#" style="color:var(--neon-blue)">View</a></td>
+                </tr>
+                <tr>
+                    <td><span class="doc-icon">⚖️</span> Supplier Compliance Form.docx</td>
+                    <td><span class="tag-role">Supplier</span></td>
+                    <td>Dec 28, 2025</td>
+                    <td><a href="#" style="color:var(--neon-blue)">Download</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div style="padding: 15px; text-align: center; border-top: 1px solid var(--border-dim);">
+                <button style="background: transparent; color: var(--text-muted); border: none; cursor: pointer;">View all 24 documents ↓</button>
+            </div>
+        </div>
+
+        <div class="feedback-panel">
+            <h3 style="margin-bottom: 10px;">Quick Validation</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+                Is the "Cold Chain v2" protocol clear for your staff?
+            </p>
+
+            <button class="btn-validate btn-yes">Yes, it's clear</button>
+            <button class="btn-validate btn-no">No, needs simplification</button>
+
+            <div class="expert-contact">
+                <p style="margin-bottom: 15px; font-size: 0.9rem;">Need implementation help?</p>
+                <a href="#" class="btn-expert">Contact L4C Expert</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

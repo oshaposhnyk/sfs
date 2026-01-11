@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureFoodSchool | L4C Student Lab</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            /* --- PALETTE: Neon Bio (Dark Mode) --- */
+            --bg-deep: #050b14;       /* Main Background */
+            --bg-card: #151f32;       /* Panels */
+            --bg-glass: rgba(21, 31, 50, 0.7);
+
+            --neon-lime: #39ff14;     /* Success / Action */
+            --neon-blue: #00d2ff;     /* Tech / Info */
+            --neon-purple: #b026ff;   /* Secondary Accents */
+            --neon-orange: #ff9f1c;   /* Warning / Translation Phase */
+
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-dim: rgba(255, 255, 255, 0.1);
+
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4 { margin-top: 0; font-weight: 700; color: white; }
+
+        canvas {
+            will-change: transform;
+            user-select: none;
+        }
+
+        /* --- SIDEBAR (Shared Style) --- */
+        aside.sidebar-nav {
+            width: 80px;
+            background: rgba(5, 11, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-dim);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        aside.sidebar-nav:hover { width: 240px; }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            color: var(--neon-lime);
+            margin-bottom: 40px;
+        }
+
+        .nav-text {
+            display: none;
+            white-space: nowrap;
+            margin-left: 15px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        aside.sidebar-nav:hover .nav-text { display: inline; }
+
+        .nav-item {
+            width: 100%;
+            padding: 18px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        aside.sidebar-nav:hover .nav-item { justify-content: flex-start; padding-left: 25px; }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--neon-lime);
+            background: linear-gradient(90deg, rgba(57, 255, 20, 0.05), transparent);
+            border-left-color: var(--neon-lime);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+        }
+
+        .nav-item svg { width: 24px; height: 24px; }
+
+        /* --- MAIN LAYOUT --- */
+        main {
+            margin-left: 80px;
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 1600px;
+            width: calc(100% - 80px); /* Fix width calculation */
+        }
+
+        /* Utility: Glass Card */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- 1. HEADER: PROFILE & RADAR --- */
+        .header-section {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            height: 340px;
+        }
+
+        .profile-card {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Neon glow decoration */
+        .profile-card::before {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 200px; height: 200px; background: var(--neon-blue);
+            filter: blur(80px); opacity: 0.15;
+        }
+
+        .avatar-group {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 90px; height: 90px;
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--neon-blue);
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+        }
+
+        .rank-badge {
+            display: inline-block;
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            width: 100%; height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .chart-container {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- 2. TOOLKIT BAR (Grid) --- */
+        .toolkit-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .widget {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+        }
+
+        .widget-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Widget Decorator Line */
+        .widget-title::after {
+            content: ''; flex: 1; height: 1px; background: var(--border-dim);
+        }
+
+        .feed-value { font-size: 2.2rem; font-weight: 700; color: var(--neon-lime); text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); }
+        .feed-meta { font-size: 0.9rem; color: var(--text-muted); }
+
+        .connection-status {
+            font-size: 0.8rem; color: var(--neon-lime); font-weight: 500;
+            display: flex; align-items: center; gap: 8px; margin-top: auto;
+        }
+        .blink { animation: blinker 2s linear infinite; width: 8px; height: 8px; background: var(--neon-lime); border-radius: 50%; box-shadow: 0 0 10px var(--neon-lime); }
+        @keyframes blinker { 50% { opacity: 0.3; } }
+
+        /* Team Avatars - Dark Mode */
+        .team-avatars { display: flex; margin-left: 15px; }
+        .team-avatars div {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+            margin-left: -15px;
+            background: #2a3b55;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 600; color: white;
+        }
+        .add-btn {
+            background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted);
+            width: 42px; height: 42px; border-radius: 50%; cursor: pointer; transition: 0.2s;
+        }
+        .add-btn:hover { border-color: var(--neon-lime); color: var(--neon-lime); }
+
+        /* Review List */
+        .review-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-dim);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9rem;
+        }
+        .review-item:last-child { border: none; }
+        .tag-pending { color: var(--neon-orange); font-size: 0.8rem; }
+        .tag-done { color: var(--neon-lime); font-size: 0.8rem; }
+
+        /* --- 3. JOURNEY MAP (Dark Timeline) --- */
+        .journey-section { padding: 40px; }
+
+        .timeline { position: relative; padding-left: 40px; margin-top: 20px; }
+
+        /* The Line */
+        .timeline::before {
+            content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 2px;
+            background: linear-gradient(180deg, var(--neon-blue) 0%, rgba(255,255,255,0.1) 100%);
+        }
+
+        .station { position: relative; margin-bottom: 50px; padding-left: 30px; opacity: 0.4; transition: 0.3s; }
+        .station.active, .station.completed { opacity: 1; }
+
+        /* The Dot */
+        .station-marker {
+            position: absolute; left: -45px; top: 0;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--bg-deep);
+            border: 2px solid var(--text-muted);
+            box-shadow: 0 0 0 4px var(--bg-card); /* spacing ring */
+            z-index: 2;
+        }
+
+        .station.completed .station-marker {
+            border-color: var(--neon-blue); background: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        .station.active .station-marker {
+            border-color: var(--neon-orange); background: var(--bg-deep);
+            box-shadow: 0 0 0 2px var(--neon-orange), 0 0 20px var(--neon-orange);
+        }
+
+        .station-title { font-size: 1.2rem; margin-bottom: 5px; color: white; }
+        .station-meta { font-size: 0.8rem; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; }
+
+        .station-card {
+            margin-top: 15px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .station.active .station-card {
+            border-color: var(--neon-orange);
+            background: rgba(255, 159, 28, 0.05);
+        }
+
+        .btn-action {
+            display: inline-block; margin-top: 15px; padding: 10px 25px;
+            background: var(--neon-orange); color: black; border-radius: 30px;
+            text-decoration: none; font-weight: 700; font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .btn-action:hover { box-shadow: 0 0 15px var(--neon-orange); transform: translateY(-2px); }
+
+        /* --- 4. PORTFOLIO --- */
+        .portfolio-section { padding: 40px; }
+
+        .project-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 25px;
+            transition: 0.3s;
+        }
+        .project-card:hover {
+            border-color: var(--neon-lime);
+            background: rgba(57, 255, 20, 0.05);
+            transform: translateY(-5px);
+        }
+
+    </style>
+</head>
+<body>
+
+<aside class="sidebar-nav">
+    <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.75l-2.5 1zm0 2.5l-5-2.5-5 2.5L12 22l10-10.5-5-2.5-5 2.5z"/></svg>
+    </div>
+
+    <a href="./insights.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        <span class="nav-text">Insights</span>
+    </a>
+    <a href="./l4c.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+        <span class="nav-text">Student Lab</span>
+    </a>
+    <a href="./ffs.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="nav-text">Future Food</span>
+    </a>
+    <a href="./governance.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span class="nav-text">Governance</span>
+    </a>
+</aside>
+
+<main>
+    <section class="header-section">
+        <div class="glass-card profile-card">
+            <span class="rank-badge">Current Rank: Analyst-Translator</span>
+            <div class="avatar-group">
+                <div class="avatar">AK</div>
+                <div>
+                    <h2 style="margin:0; font-size:2rem;">Alex Kovalenko</h2>
+                    <p style="margin:5px 0 0 0; color: var(--text-muted);">Student ID: #L4C-2026-88</p>
+                </div>
+            </div>
+            <div style="margin-top: auto;">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:white;">
+                    <strong>Next Level: System Validator</strong>
+                    <span style="color:var(--neon-blue);">65%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 65%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card chart-container">
+            <h3 class="widget-title" style="position: absolute; top: 25px; left: 25px;">L4C Competency Radar</h3>
+            <canvas id="competencyChart"></canvas>
+        </div>
+    </section>
+
+    <section class="toolkit-grid">
+        <div class="glass-card widget">
+            <div class="widget-title">Digital Twin Live Feed</div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span class="feed-value">4.3°C</span>
+                <span class="feed-meta">Fridge #2 (Lviv)</span>
+            </div>
+
+            <div style="height: 60px; width: 100%; margin: 10px 0;">
+                <canvas id="liveTempChart"></canvas>
+            </div>
+
+            <div class="connection-status">
+                <span class="blink"></span> Live Connection Stable
+            </div>
+        </div>
+
+        <div class="glass-card widget">
+            <div class="widget-title">My Living Lab Team</div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top: 10px;">
+                <div class="team-avatars">
+                    <div>OM</div>
+                    <div>KA</div>
+                    <div>JS</div>
+                </div>
+                <button class="add-btn">+</button>
+            </div>
+            <p style="margin:16px 0 0 0; font-size:0.85rem; color:var(--text-muted);">
+                Next Sync: <strong style="color:white;">Tomorrow, 14:00</strong>
+            </p>
+        </div>
+
+        <div class="glass-card widget">
+            <div class="widget-title">Peer Review Queue</div>
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                <div class="review-item">
+                    <span style="color:white;">Maria S. Project</span>
+                    <span class="tag-pending">Pending</span>
+                </div>
+                <div class="review-item">
+                    <span style="color:white;">Group #4 Report</span>
+                    <span class="tag-done">✔ Done</span>
+                </div>
+                <div class="review-item" style="border:0; color: var(--neon-blue); font-size: 0.8rem; justify-content: center; cursor: pointer; padding-top: 15px;">
+                    View all tasks →
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="glass-card journey-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dim); padding-bottom: 20px;">
+            <h2 style="margin:0;">The L4C Journey Map</h2>
+            <span style="color:var(--text-muted); font-size:0.9rem;">Module 2 of 4</span>
+        </div>
+
+        <div class="timeline">
+            <div class="station completed">
+                <div class="station-marker"></div>
+                <span class="station-meta">Phase 1: Sense-making</span>
+                <span class="station-title">Digital Twins & Data</span>
+                <div class="station-card">
+                    <p style="margin:0 0 8px 0; font-size:0.95rem; color: var(--text-muted);">
+                        You have successfully analyzed temperature sensor data.
+                    </p>
+                    <small style="color: var(--neon-lime); font-weight:600;">✔ Grade: 95/100 (Excellent)</small>
+                </div>
+            </div>
+
+            <div class="station active">
+                <div class="station-marker"></div>
+                <span class="station-meta" style="color: var(--neon-orange);">Phase 2: The Translator</span>
+                <span class="station-title">System Lab Simulation</span>
+                <div class="station-card">
+                    <p style="margin:0 0 12px 0; font-size:0.95rem; color:white;">
+                        <strong>Task:</strong> Adapt the technical water quality report for the school administration.
+                    </p>
+                    <a href="#" class="btn-action">Start Simulation</a>
+                </div>
+            </div>
+
+            <div class="station station-3">
+                <div class="station-marker"></div>
+                <span class="station-meta">Phase 3: Validation</span>
+                <span class="station-title">Living Labs Access</span>
+                <div class="station-card" style="opacity:0.5;">
+                    <p style="margin:0; font-size:0.9rem; color: var(--text-muted);">🔒 Locked. Complete Phase 2 to unlock physical access.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="glass-card portfolio-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+            <h2 style="margin:0;">Social Impact Portfolio</h2>
+            <a href="#" style="color:var(--neon-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Download CV (PDF) -></a>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;">
+            <div class="project-card">
+                <span style="background:rgba(57, 255, 20, 0.1); color:var(--neon-lime); padding:4px 10px; border-radius:10px; font-size:0.7rem; font-weight:bold; margin-bottom:12px; display:inline-block;">VALIDATED</span>
+                <h4 style="margin:0 0 8px 0;">Menu Optimization Plan</h4>
+                <p style="font-size:0.9rem; color:var(--text-muted); margin:0;">
+                    Reduced food waste by 12% in Pilot School #5 via better data prediction.
+                </p>
+            </div>
+            <div class="project-card">
+                <span style="background:rgba(57, 255, 20, 0.1); color:var(--neon-lime); padding:4px 10px; border-radius:10px; font-size:0.7rem; font-weight:bold; margin-bottom:12px; display:inline-block;">VALIDATED</span>
+                <h4 style="margin:0 0 8px 0;">Safety Posters Design</h4>
+                <p style="font-size:0.9rem; color:var(--text-muted); margin:0;">
+                    Translated technical protocols into visual guides for kitchen staff.
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Common Color Config
+        const neonBlue = '#00d2ff';
+        const neonLime = '#39ff14';
+        const textMuted = '#94a3b8';
+        const gridLine = 'rgba(255, 255, 255, 0.05)';
+
+        // 1. RADAR CHART
+        const radarElement = document.getElementById('competencyChart');
+        if (radarElement) {
+            new Chart(radarElement.getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: ['Tech Validation', 'System Trans.', 'Social Action', 'Data Analysis', 'Ethics'],
+                    datasets: [{
+                        label: 'Alex Kovalenko',
+                        data: [80, 65, 40, 70, 90],
+                        fill: true,
+                        backgroundColor: 'rgba(0, 210, 255, 0.2)', // Neon Blue fill
+                        borderColor: neonBlue,
+                        pointBackgroundColor: neonBlue,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: neonBlue
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 1000, easing: 'easeOutQuart' },
+                    layout: { padding: 0 },
+                    scales: {
+                        r: {
+                            angleLines: { color: gridLine },
+                            grid: { color: gridLine },
+                            pointLabels: {
+                                font: { size: 11, family: "'Inter', sans-serif" },
+                                color: 'white' // White labels for dark mode
+                            },
+                            suggestedMin: 0, suggestedMax: 100,
+                            ticks: { display: false, maxTicksLimit: 5, backdropColor: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#151f32', titleColor: neonBlue, bodyColor: 'white', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+                    }
+                }
+            });
+        }
+
+        // 2. LIVE FEED CHART
+        const feedElement = document.getElementById('liveTempChart');
+        if (feedElement) {
+            const liveChart = new Chart(feedElement.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['10:00', '10:15', '10:30', '10:45', '11:00'],
+                    datasets: [{
+                        data: [4.0, 4.1, 4.3, 4.2, 4.2],
+                        borderColor: neonLime,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false, min: 3, max: 6 }
+                    },
+                    animation: false
+                }
+            });
+
+            // Fake Data Updates
+            const valueDisplay = document.querySelector('.feed-value');
+            setInterval(() => {
+                if (!liveChart || !liveChart.data) return;
+                const data = liveChart.data.datasets[0].data;
+                const newVal = 4.0 + Math.random() * 0.5;
+                data.shift(); data.push(newVal);
+                liveChart.update('none');
+                if (valueDisplay) valueDisplay.innerText = newVal.toFixed(1) + "°C";
+            }, 3000);
+        }
+    });
+</script>
+
+</body>
+</html>
