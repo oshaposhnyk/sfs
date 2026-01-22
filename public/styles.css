@@ -100,37 +100,59 @@ aside.sidebar-nav:hover {
     align-items: flex-start;
 }
 
+/* --- LOGO --- */
 .logo-area {
     width: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    margin-bottom: 40px;
-    height: 50px;
-}
-
-.logo-icon {
-    min-width: 40px;
-    height: 40px;
-    color: var(--clr-highlight);
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    transition: all 0.3s;
 }
 
-.logo-text {
-    font-family: 'Manrope';
-    font-weight: 800;
-    font-size: 1.2rem;
-    color: var(--clr-text-main);
-    opacity: 0;
-    white-space: nowrap;
+.logo-collapsed {
+    width: 40px;
+    height: auto;
+    display: block;
     transition: opacity 0.2s;
-    margin-left: 10px;
 }
 
-aside.sidebar-nav:hover .logo-text {
+.logo-expanded {
+    display: none;
+    height: 40px;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* Hover State (Expanded) */
+aside.sidebar-nav:hover .logo-area {
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+aside.sidebar-nav:hover .logo-collapsed {
+    display: none;
+}
+
+aside.sidebar-nav:hover .logo-expanded {
+    display: block;
     opacity: 1;
+    animation: fadeInLogo 0.3s forwards;
+}
+
+@keyframes fadeInLogo {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .nav-item {
