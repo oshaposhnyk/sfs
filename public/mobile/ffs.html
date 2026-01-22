@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureFoodSchool | Future Food</title>
+
+    <link rel="stylesheet" href="styles.css?version=22012026">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="../js/loader.js"></script></head>
+
+<body>
+
+    <aside class="sidebar-nav">
+        <div class="logo-area">
+            <img src="../SecureFood-logo.png" class="logo-collapsed" alt="SF">
+            <img src="../SecureFood-logo.png" class="logo-expanded" alt="SecureFood">
+        </div>
+
+        <a href="./insights.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+            <span class="nav-text">Insights</span>
+        </a>
+        <a href="./l4c.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path
+                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+            <span class="nav-text">Student Lab</span>
+        </a>
+        <a href="./ffs.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="nav-text">Future Food</span>
+        </a>
+        <a href="./governance.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="nav-text">Governance</span>
+        </a>
+
+        <!-- Theme Toggle Injected by utils.js -->
+    </aside>
+
+    <main>
+        <div class="gamified-header">
+            <div>
+                <h1>Agent Mode Active</h1>
+                <p style="margin:0; color:var(--clr-text-muted);">Current Mission: "Zero Hunger"</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div style="text-align:right;">
+                    <span class="badge badge-accent">Level 5</span>
+                    <div class="xp-bar-bg">
+                        <div class="xp-bar-fill" id="xpFill"></div>
+                    </div>
+                </div>
+                <div
+                    style="width:50px; height:50px; border-radius:50%; background:var(--clr-primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid var(--clr-highlight);">
+                    AG</div>
+            </div>
+        </div>
+
+        <!-- Mission Hub -->
+        <h2 style="margin-bottom:25px;">Mission Hub</h2>
+        <div class="video-grid">
+            <div class="card video-card" style="padding:0;">
+                <div class="thumbnail thumb-gradient-1">
+                    <span class="badge badge-highlight" style="position:absolute; top:15px; left:15px;">New
+                        Mission</span>
+                    <div class="play-btn">▶</div>
+                </div>
+                <div style="padding:25px; flex:1; display:flex; flex-direction:column;">
+                    <h3>Future of Proteins</h3>
+                    <p style="color:var(--clr-text-muted); flex:1;">How lab-grown meat and insects will reshape our
+                        school menus.</p>
+                    <div style="margin-top:15px;">
+                        <span class="badge" style="background:var(--clr-surface-alt);">Science</span>
+                        <span class="badge" style="background:var(--clr-surface-alt);">Ethics</span>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <button class="btn btn-outline" style="width:100%;">Start Mission</button>
+                        <small
+                            style="display:block; text-align:center; margin-top:5px; color:var(--clr-text-muted);">Reward:
+                            +50 XP</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card video-card" style="padding:0;">
+                <div class="thumbnail thumb-gradient-2">
+                    <div class="play-btn">▶</div>
+                </div>
+                <div style="padding:25px; flex:1; display:flex; flex-direction:column;">
+                    <h3>Smart Packaging</h3>
+                    <p style="color:var(--clr-text-muted); flex:1;">Edible wrappers? See the tech that eliminates
+                        plastic waste.</p>
+                    <div style="margin-top:15px;">
+                        <span class="badge" style="background:var(--clr-surface-alt);">Tech</span>
+                        <span class="badge" style="background:var(--clr-surface-alt);">Sustainability</span>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <button class="btn btn-outline" style="width:100%;">Resume</button>
+                        <div style="width:100%; height:4px; background:var(--clr-surface-alt); margin-top:10px;">
+                            <div style="width:40%; height:100%; background:var(--clr-highlight);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Game -->
+        <div class="card" style="margin-top:50px; border:2px solid var(--clr-accent);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>⚡ Decision Point</h2>
+                <span class="badge badge-accent">Live Simulation</span>
+            </div>
+            <p style="font-size:1.1rem; max-width:700px; margin-bottom:30px;">
+                A supplier offers cheaper vegetables but refuses to provide safety certificates.
+                The school budget is tight. <strong>What do you do?</strong>
+            </p>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+                <button class="choice-btn btn btn-outline" onclick="wrongChoice(this)">
+                    Buy them (Save Monitor)
+                </button>
+                <button class="choice-btn btn btn-outline" onclick="correctChoice(this)">
+                    Reject & Report (Safety First)
+                </button>
+                <button class="choice-btn btn btn-outline" onclick="wrongChoice(this)">
+                    Ignore the offer
+                </button>
+            </div>
+
+            <div id="feedback" class="fade-in hidden"
+                style="margin-top:20px; padding:20px; background:rgba(68,161,160,0.1); border-radius:var(--radius-sm);">
+                <strong>System Feedback:</strong> Correct! Safety cannot be compromised. You earned the "Guardian"
+                badge.
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/ffs.js"></script>
+
+</body>
+
+</html>

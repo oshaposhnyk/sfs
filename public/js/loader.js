@@ -1,5 +1,36 @@
 (function () {
-    // Inject Styles & Loader HTML immediately to ensure it covers content loading
+    // --- REDIRECT LOGIC ---
+    const IS_MOBILE_DEVICE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const CURRENT_PATH = window.location.pathname;
+    const IS_MOBILE_PAGE = CURRENT_PATH.includes('/mobile/');
+
+    let shouldRedirect = false;
+    let targetUrl = '';
+
+    if (IS_MOBILE_DEVICE && !IS_MOBILE_PAGE) {
+        // Desktop -> Mobile
+        // Handle index/root case
+        let filename = CURRENT_PATH.split('/').pop() || 'index.html';
+        if (filename === '') filename = 'index.html';
+        targetUrl = 'mobile/' + filename;
+        shouldRedirect = true;
+    } else if (!IS_MOBILE_DEVICE && IS_MOBILE_PAGE) {
+        // Mobile -> Desktop
+        let filename = CURRENT_PATH.split('/').pop();
+        targetUrl = '../' + filename;
+        shouldRedirect = true;
+    }
+
+    if (shouldRedirect) {
+        window.location.replace(targetUrl);
+        return; // Stop execution if redirecting
+    }
+
+    // --- LOADER INJECTION ---
+
+    // Determine logo path based on current location
+    const logoPath = IS_MOBILE_PAGE ? '../SecureFood-logo.png' : 'SecureFood-logo.png';
+
     document.write(`
         <style>
             #app-loader {
@@ -45,17 +76,15 @@
             }
         </style>
         <div id="app-loader">
-            <img src="SecureFood-logo.png" class="loader-logo" alt="SecureFood">
+            <img src="${logoPath}" class="loader-logo" alt="SecureFood">
             <div class="loader-text">Loading...</div>
         </div>
     `);
 
     // Hide loader when page is fully loaded
     window.addEventListener('load', () => {
-        // Small delay to ensure minimum visibility of brand
         setTimeout(() => {
             document.body.classList.add('loaded');
-            // Element removal for cleanup after transition
             setTimeout(() => {
                 const loader = document.getElementById('app-loader');
                 if (loader) loader.remove();
