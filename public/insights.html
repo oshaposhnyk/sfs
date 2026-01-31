@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureFoodSchool | Systemic Insights</title>
 
-    <link rel="stylesheet" href="styles.css?version=22012026">
+    <link rel="stylesheet" href="styles.css?version=31012026">
 
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="js/loader.js"></script></head>
+    <script src="js/loader.js"></script>
+</head>
 
 <body>
 
@@ -97,20 +98,8 @@
                 <p style="margin-bottom:20px; color:var(--clr-text-muted);">
                     Our schools are more than buildings; they are active monitoring hubs.
                 </p>
-                <ul style="list-style:none; padding:0;">
-                    <li style="padding:15px 0; border-bottom:1px solid var(--clr-border);">
-                        <strong style="color:var(--clr-accent);">Kyiv Hub</strong>
-                        <span style="float:right;" class="badge badge-accent">Active</span>
-                    </li>
-                    <li style="padding:15px 0; border-bottom:1px solid var(--clr-border);">
-                        <strong>Lviv Hub</strong>
-                        <span style="float:right;" class="badge badge-accent">Active</span>
-                    </li>
-                    <li style="padding:15px 0;">
-                        <strong>Odesa Hub</strong>
-                        <span style="float:right;" class="badge"
-                            style="background:var(--clr-surface-alt);">Maintenance</span>
-                    </li>
+                <ul id="hubList" style="list-style:none; padding:0; max-height:250px; overflow-y:auto;">
+                    <!-- Hubs injected by JS -->
                 </ul>
             </div>
         </div>
@@ -119,8 +108,11 @@
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
             <h2>Systemic Insights Feed</h2>
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-outline" style="padding:8px 20px;">All Streams</button>
-                <button class="btn" style="background:var(--clr-surface); border:1px solid var(--clr-border);">Data
+                <button id="btnStreamAll" class="btn btn-outline"
+                    style="padding:8px 20px; background:var(--clr-primary); color:white; border-color:var(--clr-primary);">All
+                    Streams</button>
+                <button id="btnStreamData" class="btn"
+                    style="padding:8px 20px; background:var(--clr-surface); border:1px solid var(--clr-border);">Data
                     Only</button>
             </div>
         </div>

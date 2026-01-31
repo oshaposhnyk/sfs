@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureFoodSchool | Governance</title>
 
-    <link rel="stylesheet" href="styles.css?version=22012026">
+    <link rel="stylesheet" href="styles.css?version=31012026">
 
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/loader.js"></script></head>
+    <script src="js/loader.js"></script>
+</head>
 
 <body>
 
@@ -60,7 +61,7 @@
                 <h1>Governance Dashboard</h1>
                 <span style="color:var(--clr-accent);">● System Operational</span>
             </div>
-            <button class="btn btn-primary">Download Report</button>
+            <button id="btnDownloadReport" class="btn btn-primary">Download Report</button>
         </div>
 
         <!-- KPIs -->
@@ -93,23 +94,27 @@
 
         <h3>Management Tools</h3>
         <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            <div class="card" style="text-align:center; cursor:pointer;">
-                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-accent);">📋</div>
+            <div id="cardProtocols" class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-accent);"><span class="material-icons"
+                        style="font-size:inherit;">assignment</span></div>
                 <h4>Protocols</h4>
                 <small>Safety standards</small>
             </div>
-            <div class="card" style="text-align:center; cursor:pointer;">
-                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-accent);">⚙️</div>
+            <div class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-accent);"><span class="material-icons"
+                        style="font-size:inherit;">settings</span></div>
                 <h4>Tech Check</h4>
                 <small>Digital Twin Setup</small>
             </div>
-            <div class="card" style="text-align:center; cursor:pointer;">
-                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-highlight);">👥</div>
+            <div class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-highlight);"><span
+                        class="material-icons" style="font-size:inherit;">groups</span></div>
                 <h4>Surveys</h4>
                 <small>Community Polls</small>
             </div>
-            <div class="card" style="text-align:center; cursor:pointer;">
-                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-primary);">⚖️</div>
+            <div class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-primary);"><span
+                        class="material-icons" style="font-size:inherit;">gavel</span></div>
                 <h4>Legal</h4>
                 <small>Contracts</small>
             </div>
@@ -119,10 +124,14 @@
             <div class="card">
                 <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
                     <h3>Resource Library</h3>
-                    <div style="display:flex; gap:10px;">
-                        <span class="badge badge-accent" style="cursor:pointer;">All</span>
-                        <span class="badge" style="cursor:pointer; background:var(--clr-surface-alt);">Director</span>
-                        <span class="badge" style="cursor:pointer; background:var(--clr-surface-alt);">Supplier</span>
+                    <div id="resourceFilters" style="display:flex; gap:10px;">
+                        <span class="badge badge-accent" data-filter="All" style="cursor:pointer;">All</span>
+                        <span class="badge" data-filter="Director"
+                            style="cursor:pointer; background:var(--clr-surface-alt);">Director</span>
+                        <span class="badge" data-filter="Supplier"
+                            style="cursor:pointer; background:var(--clr-surface-alt);">Supplier</span>
+                        <span class="badge" data-filter="Tech"
+                            style="cursor:pointer; background:var(--clr-surface-alt);">Tech</span>
                     </div>
                 </div>
                 <table style="width:100%; text-align:left; border-collapse: collapse;">
@@ -134,29 +143,14 @@
                             <th style="padding:15px 10px; color:var(--clr-text-muted);">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr style="border-bottom:1px solid var(--clr-surface-alt);">
-                            <td style="padding:15px 10px;">📄 L4C Implementation Strategy</td>
-                            <td><span class="badge">Director</span></td>
-                            <td>Jan 10, 2026</td>
-                            <td><a href="#" style="color:var(--clr-accent); font-weight:600;">Download</a></td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--clr-surface-alt);">
-                            <td style="padding:15px 10px;">📊 Cold Chain Report Q1</td>
-                            <td><span class="badge badge-accent">Tech</span></td>
-                            <td>Jan 09, 2026</td>
-                            <td><a href="#" style="color:var(--clr-accent); font-weight:600;">Download</a></td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--clr-surface-alt);">
-                            <td style="padding:15px 10px;">🎥 Staff Training: Hygiene</td>
-                            <td><span class="badge badge-highlight">All</span></td>
-                            <td>Jan 05, 2026</td>
-                            <td><a href="#" style="color:var(--clr-accent); font-weight:600;">View</a></td>
-                        </tr>
+                    </thead>
+                    <tbody id="resourceTableBody">
+                        <!-- JS injected rows -->
                     </tbody>
                 </table>
                 <div style="text-align:center; padding-top:20px;">
-                    <a href="#" style="color:var(--clr-text-muted); font-size:0.9rem;">View all 24 documents ↓</a>
+                    <a href="#" id="btnViewAllResources" style="color:var(--clr-text-muted); font-size:0.9rem;">View all
+                        24 documents ↓</a>
                 </div>
             </div>
 

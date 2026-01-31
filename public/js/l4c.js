@@ -3,31 +3,32 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initRadar();
-    initLiveGraph();
+    initRadarChart();
+    initLiveTempChart();
+    initCalendarModal();
+    initJourneySimulation();
 });
 
-let radarChart;
+function initRadarChart() {
+    const ctx = document.getElementById('competencyChart').getContext('2d');
 
-// Dynamic Radar colors based on theme
-window.addEventListener('themeChanged', (e) => {
-    updateRadarTheme(e.detail);
-});
+    // Theme aware colors (read from CSS var if possible, else hardcode)
+    // Simplified:
+    const colorAccent = 'rgba(68, 161, 160, 0.5)';
+    const colorBorder = '#44A1A0';
 
-function initRadar() {
-    const ctx = document.getElementById('competencyChart');
-    if (!ctx) return;
-
-    radarChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Tech', 'Social', 'Data', 'Ethics', 'Systems'],
+            labels: ['Data Literacy', 'Systems Thinking', 'Technical', 'Communication', 'Ethics'],
             datasets: [{
                 label: 'Student Profile',
-                data: [80, 60, 75, 90, 65],
-                backgroundColor: 'rgba(68, 161, 160, 0.2)',
-                borderColor: '#44A1A0',
-                pointBackgroundColor: '#44A1A0'
+                data: [4, 5, 3, 4, 5],
+                backgroundColor: colorAccent,
+                borderColor: colorBorder,
+                borderWidth: 2,
+                pointBackgroundColor: '#fff',
+                pointRadius: 4
             }]
         },
         options: {
@@ -35,57 +36,164 @@ function initRadar() {
             maintainAspectRatio: false,
             scales: {
                 r: {
-                    angleLines: { color: 'rgba(128,128,128,0.2)' },
-                    grid: { color: 'rgba(128,128,128,0.2)' },
-                    pointLabels: { color: '#5A7D8A' }
+                    angleLines: { color: 'rgba(0,0,0,0.1)' },
+                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    pointLabels: {
+                        font: { size: 10, family: 'Figtree' }
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 5
                 }
             },
-            plugins: { legend: { display: false } }
+            plugins: {
+                legend: { display: false }
+            }
         }
     });
 }
 
-function updateRadarTheme(theme) {
-    if (!radarChart) return;
-    const color = theme === 'dark' ? '#A8C0CB' : '#5A7D8A';
-    radarChart.options.scales.r.pointLabels.color = color;
-    radarChart.update();
-}
+function initLiveTempChart() {
+    const ctx = document.getElementById('liveTempChart').getContext('2d');
 
-function initLiveGraph() {
-    const ctx = document.getElementById('liveTempChart');
-    if (!ctx) return;
+    // Fake live data
+    const dataPoints = [4.2, 4.3, 4.1, 4.4, 4.3, 4.2, 4.3, 4.3, 4.2, 4.3];
+    const labels = dataPoints.map((_, i) => i);
 
-    const liveChart = new Chart(ctx, {
+    const chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: Array(10).fill(''),
+            labels: labels,
             datasets: [{
-                data: [4, 4.2, 4.1, 4.3, 4.0, 4.2, 3.9, 4.1, 4.2, 4.0],
-                borderColor: '#DBA159',
+                label: 'Temp',
+                data: dataPoints,
+                borderColor: '#44A1A0',
                 borderWidth: 2,
                 tension: 0.4,
-                pointRadius: 0
+                pointRadius: 0,
+                fill: true,
+                backgroundColor: 'rgba(68, 161, 160, 0.1)'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 3, max: 6 }
+            },
             plugins: { legend: { display: false } },
-            scales: { x: { display: false }, y: { display: false, min: 2, max: 6 } },
             animation: false
         }
     });
 
-    // Simulate Data Stream
+    // Simulate Live Feed
     setInterval(() => {
-        const data = liveChart.data.datasets[0].data;
-        const newVal = 4.0 + (Math.random() - 0.5);
-        data.shift();
-        data.push(newVal);
-        liveChart.update('none');
+        const lastVal = dataPoints[dataPoints.length - 1];
+        const change = (Math.random() - 0.5) * 0.2;
+        let newVal = lastVal + change;
+        newVal = Math.max(3.5, Math.min(5.5, newVal)); // Clamp
 
-        const display = document.querySelector('.feed-value');
-        if (display) display.innerText = newVal.toFixed(1) + "°C";
+        dataPoints.shift();
+        dataPoints.push(newVal);
+
+        // Update DOM text if present
+        const textEl = document.querySelector('.feed-value');
+        if (textEl) textEl.textContent = newVal.toFixed(1) + '°C';
+
+        chart.update();
     }, 2000);
+}
+
+function initCalendarModal() {
+    const btnOpen = document.getElementById('btnViewCalendar');
+    const btnClose = document.getElementById('btnCloseCalendar');
+    const modal = document.getElementById('calendarModal');
+    const btnAddReminder = document.getElementById('btnAddReminder');
+
+    if (btnOpen && modal) {
+        btnOpen.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+    }
+
+    if (btnClose && modal) {
+        btnClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
+
+    // Close on click outside
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    }
+
+    // Calendar Day Selection Logic
+    const days = document.querySelectorAll('.cal-day');
+    days.forEach(day => {
+        if (!day.classList.contains('empty')) {
+            day.addEventListener('click', () => {
+                days.forEach(d => d.classList.remove('selected'));
+                day.classList.add('selected');
+            });
+        }
+    });
+
+    // Add Reminder Logic
+    if (btnAddReminder) {
+        btnAddReminder.addEventListener('click', () => {
+            const selectedDay = document.querySelector('.cal-day.selected');
+            if (selectedDay) {
+                const dayNum = selectedDay.innerText;
+                alert(`Reminder added for Feb ${dayNum}, 2026!`);
+
+                // Add visual indicator (dot)
+                selectedDay.classList.add('event');
+                selectedDay.classList.remove('selected'); // Deselect
+
+            } else {
+                alert("Please select a date first.");
+            }
+        });
+    }
+}
+
+function initJourneySimulation() {
+    const btn = document.getElementById('btnStartSim');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+        btn.innerHTML = '<span class="material-icons spin" style="font-size:1rem; vertical-align:middle;">sync</span> Running Simulation...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            // Success State
+            btn.innerHTML = '✔ Phase Completed';
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline');
+            btn.style.borderColor = 'green';
+            btn.style.color = 'green';
+
+            // Find parent timeline station
+            const activeStation = btn.closest('.timeline-station');
+            if (activeStation) {
+                // Change style to completed
+                activeStation.classList.remove('active');
+                activeStation.classList.add('completed');
+                activeStation.querySelector('strong').innerText = 'PHASE 2: COMPLETED';
+            }
+
+            // Unlock next phase
+            const nextStation = activeStation.nextElementSibling;
+            if (nextStation && nextStation.classList.contains('timeline-station')) {
+                nextStation.style.opacity = '1';
+                nextStation.classList.add('active');
+                nextStation.querySelector('small').innerText = 'Unlocked! Access granted.';
+            }
+
+        }, 2000);
+    });
 }
