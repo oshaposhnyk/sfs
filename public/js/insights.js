@@ -3,19 +3,23 @@
  */
 
 let map;
+let healthChart;
 let feedFilter = 'all'; // 'all' or 'data'
 
 document.addEventListener('DOMContentLoaded', () => {
     initChart();
+    initHeroInsights();
     initMap(); // Leaflet
     initHubs();
     initFeedFilters();
 });
 
 function initChart() {
-    const ctx = document.getElementById('healthChart').getContext('2d');
+    const canvas = document.getElementById('healthChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    const ctx = canvas.getContext('2d');
 
-    new Chart(ctx, {
+    healthChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Healthy', 'At Risk', 'Critical'],
@@ -31,15 +35,119 @@ function initChart() {
             plugins: {
                 legend: { position: 'bottom' }
             },
-            cutout: '70%'
+            animation: {
+                duration: 720,
+                easing: 'easeOutQuart'
+            },
+            cutout: '72%'
         }
     });
 }
 
+function initHeroInsights() {
+    const counters = Array.from(document.querySelectorAll('[data-hero-counter]'));
+    if (counters.length) {
+        animateHeroCounters(counters);
+    }
+
+    const updatedAtEl = document.getElementById('heroUpdatedAt');
+    const primarySignalEl = document.getElementById('heroSignalPrimary');
+    const primaryDetailEl = document.getElementById('heroSignalDetail');
+    const trendSignalEl = document.getElementById('heroSignalTrend');
+    const trendDetailEl = document.getElementById('heroSignalTrendDetail');
+
+    const snapshots = [
+        {
+            updated: 'Updated just now',
+            primarySignal: 'Cold chain stable',
+            primaryDetail: '9 hubs stay in safe threshold',
+            trendSignal: 'Water quality queue',
+            trendDetail: '2 filters scheduled in next 48h',
+            chartData: [78, 15, 7]
+        },
+        {
+            updated: 'Updated 3 min ago',
+            primarySignal: 'Thermal drift contained',
+            primaryDetail: 'Rapid response resolved 4 alerts',
+            trendSignal: 'Mentor review queue',
+            trendDetail: '6 reports awaiting verification',
+            chartData: [80, 13, 7]
+        },
+        {
+            updated: 'Updated 6 min ago',
+            primarySignal: 'Supply node synchronized',
+            primaryDetail: 'Cross-region dispatch completed',
+            trendSignal: 'Feedback translation',
+            trendDetail: '82% validated within 24 hours',
+            chartData: [77, 16, 7]
+        }
+    ];
+
+    if (!updatedAtEl && !primarySignalEl && !trendSignalEl && !healthChart) return;
+
+    let snapshotIndex = 0;
+    setInterval(() => {
+        snapshotIndex = (snapshotIndex + 1) % snapshots.length;
+        const snapshot = snapshots[snapshotIndex];
+
+        if (updatedAtEl) updatedAtEl.textContent = snapshot.updated;
+        if (primarySignalEl) primarySignalEl.textContent = snapshot.primarySignal;
+        if (primaryDetailEl) primaryDetailEl.textContent = snapshot.primaryDetail;
+        if (trendSignalEl) trendSignalEl.textContent = snapshot.trendSignal;
+        if (trendDetailEl) trendDetailEl.textContent = snapshot.trendDetail;
+
+        if (healthChart) {
+            healthChart.data.datasets[0].data = snapshot.chartData;
+            healthChart.update();
+        }
+    }, 7000);
+}
+
+function animateHeroCounters(counters) {
+    const durationMs = 1100;
+    const startTime = performance.now();
+
+    const draw = (timeNow) => {
+        const elapsed = Math.min(1, (timeNow - startTime) / durationMs);
+        const easedProgress = 1 - Math.pow(1 - elapsed, 3);
+
+        counters.forEach(counterEl => {
+            const target = Number(counterEl.dataset.target || 0);
+            const format = counterEl.dataset.format || 'int';
+            const currentValue = target * easedProgress;
+            counterEl.textContent = formatCounterValue(currentValue, target, format);
+        });
+
+        if (elapsed < 1) {
+            requestAnimationFrame(draw);
+        }
+    };
+
+    requestAnimationFrame(draw);
+}
+
+function formatCounterValue(value, target, format) {
+    if (format === 'k') {
+        if (target < 1000) {
+            return String(Math.round(value));
+        }
+        return `${(value / 1000).toFixed(1)}k`;
+    }
+
+    if (format === 'percent1') {
+        return `${value.toFixed(1)}%`;
+    }
+
+    return String(Math.round(value));
+}
+
 function initMap() {
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer || typeof L === 'undefined') return;
+
     // Leaflet setup
     // Initial view: Ukraine center
-    map = L.map('map').setView([49.0, 31.0], 6);
+    map = L.map(mapContainer).setView([49.0, 31.0], 6);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -49,6 +157,8 @@ function initMap() {
 }
 
 function initHubs() {
+    if (!map) return;
+
     // 12 Hubs
     const hubs = [
         { name: "Kyiv Hub", coords: [50.4501, 30.5234], status: "Active", color: "#44A1A0" },
@@ -67,6 +177,7 @@ function initHubs() {
 
     const listContainer = document.getElementById('hubList');
     if (!listContainer) return;
+    listContainer.innerHTML = '';
 
     hubs.forEach((hub, index) => {
         // Add Marker to Map
@@ -141,12 +252,8 @@ function setFeedFilter(type, activeBtn, inactiveBtn) {
 
     // Toggle Button Styles
     activeBtn.classList.remove('btn-outline');
-    activeBtn.classList.add('btn-primary'); // Assuming btn-primary exists or just using default active style logic
-    // Actually, based on HTML usage:
-    // Active was "btn btn-outline" (or inverse?). Let's stick to the visual language:
-    // Primary/Filled = Active, Outline = Inactive
+    activeBtn.classList.add('btn-primary');
 
-    // Let's force styles manually for clarity as I don't recall exact btn class logic
     activeBtn.style.background = 'var(--clr-primary)';
     activeBtn.style.color = '#ffffff';
     activeBtn.style.border = '1px solid var(--clr-primary)';
@@ -162,11 +269,10 @@ function setFeedFilter(type, activeBtn, inactiveBtn) {
             item.style.display = 'block';
             // Animation reset
             item.style.animation = 'none';
-            item.offsetHeight; /* trigger reflow */
+            item.offsetHeight;
             item.style.animation = 'fadeIn 0.5s ease-in';
         } else {
             // "Data Only" -> Show only items with "Data" or "Digital Twin" badges
-            // Let's assume badges containing "Data", "Sensor", "Twin", "Tech" are data.
             const text = item.innerText.toLowerCase();
             const isData = text.includes('sensor') || text.includes('twin') || text.includes('data') || text.includes('tech') || text.includes('iot');
 

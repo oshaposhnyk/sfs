@@ -74,53 +74,79 @@
         </div>
 
         <!-- Mission Hub -->
-        <h2 style="margin-bottom:25px;">Mission Hub</h2>
-        <div class="video-grid">
-            <div class="card video-card" style="padding:0;">
-                <div class="thumbnail thumb-gradient-1">
-                    <span class="badge badge-highlight" style="position:absolute; top:15px; left:15px;">New
-                        Mission</span>
-                    <div class="play-btn">▶</div>
+        <section class="mission-hub">
+            <div class="mission-hub-header">
+                <div>
+                    <p class="mission-hub-kicker">Adaptive Learning Missions</p>
+                    <h2>Mission Hub</h2>
+                    <p class="mission-hub-lead">Explore short scenario-based missions, gain XP, and turn theory into
+                        practical food-safety actions.</p>
                 </div>
-                <div style="padding:25px; flex:1; display:flex; flex-direction:column;">
-                    <h3>Future of Proteins</h3>
-                    <p style="color:var(--clr-text-muted); flex:1;">How lab-grown meat and insects will reshape our
-                        school menus.</p>
-                    <div style="margin-top:15px;">
-                        <span class="badge" style="background:var(--clr-surface-alt);">Science</span>
-                        <span class="badge" style="background:var(--clr-surface-alt);">Ethics</span>
-                    </div>
-                    <div style="margin-top:auto;">
-                        <button id="btnStartMission" class="btn btn-primary" style="width:100%;">Start Mission</button>
-                    </div>
-                    <small
-                        style="display:block; text-align:center; margin-top:5px; color:var(--clr-text-muted);">Reward:
-                        +50 XP</small>
+                <div id="missionHubLive" class="mission-hub-live">
+                    <span class="mission-live-dot"></span>
+                    <span id="missionLiveStatus">2 missions active now</span>
                 </div>
             </div>
 
-            <div class="card video-card" style="padding:0;">
-                <div class="thumbnail thumb-gradient-2">
-                    <div class="play-btn">▶</div>
-                </div>
-                <div style="padding:25px; flex:1; display:flex; flex-direction:column;">
-                    <h3>Smart Packaging</h3>
-                    <p style="color:var(--clr-text-muted); flex:1;">Edible wrappers? See the tech that eliminates
-                        plastic waste.</p>
-                    <div style="margin-top:15px;">
-                        <span class="badge" style="background:var(--clr-surface-alt);">Tech</span>
-                        <span class="badge" style="background:var(--clr-surface-alt);">Sustainability</span>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <button id="btnResumeMission" class="btn btn-outline" style="width:100%;">Resume</button>
-                        <div style="width:100%; height:4px; background:var(--clr-surface-alt); margin-top:10px;">
-                            <div id="videoProgressBar" style="width:40%; height:100%; background:var(--clr-highlight);">
-                            </div>
+            <div class="video-grid mission-grid">
+                <article class="card video-card mission-card mission-card-featured">
+                    <div class="thumbnail thumb-gradient-1 mission-thumb">
+                        <span class="badge badge-highlight mission-badge">New Mission</span>
+                        <div class="mission-thumb-meta">
+                            <span class="mission-duration">14 min</span>
+                            <div class="play-btn mission-play-btn">▶</div>
                         </div>
                     </div>
-                </div>
+                    <div class="mission-body">
+                        <div class="mission-head-row">
+                            <h3>Future of Proteins</h3>
+                            <span class="mission-xp">+50 XP</span>
+                        </div>
+                        <p class="mission-text">How lab-grown meat and insects can reshape school menus without
+                            compromising nutrition or safety standards.</p>
+                        <div class="mission-tag-row">
+                            <span class="mission-tag">Science</span>
+                            <span class="mission-tag">Ethics</span>
+                            <span class="mission-tag">Policy</span>
+                        </div>
+                        <div class="mission-footer">
+                            <button id="btnStartMission" class="btn btn-primary mission-btn">Start Mission</button>
+                            <small class="mission-reward">Reward: +50 XP + "Protein Pathfinder" badge</small>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card video-card mission-card mission-card-progress">
+                    <div class="thumbnail thumb-gradient-2 mission-thumb">
+                        <span class="mission-badge mission-badge-soft">In Progress</span>
+                        <div class="mission-thumb-meta">
+                            <span class="mission-duration">9 min left</span>
+                            <div class="play-btn mission-play-btn">▶</div>
+                        </div>
+                    </div>
+                    <div class="mission-body">
+                        <div class="mission-head-row">
+                            <h3>Smart Packaging</h3>
+                            <span class="mission-xp">+35 XP</span>
+                        </div>
+                        <p class="mission-text">Test packaging concepts that reduce waste while preserving food quality
+                            in school supply chains.</p>
+                        <div class="mission-tag-row">
+                            <span class="mission-tag">Tech</span>
+                            <span class="mission-tag">Sustainability</span>
+                            <span class="mission-tag">Design</span>
+                        </div>
+                        <div class="mission-footer">
+                            <button id="btnResumeMission" class="btn btn-outline mission-btn">Resume Mission</button>
+                            <div class="mission-progress-track">
+                                <div id="videoProgressBar" class="mission-progress-fill" style="width:40%;"></div>
+                            </div>
+                            <small id="missionResumeStatus" class="mission-reward">Progress: 40%</small>
+                        </div>
+                    </div>
+                </article>
             </div>
-        </div>
+        </section>
 
         <!-- Decision Game -->
         <div class="card" style="margin-top:50px; border:2px solid var(--clr-accent);">

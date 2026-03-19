@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initDecisionGame();
+    initMissionHub();
     initMissionLogic();
 });
 
@@ -13,6 +14,28 @@ function initDecisionGame() {
     // No specific initialization needed for onclick handlers in HTML,
     // but we can add global listeners if preferred.
     // Keeping simple onclick for now as per previous design.
+}
+
+function initMissionHub() {
+    const liveBox = document.getElementById('missionHubLive');
+    const liveStatus = document.getElementById('missionLiveStatus');
+    if (!liveBox || !liveStatus) return;
+
+    const states = [
+        '2 missions active now',
+        'Mentor feedback stream online',
+        '1 mission completed in your cohort',
+        'Live simulation synced'
+    ];
+
+    let stateIndex = 0;
+    setInterval(() => {
+        stateIndex = (stateIndex + 1) % states.length;
+        liveStatus.textContent = states[stateIndex];
+        liveBox.classList.remove('is-pulse');
+        void liveBox.offsetWidth;
+        liveBox.classList.add('is-pulse');
+    }, 4500);
 }
 
 window.correctChoice = function (btn) {
@@ -43,51 +66,62 @@ window.wrongChoice = function (btn) {
 // --- Mission & Resume Logic ---
 
 function initMissionLogic() {
-    // 1. Resume Video Progress
     const btnResume = document.getElementById('btnResumeMission');
     const progressBar = document.getElementById('videoProgressBar');
+    const resumeStatus = document.getElementById('missionResumeStatus');
+    const liveStatus = document.getElementById('missionLiveStatus');
 
     if (btnResume && progressBar) {
+        let isRunning = false;
         btnResume.addEventListener('click', () => {
-            btnResume.innerText = 'Playing...';
+            if (isRunning || btnResume.disabled) return;
+            isRunning = true;
+
+            btnResume.innerText = 'Running...';
             btnResume.classList.add('btn-primary');
             btnResume.classList.remove('btn-outline');
+            btnResume.disabled = true;
 
-            // Simulate progress filling up
             let width = 40; // element has 40% inline style initially
             const interval = setInterval(() => {
                 width += 1;
                 progressBar.style.width = width + '%';
+                if (resumeStatus) {
+                    resumeStatus.innerText = `Progress: ${width}%`;
+                }
 
                 if (width >= 100) {
                     clearInterval(interval);
                     btnResume.innerText = 'Completed ✔';
-                    btnResume.disabled = true;
-                    // Maybe trigger confetti?
+                    if (resumeStatus) {
+                        resumeStatus.innerText = 'Mission complete. Debrief unlocked.';
+                    }
+                    if (liveStatus) {
+                        liveStatus.innerText = 'Mission completion registered';
+                    }
                 }
             }, 50); // Fast fill for demo
         });
     }
 
-    // 2. Start Mission
     const btnStart = document.getElementById('btnStartMission');
     if (btnStart) {
         btnStart.addEventListener('click', () => {
-            // Animate button
-            const originalText = btnStart.innerText;
+            if (btnStart.disabled) return;
+            btnStart.disabled = true;
             btnStart.innerHTML = '<span class="material-icons spin" style="font-size:1rem; vertical-align:middle;">sync</span> Initializing...';
 
-            // Simulate loading
             setTimeout(() => {
-                btnStart.innerHTML = '🚀 Mission Started!';
-                btnStart.classList.add('btn-accent'); // Assuming accent color class
-
-                // Maybe redirect or show overlay?
-                setTimeout(() => {
-                    alert("Mission 'Urban Farming' initialized! (Simulation)");
-                    btnStart.innerText = originalText;
-                    btnStart.classList.remove('btn-accent');
-                }, 1000);
+                const missionCard = btnStart.closest('.mission-card');
+                if (missionCard) {
+                    missionCard.classList.add('is-active');
+                }
+                btnStart.innerHTML = 'Mission Started ✔';
+                btnStart.classList.remove('btn-primary');
+                btnStart.classList.add('btn-outline');
+                if (liveStatus) {
+                    liveStatus.innerText = 'New mission launched successfully';
+                }
             }, 1500);
         });
     }

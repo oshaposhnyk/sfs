@@ -58,32 +58,99 @@
 
     <main>
         <section class="insights-hero">
-            <div>
+            <div class="insights-hero-main">
+                <p class="insights-hero-kicker">Real-Time Systemic Intelligence</p>
                 <h1 class="hero-title">Digitalization for<br><span>Safety & Change</span></h1>
-                <p style="font-size:1.2rem; max-width:600px; color:var(--clr-text-muted); margin-bottom:30px;">
-                    Combining Digital Twins with community energy. See how data turns into real impact.
+                <p class="insights-hero-description">
+                    Combining digital twins with community action across school kitchens. The dashboard tracks operations,
+                    behavior shifts, and risk response in one field-ready view.
                 </p>
-                <div style="display:flex; gap:20px;">
-                    <div class="card" style="text-align:center; padding:15px; min-width:120px;">
-                        <span style="font-size:2rem; font-weight:700; color:var(--clr-accent);">12</span>
-                        <small style="display:block; text-transform:uppercase; font-size:0.75rem;">Living Labs</small>
-                    </div>
-                    <div class="card" style="text-align:center; padding:15px; min-width:120px;">
-                        <span style="font-size:2rem; font-weight:700; color:var(--clr-highlight);">1.2k</span>
-                        <small style="display:block; text-transform:uppercase; font-size:0.75rem;">Change Agents</small>
-                    </div>
-                    <div class="card" style="text-align:center; padding:15px; min-width:120px;">
-                        <span style="font-size:2rem; font-weight:700; color:var(--clr-primary);">24/7</span>
-                        <small style="display:block; text-transform:uppercase; font-size:0.75rem;">System Pulse</small>
-                    </div>
+
+                <div class="insights-hero-ribbon">
+                    <article class="hero-ribbon-item">
+                        <span class="material-icons">bolt</span>
+                        <div>
+                            <strong>6.4 min</strong>
+                            <small>Average alert response</small>
+                        </div>
+                    </article>
+                    <article class="hero-ribbon-item">
+                        <span class="material-icons">history_edu</span>
+                        <div>
+                            <strong>82%</strong>
+                            <small>Reports translated in 24h</small>
+                        </div>
+                    </article>
+                    <article class="hero-ribbon-item">
+                        <span class="material-icons">sync_alt</span>
+                        <div>
+                            <strong>47</strong>
+                            <small>Cross-team sync events/week</small>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="stats-row">
+                    <article class="card stat-card">
+                        <div class="stat-top">
+                            <span class="material-icons">hub</span>
+                            <span>Network</span>
+                        </div>
+                        <span class="stat-value" data-hero-counter data-target="12" data-format="int">12</span>
+                        <small class="stat-label">Living Labs</small>
+                        <span class="stat-delta positive">+2 this quarter</span>
+                    </article>
+                    <article class="card stat-card">
+                        <div class="stat-top">
+                            <span class="material-icons">groups</span>
+                            <span>People</span>
+                        </div>
+                        <span class="stat-value" data-hero-counter data-target="1200" data-format="k">1.2k</span>
+                        <small class="stat-label">Change Agents</small>
+                        <span class="stat-delta positive">+140 active this month</span>
+                    </article>
+                    <article class="card stat-card">
+                        <div class="stat-top">
+                            <span class="material-icons">monitor_heart</span>
+                            <span>Resilience</span>
+                        </div>
+                        <span class="stat-value" data-hero-counter data-target="94.6" data-format="percent1">94.6%</span>
+                        <small class="stat-label">System Pulse Stability</small>
+                        <span class="stat-delta warning">3 hubs require follow-up</span>
+                    </article>
                 </div>
             </div>
 
-            <div class="card"
-                style="height:350px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                <h3 style="margin-bottom:20px; font-size:1rem; color:var(--clr-text-muted);">System Health Balance</h3>
-                <div style="width:250px; height:250px;">
+            <div class="card insights-hero-panel">
+                <div class="hero-panel-head">
+                    <h3>System Health Balance</h3>
+                    <span id="heroUpdatedAt" class="hero-updated">Updated just now</span>
+                </div>
+                <div class="hero-chart-shell">
                     <canvas id="healthChart"></canvas>
+                </div>
+                <div class="hero-signal-list">
+                    <div class="hero-signal-item">
+                        <span class="material-icons hero-signal-icon status-good">check_circle</span>
+                        <div>
+                            <strong id="heroSignalPrimary">Cold chain stable</strong>
+                            <small id="heroSignalDetail">9 hubs stay in safe threshold</small>
+                        </div>
+                    </div>
+                    <div class="hero-signal-item">
+                        <span class="material-icons hero-signal-icon status-warn">warning</span>
+                        <div>
+                            <strong id="heroSignalTrend">Water quality queue</strong>
+                            <small id="heroSignalTrendDetail">2 filters scheduled in next 48h</small>
+                        </div>
+                    </div>
+                    <div class="hero-signal-item">
+                        <span class="material-icons hero-signal-icon status-info">campaign</span>
+                        <div>
+                            <strong>Behavioral campaign</strong>
+                            <small>16 peer sessions planned across 6 regions</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -164,18 +231,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/insights.js"></script>
-
-    <!-- Init Map directly here for simplicity if needed, or in insights.js -->
-    <script>
-        // Simple Leaflet Init
-        const map = L.map('map').setView([49.0, 31.0], 6);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: 'Map data &copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        L.circleMarker([50.4501, 30.5234], { color: '#44A1A0', radius: 8, fillOpacity: 0.8 }).addTo(map).bindPopup("Kyiv");
-        L.circleMarker([49.8397, 24.0297], { color: '#DBA159', radius: 8, fillOpacity: 0.8 }).addTo(map).bindPopup("Lviv");
-    </script>
 
 </body>
 
