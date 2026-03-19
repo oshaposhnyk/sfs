@@ -165,36 +165,88 @@
             </div>
 
             <!-- Widget 2 -->
-            <div class="card">
-                <h4 style="color:var(--clr-text-muted); font-size:0.8rem; text-transform:uppercase;">My Team</h4>
-                <div style="display:flex; margin-top:15px; margin-bottom:15px;">
-                    <div
-                        style="width:40px; height:40px; border-radius:50%; background:#ccc; border:2px solid var(--clr-surface); margin-right:-10px;">
-                    </div>
-                    <div
-                        style="width:40px; height:40px; border-radius:50%; background:#999; border:2px solid var(--clr-surface); margin-right:-10px;">
-                    </div>
-                    <div
-                        style="width:40px; height:40px; border-radius:50%; background:var(--clr-surface-alt); border:2px solid var(--clr-surface); display:flex; align-items:center; justify-content:center; color:var(--clr-text-muted);">
-                        +</div>
+            <div class="card team-card">
+                <div class="widget-head">
+                    <h4 class="widget-title">My Team</h4>
+                    <span class="team-live-pill"><span class="team-live-dot"></span><span id="teamOnlineLabel">3
+                            online</span></span>
                 </div>
-                <p style="font-size:0.9rem;">Next Sync: <strong>Tomorrow, 14:00</strong></p>
-                <button id="btnViewCalendar" class="btn btn-outline"
-                    style="width:100%; padding:5px; font-size:0.8rem;">View
-                    Calendar</button>
+
+                <div class="team-avatar-row">
+                    <div class="team-avatar avatar-mentor" title="Maria Stepanenko">
+                        <span>MS</span>
+                    </div>
+                    <div class="team-avatar avatar-peer" title="Andriy Kovalenko">
+                        <span>AK</span>
+                    </div>
+                    <div class="team-avatar avatar-peer" title="Olena Bondar">
+                        <span>OB</span>
+                    </div>
+                    <div class="team-avatar avatar-more" title="More members">
+                        <span>+2</span>
+                    </div>
+                </div>
+
+                <div class="team-meta-grid">
+                    <div class="team-meta-item">
+                        <small>Next Sync</small>
+                        <strong id="teamNextSync">Tomorrow, 14:00</strong>
+                    </div>
+                    <div class="team-meta-item">
+                        <small>Focus</small>
+                        <strong>Report Translation</strong>
+                    </div>
+                </div>
+
+                <div class="team-pulse-track">
+                    <span id="teamPulseFill" style="width:62%;"></span>
+                </div>
+                <small class="team-pulse-label">Coordination readiness: <strong id="teamPulseLabel">62%</strong></small>
+
+                <button id="btnViewCalendar" class="btn btn-outline team-action-btn">View Calendar</button>
             </div>
 
             <!-- Widget 3 -->
-            <div class="card">
-                <h4 style="color:var(--clr-text-muted); font-size:0.8rem; text-transform:uppercase;">Pending Review</h4>
-                <ul style="list-style:none; padding:0; margin-top:10px;">
-                    <li style="padding:10px 0; border-bottom:1px solid var(--clr-border); font-size:0.9rem;">
-                        Maria S. Project <span style="float:right; color:var(--clr-highlight);">Pending</span>
+            <div class="card review-card">
+                <div class="widget-head">
+                    <h4 class="widget-title">Pending Review</h4>
+                    <span class="review-counter" id="reviewCounterLabel">1 pending</span>
+                </div>
+
+                <ul class="review-list">
+                    <li class="review-item status-pending">
+                        <span class="material-icons">schedule</span>
+                        <div>
+                            <strong>Maria S. Project</strong>
+                            <small>Due in 3h</small>
+                        </div>
+                        <span class="review-state">Pending</span>
                     </li>
-                    <li style="padding:10px 0; font-size:0.9rem;">
-                        Group #4 (Completed) <span style="float:right; color:var(--clr-accent);">✔</span>
+                    <li class="review-item status-active">
+                        <span class="material-icons">autorenew</span>
+                        <div>
+                            <strong>Peer Lab #2</strong>
+                            <small>In review</small>
+                        </div>
+                        <span class="review-state">In Progress</span>
+                    </li>
+                    <li class="review-item status-done">
+                        <span class="material-icons">check_circle</span>
+                        <div>
+                            <strong>Group #4</strong>
+                            <small>Feedback submitted</small>
+                        </div>
+                        <span class="review-state">Completed</span>
                     </li>
                 </ul>
+
+                <div class="review-footer">
+                    <small>Weekly throughput</small>
+                    <strong id="reviewThroughputLabel">7 / 10 reviewed</strong>
+                </div>
+                <div class="review-track">
+                    <span id="reviewTrackFill" style="width:70%;"></span>
+                </div>
             </div>
         </div>
 

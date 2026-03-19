@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initRadarChart();
     initLiveTempChart();
+    initTeamReviewWidgets();
     initCalendarModal();
     initCourseAccordion();
     initJourneySimulation();
@@ -283,6 +284,77 @@ function initLiveTempChart() {
 
         chart.update();
     }, 2000);
+}
+
+function initTeamReviewWidgets() {
+    const teamNextSyncEl = document.getElementById('teamNextSync');
+    const teamOnlineLabelEl = document.getElementById('teamOnlineLabel');
+    const teamPulseFillEl = document.getElementById('teamPulseFill');
+    const teamPulseLabelEl = document.getElementById('teamPulseLabel');
+    const reviewCounterLabelEl = document.getElementById('reviewCounterLabel');
+    const reviewThroughputLabelEl = document.getElementById('reviewThroughputLabel');
+    const reviewTrackFillEl = document.getElementById('reviewTrackFill');
+    const pendingHintEl = document.querySelector('.review-item.status-pending small');
+    const reviewCardEl = document.querySelector('.review-card');
+
+    if (!teamNextSyncEl && !reviewCounterLabelEl) return;
+
+    const syncSlots = [
+        'Tomorrow, 14:00',
+        'Today, 18:30',
+        'Tomorrow, 09:45',
+        'Friday, 11:00'
+    ];
+    const onlineLabels = ['3 online', '2 online', '4 online', '3 online'];
+    const pendingHints = ['Due in 3h', 'Due in 2h', 'Due in 1h', 'Due now'];
+
+    let syncIndex = 0;
+    let pendingCount = 1;
+
+    setInterval(() => {
+        if (document.hidden) return;
+
+        syncIndex = (syncIndex + 1) % syncSlots.length;
+        if (teamNextSyncEl) {
+            teamNextSyncEl.textContent = syncSlots[syncIndex];
+        }
+        if (teamOnlineLabelEl) {
+            teamOnlineLabelEl.textContent = onlineLabels[syncIndex];
+        }
+
+        if (teamPulseFillEl || teamPulseLabelEl) {
+            const coordination = Math.round(54 + Math.random() * 34);
+            if (teamPulseFillEl) {
+                teamPulseFillEl.style.width = `${coordination}%`;
+            }
+            if (teamPulseLabelEl) {
+                teamPulseLabelEl.textContent = `${coordination}%`;
+            }
+        }
+
+        const nextPendingCount = 1 + Math.floor(Math.random() * 3);
+        if (reviewCounterLabelEl) {
+            reviewCounterLabelEl.textContent = `${nextPendingCount} pending`;
+        }
+        if (pendingHintEl) {
+            pendingHintEl.textContent = pendingHints[syncIndex];
+        }
+
+        const reviewed = 10 - nextPendingCount;
+        if (reviewThroughputLabelEl) {
+            reviewThroughputLabelEl.textContent = `${reviewed} / 10 reviewed`;
+        }
+        if (reviewTrackFillEl) {
+            reviewTrackFillEl.style.width = `${Math.round((reviewed / 10) * 100)}%`;
+        }
+
+        if (reviewCardEl && nextPendingCount !== pendingCount) {
+            reviewCardEl.classList.remove('has-update');
+            void reviewCardEl.offsetWidth;
+            reviewCardEl.classList.add('has-update');
+        }
+        pendingCount = nextPendingCount;
+    }, 3200);
 }
 
 function initCalendarModal() {
