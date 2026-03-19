@@ -55,7 +55,7 @@ window.submitVote = function (type) {
 // --- Resource Library Logic ---
 
 const resources = [
-    { title: "L4C Implementation Strategy", role: "Director", date: "Jan 10, 2026", action: "Download", icon: "description", type: "pdf" },
+    { title: "L4C Learning Program Strategy", role: "Director", date: "Jan 10, 2026", action: "Download", icon: "description", type: "pdf" },
     { title: "Cold Chain Report Q1", role: "Tech", date: "Jan 09, 2026", action: "Download", icon: "bar_chart", type: "pdf" },
     { title: "Staff Training: Hygiene", role: "All", date: "Jan 05, 2026", action: "View", icon: "movie", type: "video" },
     { title: "Supplier Code of Conduct", role: "Supplier", date: "Jan 04, 2026", action: "Download", icon: "gavel", type: "pdf" },

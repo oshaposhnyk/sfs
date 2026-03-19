@@ -57,11 +57,9 @@
 
     <main>
         <div class="profile-section">
-            <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
-                <div style="display:flex; align-items:center; gap:25px; margin-bottom:25px;">
-                    <div
-                        style="width:90px; height:90px; border-radius:50%; border:3px solid var(--clr-highlight); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--clr-highlight); font-weight:800;">
-                        OS</div>
+            <div class="card profile-card">
+                <div class="profile-main">
+                    <div class="profile-avatar">OS</div>
                     <div>
                         <span class="badge badge-accent">Analyst-Translator</span>
                         <h2 style="margin:5px 0 5px 0; font-size:2rem;">Olexandr Shaposhnyk</h2>
@@ -69,41 +67,100 @@
                     </div>
                 </div>
 
-                <div style="margin-top:auto;">
-                    <div
-                        style="display:flex; justify-content:space-between; font-size:0.9rem; font-weight:600; margin-bottom:10px;">
+                <div class="profile-chip-row">
+                    <span class="profile-chip"><span class="material-icons">hub</span>Kyiv Living Lab #2</span>
+                    <span class="profile-chip"><span class="material-icons">group</span>Cohort Spring 2026</span>
+                    <span class="profile-chip"><span class="material-icons">emoji_events</span>2 Badges This Week</span>
+                </div>
+
+                <div class="profile-meta-grid">
+                    <div class="profile-meta-item">
+                        <small>Mentor</small>
+                        <strong>Maria Stepanenko</strong>
+                    </div>
+                    <div class="profile-meta-item">
+                        <small>Completed Courses</small>
+                        <strong>5 / 8</strong>
+                    </div>
+                    <div class="profile-meta-item">
+                        <small>Peer Reviews</small>
+                        <strong>14 Submitted</strong>
+                    </div>
+                    <div class="profile-meta-item">
+                        <small>Simulation Accuracy</small>
+                        <strong>92%</strong>
+                    </div>
+                </div>
+
+                <div class="profile-progress-box">
+                    <div class="profile-progress-head">
                         <span>Next Level: System Validator</span>
                         <span style="color:var(--clr-highlight);">65%</span>
                     </div>
-                    <div style="width:100%; height:6px; background:var(--clr-surface-alt); border-radius:3px;">
+                    <div class="profile-progress-track">
                         <div style="width:65%; height:100%; background:var(--clr-highlight);"></div>
                     </div>
                 </div>
             </div>
 
             <div class="card radar-container">
-                <h3 style="position:absolute; top:20px; left:20px; font-size:0.9rem; color:var(--clr-text-muted);">
-                    COMPETENCY MATRIX</h3>
-                <canvas id="competencyChart"></canvas>
+                <div class="competency-header">
+                    <div>
+                        <p class="competency-kicker">COMPETENCY MATRIX</p>
+                        <h3 class="competency-title">Skill Signal Radar</h3>
+                    </div>
+                    <div class="competency-chip-row">
+                        <span class="competency-chip"><span class="material-icons">auto_graph</span>Growth +12%</span>
+                        <span class="competency-chip"><span class="material-icons">psychology</span>AI Readiness 4.4</span>
+                    </div>
+                </div>
+                <div class="competency-chart-wrap">
+                    <canvas id="competencyChart"></canvas>
+                </div>
             </div>
         </div>
 
         <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:30px; margin-bottom:40px;">
             <!-- Widget 1 -->
-            <div class="card">
-                <h4 style="color:var(--clr-text-muted); font-size:0.8rem; text-transform:uppercase;">Live Sensor Feed
-                </h4>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                    <span class="feed-value"
-                        style="font-size:2.5rem; font-weight:700; color:var(--clr-accent);">4.3°C</span>
-                    <small style="color:var(--clr-text-muted);">Fridge #2</small>
+            <div class="card sensor-card">
+                <div class="sensor-head">
+                    <h4 style="color:var(--clr-text-muted); font-size:0.8rem; text-transform:uppercase; margin:0;">Live
+                        Sensor Feed</h4>
+                    <span class="sensor-live-pill"><span class="sensor-live-dot"></span>Live</span>
                 </div>
-                <div style="height:50px; width:100%; margin:15px 0;">
+
+                <div class="sensor-reading-row">
+                    <div>
+                        <span class="feed-value sensor-value">4.3°C</span>
+                        <p class="sensor-caption">Fridge #2 • Cold Chain Node</p>
+                    </div>
+                    <div class="sensor-trend" id="sensorTrendBox">
+                        <span class="material-icons">trending_up</span>
+                        <small id="sensorTrendDelta">+0.1°C</small>
+                    </div>
+                </div>
+
+                <div class="sensor-chart-wrap">
                     <canvas id="liveTempChart"></canvas>
                 </div>
-                <div style="font-size:0.75rem; color:var(--clr-accent); display:flex; align-items:center; gap:5px;">
-                    <span style="width:6px; height:6px; border-radius:50%; background:currentColor;"></span> Connection
-                    Stable
+
+                <div class="sensor-stats-grid">
+                    <div class="sensor-stat">
+                        <small>Humidity</small>
+                        <strong id="sensorHumidity">63%</strong>
+                    </div>
+                    <div class="sensor-stat">
+                        <small>Door</small>
+                        <strong id="sensorDoorState">Closed</strong>
+                    </div>
+                    <div class="sensor-stat">
+                        <small>Alerts</small>
+                        <strong id="sensorAlertState">None</strong>
+                    </div>
+                </div>
+
+                <div class="sensor-pulse-track">
+                    <span id="sensorPulseFill" style="width:40%;"></span>
                 </div>
             </div>
 
@@ -142,31 +199,140 @@
         </div>
 
         <!-- Journey Map -->
-        <div class="card" style="padding:40px;">
-            <h2 style="margin-bottom:30px;">L4C Journey Map</h2>
-
-            <div class="timeline-station completed" style="opacity:0.6;">
-                <strong style="color:var(--clr-text-muted);">PHASE 1: SENSE</strong>
-                <h3>Digital Twins & Data</h3>
-            </div>
-
-            <div class="timeline-station active">
-                <strong style="color:var(--clr-highlight);">PHASE 2: TRANSLATE</strong>
-                <h3>System Lab Simulation</h3>
-                <div class="card"
-                    style="background:var(--clr-surface-alt); margin-top:15px; border-left:4px solid var(--clr-highlight);">
-                    <p style="margin-bottom:15px;">Task: Adapt the technical water quality report for the school
-                        administration.</p>
-                    <button id="btnStartSim" class="btn btn-primary">Start Simulation</button>
+        <section class="card learning-program-card">
+            <div class="learning-program-header">
+                <div class="learning-program-meta">
+                    <p class="learning-program-tag">Learning Program</p>
+                    <h2 style="margin:0;">L4C Journey Map</h2>
+                    <p style="margin:0; color:var(--clr-text-muted);">Three connected courses, one pathway from sensing
+                        to field validation.</p>
+                </div>
+                <div class="learning-program-progress">
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--clr-text-muted);">
+                        <span>Program Completion</span>
+                        <span id="journeyProgressLabel">33%</span>
+                    </div>
+                    <div class="learning-program-track">
+                        <span id="journeyProgressBar" style="width:33%;"></span>
+                    </div>
                 </div>
             </div>
 
-            <div class="timeline-station" style="opacity:0.4;">
-                <strong style="color:var(--clr-text-muted);">PHASE 3: VALIDATE</strong>
-                <h3>Living Labs Access</h3>
-                <small>Locked. Complete Phase 2 first.</small>
+            <div class="program-courses">
+                <article class="program-course completed">
+                    <div class="program-course-top">
+                        <span class="course-code">Course 1</span>
+                        <div class="course-top-controls">
+                            <span class="course-status status-completed">Completed</span>
+                            <button class="course-toggle" type="button" aria-label="Toggle course content"
+                                aria-expanded="false">
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="course-media cover-data">
+                        <span class="material-icons course-media-icon">sensors</span>
+                        <span class="course-media-label">Digital Twin Foundations</span>
+                    </div>
+                    <div class="course-meta">
+                        <span class="course-meta-item"><span class="material-icons">view_module</span>4 Modules</span>
+                        <span class="course-meta-item"><span class="material-icons">schedule</span>2h 40m</span>
+                        <span class="course-meta-item"><span class="material-icons">school</span>Core</span>
+                    </div>
+                    <h3>Digital Twins & Data Foundations</h3>
+                    <p class="course-description">Interpret sensor signals and convert anomalies into safe operational
+                        actions.</p>
+                    <ul class="course-modules">
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 1: IoT Sensor
+                            Baseline</li>
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 2: Data Quality
+                            Checks</li>
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 3: Risk Signal
+                            Mapping</li>
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 4: Incident
+                            Storyboard</li>
+                    </ul>
+                </article>
+
+                <article class="program-course active">
+                    <div class="program-course-top">
+                        <span class="course-code">Course 2</span>
+                        <div class="course-top-controls">
+                            <span class="course-status status-active">In Progress</span>
+                            <button class="course-toggle" type="button" aria-label="Toggle course content"
+                                aria-expanded="true">
+                                <span class="material-icons">expand_less</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="course-media cover-sim">
+                        <span class="material-icons course-media-icon">science</span>
+                        <span class="course-media-label">Translation Lab</span>
+                    </div>
+                    <div class="course-meta">
+                        <span class="course-meta-item"><span class="material-icons">view_module</span>5 Modules</span>
+                        <span class="course-meta-item"><span class="material-icons">schedule</span>3h 10m</span>
+                        <span class="course-meta-item"><span class="material-icons">record_voice_over</span>Practice</span>
+                    </div>
+                    <h3>System Lab Simulation</h3>
+                    <p class="course-description">Practice translating technical evidence into communication that works for
+                        school teams.</p>
+                    <ul class="course-modules">
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 1: Context Brief
+                            Decoding</li>
+                        <li class="module-current"><span class="material-icons">play_circle</span>Module 2: Report
+                            Translation Lab</li>
+                        <li class="module-pending"><span class="material-icons">radio_button_unchecked</span>Module 3:
+                            Stakeholder Role-play</li>
+                        <li class="module-pending"><span class="material-icons">radio_button_unchecked</span>Module 4:
+                            Feedback Rewrite</li>
+                        <li class="module-pending"><span class="material-icons">radio_button_unchecked</span>Module 5:
+                            Final Submission</li>
+                    </ul>
+                    <div class="course-action-panel">
+                        <p style="margin:0 0 15px 0;">Task: Adapt the technical water quality report for the school
+                            administration.</p>
+                        <button id="btnStartSim" class="btn btn-primary">Start Course Lab</button>
+                    </div>
+                </article>
+
+                <article class="program-course locked">
+                    <div class="program-course-top">
+                        <span class="course-code">Course 3</span>
+                        <div class="course-top-controls">
+                            <span class="course-status status-locked">Locked</span>
+                            <button class="course-toggle" type="button" aria-label="Toggle course content"
+                                aria-expanded="false">
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="course-media cover-field">
+                        <span class="material-icons course-media-icon">public</span>
+                        <span class="course-media-label">Living Lab Validation</span>
+                    </div>
+                    <div class="course-meta">
+                        <span class="course-meta-item"><span class="material-icons">view_module</span>4 Modules</span>
+                        <span class="course-meta-item"><span class="material-icons">schedule</span>2h 30m</span>
+                        <span class="course-meta-item"><span class="material-icons">flag</span>Capstone</span>
+                    </div>
+                    <h3>Living Labs Validation Sprint</h3>
+                    <p class="course-description">Run on-site validation with mentors and convert findings into
+                        governance-ready evidence.</p>
+                    <ul class="course-modules">
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 1: Field Audit Kickoff
+                        </li>
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 2: Cross-team
+                            Verification</li>
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 3: Evidence Packaging
+                        </li>
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 4: Governance Debrief
+                        </li>
+                    </ul>
+                    <small class="course-note">Locked. Complete Course 2 first.</small>
+                </article>
             </div>
-        </div>
+        </section>
 
         <!-- Calendar Modal -->
         <div id="calendarModal" class="modal-overlay">

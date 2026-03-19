@@ -66,12 +66,16 @@ function initAnimations() {
 // --- 3. DYNAMIC SIDEBAR (Add Toggle if missing) ---
 function injectSidebar() {
     const sidebar = document.querySelector('aside.sidebar-nav');
-    if (sidebar && !document.getElementById('themeToggle')) {
-        const toggleDiv = document.createElement('div');
-        toggleDiv.className = 'theme-toggle-container';
-        toggleDiv.innerHTML = `<button id="themeToggle" class="theme-btn"><span>🌙</span><span class="nav-text">Dark Mode</span></button>`;
-        sidebar.appendChild(toggleDiv);
-        
+    if (sidebar) {
+        ensureSidebarUser(sidebar);
+
+        if (!document.getElementById('themeToggle')) {
+            const toggleDiv = document.createElement('div');
+            toggleDiv.className = 'theme-toggle-container';
+            toggleDiv.innerHTML = `<button id="themeToggle" class="theme-btn"><span>🌙</span><span class="nav-text">Dark Mode</span></button>`;
+            sidebar.appendChild(toggleDiv);
+        }
+
         // Add logo text if missing
         const logoDiv = sidebar.querySelector('.logo-icon');
         if (logoDiv && !sidebar.querySelector('.logo-text')) {
@@ -79,10 +83,31 @@ function injectSidebar() {
             logoArea.className = 'logo-area';
             logoArea.appendChild(logoDiv.cloneNode(true));
             logoArea.innerHTML += `<span class="logo-text">SecureFood</span>`;
-            
+
             // Replace old logo container with new one
             logoDiv.parentNode.insertBefore(logoArea, logoDiv);
             logoDiv.remove();
         }
+    }
+}
+
+function ensureSidebarUser(sidebar) {
+    if (sidebar.querySelector('.sidebar-user')) return;
+
+    const userBlock = document.createElement('div');
+    userBlock.className = 'sidebar-user';
+    userBlock.innerHTML = `
+        <div class="sidebar-user-avatar">OS</div>
+        <div class="sidebar-user-meta">
+            <strong class="sidebar-user-name">Olexandr Shaposhnyk</strong>
+            <small class="sidebar-user-role">Analyst-Translator</small>
+        </div>
+    `;
+
+    const themeContainer = sidebar.querySelector('.theme-toggle-container');
+    if (themeContainer) {
+        sidebar.insertBefore(userBlock, themeContainer);
+    } else {
+        sidebar.appendChild(userBlock);
     }
 }
