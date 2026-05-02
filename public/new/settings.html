@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureFood School · Settings</title>
+<link rel="stylesheet" href="./styles.css">
+<script src="./js/shell.js"></script>
+<style>
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.settings-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.settings-card {
+  padding: 20px;
+}
+.settings-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.settings-head h3 { margin: 0; }
+.settings-head p {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field.full { grid-column: 1 / -1; }
+.field label {
+  font-size: 0.74rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.field input,
+.field select {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 0.86rem;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+}
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15,76,94,0.1);
+}
+.actions-row {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.password-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.switch-list {
+  display: grid;
+  gap: 10px;
+}
+.switch-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  background: var(--surface);
+}
+.switch-row strong {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--ink);
+}
+.switch-row small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+.switch-row input {
+  appearance: none;
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.switch-row input::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+  transition: transform 0.15s;
+}
+.switch-row input:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.switch-row input:checked::after {
+  transform: translateX(18px);
+}
+.theme-segments {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.theme-segments button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  font: 600 0.78rem 'Inter';
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.theme-segments button.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-50);
+}
+.session-list {
+  display: grid;
+  gap: 10px;
+}
+.session-row {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.session-row .meta {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.status-banner {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  border: 1px solid transparent;
+  display: none;
+}
+.status-banner.show { display: block; }
+.status-banner.ok {
+  color: var(--success);
+  background: rgba(63,140,90,0.1);
+  border-color: rgba(63,140,90,0.22);
+}
+.status-banner.err {
+  color: var(--danger);
+  background: rgba(184,70,63,0.08);
+  border-color: rgba(184,70,63,0.24);
+}
+@media (max-width: 1080px) {
+  .settings-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .field-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body data-page="settings">
+<script>
+SF.mount(
+  { crumb: ['Dashboard', 'Settings'] },
+  `
+    <div class="page-head">
+      <div class="titles">
+        <div class="kicker">Account management</div>
+        <h1>Settings</h1>
+        <p class="lede">Configure your account, language, password, notifications, and privacy preferences.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="resetAllBtn"><span class="material-symbols-rounded">restart_alt</span>Reset to defaults</button>
+      </div>
+    </div>
+
+    <div id="statusBanner" class="status-banner"></div>
+
+    <div class="settings-grid">
+      <div class="settings-stack">
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Profile</h3>
+              <p>Public and cohort-facing information.</p>
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input id="fullName" type="text" placeholder="Your full name">
+            </div>
+            <div class="field">
+              <label for="displayName">Display name</label>
+              <input id="displayName" type="text" placeholder="Visible in chats">
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="you@school.edu">
+            </div>
+            <div class="field">
+              <label for="cohort">Cohort</label>
+              <input id="cohort" type="text" placeholder="Cohort 2026">
+            </div>
+            <div class="field full">
+              <label for="bio">Role</label>
+              <input id="bio" type="text" placeholder="Student · Analyst-Translator pathway">
+            </div>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="saveProfileBtn"><span class="material-symbols-rounded">save</span>Save profile</button>
+          </div>
+        </section>
+
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Language & region</h3>
+              <p>Interface language and locale formatting.</p>
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="language">Language</label>
+              <select id="language">
+                <option value="en">English</option>
+                <option value="uk">Українська</option>
+                <option value="pl">Polski</option>
+                <option value="de">Deutsch</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timezone">Timezone</label>
+              <select id="timezone">
+                <option value="Europe/Kiev">Europe/Kiev</option>
+                <option value="Europe/Warsaw">Europe/Warsaw</option>
+                <option value="Europe/Berlin">Europe/Berlin</option>
+                <option value="UTC">UTC</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="dateFormat">Date format</label>
+              <select id="dateFormat">
+                <option value="dd.mm.yyyy">DD.MM.YYYY</option>
+                <option value="mm/dd/yyyy">MM/DD/YYYY</option>
+                <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="saveLocaleBtn"><span class="material-symbols-rounded">language</span>Apply locale</button>
+          </div>
+        </section>
+
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Password</h3>
+              <p>Update your password for account security.</p>
+            </div>
+          </div>
+          <div class="password-grid">
+            <div class="field">
+              <label for="currentPassword">Current password</label>
+              <input id="currentPassword" type="password" placeholder="Current password">
+            </div>
+            <div class="field">
+              <label for="newPassword">New password</label>
+              <input id="newPassword" type="password" placeholder="At least 8 characters">
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Confirm new password</label>
+              <input id="confirmPassword" type="password" placeholder="Repeat new password">
+            </div>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="changePasswordBtn"><span class="material-symbols-rounded">lock_reset</span>Change password</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="settings-stack">
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Appearance</h3>
+              <p>Control how the interface looks.</p>
+            </div>
+          </div>
+          <div class="theme-segments" id="themeSegments">
+            <button data-theme="light"><span class="material-symbols-rounded">light_mode</span>Light</button>
+            <button data-theme="dark"><span class="material-symbols-rounded">dark_mode</span>Dark</button>
+            <button data-theme="system"><span class="material-symbols-rounded">settings_suggest</span>System</button>
+          </div>
+        </section>
+
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Notifications</h3>
+              <p>Choose which updates you want to receive.</p>
+            </div>
+          </div>
+          <div class="switch-list">
+            <label class="switch-row"><span><strong>Learning updates</strong><small>Course unlocks, module deadlines, mentor comments.</small></span><input type="checkbox" id="nLearning"></label>
+            <label class="switch-row"><span><strong>Grades</strong><small>Quiz scores, assignment reviews, rubric updates.</small></span><input type="checkbox" id="nGrades"></label>
+            <label class="switch-row"><span><strong>Badges & achievements</strong><small>XP rewards, streaks, leaderboard changes.</small></span><input type="checkbox" id="nRewards"></label>
+            <label class="switch-row"><span><strong>System alerts</strong><small>Policy, schedule and account notices.</small></span><input type="checkbox" id="nSystem"></label>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="saveNotifBtn"><span class="material-symbols-rounded">notifications_active</span>Save preferences</button>
+          </div>
+        </section>
+
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Privacy</h3>
+              <p>Control visibility and reachability.</p>
+            </div>
+          </div>
+          <div class="switch-list">
+            <label class="switch-row"><span><strong>Show profile in cohort directory</strong><small>Allow peers to find your profile.</small></span><input type="checkbox" id="pDirectory"></label>
+            <label class="switch-row"><span><strong>Allow direct messages from cohort</strong><small>Open direct chat from student list.</small></span><input type="checkbox" id="pDirect"></label>
+            <label class="switch-row"><span><strong>Share learning progress with mentors</strong><small>Auto-share course completion status.</small></span><input type="checkbox" id="pProgress"></label>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-primary" id="savePrivacyBtn"><span class="material-symbols-rounded">privacy_tip</span>Save privacy</button>
+          </div>
+        </section>
+
+        <section class="card settings-card">
+          <div class="settings-head">
+            <div>
+              <h3>Sessions</h3>
+              <p>Signed-in devices and active sessions.</p>
+            </div>
+          </div>
+          <div class="session-list">
+            <div class="session-row">
+              <div>
+                <strong>This MacBook · Chrome</strong>
+                <div class="meta">Kyiv, Ukraine · active now</div>
+              </div>
+              <span class="chip solid-success">Current</span>
+            </div>
+            <div class="session-row">
+              <div>
+                <strong>iPhone · Safari</strong>
+                <div class="meta">Kyiv, Ukraine · 2 hours ago</div>
+              </div>
+              <button class="btn btn-ghost" style="padding:7px 11px;font-size:0.75rem;" id="revokeMobileBtn">Revoke</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  `
+);
+
+const STORAGE = {
+  profile: 'sf-settings-profile',
+  locale: 'sf-settings-locale',
+  notifications: 'sf-settings-notifications',
+  privacy: 'sf-settings-privacy',
+  appearance: 'sf-settings-appearance'
+};
+
+const defaults = {
+  profile: {
+    fullName: 'Olexandr Shaposhnyk',
+    displayName: 'Olexandr S.',
+    email: 'olexandr@student.securefood.school',
+    cohort: 'Cohort 2026',
+    bio: 'Student · Analyst-Translator pathway'
+  },
+  locale: {
+    language: 'en',
+    timezone: 'Europe/Kiev',
+    dateFormat: 'dd.mm.yyyy'
+  },
+  notifications: {
+    learning: true,
+    grades: true,
+    rewards: true,
+    system: true
+  },
+  privacy: {
+    directory: true,
+    direct: true,
+    progress: true
+  },
+  appearance: {
+    theme: 'system'
+  }
+};
+
+function loadOrDefault(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return { ...fallback };
+    return { ...fallback, ...JSON.parse(raw) };
+  } catch (_) {
+    return { ...fallback };
+  }
+}
+
+function save(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function showStatus(type, text) {
+  const banner = document.getElementById('statusBanner');
+  banner.className = `status-banner show ${type}`;
+  banner.textContent = text;
+  setTimeout(() => {
+    banner.className = 'status-banner';
+    banner.textContent = '';
+  }, 3200);
+}
+
+function applyTheme(theme) {
+  const resolved = theme === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : theme;
+  document.documentElement.dataset.theme = resolved;
+  localStorage.setItem('sf-theme', resolved);
+  const icon = document.getElementById('sf-theme-icon');
+  if (icon) icon.textContent = resolved === 'dark' ? 'light_mode' : 'dark_mode';
+}
+
+function syncThemeButtons(activeTheme) {
+  document.querySelectorAll('#themeSegments [data-theme]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === activeTheme);
+  });
+}
+
+function setFields(state) {
+  document.getElementById('fullName').value = state.profile.fullName;
+  document.getElementById('displayName').value = state.profile.displayName;
+  document.getElementById('email').value = state.profile.email;
+  document.getElementById('cohort').value = state.profile.cohort;
+  document.getElementById('bio').value = state.profile.bio;
+
+  document.getElementById('language').value = state.locale.language;
+  document.getElementById('timezone').value = state.locale.timezone;
+  document.getElementById('dateFormat').value = state.locale.dateFormat;
+
+  document.getElementById('nLearning').checked = state.notifications.learning;
+  document.getElementById('nGrades').checked = state.notifications.grades;
+  document.getElementById('nRewards').checked = state.notifications.rewards;
+  document.getElementById('nSystem').checked = state.notifications.system;
+
+  document.getElementById('pDirectory').checked = state.privacy.directory;
+  document.getElementById('pDirect').checked = state.privacy.direct;
+  document.getElementById('pProgress').checked = state.privacy.progress;
+
+  syncThemeButtons(state.appearance.theme);
+  applyTheme(state.appearance.theme);
+  document.documentElement.lang = state.locale.language;
+}
+
+function collectProfile() {
+  return {
+    fullName: document.getElementById('fullName').value.trim(),
+    displayName: document.getElementById('displayName').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    cohort: document.getElementById('cohort').value.trim(),
+    bio: document.getElementById('bio').value.trim()
+  };
+}
+
+function collectLocale() {
+  return {
+    language: document.getElementById('language').value,
+    timezone: document.getElementById('timezone').value,
+    dateFormat: document.getElementById('dateFormat').value
+  };
+}
+
+function collectNotifications() {
+  return {
+    learning: document.getElementById('nLearning').checked,
+    grades: document.getElementById('nGrades').checked,
+    rewards: document.getElementById('nRewards').checked,
+    system: document.getElementById('nSystem').checked
+  };
+}
+
+function collectPrivacy() {
+  return {
+    directory: document.getElementById('pDirectory').checked,
+    direct: document.getElementById('pDirect').checked,
+    progress: document.getElementById('pProgress').checked
+  };
+}
+
+const state = {
+  profile: loadOrDefault(STORAGE.profile, defaults.profile),
+  locale: loadOrDefault(STORAGE.locale, defaults.locale),
+  notifications: loadOrDefault(STORAGE.notifications, defaults.notifications),
+  privacy: loadOrDefault(STORAGE.privacy, defaults.privacy),
+  appearance: loadOrDefault(STORAGE.appearance, defaults.appearance)
+};
+
+setFields(state);
+
+document.getElementById('saveProfileBtn').addEventListener('click', () => {
+  const profile = collectProfile();
+  if (!profile.fullName || !profile.displayName || !profile.email) {
+    showStatus('err', 'Please fill in full name, display name, and email.');
+    return;
+  }
+  state.profile = profile;
+  save(STORAGE.profile, state.profile);
+  showStatus('ok', 'Profile settings saved.');
+});
+
+document.getElementById('saveLocaleBtn').addEventListener('click', () => {
+  state.locale = collectLocale();
+  save(STORAGE.locale, state.locale);
+  document.documentElement.lang = state.locale.language;
+  showStatus('ok', `Locale applied: ${state.locale.language.toUpperCase()} · ${state.locale.timezone}.`);
+});
+
+document.getElementById('changePasswordBtn').addEventListener('click', () => {
+  const current = document.getElementById('currentPassword').value;
+  const next = document.getElementById('newPassword').value;
+  const confirm = document.getElementById('confirmPassword').value;
+
+  if (!current || !next || !confirm) {
+    showStatus('err', 'Fill in all password fields.');
+    return;
+  }
+  if (next.length < 8) {
+    showStatus('err', 'New password must contain at least 8 characters.');
+    return;
+  }
+  if (!/[0-9]/.test(next)) {
+    showStatus('err', 'New password must include at least one number.');
+    return;
+  }
+  if (next !== confirm) {
+    showStatus('err', 'Password confirmation does not match.');
+    return;
+  }
+
+  document.getElementById('currentPassword').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+  showStatus('ok', 'Password updated successfully.');
+});
+
+document.getElementById('saveNotifBtn').addEventListener('click', () => {
+  state.notifications = collectNotifications();
+  save(STORAGE.notifications, state.notifications);
+  showStatus('ok', 'Notification preferences saved.');
+});
+
+document.getElementById('savePrivacyBtn').addEventListener('click', () => {
+  state.privacy = collectPrivacy();
+  save(STORAGE.privacy, state.privacy);
+  showStatus('ok', 'Privacy preferences saved.');
+});
+
+document.getElementById('themeSegments').addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-theme]');
+  if (!btn) return;
+  state.appearance.theme = btn.dataset.theme;
+  save(STORAGE.appearance, state.appearance);
+  syncThemeButtons(state.appearance.theme);
+  applyTheme(state.appearance.theme);
+  showStatus('ok', `Theme switched to ${state.appearance.theme}.`);
+});
+
+document.getElementById('revokeMobileBtn').addEventListener('click', () => {
+  showStatus('ok', 'Session on iPhone has been revoked.');
+});
+
+document.getElementById('resetAllBtn').addEventListener('click', () => {
+  state.profile = { ...defaults.profile };
+  state.locale = { ...defaults.locale };
+  state.notifications = { ...defaults.notifications };
+  state.privacy = { ...defaults.privacy };
+  state.appearance = { ...defaults.appearance };
+
+  save(STORAGE.profile, state.profile);
+  save(STORAGE.locale, state.locale);
+  save(STORAGE.notifications, state.notifications);
+  save(STORAGE.privacy, state.privacy);
+  save(STORAGE.appearance, state.appearance);
+
+  setFields(state);
+  document.getElementById('currentPassword').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+  showStatus('ok', 'Settings reset to defaults.');
+});
+</script>
+</body>
+</html>

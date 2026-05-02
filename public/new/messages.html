@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureFood School · Messages</title>
+<link rel="stylesheet" href="./styles.css">
+<script src="./js/shell.js"></script>
+<style>
+.msg-shell {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  min-height: 640px;
+  overflow: hidden;
+}
+.msg-sidebar {
+  border-right: 1px solid var(--line);
+  background: var(--surface-2);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.msg-side-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 4px 0;
+}
+.msg-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--muted);
+}
+.msg-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  font-size: 0.84rem;
+}
+.msg-search .material-symbols-rounded { font-size: 17px; }
+.msg-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.msg-filter {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font: 600 0.74rem 'Inter';
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.msg-filter:hover { background: var(--surface-2); color: var(--ink-2); }
+.msg-filter.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+.thread-list::-webkit-scrollbar { width: 6px; }
+.thread-list::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+.thread-item {
+  border: 1px solid transparent;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.thread-item:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-1);
+}
+.thread-item.active {
+  border-color: var(--primary);
+  background: var(--primary-50);
+}
+.thread-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-family: 'Manrope';
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+}
+.thread-avatar.cohort { background: linear-gradient(135deg, #0F4C5E, #2A8C8A); }
+.thread-avatar.mentor { background: linear-gradient(135deg, #2A8C8A, #4FC3C0); }
+.thread-avatar.staff { background: linear-gradient(135deg, #C68A3B, #E0A458); }
+.thread-avatar .live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 2px solid var(--surface);
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+}
+.thread-main { min-width: 0; }
+.thread-main .name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.thread-main .preview {
+  margin-top: 3px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.thread-main .meta {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.thread-side {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+.thread-time {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.thread-unread {
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  font: 700 0.72rem 'Manrope';
+  color: #fff;
+  background: var(--accent);
+}
+.thread-empty {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 24px 14px;
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.msg-chat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.chat-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.chat-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-contact .avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-family: 'Manrope';
+  font-weight: 700;
+  color: #fff;
+}
+.chat-contact .avatar.cohort { background: linear-gradient(135deg, #0F4C5E, #2A8C8A); }
+.chat-contact .avatar.mentor { background: linear-gradient(135deg, #2A8C8A, #4FC3C0); }
+.chat-contact .avatar.staff { background: linear-gradient(135deg, #C68A3B, #E0A458); }
+.chat-contact .name {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.chat-contact .sub {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.chat-head .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.chat-feed {
+  flex: 1;
+  min-height: 320px;
+  padding: 16px 18px;
+  background: var(--bg);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-feed::-webkit-scrollbar { width: 6px; }
+.chat-feed::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+.day-label {
+  align-self: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.msg-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 72%;
+}
+.msg-row.them { align-self: flex-start; }
+.msg-row.me { align-self: flex-end; }
+.msg-row .author {
+  font-size: 0.73rem;
+  color: var(--muted);
+  padding: 0 2px;
+}
+.bubble {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  word-break: break-word;
+}
+.msg-row.them .bubble { border-top-left-radius: 6px; }
+.msg-row.me .bubble {
+  border-top-right-radius: 6px;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.msg-row .time {
+  font-size: 0.7rem;
+  color: var(--muted);
+  align-self: flex-end;
+}
+.chat-quick {
+  border-top: 1px solid var(--line);
+  padding: 10px 18px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.quick-btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  border-radius: 999px;
+  font: 600 0.75rem 'Inter';
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.quick-btn:hover { border-color: var(--primary); color: var(--primary); }
+.chat-compose {
+  border-top: 1px solid var(--line);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+}
+.compose-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+}
+.compose-icon .material-symbols-rounded { font-size: 18px; }
+.chat-compose input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 0.86rem;
+  outline: none;
+  color: var(--ink);
+  background: var(--surface);
+}
+.chat-compose input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15,76,94,0.1);
+}
+@media (max-width: 1160px) {
+  .msg-shell { grid-template-columns: 300px 1fr; }
+}
+@media (max-width: 900px) {
+  .msg-shell { grid-template-columns: 1fr; }
+  .msg-sidebar { border-right: none; border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 680px) {
+  .msg-row { max-width: 88%; }
+  .chat-compose { flex-wrap: wrap; }
+  .chat-compose .btn { width: 100%; }
+}
+</style>
+</head>
+<body data-page="messages">
+<script>
+SF.mount(
+  { crumb: ['Dashboard', 'Messages'] },
+  `
+    <div class="page-head">
+      <div class="titles">
+        <div class="kicker">Cohort communication</div>
+        <h1>Messages</h1>
+        <p class="lede">Direct chat and group threads with cohort representatives, mentors, and governance contacts.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <span class="chip solid-success"><span class="material-symbols-rounded">radio_button_checked</span>4 contacts online</span>
+        <button class="btn btn-primary" id="newMessageBtn"><span class="material-symbols-rounded">edit_square</span>New message</button>
+      </div>
+    </div>
+
+    <section class="card msg-shell">
+      <aside class="msg-sidebar">
+        <div class="msg-side-head">
+          <h3>Inbox</h3>
+          <button class="icon-btn" id="composeBtn" aria-label="Compose"><span class="material-symbols-rounded">add_comment</span></button>
+        </div>
+        <label class="msg-search">
+          <span class="material-symbols-rounded">search</span>
+          <input id="threadSearch" type="text" placeholder="Search threads, people...">
+        </label>
+        <div class="msg-filters" id="threadFilters">
+          <button class="msg-filter active" data-filter="all">All</button>
+          <button class="msg-filter" data-filter="unread">Unread</button>
+          <button class="msg-filter" data-filter="cohort">Cohort</button>
+          <button class="msg-filter" data-filter="mentor">Mentors</button>
+          <button class="msg-filter" data-filter="staff">Governance</button>
+        </div>
+        <div class="thread-list" id="threadList"></div>
+      </aside>
+
+      <section class="msg-chat">
+        <div class="chat-head" id="chatHead"></div>
+        <div class="chat-feed" id="chatFeed"></div>
+        <div class="chat-quick" id="quickReplies"></div>
+        <form class="chat-compose" id="chatForm">
+          <button type="button" class="compose-icon" aria-label="Attach">
+            <span class="material-symbols-rounded">attach_file</span>
+          </button>
+          <input id="chatInput" type="text" placeholder="Write a message...">
+          <button class="btn btn-primary" type="submit">
+            <span class="material-symbols-rounded">send</span>Send
+          </button>
+        </form>
+      </section>
+    </section>
+  `
+);
+
+const threads = [
+  {
+    id: 'cohort-reps',
+    type: 'cohort',
+    title: 'Cohort 2026 Representatives',
+    subtitle: 'Anna K. · Marko B. · Group thread',
+    avatar: 'C26',
+    online: true,
+    unread: 2,
+    lastAt: '5 min ago',
+    quickReplies: ['Got it, thanks.', 'I can join at 16:00.', 'Please share the rubric link.'],
+    messages: [
+      { from: 'them', author: 'Anna K.', day: 'Today', at: '14:06', text: 'Team, tomorrow we collect questions for the mentor panel. Please send your top 2 by tonight.' },
+      { from: 'them', author: 'Marko B.', day: 'Today', at: '14:09', text: 'Also we need one volunteer to present the Stage 2 progress at Friday standup.' },
+      { from: 'me', day: 'Today', at: '14:14', text: 'I can take the Friday standup slot.' },
+      { from: 'them', author: 'Anna K.', day: 'Today', at: '14:16', text: 'Perfect. I will add you to the agenda.' }
+    ]
+  },
+  {
+    id: 'mentor-olena',
+    type: 'mentor',
+    title: 'Olena H. · Mentor',
+    subtitle: 'Report Translation Lab',
+    avatar: 'OH',
+    online: true,
+    unread: 1,
+    lastAt: '18 min ago',
+    quickReplies: ['I will submit by 18:00.', 'Could you review section 3?', 'Thanks for the guidance.'],
+    messages: [
+      { from: 'them', author: 'Olena H.', day: 'Today', at: '13:42', text: 'I reviewed your draft intro. Strong structure, but cite the source for the risk baseline.' },
+      { from: 'me', day: 'Today', at: '13:47', text: 'Understood. I will add the citation and update the paragraph.' },
+      { from: 'them', author: 'Olena H.', day: 'Today', at: '13:56', text: 'Great. Ping me when the revision is ready and I will re-check quickly.' }
+    ]
+  },
+  {
+    id: 'grading-office',
+    type: 'staff',
+    title: 'Assessment Office',
+    subtitle: 'Grades and certificates',
+    avatar: 'AO',
+    online: false,
+    unread: 0,
+    lastAt: 'Yesterday',
+    quickReplies: ['Thanks, received.', 'Please clarify deadline.', 'Can I get a template copy?'],
+    messages: [
+      { from: 'them', author: 'Assessment Office', day: 'Yesterday', at: '10:15', text: 'Your Data Quality Checks quiz grade is published. Re-check window is open for 48 hours.' },
+      { from: 'me', day: 'Yesterday', at: '10:28', text: 'Thank you. I have reviewed the feedback and no appeals are needed.' }
+    ]
+  },
+  {
+    id: 'dairy-pod',
+    type: 'cohort',
+    title: 'Milk & Dairy Pod',
+    subtitle: 'Lab subgroup · 7 participants',
+    avatar: 'MD',
+    online: true,
+    unread: 0,
+    lastAt: 'Yesterday',
+    quickReplies: ['I can cover sampling protocol.', 'Uploading my notes now.', 'Let us split sections 2 and 3.'],
+    messages: [
+      { from: 'them', author: 'Sofiia P.', day: 'Yesterday', at: '16:08', text: 'Can someone verify the temperature anomaly chart before we send it?' },
+      { from: 'me', day: 'Yesterday', at: '16:21', text: 'I can validate it in the evening and post comments.' },
+      { from: 'them', author: 'Taras N.', day: 'Yesterday', at: '16:25', text: 'Great, thanks. I will prep the summary slide.' }
+    ]
+  },
+  {
+    id: 'governance-desk',
+    type: 'staff',
+    title: 'Governance Helpdesk',
+    subtitle: 'Policies · legal docs',
+    avatar: 'GH',
+    online: false,
+    unread: 1,
+    lastAt: '2 days ago',
+    quickReplies: ['Please resend document link.', 'Question about compliance checklist.', 'Resolved, thank you.'],
+    messages: [
+      { from: 'them', author: 'Governance Desk', day: '2 days ago', at: '11:02', text: 'Cold Chain v2 protocol was updated. Please align your project template before next submission.' }
+    ]
+  }
+];
+
+let activeThreadId = threads[0].id;
+let activeFilter = 'all';
+let searchTerm = '';
+
+const threadListEl = document.getElementById('threadList');
+const chatHeadEl = document.getElementById('chatHead');
+const chatFeedEl = document.getElementById('chatFeed');
+const quickRepliesEl = document.getElementById('quickReplies');
+const searchEl = document.getElementById('threadSearch');
+const inputEl = document.getElementById('chatInput');
+const sendBtn = document.querySelector('#chatForm button[type="submit"]');
+
+function escapeHTML(value) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function getLastMessage(thread) {
+  return thread.messages[thread.messages.length - 1] || null;
+}
+
+function nowTime() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function getVisibleThreads() {
+  const term = searchTerm.trim().toLowerCase();
+  return threads.filter(thread => {
+    const filterMatch =
+      activeFilter === 'all' ||
+      (activeFilter === 'unread' && thread.unread > 0) ||
+      thread.type === activeFilter;
+    const text = `${thread.title} ${thread.subtitle}`.toLowerCase();
+    const searchMatch = !term || text.includes(term);
+    return filterMatch && searchMatch;
+  });
+}
+
+function renderThreadList() {
+  const visible = getVisibleThreads();
+  if (!visible.some(thread => thread.id === activeThreadId) && visible.length) {
+    activeThreadId = visible[0].id;
+  }
+  if (!visible.length) {
+    threadListEl.innerHTML = '<div class="thread-empty">No threads match this filter.</div>';
+    return;
+  }
+  threadListEl.innerHTML = visible.map(thread => {
+    const last = getLastMessage(thread);
+    const preview = last ? last.text : 'No messages yet';
+    return `
+      <article class="thread-item ${thread.id === activeThreadId ? 'active' : ''}" data-thread-id="${thread.id}">
+        <div class="thread-avatar ${thread.type}">
+          ${thread.avatar}
+          ${thread.online ? '<span class="live-dot"></span>' : ''}
+        </div>
+        <div class="thread-main">
+          <div class="name">${escapeHTML(thread.title)}</div>
+          <div class="preview">${escapeHTML(preview)}</div>
+          <div class="meta">
+            <span class="chip">${thread.type === 'cohort' ? 'Cohort' : (thread.type === 'mentor' ? 'Mentor' : 'Governance')}</span>
+          </div>
+        </div>
+        <div class="thread-side">
+          <div class="thread-time">${thread.lastAt}</div>
+          ${thread.unread > 0 ? `<span class="thread-unread">${thread.unread}</span>` : ''}
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function renderChatHead(thread) {
+  chatHeadEl.innerHTML = `
+    <div class="chat-contact">
+      <div class="avatar ${thread.type}">${thread.avatar}</div>
+      <div>
+        <div class="name">${escapeHTML(thread.title)}</div>
+        <div class="sub">${escapeHTML(thread.subtitle)}</div>
+      </div>
+    </div>
+    <div class="actions">
+      ${thread.online ? '<span class="chip solid-success"><span class="material-symbols-rounded">radio_button_checked</span>Online</span>' : '<span class="chip"><span class="material-symbols-rounded">schedule</span>Away</span>'}
+      <button class="btn btn-ghost" style="padding:7px 12px;font-size:0.78rem;" data-action="mark-unread">
+        <span class="material-symbols-rounded" style="font-size:16px;">mark_chat_unread</span>Mark unread
+      </button>
+    </div>
+  `;
+
+  const markUnreadBtn = chatHeadEl.querySelector('[data-action="mark-unread"]');
+  if (markUnreadBtn) {
+    markUnreadBtn.addEventListener('click', () => {
+      const item = threads.find(threadItem => threadItem.id === activeThreadId);
+      if (!item) return;
+      item.unread = Math.max(item.unread, 1);
+      renderThreadList();
+    });
+  }
+}
+
+function renderFeed(thread) {
+  let prevDay = '';
+  chatFeedEl.innerHTML = thread.messages.map(message => {
+    const dayLabel = message.day !== prevDay
+      ? `<div class="day-label">${escapeHTML(message.day)}</div>`
+      : '';
+    prevDay = message.day;
+    const author = message.from === 'them' && message.author
+      ? `<div class="author">${escapeHTML(message.author)}</div>`
+      : '';
+    return `
+      ${dayLabel}
+      <div class="msg-row ${message.from}">
+        ${author}
+        <div class="bubble">${escapeHTML(message.text)}</div>
+        <div class="time">${message.at}</div>
+      </div>
+    `;
+  }).join('');
+  chatFeedEl.scrollTop = chatFeedEl.scrollHeight;
+}
+
+function renderQuickReplies(thread) {
+  quickRepliesEl.innerHTML = thread.quickReplies.map((text, index) => `
+    <button class="quick-btn" data-quick="${index}">${escapeHTML(text)}</button>
+  `).join('');
+}
+
+function renderChat() {
+  const visible = getVisibleThreads();
+  if (!visible.length) {
+    chatHeadEl.innerHTML = `
+      <div class="chat-contact">
+        <div class="avatar cohort">--</div>
+        <div>
+          <div class="name">No conversation selected</div>
+          <div class="sub">Change filters or search query to view threads.</div>
+        </div>
+      </div>
+    `;
+    chatFeedEl.innerHTML = '<div class="thread-empty">No conversation matches current filters.</div>';
+    quickRepliesEl.innerHTML = '';
+    inputEl.value = '';
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+    return;
+  }
+
+  let thread = threads.find(item => item.id === activeThreadId);
+  if (!thread || !visible.some(item => item.id === thread.id)) {
+    thread = visible[0];
+    activeThreadId = thread.id;
+  }
+
+  inputEl.disabled = false;
+  sendBtn.disabled = false;
+  renderChatHead(thread);
+  renderFeed(thread);
+  renderQuickReplies(thread);
+}
+
+function sendMessage(rawText) {
+  const text = rawText.trim();
+  if (!text) return;
+  const thread = threads.find(item => item.id === activeThreadId);
+  if (!thread) return;
+
+  thread.messages.push({
+    from: 'me',
+    day: 'Today',
+    at: nowTime(),
+    text
+  });
+  thread.lastAt = 'now';
+  thread.unread = 0;
+
+  const idx = threads.findIndex(item => item.id === thread.id);
+  if (idx > 0) {
+    threads.splice(idx, 1);
+    threads.unshift(thread);
+  }
+
+  renderThreadList();
+  renderChat();
+  inputEl.value = '';
+  inputEl.focus();
+}
+
+threadListEl.addEventListener('click', (event) => {
+  const row = event.target.closest('[data-thread-id]');
+  if (!row) return;
+  const id = row.dataset.threadId;
+  const thread = threads.find(item => item.id === id);
+  if (!thread) return;
+  activeThreadId = id;
+  if (thread.unread > 0) thread.unread = 0;
+  renderThreadList();
+  renderChat();
+});
+
+document.getElementById('threadFilters').addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-filter]');
+  if (!btn) return;
+  activeFilter = btn.dataset.filter;
+  document.querySelectorAll('.msg-filter').forEach(filterBtn => {
+    filterBtn.classList.toggle('active', filterBtn === btn);
+  });
+  renderThreadList();
+  renderChat();
+});
+
+searchEl.addEventListener('input', () => {
+  searchTerm = searchEl.value;
+  renderThreadList();
+  renderChat();
+});
+
+document.getElementById('chatForm').addEventListener('submit', (event) => {
+  event.preventDefault();
+  sendMessage(inputEl.value);
+});
+
+quickRepliesEl.addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-quick]');
+  if (!btn) return;
+  const thread = threads.find(item => item.id === activeThreadId);
+  if (!thread) return;
+  const quickText = thread.quickReplies[Number(btn.dataset.quick)];
+  if (!quickText) return;
+  sendMessage(quickText);
+});
+
+document.getElementById('newMessageBtn').addEventListener('click', () => {
+  searchEl.focus();
+  searchEl.select();
+});
+document.getElementById('composeBtn').addEventListener('click', () => {
+  searchEl.focus();
+  searchEl.select();
+});
+
+renderThreadList();
+renderChat();
+</script>
+</body>
+</html>

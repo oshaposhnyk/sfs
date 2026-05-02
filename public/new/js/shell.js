@@ -2,6 +2,41 @@
 
 (function() {
   window.SF = window.SF || {};
+  const TOP_NOTIF_STORAGE_KEY = 'sf-topbar-notifications';
+  const DEFAULT_TOP_NOTIFICATIONS = [
+    {
+      id: 'n-1',
+      icon: 'grading',
+      title: 'New grade posted: Data Quality Checks',
+      meta: 'Assessment Office',
+      time: '18 min ago',
+      unread: true
+    },
+    {
+      id: 'n-2',
+      icon: 'workspace_premium',
+      title: 'Badge earned: Streak Keeper',
+      meta: 'Future Food',
+      time: '1 h ago',
+      unread: true
+    },
+    {
+      id: 'n-3',
+      icon: 'forum',
+      title: 'Mentor replied in Report Translation Lab',
+      meta: 'Olena H.',
+      time: 'Today',
+      unread: true
+    },
+    {
+      id: 'n-4',
+      icon: 'event',
+      title: 'Live lab rescheduled to 16:00',
+      meta: 'Student Lab',
+      time: 'Yesterday',
+      unread: false
+    }
+  ];
 
   // Inject a reusable sidebar+topbar pair
   window.SF.shell = function(opts) {
@@ -39,13 +74,17 @@
         </a>
 
         <div class="nav-section-label">Account</div>
-        <a href="#" class="nav-item" data-tip="Notifications">
+        <a href="./notifications.html" class="nav-item" data-page="notifications" data-tip="Notifications">
           <span class="material-symbols-rounded">notifications</span>
           <span class="nav-label">Notifications</span>
         </a>
-        <a href="#" class="nav-item" data-tip="Messages">
+        <a href="./messages.html" class="nav-item" data-page="messages" data-tip="Messages">
           <span class="material-symbols-rounded">forum</span>
           <span class="nav-label">Messages</span>
+        </a>
+        <a href="./settings.html" class="nav-item" data-page="settings" data-tip="Settings">
+          <span class="material-symbols-rounded">settings</span>
+          <span class="nav-label">Settings</span>
         </a>
 
         <div class="sidebar-spacer"></div>
@@ -72,9 +111,19 @@
             <button class="icon-btn" id="sf-theme-toggle" aria-label="Toggle theme">
               <span class="material-symbols-rounded" id="sf-theme-icon">dark_mode</span>
             </button>
-            <button class="icon-btn has-dot" aria-label="Notifications">
-              <span class="material-symbols-rounded">notifications</span>
-            </button>
+            <div class="notif-wrap" id="sf-notif-wrap">
+              <button class="icon-btn" id="sf-notif-toggle" type="button" aria-label="Notifications" aria-expanded="false">
+                <span class="material-symbols-rounded">notifications</span>
+              </button>
+              <div class="notif-popover" id="sf-notif-popover" hidden>
+                <div class="notif-popover-head">
+                  <strong>Notifications</strong>
+                  <button class="notif-mark-all" id="sf-notif-mark-all" type="button">Mark all read</button>
+                </div>
+                <div class="notif-popover-list" id="sf-notif-list"></div>
+                <a href="./notifications.html" class="notif-popover-foot">Open notifications page</a>
+              </div>
+            </div>
             <button class="icon-btn" aria-label="Help">
               <span class="material-symbols-rounded">help</span>
             </button>
@@ -102,6 +151,122 @@
   function applyStoredCollapsed() {
     const collapsed = localStorage.getItem('sf-sidebar-collapsed') === '1';
     document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
+  }
+
+  function escapeHTML(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function cloneDefaultTopNotifications() {
+    return DEFAULT_TOP_NOTIFICATIONS.map(item => ({ ...item }));
+  }
+
+  function loadTopNotifications() {
+    try {
+      const raw = localStorage.getItem(TOP_NOTIF_STORAGE_KEY);
+      if (!raw) return cloneDefaultTopNotifications();
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return cloneDefaultTopNotifications();
+      return parsed
+        .filter(item => item && item.id && item.title)
+        .map(item => ({
+          id: String(item.id),
+          icon: item.icon ? String(item.icon) : 'notifications',
+          title: String(item.title),
+          meta: item.meta ? String(item.meta) : '',
+          time: item.time ? String(item.time) : '',
+          unread: Boolean(item.unread)
+        }));
+    } catch (_) {
+      return cloneDefaultTopNotifications();
+    }
+  }
+
+  function saveTopNotifications(items) {
+    localStorage.setItem(TOP_NOTIF_STORAGE_KEY, JSON.stringify(items));
+  }
+
+  function bindTopbarNotifications() {
+    const wrap = document.getElementById('sf-notif-wrap');
+    const toggle = document.getElementById('sf-notif-toggle');
+    const popover = document.getElementById('sf-notif-popover');
+    const list = document.getElementById('sf-notif-list');
+    const markAll = document.getElementById('sf-notif-mark-all');
+    if (!wrap || !toggle || !popover || !list || !markAll) return;
+
+    let items = loadTopNotifications();
+
+    function unreadCount() {
+      return items.filter(item => item.unread).length;
+    }
+
+    function syncToggleDot() {
+      toggle.classList.toggle('has-dot', unreadCount() > 0);
+    }
+
+    function renderList() {
+      syncToggleDot();
+      markAll.disabled = unreadCount() === 0;
+      if (!items.length) {
+        list.innerHTML = '<div class="notif-empty">No notifications</div>';
+        return;
+      }
+
+      list.innerHTML = items.slice(0, 8).map(item => `
+        <button class="notif-item ${item.unread ? 'unread' : ''}" type="button" data-notif-id="${escapeHTML(item.id)}">
+          <span class="notif-item-icon">
+            <span class="material-symbols-rounded">${escapeHTML(item.icon || 'notifications')}</span>
+          </span>
+          <span class="notif-item-main">
+            <span class="notif-item-title">${escapeHTML(item.title)}</span>
+            <span class="notif-item-meta">${escapeHTML(item.meta)}</span>
+          </span>
+          <span class="notif-item-time">${escapeHTML(item.time)}</span>
+        </button>
+      `).join('');
+    }
+
+    function setOpen(next) {
+      popover.hidden = !next;
+      toggle.setAttribute('aria-expanded', next ? 'true' : 'false');
+    }
+
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setOpen(popover.hidden);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!wrap.contains(event.target)) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    });
+
+    markAll.addEventListener('click', () => {
+      items = items.map(item => ({ ...item, unread: false }));
+      saveTopNotifications(items);
+      renderList();
+    });
+
+    list.addEventListener('click', (event) => {
+      const row = event.target.closest('[data-notif-id]');
+      if (!row) return;
+      const id = row.dataset.notifId;
+      const current = items.find(item => item.id === id);
+      if (!current) return;
+      current.unread = false;
+      saveTopNotifications(items);
+      renderList();
+    });
+
+    renderList();
   }
 
   function bindShell() {
@@ -146,6 +311,7 @@
       });
     }
 
+    bindTopbarNotifications();
     applyStoredTheme();
     applyStoredCollapsed();
   }
