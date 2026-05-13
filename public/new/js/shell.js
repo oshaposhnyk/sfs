@@ -51,8 +51,10 @@
     return `
       <aside class="sidebar" id="sf-sidebar">
         <div class="brand">
-          <img src="./assets/SecureFood-logo.png" alt="SecureFood School" class="brand-logo-full">
-          <div class="brand-mark">SF</div>
+          <img src="./assets/logo-full-light.png" alt="SecureFood School" class="brand-logo-full brand-logo-light">
+          <img src="./assets/logo-full-dark.png" alt="SecureFood School" class="brand-logo-full brand-logo-dark">
+          <img src="./assets/logo-icon-light.png" alt="SecureFood School" class="brand-logo-icon brand-logo-light">
+          <img src="./assets/logo-icon-dark.png" alt="SecureFood School" class="brand-logo-icon brand-logo-dark">
         </div>
 
         <div class="nav-section-label">Learning</div>

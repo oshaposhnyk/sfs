@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureFood School · Activity</title>
+<link rel="stylesheet" href="./styles.css">
+<style>
+/* Two-column layout inside the page: course index + activity body */
+.course-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* ── Course index sidebar (Moodle-style) ─────────────── */
+.course-index {
+  position: sticky; top: 84px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.course-index::-webkit-scrollbar { width: 6px; }
+.course-index::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+
+.ci-header {
+  padding: 4px 8px 14px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+.ci-header .crumb {
+  font-size: 0.72rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+  margin-bottom: 4px;
+}
+.ci-header h3 {
+  font-size: 0.98rem;
+  margin: 0;
+  line-height: 1.3;
+}
+.ci-header .pct {
+  margin-top: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ci-header .pct .progress { flex: 1; height: 4px; }
+.ci-header .pct .v {
+  font-family: 'Manrope'; font-weight: 700;
+  font-size: 0.8rem; color: var(--accent);
+}
+
+.ci-module {
+  margin-top: 6px;
+}
+.ci-module-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+}
+.ci-module-head:hover { background: var(--surface-2); }
+.ci-module-head .ic {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(63,140,90,0.14); color: var(--success);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.ci-module-head .ic .material-symbols-rounded { font-size: 14px; }
+.ci-module-head .name {
+  font-size: 0.86rem; font-weight: 600; color: var(--ink);
+  flex: 1; min-width: 0;
+}
+.ci-module-head .name small {
+  display: block; font-size: 0.72rem; color: var(--muted); font-weight: 500;
+  margin-top: 2px;
+}
+.ci-module-head .toggle {
+  color: var(--muted); transition: transform .2s;
+}
+.ci-module-head .toggle .material-symbols-rounded { font-size: 18px; }
+.ci-module.open .toggle { transform: rotate(180deg); }
+.ci-module.current .ic { background: var(--accent-50); color: var(--accent); }
+.ci-module.pending .ic { background: var(--surface-2); color: var(--muted); }
+
+.ci-acts {
+  display: none;
+  padding: 4px 0 10px 30px;
+  border-left: 1px solid var(--line);
+  margin-left: 18px;
+}
+.ci-module.open .ci-acts { display: block; }
+.ci-act {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px 6px 6px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background .12s;
+  line-height: 1.35;
+}
+.ci-act:hover { background: var(--surface-2); }
+.ci-act.active {
+  background: var(--primary-50); color: var(--primary);
+  font-weight: 600;
+}
+.ci-act .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--success); flex-shrink: 0;
+}
+.ci-act.locked .dot { background: var(--muted-2); }
+.ci-act.pending .dot { background: var(--line-strong); }
+.ci-act.current .dot { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-50); }
+.ci-act .a-type {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.82rem;
+}
+.ci-act .a-type .material-symbols-rounded { font-size: 14px; color: var(--muted); }
+.ci-act.active .a-type .material-symbols-rounded { color: var(--primary); }
+
+/* ── Activity main column ─────────────────────────────── */
+.activity-main {
+  min-width: 0;
+}
+.act-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 18px; flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.act-crumbs {
+  font-size: 0.82rem; color: var(--muted);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.act-crumbs a { color: var(--ink-2); }
+.act-crumbs a:hover { color: var(--primary); text-decoration: underline; }
+.act-crumbs .material-symbols-rounded { font-size: 14px; opacity: 0.5; }
+
+.act-title h1 {
+  font-size: 1.7rem; line-height: 1.2;
+  margin-bottom: 8px;
+}
+.act-tags {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  font-size: 0.84rem; color: var(--muted);
+}
+.act-tags .type-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--accent-50); color: var(--accent);
+  font-weight: 600; font-size: 0.78rem;
+}
+.act-tags .type-chip.lesson { background: var(--primary-50); color: var(--primary); }
+.act-tags .type-chip.video  { background: var(--teal-50); color: var(--teal); }
+.act-tags .type-chip.file   { background: rgba(184,70,63,0.10); color: var(--danger); }
+.act-tags .type-chip.quiz   { background: var(--accent-50); color: var(--accent); }
+.act-tags .type-chip.task   { background: rgba(63,140,90,0.14); color: var(--success); }
+.act-tags .type-chip.forum  { background: rgba(184,70,63,0.10); color: var(--danger); }
+.act-tags .type-chip .material-symbols-rounded { font-size: 14px; }
+.act-tags .meta-sep { color: var(--muted-2); }
+.act-tags .done-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--success); font-weight: 600;
+}
+.act-tags .done-pill .material-symbols-rounded { font-size: 14px; }
+
+.act-top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── Moodle-like module info block ───────────────────── */
+.module-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.module-meta .meta-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+.module-meta .meta-card .k {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.module-meta .meta-card .v {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.module-meta .meta-card .v .material-symbols-rounded { font-size: 16px; }
+.module-meta .meta-card .v.success { color: var(--success); }
+.module-meta .meta-card .v.warn { color: var(--accent); }
+.module-meta .meta-card .v.muted { color: var(--muted); }
+
+/* ── Main content body ────────────────────────────────── */
+.act-body {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 32px 36px;
+}
+
+/* Lesson prose */
+.lesson-prose { max-width: 64ch; }
+.lesson-prose h2 { font-size: 1.4rem; margin: 22px 0 12px; line-height: 1.25; }
+.lesson-prose h2:first-child { margin-top: 0; }
+.lesson-prose h3 { font-size: 1.05rem; margin: 22px 0 8px; }
+.lesson-prose p { color: var(--ink-2); font-size: 0.98rem; line-height: 1.7; margin-bottom: 14px; }
+.lesson-prose ul, .lesson-prose ol { color: var(--ink-2); font-size: 0.98rem; line-height: 1.7; padding-left: 20px; margin-bottom: 14px; }
+.lesson-prose ul li::marker { color: var(--accent); }
+.lesson-prose blockquote {
+  margin: 18px 0;
+  background: var(--surface-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink-2); font-style: italic;
+}
+.lesson-prose blockquote .by {
+  display: block; margin-top: 8px;
+  font-style: normal; font-size: 0.84rem; color: var(--muted); font-weight: 600;
+}
+.lesson-prose .callout {
+  display: grid; grid-template-columns: 28px 1fr; gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-50);
+  margin: 18px 0;
+  font-size: 0.92rem;
+  border: 1px solid rgba(15,76,94,0.12);
+}
+.lesson-prose .callout .material-symbols-rounded { color: var(--primary); font-size: 22px; margin-top: 2px; }
+.lesson-prose .callout strong { color: var(--ink); display: block; margin-bottom: 4px; }
+.lesson-prose .callout span:not(.material-symbols-rounded) { color: var(--ink-2); line-height: 1.6; }
+
+.lesson-prose .compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin: 18px 0;
+}
+.compare-card {
+  padding: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.compare-card .tag {
+  display: inline-block;
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 8px; border-radius: 999px;
+  margin-bottom: 8px;
+}
+.compare-card.bad .tag { background: rgba(184,70,63,0.14); color: var(--danger); }
+.compare-card.good .tag { background: rgba(63,140,90,0.14); color: var(--success); }
+.compare-card .txt { font-size: 0.88rem; line-height: 1.55; color: var(--ink-2); }
+
+/* Activity footer / nav */
+.act-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  margin-top: 22px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.act-foot-info { font-size: 0.84rem; color: var(--muted); }
+.act-foot-info strong { color: var(--ink); }
+.act-foot-nav { display: flex; gap: 8px; }
+
+.complete-row {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: rgba(63,140,90,0.08);
+  border: 1px solid rgba(63,140,90,0.2);
+  display: flex; align-items: center; gap: 10px;
+  color: var(--success); font-weight: 600;
+  font-size: 0.92rem;
+}
+.complete-row .material-symbols-rounded { font-size: 22px; }
+.complete-row .when { color: var(--muted); font-weight: 500; margin-left: auto; font-size: 0.84rem; }
+
+/* ── VIDEO view ───────────────────────────────────────── */
+.video-player {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(224,164,88,0.18), transparent 60%),
+    linear-gradient(135deg, #0F2A33, #143E4D);
+  display: grid; place-items: center;
+  overflow: hidden;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.video-player .play-btn {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  display: grid; place-items: center;
+  color: #0F4C5E;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.3);
+  transition: transform .15s;
+}
+.video-player:hover .play-btn { transform: scale(1.06); }
+.video-player .play-btn .material-symbols-rounded { font-size: 38px; margin-left: 4px; }
+.video-player .v-time {
+  position: absolute; bottom: 14px; right: 14px;
+  background: rgba(0,0,0,0.5); color: #fff;
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 0.82rem; font-weight: 600;
+  font-family: 'Manrope';
+}
+.video-player .v-chap {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 4px; background: rgba(255,255,255,0.12);
+}
+.video-player .v-chap span { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--accent), var(--teal)); }
+
+.transcript {
+  padding: 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-top: 18px;
+}
+.transcript h3 { font-size: 1rem; margin-bottom: 12px; }
+.tr-row {
+  display: grid; grid-template-columns: 64px 1fr; gap: 12px;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+.tr-row + .tr-row { border-top: 1px solid var(--line); }
+.tr-row .t { font-family: 'Manrope'; font-weight: 700; color: var(--accent); }
+.tr-row .body { color: var(--ink-2); line-height: 1.55; }
+
+/* ── FILE view ────────────────────────────────────────── */
+.file-preview {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 22px;
+  align-items: flex-start;
+}
+.pdf-thumb {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-sm);
+  background:
+    repeating-linear-gradient(180deg, rgba(15,42,51,0.03) 0 14px, transparent 14px 28px),
+    linear-gradient(180deg, #FAFAF7, #ECE6D8);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-2);
+  position: relative; overflow: hidden;
+}
+.pdf-thumb::before {
+  content: 'PDF';
+  position: absolute; top: 14px; left: 14px;
+  font-family: 'Manrope'; font-weight: 800; font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  padding: 3px 7px; border-radius: 4px;
+  background: var(--danger); color: #fff;
+}
+.pdf-thumb::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, transparent 50%, var(--bg-2) 50%);
+}
+.file-info h2 { font-size: 1.2rem; margin-bottom: 6px; }
+.file-info .file-meta { color: var(--muted); font-size: 0.86rem; margin-bottom: 16px; }
+.file-info .takeaways {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px; margin-top: 16px;
+}
+.file-info .takeaways h3 { font-size: 0.86rem; margin-bottom: 10px; color: var(--ink); }
+.file-info .takeaways ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+.file-info .takeaways li { padding: 4px 0; line-height: 1.55; font-size: 0.92rem; }
+.file-info .takeaways li::marker { color: var(--accent); }
+
+/* ── QUIZ view ────────────────────────────────────────── */
+.quiz-result {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 22px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.score-circle {
+  aspect-ratio: 1;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--success) 360deg, var(--surface-2) 0);
+  padding: 10px;
+}
+.score-circle .inner {
+  width: 100%; height: 100%;
+  background: var(--surface);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  text-align: center;
+}
+.score-circle .inner .pct {
+  font-family: 'Manrope'; font-weight: 800; font-size: 2rem;
+  color: var(--success); line-height: 1; letter-spacing: -0.02em;
+}
+.score-circle .inner .lbl { font-size: 0.74rem; color: var(--muted); margin-top: 4px; font-weight: 600; }
+.quiz-summary { padding-top: 6px; }
+.quiz-summary h2 { margin-bottom: 6px; font-size: 1.2rem; }
+.quiz-summary p { color: var(--muted); margin-bottom: 14px; font-size: 0.92rem; }
+.quiz-summary .stats { display: flex; gap: 22px; }
+.quiz-summary .stat { font-size: 0.86rem; }
+.quiz-summary .stat .v { font-family: 'Manrope'; font-weight: 700; color: var(--ink); font-size: 1.05rem; display: block; }
+.quiz-summary .stat .l { color: var(--muted); font-size: 0.78rem; }
+
+.question {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  background: var(--surface);
+}
+.question .q-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; gap: 10px;
+}
+.question .q-num {
+  font-family: 'Manrope'; font-weight: 700;
+  font-size: 0.76rem; color: var(--accent);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.question .q-state {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.78rem; font-weight: 700;
+  color: var(--success);
+}
+.question .q-state .material-symbols-rounded { font-size: 16px; }
+.question h4 { font-size: 0.95rem; margin-bottom: 10px; }
+.question .options { display: grid; gap: 6px; }
+.question .opt {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  background: var(--surface-2);
+  display: flex; align-items: center; gap: 8px;
+  color: var(--muted);
+}
+.question .opt.correct {
+  background: rgba(63,140,90,0.08);
+  border-color: rgba(63,140,90,0.3);
+  color: var(--success); font-weight: 600;
+}
+.question .opt .material-symbols-rounded { font-size: 16px; }
+
+/* ── TASK view ────────────────────────────────────────── */
+.task-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  padding: 16px;
+}
+.task-panel + .task-panel { margin-top: 12px; }
+.task-panel h3 {
+  font-size: 0.96rem;
+  margin-bottom: 8px;
+}
+.task-panel p {
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.task-grid .cell {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.task-grid .cell .k {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.task-grid .cell .v {
+  font-size: 0.88rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── FORUM view ───────────────────────────────────────── */
+.forum-thread {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 14px 16px;
+}
+.forum-thread + .forum-thread { margin-top: 10px; }
+.forum-thread .h {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.forum-thread .h strong {
+  font-size: 0.93rem;
+  color: var(--ink);
+}
+.forum-thread .h span {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.forum-thread p {
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .course-shell { grid-template-columns: 1fr; }
+  .course-index {
+    position: static; max-height: none;
+    /* On mobile, collapse to a summary */
+  }
+  .module-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .act-body { padding: 22px; }
+  .file-preview, .quiz-result { grid-template-columns: 1fr; }
+  .pdf-thumb, .score-circle { max-width: 240px; }
+  .lesson-prose .compare { grid-template-columns: 1fr; }
+  .module-meta { grid-template-columns: 1fr; }
+  .task-grid { grid-template-columns: 1fr; }
+}
+</style>
+<script src="./js/shell.js"></script>
+</head>
+<body data-page="l4c">
+
+<script>
+const params = new URLSearchParams(location.search);
+const requestedType = params.get('type');
+const id   = params.get('id') || '1';
+
+// Course outline data
+const course = {
+  title: 'Report Translation Lab',
+  stage: 'Stage 2 · Translation Lab',
+  percent: 40,
+  modules: [
+    { name: 'Module 1', sub: 'Context briefing', state: 'done', acts: [
+      { id:'1', type:'lesson', icon:'menu_book', title:'What translation really means', state:'done', meta:'18 min' },
+      { id:'2', type:'video',  icon:'play_circle', title:'Olena interviews a kitchen director', state:'done', meta:'12:40' },
+      { id:'3', type:'file',   icon:'picture_as_pdf', title:'Sample technical brief (Kyiv Lab)', state:'done', meta:'PDF · 4p' },
+      { id:'4', type:'quiz',   icon:'quiz', title:'Quick check · Identify claim &amp; audience', state:'done', meta:'10/10' }
+    ]},
+    { name: 'Module 2', sub: 'Drafting the brief', state: 'current', acts: [
+      { id:'5', type:'lesson', icon:'menu_book', title:'Structure for non-technical audiences', state:'done', meta:'14 min' },
+      { id:'6', type:'video',  icon:'play_circle', title:'Walkthrough · A good translation, side by side', state:'done', meta:'9:08' },
+      { id:'7', type:'task',   icon:'edit_note', title:'Assignment · Draft a 1-page school brief', state:'current', meta:'Due May 17' },
+      { id:'8', type:'forum',  icon:'forum', title:'Forum · Compare drafts with peers', state:'pending', meta:'3 threads' }
+    ]},
+    { name: 'Module 3', sub: 'Peer review &amp; rewrite', state: 'pending', acts: [
+      { id:'9',  type:'task',  icon:'rate_review', title:'Peer review · Critique 2 partner drafts', state:'pending', meta:'30 min' },
+      { id:'10', type:'task',  icon:'edit_note', title:'Rewrite · Apply feedback', state:'pending', meta:'30 min' },
+      { id:'11', type:'forum', icon:'forum', title:'Reflection thread · What I changed', state:'pending', meta:'1 post' }
+    ]},
+    { name: 'Module 4', sub: 'Live translation session', state: 'pending', acts: [
+      { id:'12', type:'lesson', icon:'menu_book', title:'Live communication patterns', state:'locked' },
+      { id:'13', type:'video',  icon:'videocam', title:'Live · 1:1 with mentor', state:'locked' },
+      { id:'14', type:'task',   icon:'checklist', title:'Debrief notes', state:'locked' },
+      { id:'15', type:'quiz',   icon:'quiz', title:'Self-assessment · Communication', state:'locked' }
+    ]},
+    { name: 'Module 5', sub: 'Final submission', state: 'pending', acts: [
+      { id:'16', type:'task',  icon:'upload_file', title:'Submit · Final 2-page brief (PDF)', state:'locked' },
+      { id:'17', type:'quiz',  icon:'quiz', title:'Final reflection quiz', state:'locked' },
+      { id:'18', type:'forum', icon:'workspace_premium', title:'Earn · "Translator" badge', state:'locked' }
+    ]}
+  ]
+};
+
+// Current activity
+function findActivity(actId, fallbackType) {
+  for (const m of course.modules) for (const a of m.acts) if (a.id === actId) return { mod: m, act: a };
+  if (fallbackType) {
+    for (const m of course.modules) {
+      const match = m.acts.find(a => a.type === fallbackType);
+      if (match) return { mod: m, act: match };
+    }
+  }
+  return { mod: course.modules[0], act: course.modules[0].acts[0] };
+}
+const { mod: currentMod, act: currentAct } = findActivity(id, requestedType);
+const TYPE = currentAct.type;
+
+// Build prev/next
+function flatActs() {
+  const out = []; course.modules.forEach(m => m.acts.forEach(a => out.push(a))); return out;
+}
+const flat = flatActs();
+const curIdx = flat.findIndex(x => x.id === id);
+const prev = curIdx > 0 ? flat[curIdx - 1] : null;
+const next = curIdx < flat.length - 1 ? flat[curIdx + 1] : null;
+function actUrl(a) { return `./activity.html?type=${a.type}&id=${a.id}`; }
+
+// ── Course index sidebar HTML ──
+function courseIndex() {
+  return `
+    <aside class="course-index">
+      <div class="ci-header">
+        <div class="crumb">${course.stage}</div>
+        <h3>${course.title}</h3>
+        <div class="pct">
+          <div class="progress amber"><span style="width:${course.percent}%"></span></div>
+          <span class="v">${course.percent}%</span>
+        </div>
+      </div>
+
+      ${course.modules.map((m, mi) => {
+        const isCurrentModule = m.acts.some(a => a.id === id);
+        const openClass = isCurrentModule ? 'open current' : (m.state === 'done' ? '' : (m.state === 'current' ? 'current' : 'pending'));
+        const moduleIcon = m.state === 'done' ? 'check' : (isCurrentModule ? 'play_arrow' : 'radio_button_unchecked');
+        return `
+          <div class="ci-module ${openClass}" data-mod="${mi}">
+            <div class="ci-module-head">
+              <div class="ic"><span class="material-symbols-rounded">${moduleIcon}</span></div>
+              <div class="name">${m.name}<small>${m.sub}</small></div>
+              <div class="toggle"><span class="material-symbols-rounded">expand_more</span></div>
+            </div>
+            <div class="ci-acts">
+              ${m.acts.map(a => {
+                const isCurrent = a.id === id;
+                const cls = isCurrent ? 'active current' : (a.state || '');
+                return `
+                  <a href="${actUrl(a)}" class="ci-act ${cls}">
+                    <span class="dot"></span>
+                    <span class="a-type"><span class="material-symbols-rounded">${a.icon}</span> ${a.title}</span>
+                  </a>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </aside>
+  `;
+}
+
+// ── Activity top (crumbs + title + meta + actions) ──
+const typeLabels = {
+  lesson: { label: 'Lesson', icon: 'menu_book' },
+  video:  { label: 'Video',  icon: 'play_circle' },
+  file:   { label: 'File',   icon: 'picture_as_pdf' },
+  quiz:   { label: 'Quiz',   icon: 'quiz' },
+  task:   { label: 'Assignment', icon: 'edit_note' },
+  forum:  { label: 'Forum', icon: 'forum' }
+};
+const T = typeLabels[TYPE] || typeLabels.lesson;
+
+function activityStatePill() {
+  if (currentAct.state === 'done') {
+    return '<span class="done-pill"><span class="material-symbols-rounded">check_circle</span>Completed</span>';
+  }
+  if (currentAct.state === 'current') {
+    return '<span class="done-pill" style="color:var(--accent);"><span class="material-symbols-rounded">pending</span>In progress</span>';
+  }
+  if (currentAct.state === 'locked') {
+    return '<span class="done-pill" style="color:var(--muted);"><span class="material-symbols-rounded">lock</span>Locked</span>';
+  }
+  return '<span class="done-pill" style="color:var(--muted);"><span class="material-symbols-rounded">radio_button_unchecked</span>Not started</span>';
+}
+
+function topBar() {
+  return `
+    <div class="act-top">
+      <div>
+        <div class="act-crumbs">
+          <a href="./l4c.html">Student Lab</a>
+          <span class="material-symbols-rounded">chevron_right</span>
+          <a href="./course.html">${course.title}</a>
+          <span class="material-symbols-rounded">chevron_right</span>
+          <span>${currentMod.name} · ${currentMod.sub}</span>
+        </div>
+        <div class="act-title">
+          <h1>${stripTags(currentAct.title)}</h1>
+          <div class="act-tags">
+            <span class="type-chip ${TYPE}"><span class="material-symbols-rounded">${T.icon}</span>${T.label}</span>
+            ${currentAct.meta ? `<span class="meta-sep">·</span><span>${currentAct.meta}</span>` : ''}
+            <span class="meta-sep">·</span>
+            ${activityStatePill()}
+          </div>
+        </div>
+      </div>
+      <div class="act-top-actions">
+        <button class="btn btn-ghost"><span class="material-symbols-rounded">bookmark</span>Save</button>
+        <a href="./course.html" class="btn btn-ghost"><span class="material-symbols-rounded">arrow_back</span>Course</a>
+      </div>
+    </div>
+  `;
+}
+function stripTags(s) { return String(s).replace(/<[^>]+>/g,'').replace(/&amp;/g,'&'); }
+
+function moduleMetaBar() {
+  const completionLabel = currentAct.state === 'done'
+    ? 'Completed manually'
+    : currentAct.state === 'current'
+      ? 'Marked in progress'
+      : currentAct.state === 'locked'
+        ? 'Not available'
+        : 'To do';
+  const completionTone = currentAct.state === 'done'
+    ? 'success'
+    : currentAct.state === 'current'
+      ? 'warn'
+      : 'muted';
+  const availabilityLabel = currentAct.state === 'locked'
+    ? 'After previous module'
+    : 'Available now';
+  const gradeLabel = TYPE === 'quiz'
+    ? 'Highest grade'
+    : TYPE === 'task'
+      ? 'Graded submission'
+      : TYPE === 'forum'
+        ? 'Participation'
+        : 'Tracking only';
+
+  return `
+    <div class="module-meta">
+      <div class="meta-card">
+        <span class="k">Activity completion</span>
+        <span class="v ${completionTone}"><span class="material-symbols-rounded">check_circle</span>${completionLabel}</span>
+      </div>
+      <div class="meta-card">
+        <span class="k">Availability</span>
+        <span class="v ${currentAct.state === 'locked' ? 'muted' : ''}"><span class="material-symbols-rounded">${currentAct.state === 'locked' ? 'lock' : 'lock_open'}</span>${availabilityLabel}</span>
+      </div>
+      <div class="meta-card">
+        <span class="k">Grade</span>
+        <span class="v"><span class="material-symbols-rounded">grade</span>${gradeLabel}</span>
+      </div>
+      <div class="meta-card">
+        <span class="k">Attempts</span>
+        <span class="v"><span class="material-symbols-rounded">history</span>${TYPE === 'quiz' ? '1 of 1' : TYPE === 'task' ? '1 draft' : 'N/A'}</span>
+      </div>
+    </div>
+  `;
+}
+
+// ── Activity body views ──
+function lessonView() { return `
+  <div class="lesson-prose">
+    <h2>What translation really means</h2>
+    <p>In SecureFood we use the word "translation" in a very specific way. It is not converting a document from Ukrainian to English. It is the act of taking <strong>technical evidence</strong> — a temperature curve, a supplier audit, a microbial assay — and rendering it usable for someone who has to make a decision under time pressure.</p>
+    <p>A school director does not need the methodology section. They need to know: <em>do I serve this milk on Monday?</em></p>
+
+    <div class="callout">
+      <span class="material-symbols-rounded">lightbulb</span>
+      <div>
+        <strong>The translator's job</strong>
+        <span>Preserve the scientific claim. Drop the scaffolding. Keep the uncertainty honest. Lead with the decision.</span>
+      </div>
+    </div>
+
+    <h3>What a good translation does</h3>
+    <ul>
+      <li><strong>Names the audience.</strong> A kitchen team is not a procurement officer. Decide who you are writing for before you write a word.</li>
+      <li><strong>Leads with the action.</strong> The headline should be the recommended next step, not the abstract.</li>
+      <li><strong>Quantifies uncertainty in plain words.</strong> "Two of three samples passed" beats "n=3, σ=…".</li>
+      <li><strong>Preserves the source.</strong> A footnote linking back to the technical report is non-negotiable.</li>
+    </ul>
+
+    <h3>Two ways of writing the same finding</h3>
+    <div class="compare">
+      <div class="compare-card bad">
+        <span class="tag">Source language</span>
+        <p class="txt">"Temperature logs from fridge unit #2 show recurrent excursions above 6 °C between 14:00 and 16:00 on weekdays, correlating with door-open events recorded by the auxiliary contact sensor."</p>
+      </div>
+      <div class="compare-card good">
+        <span class="tag">Translated</span>
+        <p class="txt">"Fridge #2 gets too warm every afternoon. The door is being opened too often during the post-lunch reset. Move the milk to fridge #3 from 13:30 to 16:00 until the seal is repaired."</p>
+      </div>
+    </div>
+
+    <h3>What translation is <em>not</em></h3>
+    <p>Translation is not dumbing things down. A bad translation strips out the uncertainty — and a school director who acts on a false certainty is worse off than one who reads the full technical report.</p>
+
+    <blockquote>
+      The goal is not simplicity. The goal is <strong>actionable accuracy</strong>.
+      <span class="by">— SecureFood L4C principle</span>
+    </blockquote>
+  </div>
+
+  <div class="complete-row">
+    <span class="material-symbols-rounded">check_circle</span>
+    Activity completed
+    <span class="when">May 4, 2026</span>
+  </div>
+`; }
+
+function videoView() { return `
+  <div class="video-player">
+    <div class="play-btn"><span class="material-symbols-rounded">play_arrow</span></div>
+    <div class="v-time">12:40</div>
+    <div class="v-chap"><span style="width:100%"></span></div>
+  </div>
+  <div class="lesson-prose" style="max-width:none;">
+    <h2 style="font-size:1.2rem;">In the kitchen at Lyceum №14, Kyiv</h2>
+    <p>Olena, our peer translator from the Kyiv Living Lab, sits down with school cook Marta Hrytsenko to walk through one week of fridge-temperature data. The conversation shows how a 60-page technical audit turns into three concrete actions Marta can take on Monday morning.</p>
+  </div>
+  <div class="transcript">
+    <h3>Chapter highlights</h3>
+    <div class="tr-row"><span class="t">00:00</span><span class="body">Setting · why we monitor fridge temperatures in school canteens</span></div>
+    <div class="tr-row"><span class="t">02:14</span><span class="body">Marta describes the post-lunch rush and the "open-door problem"</span></div>
+    <div class="tr-row"><span class="t">04:32</span><span class="body">Olena walks through last week's chart, pointing at three excursions</span></div>
+    <div class="tr-row"><span class="t">07:48</span><span class="body">Translating the chart into three action items for Marta</span></div>
+    <div class="tr-row"><span class="t">10:22</span><span class="body">What Marta would have done <em>without</em> the translation</span></div>
+    <div class="tr-row"><span class="t">11:50</span><span class="body">Wrap-up · the human cost of an untranslated report</span></div>
+  </div>
+  <div class="complete-row">
+    <span class="material-symbols-rounded">check_circle</span>
+    Watched in full
+    <span class="when">May 5, 2026</span>
+  </div>
+`; }
+
+function fileView() { return `
+  <div class="file-preview">
+    <div class="pdf-thumb"></div>
+    <div class="file-info">
+      <h2>Sample technical brief — Kyiv Living Lab</h2>
+      <div class="file-meta">PDF · 4 pages · 1.2 MB · Updated May 2, 2026</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary"><span class="material-symbols-rounded">file_download</span>Download PDF</button>
+        <button class="btn btn-ghost"><span class="material-symbols-rounded">open_in_new</span>Open in viewer</button>
+      </div>
+      <div class="takeaways">
+        <h3>What to look for as you read</h3>
+        <ul>
+          <li>Where is the <strong>claim</strong> stated? Is it in the abstract, the conclusion, or both?</li>
+          <li>How is <strong>uncertainty</strong> communicated — numerically, verbally, or hidden?</li>
+          <li>Who is the implicit <strong>audience</strong> — and which sections would they actually read?</li>
+          <li>What is the <strong>decision</strong> the reader is expected to make after finishing the document?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="complete-row">
+    <span class="material-symbols-rounded">check_circle</span>
+    Read &amp; annotated
+    <span class="when">May 6, 2026</span>
+  </div>
+`; }
+
+function quizView() { return `
+  <div class="quiz-result">
+    <div class="score-circle"><div class="inner"><div><div class="pct">100%</div><div class="lbl">10 / 10</div></div></div></div>
+    <div class="quiz-summary">
+      <h2>Perfect score — well done.</h2>
+      <p>You correctly identified the claim, the audience and the decision for every prompt. The questions are shown below with the correct answer highlighted, so you can use them as revision.</p>
+      <div class="stats">
+        <div class="stat"><span class="v">10 / 10</span><span class="l">Correct</span></div>
+        <div class="stat"><span class="v">2m 14s</span><span class="l">Time</span></div>
+        <div class="stat"><span class="v">1 / 1</span><span class="l">Attempts</span></div>
+      </div>
+    </div>
+  </div>
+
+  ${[
+    { q: 'The audience for a school food-safety brief is most usefully thought of as…', opts:['The scientific community','The kitchen manager who acts on Monday','The ministry of health','Parents of the students'], correct: 1 },
+    { q: '"Two of three samples passed" is a better translation of statistical results than "n=3, σ=…" because…', opts:['It is shorter','It preserves uncertainty in plain words the reader can act on','It removes the uncertainty','It is what scientists prefer'], correct: 1 },
+    { q: 'A translation should lead with…', opts:['The methodology used in the study','The author\'s credentials','The recommended next action','A summary of the source PDF'], correct: 2 },
+    { q: '"Translation" in the SecureFood sense is closest to…', opts:['Converting English into Ukrainian','Rendering technical evidence usable by a decision-maker','Editing for grammar','Re-illustrating the report'], correct: 1 },
+    { q: 'A footnote linking back to the source technical report is…', opts:['Optional','Discouraged in school briefs','Non-negotiable — readers need a path back to the source','Only required for legal documents'], correct: 2 }
+  ].map((Q, i) => `
+    <div class="question">
+      <div class="q-head">
+        <span class="q-num">Question ${i+1} of 5</span>
+        <span class="q-state"><span class="material-symbols-rounded">check_circle</span>Correct</span>
+      </div>
+      <h4>${Q.q}</h4>
+      <div class="options">
+        ${Q.opts.map((o, oi) => `
+          <div class="opt ${oi === Q.correct ? 'correct' : ''}">
+            <span class="material-symbols-rounded">${oi === Q.correct ? 'check_circle' : 'radio_button_unchecked'}</span>${o}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('')}
+`; }
+
+function taskView() { return `
+  <div class="task-panel">
+    <h3>Assignment instructions</h3>
+    <p>Prepare a one-page school brief based on the provided technical report. The brief should include the decision statement, evidence summary, and one uncertainty note written in plain language.</p>
+    <ul style="padding-left:20px;color:var(--ink-2);font-size:0.92rem;line-height:1.6;">
+      <li>Length: 1 page (A4), PDF format.</li>
+      <li>Language: Ukrainian or English.</li>
+      <li>Use the module template from Resources.</li>
+    </ul>
+  </div>
+  <div class="task-panel">
+    <h3>Submission status</h3>
+    <div class="task-grid">
+      <div class="cell"><span class="k">Submission status</span><span class="v">Draft saved</span></div>
+      <div class="cell"><span class="k">Grading status</span><span class="v">Not graded</span></div>
+      <div class="cell"><span class="k">Due date</span><span class="v">Fri, May 17, 2026 · 23:59</span></div>
+      <div class="cell"><span class="k">Last modified</span><span class="v">May 13, 2026 · 16:20</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+      <button class="btn btn-primary"><span class="material-symbols-rounded">upload_file</span>Add submission</button>
+      <button class="btn btn-ghost"><span class="material-symbols-rounded">description</span>View draft</button>
+    </div>
+  </div>
+`; }
+
+function forumView() { return `
+  <div class="task-panel">
+    <h3>Discussion purpose</h3>
+    <p>Compare translation drafts with peers and leave actionable feedback based on clarity, evidence preservation, and decision-readiness.</p>
+  </div>
+  <div class="forum-thread">
+    <div class="h"><strong>Thread 1 · Where do you place uncertainty?</strong><span>8 replies</span></div>
+    <p>Share one sentence from your draft where uncertainty is communicated, and explain why you chose that phrasing.</p>
+  </div>
+  <div class="forum-thread">
+    <div class="h"><strong>Thread 2 · Decision-first headline examples</strong><span>5 replies</span></div>
+    <p>Post your current headline and suggest one improvement to another peer's version.</p>
+  </div>
+  <div class="forum-thread">
+    <div class="h"><strong>Thread 3 · Mentor feedback digest</strong><span>Pinned</span></div>
+    <p>Collect and summarize mentor comments from this week into a single checklist for the cohort.</p>
+  </div>
+`; }
+
+function lockedView() { return `
+  <div class="task-panel">
+    <h3>Activity locked</h3>
+    <p>This module activity will unlock after you complete the required activities in the previous module.</p>
+    <div class="task-grid">
+      <div class="cell"><span class="k">Requirement</span><span class="v">Complete all activities in current module</span></div>
+      <div class="cell"><span class="k">Unlock condition</span><span class="v">Automatic after completion tracking</span></div>
+    </div>
+  </div>
+`; }
+
+const views = { lesson: lessonView, video: videoView, file: fileView, quiz: quizView, task: taskView, forum: forumView };
+
+// Bottom prev/next nav
+function bottomNav() {
+  return `
+    <div class="act-foot">
+      <div class="act-foot-info">${prev ? `Previous: <strong>${stripTags(prev.title)}</strong>` : 'You are at the start of the course'}</div>
+      <div class="act-foot-nav">
+        ${prev ? `<a href="${actUrl(prev)}" class="btn btn-ghost"><span class="material-symbols-rounded">arrow_back</span>Previous</a>` : ''}
+        ${next ? `<a href="${actUrl(next)}" class="btn btn-primary">Next<span class="material-symbols-rounded">arrow_forward</span></a>` : `<a href="./course.html" class="btn btn-primary">Back to course<span class="material-symbols-rounded">arrow_forward</span></a>`}
+      </div>
+    </div>
+  `;
+}
+
+// Mount
+SF.mount(
+  { crumb: ['Dashboard', 'Student Lab', course.title, T.label] },
+  `
+    <div class="course-shell">
+      ${courseIndex()}
+      <div class="activity-main">
+        ${topBar()}
+        ${moduleMetaBar()}
+        <div class="act-body">
+          ${(currentAct.state === 'locked' ? lockedView : (views[TYPE] || lessonView))()}
+        </div>
+        ${bottomNav()}
+      </div>
+    </div>
+  `
+);
+
+document.title = `SecureFood School · ${stripTags(currentAct.title)}`;
+
+// Module collapse/expand in the index
+document.querySelectorAll('.ci-module .ci-module-head').forEach(h => {
+  h.addEventListener('click', (e) => {
+    if (e.target.closest('.ci-act')) return;
+    h.parentElement.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
