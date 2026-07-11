@@ -1,0 +1,67 @@
+{{!
+    @template local_learningplans/cohorts_page
+
+    Manage cohorts linked to a learning plan.
+
+    Context variables required for this template:
+    * intro - Introductory text describing cohort sync behaviour.
+    * backurl - URL back to the plan view page.
+    * backlabel - Label for the back link.
+    * addtitle - Heading for the link-a-cohort form.
+    * addform - Rendered moodleform HTML.
+    * hasrows - Whether any cohorts are linked.
+    * rows - Linked cohort rows (cohortid, name, missing, unlinkurl).
+    * empty - Message shown when no cohorts are linked.
+    * labelcohort, labelactions, labelunlink, labelmissing - Column and action labels.
+
+    Example context (json):
+    {
+        "intro": "Users in linked cohorts are enrolled automatically.",
+        "backurl": "#", "backlabel": "Back to plan",
+        "addtitle": "Link a cohort", "addform": "<form></form>",
+        "hasrows": true,
+        "rows": [{"cohortid": 1, "name": "First years", "missing": false, "unlinkurl": "#"}],
+        "empty": "No cohorts linked yet.",
+        "labelcohort": "Cohort", "labelactions": "Actions",
+        "labelunlink": "Unlink", "labelmissing": "(deleted)"
+    }
+}}
+<div class="learning-plan__cohorts">
+    <p class="learning-plan__cohorts-intro">{{intro}}</p>
+
+    <div class="learning-plan__cohorts-add">
+        <h3>{{addtitle}}</h3>
+        {{{addform}}}
+    </div>
+
+    {{#hasrows}}
+        <div class="learning-plan__cohorts-table">
+            <table class="generaltable">
+                <thead>
+                    <tr>
+                        <th>{{labelcohort}}</th>
+                        <th>{{labelactions}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#rows}}
+                        <tr>
+                            <td>
+                                {{name}}
+                                {{#missing}}<span class="badge badge-warning">{{labelmissing}}</span>{{/missing}}
+                            </td>
+                            <td>
+                                <a href="{{unlinkurl}}" class="learning-plan__cohort-unlink">{{labelunlink}}</a>
+                            </td>
+                        </tr>
+                    {{/rows}}
+                </tbody>
+            </table>
+        </div>
+    {{/hasrows}}
+    {{^hasrows}}
+        <p class="learning-plan__cohorts-empty">{{empty}}</p>
+    {{/hasrows}}
+
+    <p><a href="{{backurl}}">{{backlabel}}</a></p>
+</div>

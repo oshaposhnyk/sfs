@@ -1,0 +1,67 @@
+<section class="learning-plan">
+    <div class="learning-plan__header learning-plan__header--list">
+        <div class="learning-plan__actions">
+            <a class="btn btn-primary learning-plan__action-btn" href="{{createurl}}">
+                {{{createicon}}}
+                <span>{{createlabel}}</span>
+            </a>
+        </div>
+    </div>
+
+    {{#hasrows}}
+        <div class="table-responsive">
+            <table class="generaltable learning-plan__list-table">
+                <thead>
+                    <tr>
+                        <th>{{labelplanname}}</th>
+                        <th>{{labelstatus}}</th>
+                        <th>{{labelcourses}}</th>
+                        <th>{{labelmembers}}</th>
+                        <th>{{labelactions}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#rows}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>
+                                <span class="{{statusclass}}">
+                                    {{{statusicon}}}
+                                    <span>{{statuslabel}}</span>
+                                </span>
+                            </td>
+                            <td>{{coursescount}}</td>
+                            <td>{{memberscount}}</td>
+                            <td class="learning-plan__table-actions">
+                                <a class="btn btn-outline-secondary btn-sm learning-plan__action-btn" href="{{viewurl}}">
+                                    {{{viewicon}}}
+                                    <span>{{labelview}}</span>
+                                </a>
+                                <a class="btn btn-outline-secondary btn-sm learning-plan__action-btn" href="{{editurl}}">
+                                    {{{editicon}}}
+                                    <span>{{labeledit}}</span>
+                                </a>
+                                <a class="btn btn-outline-secondary btn-sm learning-plan__action-btn" href="{{archiveurl}}">
+                                    {{{archiveicon}}}
+                                    <span>{{archiveactionlabel}}</span>
+                                </a>
+                                <a class="btn btn-outline-danger btn-sm learning-plan__action-btn" href="{{deleteurl}}">
+                                    {{{deleteicon}}}
+                                    <span>{{labeldelete}}</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {{/rows}}
+                </tbody>
+            </table>
+        </div>
+        {{#haspagination}}
+            <div class="learning-plan__pagination">
+                {{{pagination}}}
+            </div>
+        {{/haspagination}}
+    {{/hasrows}}
+    {{^hasrows}}
+        <p>{{empty}}</p>
+    {{/hasrows}}
+</section>

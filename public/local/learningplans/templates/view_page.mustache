@@ -1,0 +1,103 @@
+<section class="learning-plan">
+    <div class="learning-plan__header">
+        <div>
+            <h2>{{title}}</h2>
+            <div>{{{description}}}</div>
+        </div>
+        <div class="learning-plan__actions">
+            <a class="btn btn-secondary" href="{{editurl}}">{{labeledit}}</a>
+            <a class="btn btn-secondary" href="{{cohortsurl}}">{{labelmanagecohorts}}</a>
+            <a class="btn btn-primary" href="{{enrolurl}}">{{labelmanageenrolments}}</a>
+        </div>
+    </div>
+
+    <h3>{{addcoursetitle}}</h3>
+    {{{addcourseform}}}
+
+    <h3>{{labelcourse}}</h3>
+    {{#hascoursereorder}}
+        <form id="{{reorderformid}}" method="post" action="{{reorderurl}}" class="learning-plan__reorder-form">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="action" value="reorder">
+            <input type="hidden" id="{{reorderinputid}}" name="orderedcourseids" value="">
+        </form>
+    {{/hascoursereorder}}
+    {{#hascourses}}
+        <ul id="{{courselistid}}" class="learning-plan__course-list">
+            {{#courses}}
+                <li class="learning-plan__course-item" data-courseid="{{courseid}}" data-name="{{name}}">
+                    <div class="learning-plan__course-main">
+                        <span class="learning-plan__course-handle">{{{draghandle}}}</span>
+                        <div class="learning-plan__course-title">
+                            <strong>{{order}}.</strong> <span class="learning-plan__course-name">{{name}}</span>
+                        </div>
+                    </div>
+                    <div class="learning-plan__actions">
+                        <a class="btn btn-icon learning-plan__icon-action" href="{{moveupurl}}" title="{{labelmoveup}}" aria-label="{{labelmoveup}}">
+                            {{{moveupicon}}}
+                        </a>
+                        <a class="btn btn-icon learning-plan__icon-action" href="{{movedownurl}}" title="{{labelmovedown}}" aria-label="{{labelmovedown}}">
+                            {{{movedownicon}}}
+                        </a>
+                        <a class="btn btn-danger btn-sm" href="{{removeurl}}">{{labelremove}}</a>
+                    </div>
+                </li>
+            {{/courses}}
+        </ul>
+    {{/hascourses}}
+    {{^hascourses}}
+        <p>{{nocourses}}</p>
+    {{/hascourses}}
+
+    <h3>{{labelmemberships}}</h3>
+    {{#hasmembers}}
+        <div class="learning-plan__membership-table">
+            <table class="generaltable">
+                <thead>
+                    <tr>
+                        <th>{{labeluser}}</th>
+                        <th>{{labelprogress}}</th>
+                        <th>{{labelcompletedcourses}}</th>
+                        <th>{{labelinprogresscourses}}</th>
+                        <th>{{labelnotstartedcourses}}</th>
+                        <th>{{labelnextcourse}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#members}}
+                        <tr>
+                            <td>
+                                <div class="learning-plan__user">
+                                    <a class="learning-plan__user-link" href="{{userprofileurl}}">
+                                        {{{userpicture}}}
+                                        <span>{{fullname}}</span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="learning-plan__progress">
+                                    <progress class="learning-plan__progress-bar" max="100" value="{{progresspercent}}"></progress>
+                                    <span>{{progresslabel}}</span>
+                                </div>
+                            </td>
+                            <td>{{completedcourses}}</td>
+                            <td>{{inprogresscourses}}</td>
+                            <td>{{notstartedcourses}}</td>
+                            <td>
+                                {{#nextcourseurl}}
+                                    <a href="{{nextcourseurl}}">{{nextcourse}}</a>
+                                {{/nextcourseurl}}
+                                {{^nextcourseurl}}
+                                    {{nextcourse}}
+                                {{/nextcourseurl}}
+                            </td>
+                        </tr>
+                    {{/members}}
+                </tbody>
+            </table>
+        </div>
+    {{/hasmembers}}
+    {{^hasmembers}}
+        <p>{{nomembers}}</p>
+    {{/hasmembers}}
+</section>

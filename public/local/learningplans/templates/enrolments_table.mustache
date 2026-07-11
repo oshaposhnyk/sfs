@@ -1,0 +1,28 @@
+{{#hasrows}}
+    <div class="learning-plan__membership-table">
+        <table class="generaltable">
+            <thead>
+                <tr>
+                    <th>{{labeluser}}</th>
+                    <th>{{labelprogress}}</th>
+                    <th>{{labelnextcourse}}</th>
+                    <th>{{labelactions}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#rows}}
+                    <tr>
+                        <td>{{fullname}}</td>
+                        <td>{{progresslabel}}</td>
+                        <td>{{nextcourse}}</td>
+                        <td><a href="{{unenrolurl}}">{{unenrollabel}}</a></td>
+                    </tr>
+                {{/rows}}
+            </tbody>
+        </table>
+    </div>
+{{/hasrows}}
+{{^hasrows}}
+    <p>{{empty}}</p>
+{{/hasrows}}
+

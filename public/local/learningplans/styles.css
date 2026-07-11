@@ -1,0 +1,170 @@
+/* This file is part of Moodle - http://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.learning-plan {
+    display: block;
+}
+
+.learning-plan__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+.learning-plan__header--list {
+    justify-content: flex-end;
+}
+
+.learning-plan__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.learning-plan__action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    white-space: nowrap;
+}
+
+.learning-plan__action-btn .icon {
+    margin: 0;
+}
+
+.learning-plan__list-table td,
+.learning-plan__list-table th {
+    vertical-align: middle;
+}
+
+.learning-plan__table-actions {
+    min-width: 300px;
+}
+
+.learning-plan__status {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    border-radius: 999px;
+    padding: .2rem .6rem;
+    font-size: .875rem;
+    font-weight: 500;
+}
+
+.learning-plan__status .icon {
+    margin: 0;
+}
+
+.learning-plan__status--enabled {
+    color: #1f6f43;
+    background-color: #e9f7ef;
+}
+
+.learning-plan__status--disabled {
+    color: #755719;
+    background-color: #fff5d6;
+}
+
+.learning-plan__pagination {
+    margin-top: .75rem;
+}
+
+.learning-plan__course-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.learning-plan__course-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .5rem;
+    align-items: center;
+    padding: .5rem .75rem;
+    border: 1px solid var(--border-color, #d8d8d8);
+    border-radius: 6px;
+    margin-bottom: .5rem;
+}
+
+.learning-plan__course-main {
+    display: flex;
+    align-items: center;
+    gap: .625rem;
+    min-width: 0;
+}
+
+.learning-plan__course-title {
+    min-width: 0;
+}
+
+.learning-plan__course-name {
+    overflow-wrap: anywhere;
+}
+
+.learning-plan__course-handle .btn {
+    cursor: move;
+}
+
+.learning-plan__icon-action .icon {
+    margin: 0;
+}
+
+.learning-plan__reorder-form {
+    display: none;
+}
+
+.learning-plan__course-item--locked {
+    opacity: .8;
+}
+
+.learning-plan__progress {
+    display: flex;
+    flex-direction: column;
+    gap: .375rem;
+}
+
+.learning-plan__progress-bar {
+    width: 100%;
+    min-width: 120px;
+}
+
+.learning-plan__membership-table {
+    overflow-x: auto;
+}
+
+.learning-plan__user {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.learning-plan__user-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+@media (max-width: 767px) {
+    .learning-plan__course-item {
+        grid-template-columns: 1fr;
+    }
+
+    .learning-plan__table-actions {
+        min-width: 240px;
+    }
+}
