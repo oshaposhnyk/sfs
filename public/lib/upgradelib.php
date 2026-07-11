@@ -455,6 +455,12 @@ function upgrade_stale_php_files_present(): bool {
     global $CFG;
 
     $someexamplesofremovedfiles = [
+        // Removed in 5.2.
+        '/availability/renderer.php',
+        '/course/tests/behat/course_controls.feature',
+        '/lib/amd/src/addblockmodal.js',
+        '/question/qengine.js',
+        '/tag/classes/manage_table.php',
         // Removed in 5.1.
         '/badges/classes/observer.php',
         '/course/request_form.php',
@@ -2518,7 +2524,11 @@ function check_upgrade_key($upgradekeyhash) {
 
                 /** @var core_admin_renderer $output */
                 $output = $PAGE->get_renderer('core', 'admin');
-                echo $output->upgradekey_form_page(new moodle_url('/admin/index.php', array('cache' => 0)));
+
+                echo $output->upgradekey_form_page_with_validation(
+                    new moodle_url('/admin/index.php', ['cache' => 0]),
+                    $upgradekeyhash !== null,
+                );
                 die();
             } else {
                 // This should not happen.

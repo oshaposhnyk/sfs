@@ -21,12 +21,14 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
   # test use of the singleselect functionality.
   @javascript
   Scenario: Self-enrolment enabled as guest
-    Given I log in as "teacher1"
+    Given the following config values are set as admin:
+      | guestloginbutton | 1 |
+    And I log in as "teacher1"
     And I add "Self enrolment" enrolment method in "Course 1" with:
       | Custom instance name | Test student enrolment |
     And I log out
     When I am on "Course 1" course homepage
-    And I press "Access as a guest"
+    And I press "Log in as guest"
     Then I should see "Guests cannot access this course. Please log in."
     And I press "Continue"
     And I should see "Log in"
@@ -42,7 +44,7 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
     Then I should see "New section"
     And I should not see "Enrolment options"
 
-  @javascript
+  @javascript @accessibility
   Scenario: Self-enrolment enabled requiring an enrolment key
     Given I log in as "teacher1"
     When I add "Self enrolment" enrolment method in "Course 1" with:
@@ -52,6 +54,7 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I should see "An enrolment key will be required."
+    And the page should meet accessibility standards with "best-practice" extra tests
     And I press "Enrol me"
     And I set the following fields to these values:
       | Enrolment key | moodle_rules |
@@ -93,8 +96,7 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
     And I set the following fields to these values:
       | Enrolment key | moodle_rules |
     And I click on "Enrol me" "button" in the "Test student enrolment" "dialogue"
-    And I am on the "Course 1" course page logged in as teacher1
-    And I navigate to course participants
+    And I am on the "Course 1" "enrolled users" page logged in as teacher1
     And the following should exist in the "participants" table:
       | First name | Email address        | Roles   | Groups    |
       | Student 1  | student1@example.com | Student | Group 1   |
@@ -110,10 +112,7 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
     And I am on "Course 1" course homepage
     And I press "Enrol me"
     And I should see "You are enrolled in the course"
-    And I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to course participants
+    And I am on the "Course 1" "enrolled users" page logged in as "teacher1"
     When I click on "//a[@data-action='editenrolment']" "xpath_element" in the "student1" "table_row"
     And I should see "Edit Student 1's enrolment"
     And I set the field "Status" to "Suspended"
@@ -130,10 +129,7 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
     And I am on "Course 1" course homepage
     And I press "Enrol me"
     And I should see "You are enrolled in the course"
-    And I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to course participants
+    And I am on the "Course 1" "enrolled users" page logged in as "teacher1"
     When I click on "//a[@data-action='unenrol']" "xpath_element" in the "student1" "table_row"
     And I click on "Unenrol" "button" in the "Unenrol" "dialogue"
     Then I should not see "Student 1" in the "participants" "table"
@@ -162,7 +158,7 @@ Feature: Users can auto-enrol themself in courses where self enrolment is allowe
   Scenario: Self-enrolment enabled with simultaneous guest access
     Given I log in as "teacher1"
     And I am on the "Course 1" "enrolment methods" page
-    And I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I click on "Enable" "link" in the "Self enrolment as 'Student'" "table_row"
     And I click on "Edit" "link" in the "Guest access" "table_row"
     And I set the following fields to these values:
       | Allow guest access | Yes |

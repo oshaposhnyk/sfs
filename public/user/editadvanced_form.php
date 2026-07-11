@@ -162,6 +162,7 @@ class user_editadvanced_form extends moodleform {
         }
 
         $this->add_action_buttons(true, $btnstring);
+        $mform->set_sticky_footer('buttonar');
 
         $this->set_data($user);
     }
@@ -323,6 +324,8 @@ class user_editadvanced_form extends moodleform {
                 }
             }
         }
+
+        $err += useredit_validate_description_length((array)$usernew);
 
         // Next the customisable profile fields.
         $err += profile_validation($usernew, $files);

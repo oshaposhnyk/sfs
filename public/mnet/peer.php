@@ -79,6 +79,11 @@ class mnet_peer {
             return true;
         }
 
+        $securityhelper = new \core\files\curl_security_helper();
+        if ($securityhelper->url_is_blocked($wwwroot)) {
+            throw new moodle_exception('curlsecurityurlblocked', 'admin');
+        }
+
         $hostname = mnet_get_hostname_from_uri($wwwroot);
         // Get the IP address for that host - if this fails, it will return the hostname string
         $ip_address = gethostbyname($hostname);
@@ -315,13 +320,5 @@ class mnet_peer {
         $this->sslverification      = $hostinfo->sslverification;
         $this->application = $DB->get_record('mnet_application', array('id'=>$this->applicationid));
         $this->bootstrapped = true;
-    }
-
-    /**
-     * @deprecated since Moodle 4.3
-     */
-    #[\core\attribute\deprecated(null, since: '4.3', mdl: 'MDL-77341', final: true)]
-    public function get_public_key(): void {
-        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
     }
 }

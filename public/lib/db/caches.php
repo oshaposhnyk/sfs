@@ -239,6 +239,9 @@ $definitions = array(
         // Executing actions in more than 10 courses usually means executing the same action on each course
         // so there is no need for caching individual course instances.
         'staticaccelerationsize' => 10,
+        'invalidationevents' => [
+            'changesincourseactionstate',
+        ],
     ],
     // Used to store data for repositories to avoid repetitive DB queries within one request.
     'repositories' => array(
@@ -589,19 +592,6 @@ $definitions = array(
         'staticaccelerationsize' => 100,
     ],
 
-    // Cache if a user has the capability to share to MoodleNet.
-    'moodlenet_usercanshare' => [
-        'mode' => cache_store::MODE_SESSION,
-        'simplekeys' => true,
-        'simpledata' => true,
-        'ttl' => 1800,
-        'invalidationevents' => [
-            'changesincoursecat',
-            'changesincategoryenrolment',
-            'changesincourse',
-        ],
-    ],
-
     // A theme has been used in context to override the default theme.
     // Applies to user, cohort, category and course.
     'theme_usedincontext' => [
@@ -641,5 +631,14 @@ $definitions = array(
         'simplekeys' => true,
         'simpledata' => true,
         'ttl' => 1800,
+    ],
+
+    // Stores the calculated disk (filepool) usage for the site registration page.
+    // Cached to avoid running an expensive aggregate query on the files table on every page load.
+    'hub_filepoolusage' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'ttl' => 90000, // 25 hours.
     ],
 );

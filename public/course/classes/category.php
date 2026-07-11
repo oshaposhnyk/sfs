@@ -176,7 +176,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * Get list of plugin callback functions.
      *
      * @param string $name Callback function name.
-     * @return [callable] $pluginfunctions
+     * @return callable[] $pluginfunctions
      */
     public function get_plugins_callback_function(string $name): array {
         $pluginfunctions = [];
@@ -699,6 +699,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      *
      * @param stdClass $course course object (must have 'id', 'visible' and 'category' fields)
      * @param null|stdClass $user The user id or object. By default (null) checks access for the current user.
+     * @return bool
      */
     public static function can_view_course_info($course, $user = null) {
         if ($course->id == SITEID) {
@@ -1335,14 +1336,9 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
         } else {
             $sortfields = array('sortorder' => 1);
         }
-        $limit = null;
-        if (!empty($options['limit']) && (int)$options['limit']) {
-            $limit = (int)$options['limit'];
-        }
-        $offset = 0;
-        if (!empty($options['offset']) && (int)$options['offset']) {
-            $offset = (int)$options['offset'];
-        }
+
+        $offset = !empty($options['offset']) && (int) $options['offset'] ? (int) $options['offset'] : 0;
+        $limit = !empty($options['limit']) && (int) $options['limit'] ? (int) $options['limit'] : null;
 
         // First retrieve list of user-visible and sorted children ids from cache.
         $sortedids = $coursecatcache->get('c'. $this->id. ':'.  serialize($sortfields));
@@ -1531,7 +1527,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
     /**
      * Returns true if the category has ANY children, including those not visible to the user
      *
-     * @return boolean
+     * @return bool
      */
     public function has_children() {
         $allchildren = self::get_tree($this->id);
@@ -1582,8 +1578,9 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      */
     public static function search_courses($search, $options = array(), $requiredcapabilities = array()) {
         global $DB;
-        $offset = !empty($options['offset']) ? $options['offset'] : 0;
-        $limit = !empty($options['limit']) ? $options['limit'] : null;
+
+        $offset = !empty($options['offset']) && (int) $options['offset'] ? (int) $options['offset'] : 0;
+        $limit = !empty($options['limit']) && (int) $options['limit'] ? (int) $options['limit'] : null;
         $sortfields = !empty($options['sort']) ? $options['sort'] : array('sortorder' => 1);
 
         $coursecatcache = cache::make('core', 'coursecat');
@@ -1812,9 +1809,10 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      */
     public function get_courses($options = array()) {
         global $DB;
+
         $recursive = !empty($options['recursive']);
-        $offset = !empty($options['offset']) ? $options['offset'] : 0;
-        $limit = !empty($options['limit']) ? $options['limit'] : null;
+        $offset = !empty($options['offset']) && (int) $options['offset'] ? (int) $options['offset'] : 0;
+        $limit = !empty($options['limit']) && (int) $options['limit'] ? (int) $options['limit'] : null;
         $sortfields = !empty($options['sort']) ? $options['sort'] : array('sortorder' => 1);
 
         if (!$this->id && !$recursive) {
@@ -1936,7 +1934,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * {@link core_course_category::can_delete_full()} or {@link core_course_category::can_move_content_to()}
      * depending upon what the user wished to do.
      *
-     * @return boolean
+     * @return bool
      */
     public function can_delete() {
         if (!$this->has_manage_capability()) {
@@ -2015,7 +2013,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * to calling this function because there is no capability check
      * inside this function
      *
-     * @param boolean $showfeedback display some notices
+     * @param bool $showfeedback display some notices
      * @return array return deleted courses
      * @throws moodle_exception
      */
@@ -2065,6 +2063,9 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
 
         // Delete all events in the category.
         $DB->delete_records('event', array('categoryid' => $this->id));
+
+        // Delete all event subscriptions in the category.
+        $DB->delete_records('event_subscriptions', ['categoryid' => $this->id]);
 
         // Finally delete the category and it's context.
         $categoryrecord = $this->get_db_record();
@@ -2620,10 +2621,10 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * moving categories, where you do not want to allow people to move a category
      * to be the child of itself.
      *
-     * @param string/array $requiredcapability if given, only categories where the current
+     * @param string|array $requiredcapability if given, only categories where the current
      *      user has this capability will be returned. Can also be an array of capabilities,
      *      in which case they are all required.
-     * @param integer $excludeid Exclude this category and its children from the lists built.
+     * @param int $excludeid Exclude this category and its children from the lists built.
      * @param string $separator string to use as a separator between parent and child category. Default ' / '
      * @return array of strings
      */
@@ -3263,6 +3264,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
             ON uc.roleid = rc.roleid
            AND ( $eqpaths OR $likechild )
          WHERE (ra.id IS NOT NULL OR uc.upath IS NOT NULL)
+      ORDER BY cc.sortorder, cc.id
     ";
 
         $params = [

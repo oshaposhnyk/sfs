@@ -35,7 +35,7 @@ Feature: Managers can manage categories for course custom fields
       | Field 1 | Category for test | text | f1        |
     And I log in as "admin"
     And I navigate to "Courses > Default settings > Course custom fields" in site administration
-    And I press "Delete custom field category: Category for test"
+    And I choose the "Delete" item in the "Actions" action menu of the "Category for test" "core_customfield > Category header"
     And I click on "Yes" "button" in the "Confirm" "dialogue"
     And I wait until the page is ready
     And I wait until "Test category" "text" does not exist
@@ -43,6 +43,7 @@ Feature: Managers can manage categories for course custom fields
     And I navigate to "Reports > Logs" in site administration
     And I press "Get these logs"
 
+  @accessibility
   Scenario: Move field in the course custom fields to another category
     Given the following "custom field categories" exist:
       | name      | component   | area   | itemid |
@@ -60,6 +61,7 @@ Feature: Managers can manage categories for course custom fields
     And "Field2" "text" should appear after "Category2" "text"
     And "Category3" "text" should appear after "Field2" "text"
     And I press "Move \"Field1\""
+    And the page should meet accessibility standards
     And I follow "To the top of category Category2"
     And "Category2" "text" should appear after "Category1" "text"
     And "Field1" "text" should appear after "Category2" "text"

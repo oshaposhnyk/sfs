@@ -80,6 +80,8 @@ Feature: Managers can create courses
       | moodle/course:create           | allow   |
       | moodle/course:manageactivities | allow   |
       | moodle/course:viewparticipants | allow   |
+    And the following config values are set as admin:
+      | enablemyhome | 1 |
     And I log in as "kevin"
     And I am on site homepage
     When I press "Add a new course"
@@ -102,6 +104,8 @@ Feature: Managers can create courses
     And I set the following administration settings values:
       | Creators' role in new courses | Non-editing teacher |
     And I log out
+    And the following config values are set as admin:
+      | enablemyhome | 1 |
     And I log in as "kevin"
     And I am on site homepage
     When I press "Add a new course"
@@ -122,7 +126,7 @@ Feature: Managers can create courses
       | Course full name  | My first course |
       | Course short name | myfirstcourse |
     And I press "Save and display"
-    And I navigate to course participants
+    And I am on the "myfirstcourse" "enrolled users" page
     Then I should not see "Teacher"
     And I should see "Nothing to display"
     And the following config values are set as admin:
@@ -132,6 +136,6 @@ Feature: Managers can create courses
       | Course full name  | My second course |
       | Course short name | mysecondcourse |
     And I press "Save and display"
-    And I navigate to course participants
+    And I am on the "mysecondcourse" "enrolled users" page
     And I should see "Teacher"
     And I should not see "Nothing to display"

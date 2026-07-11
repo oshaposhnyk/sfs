@@ -50,7 +50,7 @@ class cm implements renderable {
         protected cm_info $cm,
         /** @var bool $exportcontent False if pre-rendered cmitem HTML content must be exported. */
         protected bool $exportcontent = false,
-        /** @var ?bool $istrackeduser If is_tracked_user is pre-computed for this CM's course, it can be provided here. */
+        /** @var bool|null $istrackeduser If is_tracked_user is pre-computed for this CM's course, it can be provided here. */
         protected ?bool $istrackeduser = null,
     ) {
     }
@@ -95,7 +95,10 @@ class cm implements renderable {
 
         // Check the user access type to this cm.
         $info = new info_module($cm);
-        $data->accessvisible = ($data->visible && $info->is_available_for_all());
+        $information = '';
+        $data->accessvisible = $data->visible && (
+            ($info->is_available_for_all() || $info->is_available($information, true, $USER->id))
+        );
 
         // Add url if the activity is compatible.
         $url = $cm->url;

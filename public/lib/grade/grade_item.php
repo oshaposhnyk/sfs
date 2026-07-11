@@ -874,7 +874,15 @@ class grade_item extends grade_object {
                     continue;
                 }
 
-                $grade->finalgrade = $this->adjust_raw_grade($grade->rawgrade, $grade->rawgrademin, $grade->rawgrademax);
+                if ($grade->deductedmark > 0) {
+                    // A penalty is recorded on this grade. Preserve it by recalculating
+                    // from the penalised raw grade so that a full regrade does not silently
+                    // undo the penalty that penalty_manager already applied.
+                    $penalisedraw = max($this->grademin, $grade->rawgrade - $grade->deductedmark);
+                    $grade->finalgrade = $this->adjust_raw_grade($penalisedraw, $grade->rawgrademin, $grade->rawgrademax);
+                } else {
+                    $grade->finalgrade = $this->adjust_raw_grade($grade->rawgrade, $grade->rawgrademin, $grade->rawgrademax);
+                }
 
                 if (grade_floats_different($grade_record->finalgrade, $grade->finalgrade)) {
                     $success = $grade->update('system');
@@ -2067,7 +2075,15 @@ class grade_item extends grade_object {
 
         // update final grade if possible
         if (!$grade->is_locked() and !$grade->is_overridden()) {
-            $grade->finalgrade = $this->adjust_raw_grade($grade->rawgrade, $grade->rawgrademin, $grade->rawgrademax);
+            if ($grade->deductedmark > 0 && $rawgrade === false) {
+                // No new rawgrade was provided (e.g. a submission-date update). The existing
+                // penalty must be preserved: recalculate finalgrade from the penalised raw grade
+                // rather than the plain rawgrade, so that the penalty indicator remains visible.
+                $penalisedraw = max($this->grademin, $grade->rawgrade - $grade->deductedmark);
+                $grade->finalgrade = $this->adjust_raw_grade($penalisedraw, $grade->rawgrademin, $grade->rawgrademax);
+            } else {
+                $grade->finalgrade = $this->adjust_raw_grade($grade->rawgrade, $grade->rawgrademin, $grade->rawgrademax);
+            }
         }
 
         // TODO: hack alert - create new fields for these in 2.0
@@ -2098,7 +2114,7 @@ class grade_item extends grade_object {
         // end of hack alert
 
         // Only reset the deducted mark if the grade has changed.
-        if ($grade->timemodified !== $oldgrade->timemodified) {
+        if ($grade->timemodified !== $oldgrade->timemodified && $rawgrade !== false) {
             $grade->deductedmark = 0;
         }
 
@@ -2633,12 +2649,19 @@ class grade_item extends grade_object {
                 rebuild_course_cache($this->courseid, true);
                 $modinfo = get_fast_modinfo($this->courseid);
             }
-            // Even with a rebuilt cache the module does not exist. This means the
-            // database is in an invalid state - we will log an error and return
-            // the course context but the calling code should be updated.
+
+            // Even with a rebuilt cache the module does not exist. This means we are dealing
+            // with a mod plugin type that is disabled on the site (which are not included in the
+            // modinfo cache) or the database is in an invalid state. In the latter case we will
+            // log an error and return the course context, but the calling code should be updated.
             if (!isset($modinfo->instances[$this->itemmodule][$this->iteminstance])) {
-                mtrace(get_string('moduleinstancedoesnotexist', 'error'));
-                $context = \context_course::instance($this->courseid);
+                if ($cm = get_coursemodule_from_instance($this->itemmodule, $this->iteminstance)) {
+                    // Cache does not contain module plugins that are disabled.
+                    $context = \context_module::instance($cm->id);
+                } else {
+                    debugging(get_string('moduleinstancedoesnotexist', 'error'));
+                    $context = \context_course::instance($this->courseid);
+                }
             } else {
                 $cm = $modinfo->instances[$this->itemmodule][$this->iteminstance];
                 $context = \context_module::instance($cm->id);

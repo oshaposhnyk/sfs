@@ -341,8 +341,9 @@ abstract class backup_plan_dbops extends backup_dbops {
             try {
                 $new = @$mustache->render($possibletemplate, $mustachecontext);
 
-                // Clean as filename, remove spaces, and trim to max 251 chars (filename limit, 255 including .mbz extension).
-                $cleaned = substr(str_replace(' ', '_', clean_filename($new)), 0, 251);
+                // Clean as filename, remove spaces, and trim to max 251 bytes (filename limit, 255 bytes including .mbz).
+                // Use str_max_bytes instead of substr to avoid splitting multi-byte UTF-8 characters.
+                $cleaned = core_text::str_max_bytes(str_replace(' ', '_', clean_filename($new)), 251);
 
                 // Success - this template rendered - return it.
                 return $cleaned . '.mbz';
@@ -362,9 +363,10 @@ abstract class backup_plan_dbops extends backup_dbops {
      * @return mustache_engine
      */
     private static function get_mustache_for_filename_generation(): mustache_engine {
+        $stringhelper = new mustache_string_helper();
         return new mustache_engine([
             'helpers' => [
-                'str' => [new mustache_string_helper(), 'str'],
+                'str' => fn($text, $helper) => $stringhelper->str($text, $helper),
             ],
         ]);
     }

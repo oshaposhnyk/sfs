@@ -29,8 +29,9 @@ use context_course;
 use context_module;
 use context_system;
 use context_coursecat;
-use core\event\section_viewed;
 use core_completion_external;
+use core_courseformat\formatactions;
+use core_course\exception\reset_timeout;
 use core_external;
 use core_tag_index_builder;
 use core_tag_tag;
@@ -42,7 +43,6 @@ use grade_item;
 use grading_manager;
 use moodle_exception;
 use moodle_url;
-use phpunit_util;
 use rating_manager;
 use restore_controller;
 use stdClass;
@@ -1303,7 +1303,8 @@ final class courselib_test extends advanced_testcase {
         $oldsectionid = $cm->section;
 
         // Perform the move
-        moveto_module($cm, $newsection);
+        $cmactions = formatactions::cm($course);
+        $cmactions->move_end_section($cm->id, $newsection->id);
 
         $cms = get_fast_modinfo($course)->get_cms();
         $cm = reset($cms);
@@ -1330,7 +1331,7 @@ final class courselib_test extends advanced_testcase {
         // Perform a second move as some issues were only seen on the second move
         $newsection = get_fast_modinfo($course)->get_section_info(2);
         $oldsectionid = $cm->section;
-        moveto_module($cm, $newsection);
+        $cmactions->move_end_section($cm->id, $newsection->id);
 
         $cms = get_fast_modinfo($course)->get_cms();
         $cm = reset($cms);
@@ -1372,8 +1373,9 @@ final class courselib_test extends advanced_testcase {
 
         // Try to perform the move.
         $this->expectExceptionMessageMatches($codingerror);
+        $cmactions = formatactions::cm($course);
         try {
-            moveto_module($qbankcm, $newsection);
+            $cmactions->move_end_section($qbankcm->id, $newsection->id);
         } finally {
             $qbankcms = get_fast_modinfo($course)->get_instances_of('qbank');
             $qbankcm = reset($qbankcms);
@@ -2787,7 +2789,7 @@ final class courselib_test extends advanced_testcase {
      * Returns a user object and its assigned new role.
      *
      * @param testing_data_generator $generator
-     * @param $contextid
+     * @param int|context|(int|context)[] $contextid
      * @return array The user object and the role ID
      */
     protected function get_user_objects(testing_data_generator $generator, $contextid) {
@@ -2889,6 +2891,7 @@ final class courselib_test extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest(true);
+        $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -3726,6 +3729,61 @@ final class courselib_test extends advanced_testcase {
         $this->assertEmpty($usersroles);
     }
 
+    /**
+     * Test that the course reset throws an exception if it takes too long.
+     *
+     * @covers ::reset_course_userdata()
+     */
+    public function test_course_reset_timeout(): void {
+        global $DB, $CFG;
+        require_once($CFG->dirroot . '/notes/lib.php');
+
+        $this->resetAfterTest();
+
+        $generator = $this->getDataGenerator();
+
+        // Create test course and user, enrol one in the other.
+        $course = $generator->create_course();
+        $user = $generator->create_user();
+        $roleid = $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);
+        $generator->enrol_user($user->id, $course->id, $roleid);
+
+        // Define a reset job.
+        $resetdata = new stdClass();
+        $resetdata->id = $course->id;
+        $resetdata->reset_start_date_old = $course->startdate;
+        $resetdata->reset_start_date = $course->startdate;
+        $resetdata->reset_end_date = $course->enddate;
+        $resetdata->reset_end_date_old = $course->enddate;
+        $resetdata->reset_notes = true;
+
+        // Create a note that will be deleted by the reset.
+        $note = (object) ['content' => 'Note 1', 'courseid' => $course->id];
+        note_save($note);
+
+        $this->assertTrue($DB->record_exists('post', ['module' => 'notes', 'courseid' => $course->id]));
+
+        // Call the reset once with a long timeout that won't be exceeded.
+        $timeout = new reset_timeout($course->shortname, time() + 10);
+        reset_course_userdata($resetdata, $timeout);
+
+        // Verify the course has been reset.
+        $this->assertFalse($DB->record_exists('post', ['module' => 'notes', 'courseid' => $course->id]));
+
+        $note = (object) ['content' => 'Note 2', 'courseid' => $course->id];
+        note_save($note);
+
+        $this->assertTrue($DB->record_exists('post', ['module' => 'notes', 'courseid' => $course->id]));
+
+        // Call the reset with a timeout that will be exceeded. Confirm an exception is thrown.
+        $timeout = new reset_timeout($course->shortname, time() - 1);
+        $this->expectExceptionObject($timeout);
+        reset_course_userdata($resetdata, $timeout);
+
+        // Verify the course has not been reset.
+        $this->assertTrue($DB->record_exists('post', ['module' => 'notes', 'courseid' => $course->id]));
+    }
+
     public function test_course_check_module_updates_since(): void {
         global $CFG, $DB, $USER;
         require_once($CFG->dirroot . '/mod/glossary/lib.php');
@@ -3877,7 +3935,7 @@ final class courselib_test extends advanced_testcase {
 
         // Now, run the adhoc task to delete the modules from section 0.
         $sink = $this->redirectEvents(); // To capture the events.
-        phpunit_util::run_all_adhoc_tasks();
+        \core\test\phpunit\phpunit_util::run_all_adhoc_tasks();
 
         // Confirm the modules have been deleted.
         list($insql, $assignids) = $DB->get_in_or_equal([$assign0->cmid, $assign1->cmid, $assign2->cmid]);
@@ -7033,6 +7091,12 @@ final class courselib_test extends advanced_testcase {
 
         // Manager has permissions.
         $this->assertTrue(course_allowed_module($course, 'assign', $manager));
+
+        // Disable the assign module.
+        $DB->set_field('modules', 'visible', 0, ['name' => 'assign']);
+
+        // Verify that disabled modules are not allowed.
+        $this->assertFalse(course_allowed_module($course, 'assign', $manager));
     }
 
     /**
@@ -7227,6 +7291,37 @@ final class courselib_test extends advanced_testcase {
 
         // Check the event details are correct.
         $this->assertInstanceOf('\core\event\section_viewed', $event);
+        $this->assertEquals(context_course::instance($course->id), $event->get_context());
+        $this->assertEquals('course_sections', $event->objecttable);
+        $this->assertEquals($section->id, $event->objectid);
+    }
+
+    /**
+     * Test course_section_view() function for restricted sections.
+     *
+     * @covers ::course_section_view
+     */
+    public function test_course_restricted_section_view(): void {
+
+        $this->resetAfterTest();
+
+        // Course without sections.
+        $course = $this->getDataGenerator()->create_course(['numsections' => 5], ['createsections' => true]);
+        $coursecontext = context_course::instance($course->id);
+        $format = course_get_format($course->id);
+        $sections = $format->get_sections();
+        $section = reset($sections);
+
+        // Redirect events to the sink, so we can recover them later.
+        $sink = $this->redirectEvents();
+
+        course_section_view($coursecontext, $section->id, true);
+
+        $events = $sink->get_events();
+        $event = reset($events);
+
+        // Check the event details are correct.
+        $this->assertInstanceOf('\core\event\restricted_section_viewed', $event);
         $this->assertEquals(context_course::instance($course->id), $event->get_context());
         $this->assertEquals('course_sections', $event->objecttable);
         $this->assertEquals($section->id, $event->objectid);

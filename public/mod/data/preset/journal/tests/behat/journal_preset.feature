@@ -17,16 +17,12 @@ Feature: Users can use the Journal preset
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
     And the following "activities" exist:
-      | activity | name                   | intro          | course | idnumber |
-      | data     | Student reflections    | Database intro | C1     | data1    |
-    And I am on the "Student reflections" "data activity" page logged in as teacher1
-    And I follow "Presets"
-    And I click on "fullname" "radio" in the "Journal" "table_row"
-    And I click on "Use this preset" "button"
+      | activity | name                | intro          | course | idnumber | preset  |
+      | data     | Student reflections | Database intro | C1     | data1    | journal |
     And the following "mod_data > entries" exist:
-      | database | user      | Title                           | Content                                  |
-      | data1    | student1  | Reflection created by student   | This is the content for the entry 1      |
-      | data1    | teacher1  | Reflection created by teacher   | And this is the content for the entry 2  |
+      | database | user     | Title                         | Content                                 |
+      | data1    | student1 | Reflection created by student | This is the content for the entry 1     |
+      | data1    | teacher1 | Reflection created by teacher | And this is the content for the entry 2 |
 
   @javascript
   Scenario: Journal. Users view entries
@@ -73,7 +69,7 @@ Feature: Users can use the Journal preset
     When I press "Add entry"
     And I set the field "Title" to "This is the title"
     And I set the field "Content" to "This is the content for the new entry."
-    And I press "Save"
+    And I press "saveandview"
     Then I should see "This is the title"
     And I should see "This is the content for the new entry."
 

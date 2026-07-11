@@ -1073,10 +1073,12 @@ final class events_test extends \advanced_testcase {
      */
     public function test_batch_set_marker_allocation_viewed(): void {
         $this->resetAfterTest();
+        $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
-        $assign = $this->create_instance($course);
+        $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
+        $assign = $this->create_instance($course, ['markercount' => 1]);
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();

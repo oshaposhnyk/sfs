@@ -180,16 +180,9 @@ class structure {
      * @return bool
      */
     public function can_display_number_be_customised(int $slotnumber): bool {
-        return $this->is_real_question($slotnumber) && !quiz_has_attempts($this->quizobj->get_quizid());
-    }
-
-    /**
-     * @deprecated since 4.2. $slot->displayednumber is no longer used. If you need this,
-     *      use isset(...->displaynumber), but this method was not used.
-     */
-    #[\core\attribute\deprecated('isset(...->displaynumber)()', since: '4.2', mdl: 'MDL-77656', final: true)]
-    public function is_display_number_customised(int $slotid): bool {
-        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+        return $this->is_real_question($slotnumber)
+            && !quiz_has_attempts($this->quizobj->get_quizid())
+            && has_capability('mod/quiz:customisequestionnumbers', $this->quizobj->get_context());
     }
 
     /**
@@ -201,7 +194,7 @@ class structure {
      */
     public function make_slot_display_number_in_place_editable(int $slotid, \context $context): \core\output\inplace_editable {
         $slot = $this->get_slot_by_id($slotid);
-        $editable = has_capability('mod/quiz:manage', $context);
+        $editable = has_capability('mod/quiz:manage', $context) && $this->can_display_number_be_customised($slot->slot);
 
         // Get the current value.
         $value = $slot->displaynumber ?? $slot->defaultnumber;
@@ -272,7 +265,7 @@ class structure {
             return false;
         }
 
-        if (in_array($this->get_question_type_for_slot($slotnumber), ['random', 'missingtype'])) {
+        if ($this->slotsinorder[$slotnumber]->random || $this->get_question_type_for_slot($slotnumber) === 'missingtype') {
             return \question_engine::can_questions_finish_during_the_attempt(
                     $this->quizobj->get_quiz()->preferredbehaviour);
         }
@@ -1796,7 +1789,7 @@ class structure {
         // Find the random slots.
         $allslots = $this->get_slots();
         foreach ($allslots as $key => $slot) {
-            if ($slot->qtype != 'random') {
+            if (!$slot->random) {
                 unset($allslots[$key]);
             }
         }

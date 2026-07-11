@@ -139,7 +139,8 @@ if (!empty($add)) {
     require_all_capabilities(['moodle/backup:backuptargetimport', 'moodle/restore:restoretargetimport'], $coursecontext);
 
     // Duplicate the module.
-    $newcm = duplicate_module($course, $cm);
+    $cmaction = \core_courseformat\formatactions::cm($course->id);
+    $newcm = $cmaction->duplicate($cm->id);
     redirect(course_get_url($course, $cm->sectionnum, $urloptions));
 
 } else if (!empty($delete)) {
@@ -232,7 +233,14 @@ if ((!empty($movetosection) or !empty($moveto)) and confirm_sesskey()) {
         throw new \moodle_exception('needcopy', '', "view.php?id=$section->course");
     }
 
-    moveto_module($cm, $section, $beforecm);
+    $formatactions = formatactions::cm($course->id);
+    if (!empty($section)) {
+        $formatactions->move_end_section($cm->id, $section->id);
+    } else if (!empty($beforecm)) {
+        $formatactions->move_before($cm->id, $beforecm->id);
+    } else {
+        throw new \moodle_exception('invalidmovetarget');
+    }
 
     $sectionreturn = $USER->activitycopysectionreturn;
     unset($USER->activitycopy);

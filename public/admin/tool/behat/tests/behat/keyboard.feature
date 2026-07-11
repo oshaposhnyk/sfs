@@ -4,12 +4,16 @@ Feature: Verify that keyboard steps work as expected
   As a test writer
   I need to verify that the keyboard steps work as expected
 
+  Background:
+    Given the following config values are set as admin:
+      | enablemyhome | 1 |
+
   @javascript
   Scenario: Typing keys into a field causes them to be input
     Given the following "users" exist:
       | username | email                        | firstname | lastname | password    |
       | saffronr | saffron.rutledge@example.com | Saffron   | Rutledge | flowerpower |
-    Given I click on "Log in" "link"
+    Given I am on homepage
     And I click on "Username" "field"
     When I type "saffronr"
     And I press the tab key
@@ -19,7 +23,7 @@ Feature: Verify that keyboard steps work as expected
 
   @javascript
   Scenario: Using tab changes focus to the next or previous field
-    Given I click on "Log in" "link"
+    Given I am on homepage
     And I click on "Username" "field"
     And the focused element is "Username" "field"
     When I press the tab key
@@ -44,8 +48,7 @@ Feature: Verify that keyboard steps work as expected
      | fullname  | C1|
      | shortname | C1 |
     And I log in as "admin"
-    And I am on "C1" course homepage
-    And I navigate to course participants
+    And I am on the "C1" "enrolled users" page
     And I press "Enrol users"
     And "Enrol users" "dialogue" should be visible
     When I press the escape key
