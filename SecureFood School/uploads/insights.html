@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureFoodSchool | Systemic Insights</title>
+
+    <link rel="stylesheet" href="styles.css?version=31012026">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="js/loader.js"></script>
+</head>
+
+<body>
+
+    <aside class="sidebar-nav">
+        <div class="logo-area">
+            <img src="SecureFood-logo.png" class="logo-collapsed" alt="SF">
+            <img src="SecureFood-logo.png" class="logo-expanded" alt="SecureFood">
+        </div>
+
+        <a href="./insights.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+            <span class="nav-text">Insights</span>
+        </a>
+        <a href="./l4c.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path
+                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+            <span class="nav-text">Student Lab</span>
+        </a>
+        <a href="./ffs.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="nav-text">Future Food</span>
+        </a>
+        <a href="./governance.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="nav-text">Governance</span>
+        </a>
+
+        <!-- Theme Toggle Injected by utils.js -->
+    </aside>
+
+    <main>
+        <section class="insights-hero">
+            <div class="insights-hero-main">
+                <p class="insights-hero-kicker">Real-Time Systemic Intelligence</p>
+                <h1 class="hero-title">Digitalization for<br><span>Safety & Change</span></h1>
+                <p class="insights-hero-description">
+                    Combining digital twins with community action across school kitchens. The dashboard tracks operations,
+                    behavior shifts, and risk response in one field-ready view.
+                </p>
+
+                <div class="insights-hero-ribbon">
+                    <article class="hero-ribbon-item">
+                        <span class="material-icons">bolt</span>
+                        <div>
+                            <strong>6.4 min</strong>
+                            <small>Average alert response</small>
+                        </div>
+                    </article>
+                    <article class="hero-ribbon-item">
+                        <span class="material-icons">history_edu</span>
+                        <div>
+                            <strong>82%</strong>
+                            <small>Reports translated in 24h</small>
+                        </div>
+                    </article>
+                    <article class="hero-ribbon-item">
+                        <span class="material-icons">sync_alt</span>
+                        <div>
+                            <strong>47</strong>
+                            <small>Cross-team sync events/week</small>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="stats-row">
+                    <article class="card stat-card">
+                        <div class="stat-top">
+                            <span class="material-icons">hub</span>
+                            <span>Network</span>
+                        </div>
+                        <span class="stat-value" data-hero-counter data-target="12" data-format="int">12</span>
+                        <small class="stat-label">Living Labs</small>
+                        <span class="stat-delta positive">+2 this quarter</span>
+                    </article>
+                    <article class="card stat-card">
+                        <div class="stat-top">
+                            <span class="material-icons">groups</span>
+                            <span>People</span>
+                        </div>
+                        <span class="stat-value" data-hero-counter data-target="1200" data-format="k">1.2k</span>
+                        <small class="stat-label">Change Agents</small>
+                        <span class="stat-delta positive">+140 active this month</span>
+                    </article>
+                    <article class="card stat-card">
+                        <div class="stat-top">
+                            <span class="material-icons">monitor_heart</span>
+                            <span>Resilience</span>
+                        </div>
+                        <span class="stat-value" data-hero-counter data-target="94.6" data-format="percent1">94.6%</span>
+                        <small class="stat-label">System Pulse Stability</small>
+                        <span class="stat-delta warning">3 hubs require follow-up</span>
+                    </article>
+                </div>
+            </div>
+
+            <div class="card insights-hero-panel">
+                <div class="hero-panel-head">
+                    <h3>System Health Balance</h3>
+                    <span id="heroUpdatedAt" class="hero-updated">Updated just now</span>
+                </div>
+                <div class="hero-chart-shell">
+                    <canvas id="healthChart"></canvas>
+                </div>
+                <div class="hero-signal-list">
+                    <div class="hero-signal-item">
+                        <span class="material-icons hero-signal-icon status-good">check_circle</span>
+                        <div>
+                            <strong id="heroSignalPrimary">Cold chain stable</strong>
+                            <small id="heroSignalDetail">9 hubs stay in safe threshold</small>
+                        </div>
+                    </div>
+                    <div class="hero-signal-item">
+                        <span class="material-icons hero-signal-icon status-warn">warning</span>
+                        <div>
+                            <strong id="heroSignalTrend">Water quality queue</strong>
+                            <small id="heroSignalTrendDetail">2 filters scheduled in next 48h</small>
+                        </div>
+                    </div>
+                    <div class="hero-signal-item">
+                        <span class="material-icons hero-signal-icon status-info">campaign</span>
+                        <div>
+                            <strong>Behavioral campaign</strong>
+                            <small>16 peer sessions planned across 6 regions</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:40px; margin-bottom:50px;">
+            <div class="card" style="padding:0; overflow:hidden;">
+                <div id="map" style="height:400px; width:100%;"></div>
+            </div>
+
+            <div class="card">
+                <h3>Living Labs Geography</h3>
+                <p style="margin-bottom:20px; color:var(--clr-text-muted);">
+                    Our schools are more than buildings; they are active monitoring hubs.
+                </p>
+                <ul id="hubList" style="list-style:none; padding:0; max-height:250px; overflow-y:auto;">
+                    <!-- Hubs injected by JS -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Live Feed -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2>Systemic Insights Feed</h2>
+            <div style="display:flex; gap:10px;">
+                <button id="btnStreamAll" class="btn btn-outline"
+                    style="padding:8px 20px; background:var(--clr-primary); color:white; border-color:var(--clr-primary);">All
+                    Streams</button>
+                <button id="btnStreamData" class="btn"
+                    style="padding:8px 20px; background:var(--clr-surface); border:1px solid var(--clr-border);">Data
+                    Only</button>
+            </div>
+        </div>
+
+        <div class="masonry-feed">
+            <!-- Feed Card 1 -->
+            <div class="card feed-card">
+                <div class="feed-img thumb-gradient-1"></div>
+                <div style="padding:15px;">
+                    <span class="badge badge-accent">Digital Twin</span>
+                    <h4 style="margin:10px 0 5px 0;">Cold Chain Optimization</h4>
+                    <p style="font-size:0.9rem; color:var(--clr-text-muted);">
+                        Sensors detected a deviation. Alert sent to kitchen staff, saving 50L of milk.
+                    </p>
+                    <small style="color:var(--clr-primary); font-weight:600;">2 mins ago</small>
+                </div>
+            </div>
+
+            <!-- Feed Card 2 -->
+            <div class="card feed-card">
+                <div class="feed-img thumb-gradient-2"></div>
+                <div style="padding:15px;">
+                    <span class="badge badge-highlight">Culture Change</span>
+                    <h4 style="margin:10px 0 5px 0;">Behavioral Impact</h4>
+                    <p style="font-size:0.9rem; color:var(--clr-text-muted);">
+                        "Now we understand why closing the fridge matters." — Olena, 9th Grade.
+                    </p>
+                    <small style="color:var(--clr-primary); font-weight:600;">1 hour ago</small>
+                </div>
+            </div>
+
+            <!-- Feed Card 3 -->
+            <div class="card feed-card">
+                <div style="padding:15px;">
+                    <span class="badge badge-accent">Water Quality</span>
+                    <h4 style="margin:10px 0 5px 0;">Filtration Report</h4>
+                    <p style="font-size:0.9rem; color:var(--clr-text-muted);">
+                        pH levels normal. Filter replacement due in 14 days.
+                    </p>
+                    <div
+                        style="margin-top:15px; width:100%; height:4px; background:var(--clr-surface-alt); border-radius:2px;">
+                        <div style="width:80%; height:100%; background:var(--clr-accent);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/insights.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureFood School · Future Food</title>
+<link rel="stylesheet" href="styles.css">
+<script src="js/shell.js"></script>
+</head>
+<body data-page="ffs">
+<script>
+SF.mount(
+  { crumb: ['Dashboard', 'Future Food'] },
+  `
+    <div class="page-head">
+      <div class="titles">
+        <div class="kicker">Adaptive missions</div>
+        <h1>Future Food</h1>
+        <p class="lede">Short scenario-based missions that turn theory into practical food-safety actions. Earn XP, unlock badges, and influence the menu of tomorrow.</p>
+      </div>
+    </div>
+
+    <div class="ff-hero">
+      <div style="position:relative;z-index:1;">
+        <div class="kicker">Agent mode active</div>
+        <h1>Mission: Zero Hunger</h1>
+        <p>Collect evidence, run decision simulations, and earn XP toward your next agent rank. Every action you take shapes a real protocol used in 12 schools.</p>
+        <div style="display:flex;gap:10px;margin-top:18px;">
+          <button class="btn btn-accent"><span class="material-symbols-rounded">play_arrow</span>Start daily mission</button>
+          <button class="btn btn-ghost" style="background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.18);"><span class="material-symbols-rounded">leaderboard</span>Leaderboard</button>
+        </div>
+      </div>
+      <div class="ff-stats">
+        <div class="ff-level-row">
+          <div>
+            <div class="lvl-tag">Current rank</div>
+            <div class="lvl-num">Level 5</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="lvl-tag">Total XP</div>
+            <div class="lvl-num" style="font-size:1.4rem;">2,840</div>
+          </div>
+        </div>
+        <div>
+          <div class="ff-xp-bar"><span style="width:62%;"></span></div>
+          <div class="ff-xp-meta" style="margin-top:6px;"><span>Progress to Level 6</span><span>620 / 1000 XP</span></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="chip" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.18);"><span class="material-symbols-rounded">local_fire_department</span>4-day streak</span>
+          <span class="chip" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.18);"><span class="material-symbols-rounded">workspace_premium</span>9 badges</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin:6px 0 14px;">Achievements</h2>
+    <div class="achievement-row">
+      <div class="ach"><div class="badge-img"><span class="material-symbols-rounded">shield</span></div><div class="name">Guardian</div><div class="xp">+25 XP</div></div>
+      <div class="ach"><div class="badge-img"><span class="material-symbols-rounded">eco</span></div><div class="name">Eco Pioneer</div><div class="xp">+30 XP</div></div>
+      <div class="ach"><div class="badge-img"><span class="material-symbols-rounded">science</span></div><div class="name">Lab Rookie</div><div class="xp">+15 XP</div></div>
+      <div class="ach"><div class="new-pip"></div><div class="badge-img"><span class="material-symbols-rounded">local_fire_department</span></div><div class="name">Streak Keeper</div><div class="xp">New!</div></div>
+      <div class="ach locked"><div class="badge-img"><span class="material-symbols-rounded">restaurant</span></div><div class="name">Protein Pathfinder</div><div class="xp">Locked</div></div>
+      <div class="ach locked"><div class="badge-img"><span class="material-symbols-rounded">verified</span></div><div class="name">Validator</div><div class="xp">Locked</div></div>
+    </div>
+
+    <h2 style="margin:6px 0 14px;">Active missions</h2>
+    <div class="mission-grid">
+      <article class="mission">
+        <div class="mission-thumb m-1">
+          <div class="top-row"><span class="chip solid-amber" style="background:rgba(255,255,255,0.92);color:var(--accent);border:none;">New mission</span><div class="play"><span class="material-symbols-rounded">play_arrow</span></div></div>
+          <span class="duration">14 min</span>
+        </div>
+        <div class="mission-body">
+          <div class="tag-row"><span class="chip">Science</span><span class="chip">Ethics</span><span class="chip">Policy</span></div>
+          <h3>Future of Proteins</h3>
+          <p>How lab-grown meat and insect-based protein could reshape school menus without compromising nutrition.</p>
+          <div class="mission-foot">
+            <span class="xp"><span class="material-symbols-rounded">bolt</span>+50 XP</span>
+            <button class="btn btn-primary" style="padding:7px 14px;font-size:0.82rem;">Start</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mission">
+        <div class="mission-thumb m-2">
+          <div class="top-row"><span class="chip" style="background:rgba(0,0,0,0.4);color:#fff;border:none;">In progress</span><div class="play"><span class="material-symbols-rounded">play_arrow</span></div></div>
+          <span class="duration">9 min left</span>
+        </div>
+        <div class="mission-body">
+          <div class="tag-row"><span class="chip">Tech</span><span class="chip">Sustainability</span><span class="chip">Design</span></div>
+          <h3>Smart Packaging</h3>
+          <p>Test packaging concepts that reduce waste while preserving food quality through the cold chain.</p>
+          <div style="margin:10px 0 12px;">
+            <div class="progress amber"><span style="width:40%"></span></div>
+            <div style="font-size:0.74rem;color:var(--muted);margin-top:4px;">40% complete</div>
+          </div>
+          <div class="mission-foot">
+            <span class="xp"><span class="material-symbols-rounded">bolt</span>+35 XP</span>
+            <button class="btn btn-ghost" style="padding:7px 14px;font-size:0.82rem;">Resume</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mission">
+        <div class="mission-thumb m-3">
+          <div class="top-row"><span class="chip" style="background:rgba(255,255,255,0.92);color:var(--primary);border:none;">Featured</span><div class="play"><span class="material-symbols-rounded">play_arrow</span></div></div>
+          <span class="duration">11 min</span>
+        </div>
+        <div class="mission-body">
+          <div class="tag-row"><span class="chip">Data</span><span class="chip">Health</span></div>
+          <h3>Reading the Cold Chain</h3>
+          <p>Decode a temperature curve and decide whether the milk batch is safe to serve. Real sensor data, real call.</p>
+          <div class="mission-foot">
+            <span class="xp"><span class="material-symbols-rounded">bolt</span>+40 XP</span>
+            <button class="btn btn-primary" style="padding:7px 14px;font-size:0.82rem;">Start</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mission">
+        <div class="mission-thumb m-4">
+          <div class="top-row"><span class="chip" style="background:rgba(255,255,255,0.92);color:var(--success);border:none;">Community</span><div class="play"><span class="material-symbols-rounded">play_arrow</span></div></div>
+          <span class="duration">8 min</span>
+        </div>
+        <div class="mission-body">
+          <div class="tag-row"><span class="chip">Behavior</span><span class="chip">Comms</span></div>
+          <h3>Convince the Council</h3>
+          <p>Run a 3-minute pitch simulation: present a new menu concept to a school parents' council and read the room.</p>
+          <div class="mission-foot">
+            <span class="xp"><span class="material-symbols-rounded">bolt</span>+30 XP</span>
+            <button class="btn btn-primary" style="padding:7px 14px;font-size:0.82rem;">Start</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="decision">
+      <div class="decision-head">
+        <h2><span class="material-symbols-rounded" style="color:var(--accent);vertical-align:-4px;">bolt</span> Decision Point</h2>
+        <span class="chip solid-amber"><span class="material-symbols-rounded">radio_button_checked</span>Live simulation</span>
+      </div>
+      <p class="scenario">A supplier offers cheaper vegetables but refuses to provide safety certificates. The school budget is tight. <strong>What do you do?</strong></p>
+      <div class="choice-grid">
+        <button class="choice-btn" data-correct="false"><span class="material-symbols-rounded">savings</span>Buy them — save the monthly budget</button>
+        <button class="choice-btn" data-correct="true"><span class="material-symbols-rounded">verified_user</span>Reject &amp; report — safety first</button>
+        <button class="choice-btn" data-correct="false"><span class="material-symbols-rounded">block</span>Ignore the offer entirely</button>
+      </div>
+      <div class="feedback hidden" id="feedback"><strong>System feedback:</strong> Correct — safety cannot be compromised. You earned the "Guardian" badge. <span style="color:var(--accent);font-weight:600;">+25 XP</span></div>
+    </div>
+  `
+);
+
+document.querySelectorAll('.choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    const isCorrect = btn.dataset.correct === 'true';
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    const fb = document.getElementById('feedback');
+    fb.classList.remove('hidden');
+    fb.style.borderLeftColor = isCorrect ? 'var(--success)' : 'var(--danger)';
+    fb.innerHTML = isCorrect
+      ? '<strong>System feedback:</strong> Correct — safety cannot be compromised. You earned the "Guardian" badge. <span style="color:var(--accent);font-weight:600;">+25 XP</span>'
+      : '<strong>System feedback:</strong> That choice puts students at risk. Try again — safety always comes before cost.';
+  });
+});
+</script>
+</body>
+</html>

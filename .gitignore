@@ -20,6 +20,13 @@
 *~
 #
 /config.php
+/.env
+/moodledata/*
+!/moodledata/.gitkeep
+/database/init/*
+!/database/init/.gitkeep
+/backups/*
+!/backups/.gitkeep
 /tags
 /TAGS
 /cscope.*

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureFoodSchool | Governance</title>
+
+    <link rel="stylesheet" href="styles.css?version=31012026">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/loader.js"></script>
+</head>
+
+<body>
+
+    <aside class="sidebar-nav">
+        <div class="logo-area">
+            <img src="../SecureFood-logo.png" class="logo-collapsed" alt="SF">
+            <img src="../SecureFood-logo.png" class="logo-expanded" alt="SecureFood">
+        </div>
+
+        <a href="./insights.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+            <span class="nav-text">Insights</span>
+        </a>
+        <a href="./l4c.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path
+                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+            <span class="nav-text">Student Lab</span>
+        </a>
+        <a href="./ffs.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="nav-text">Future Food</span>
+        </a>
+        <a href="./governance.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="nav-text">Governance</span>
+        </a>
+
+        <!-- Theme Toggle Injected by utils.js -->
+    </aside>
+
+    <main>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <div>
+                <h1>Governance Dashboard</h1>
+                <span style="color:var(--clr-accent);">● System Operational</span>
+            </div>
+            <button id="btnDownloadReport" class="btn btn-primary">Download Report</button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid kpi-grid-enhanced">
+            <div class="card">
+                <h3>Infrastructure</h3>
+                <div class="kpi-value">82%</div>
+                <span class="badge badge-accent">▲ 4%</span>
+                <div style="width:100%; height:4px; background:var(--clr-surface-alt); margin-top:10px;">
+                    <div style="width:82%; height:100%; background:var(--clr-accent);"></div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Social Acceptance</h3>
+                <div class="kpi-value kpi-value-social">4.2</div>
+                <span class="badge badge-highlight">/ 5.0</span>
+                <div style="width:100%; height:4px; background:var(--clr-surface-alt); margin-top:10px;">
+                    <div style="width:84%; height:100%; background:var(--clr-highlight);"></div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Staff Trained</h3>
+                <div class="kpi-value">145</div>
+                <small style="color:var(--clr-text-muted)">L4C Courses Completed</small>
+                <div style="width:100%; height:4px; background:var(--clr-surface-alt); margin-top:10px;">
+                    <div style="width:60%; height:100%; background:var(--clr-primary);"></div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Management Tools</h3>
+        <div class="kpi-grid kpi-grid-enhanced" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div id="cardProtocols" class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-accent);"><span class="material-icons"
+                        style="font-size:inherit;">assignment</span></div>
+                <h4>Protocols</h4>
+                <small>Safety standards</small>
+            </div>
+            <div class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-accent);"><span class="material-icons"
+                        style="font-size:inherit;">settings</span></div>
+                <h4>Tech Check</h4>
+                <small>Digital Twin Setup</small>
+            </div>
+            <div class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-highlight);"><span
+                        class="material-icons" style="font-size:inherit;">groups</span></div>
+                <h4>Surveys</h4>
+                <small>Community Polls</small>
+            </div>
+            <div class="card management-card" style="text-align:center; cursor:pointer;">
+                <div style="font-size:2.5rem; margin-bottom:15px; color:var(--clr-primary);"><span
+                        class="material-icons" style="font-size:inherit;">gavel</span></div>
+                <h4>Legal</h4>
+                <small>Contracts</small>
+            </div>
+        </div>
+
+        <div class="kpi-grid kpi-grid-enhanced">
+            <div class="card">
+                <div class="section-header">
+                    <h3>Resource Library</h3>
+                    <div class="filter-row">
+                        <span class="badge badge-accent" style="cursor:pointer;">All</span>
+                        <span class="badge" style="cursor:pointer; background:var(--clr-surface-alt);">Director</span>
+                        <span class="badge" style="cursor:pointer; background:var(--clr-surface-alt);">Supplier</span>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table style="width:100%; text-align:left; border-collapse: collapse;">
+                        <thead style="border-bottom:1px solid var(--clr-border);">
+                            <tr>
+                                <th style="padding:15px 10px; color:var(--clr-text-muted);">Document</th>
+                                <th style="padding:15px 10px; color:var(--clr-text-muted);">Role</th>
+                                <th style="padding:15px 10px; color:var(--clr-text-muted);">Updated</th>
+                                <th style="padding:15px 10px; color:var(--clr-text-muted);">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid var(--clr-surface-alt);">
+                                <td style="padding:15px 10px; display:flex; align-items:center; gap:8px;"><span
+                                        class="material-icons" style="font-size:1.2rem;">description</span> L4C
+                                    Learning Program Strategy</td>
+                                <td><span class="badge">Director</span></td>
+                                <td>Jan 10, 2026</td>
+                                <td><a href="#" style="color:var(--clr-accent); font-weight:600;">Download</a></td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--clr-surface-alt);">
+                                <td style="padding:15px 10px; display:flex; align-items:center; gap:8px;"><span
+                                        class="material-icons" style="font-size:1.2rem;">bar_chart</span> Cold Chain
+                                    Report Q1</td>
+                                <td><span class="badge badge-accent">Tech</span></td>
+                                <td>Jan 09, 2026</td>
+                                <td><a href="#" style="color:var(--clr-accent); font-weight:600;">Download</a></td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--clr-surface-alt);">
+                                <td style="padding:15px 10px; display:flex; align-items:center; gap:8px;"><span
+                                        class="material-icons" style="font-size:1.2rem;">movie</span> Staff Training:
+                                    Hygiene</td>
+                                <td><span class="badge badge-highlight">All</span></td>
+                                <td>Jan 05, 2026</td>
+                                <td><a href="#" style="color:var(--clr-accent); font-weight:600;">View</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align:center; padding-top:20px;">
+                    <a href="#" style="color:var(--clr-text-muted); font-size:0.9rem;">View all 24 documents ↓</a>
+                </div>
+            </div>
+
+            <div class="card" id="votePanel" style="display:flex; flex-direction:column; justify-content:center;">
+                <h3>Quick Validation</h3>
+                <p style="margin-bottom:20px; color:var(--clr-text-muted);">
+                    Is the "Cold Chain v2" protocol clear for your staff?
+                </p>
+                <button class="btn btn-outline" style="width:100%; margin-bottom:15px;" onclick="submitVote('yes')">Yes,
+                    it's clear</button>
+                <button class="btn btn-outline" style="width:100%;" onclick="submitVote('no')">No, needs work</button>
+
+                <div
+                    style="margin-top:auto; padding-top:20px; border-top:1px solid var(--clr-border); text-align:center;">
+                    <small>Need help?</small><br>
+                    <a href="#" style="color:var(--clr-highlight); font-weight:700;">Contact Expert</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/governance.js"></script>
+
+</body>
+
+</html>

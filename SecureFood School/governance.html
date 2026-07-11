@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureFood School · Resources &amp; Standards</title>
+<link rel="stylesheet" href="styles.css">
+<script src="js/shell.js"></script>
+</head>
+<body data-page="governance">
+<script>
+SF.mount(
+  { crumb: ['Dashboard', 'Resources & Standards'] },
+  `
+    <div class="page-head">
+      <div class="titles">
+        <div class="kicker">Governance hub</div>
+        <h1>Resources &amp; Standards</h1>
+        <p class="lede">All protocols, contracts and reference documents in one place — searchable, role-tagged, and ready to share with school staff and suppliers.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span class="chip solid-success"><span class="material-symbols-rounded">circle</span>System operational</span>
+        <button class="btn btn-primary"><span class="material-symbols-rounded">file_download</span>Download report</button>
+      </div>
+    </div>
+
+    <div class="gov-grid-3">
+      <div class="kpi">
+        <div class="kpi-head"><span>Infrastructure readiness</span><span class="material-symbols-rounded">construction</span></div>
+        <div class="kpi-value">82%</div>
+        <div class="progress" style="margin-top:10px;"><span style="width:82%;background:var(--teal);"></span></div>
+        <div class="kpi-sub up" style="margin-top:8px;"><span class="material-symbols-rounded" style="font-size:14px;">trending_up</span>+4 pts vs last quarter</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-head"><span>Social acceptance</span><span class="material-symbols-rounded">groups</span></div>
+        <div class="kpi-value">4.2 <span style="font-size:0.92rem;color:var(--muted);font-weight:500;">/ 5.0</span></div>
+        <div class="progress amber" style="margin-top:10px;"><span style="width:84%"></span></div>
+        <div class="kpi-sub up" style="margin-top:8px;"><span class="material-symbols-rounded" style="font-size:14px;">trending_up</span>1,420 surveys</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-head"><span>Staff trained</span><span class="material-symbols-rounded">school</span></div>
+        <div class="kpi-value">145</div>
+        <div class="progress" style="margin-top:10px;"><span style="width:60%"></span></div>
+        <div class="kpi-sub" style="margin-top:8px;color:var(--muted);">L4C courses completed</div>
+      </div>
+    </div>
+
+    <h2 style="margin-bottom:14px;">Management tools</h2>
+    <div class="gov-tools">
+      <div class="tool">
+        <div class="tool-icon"><span class="material-symbols-rounded">assignment</span></div>
+        <h4>Protocols</h4>
+        <div class="desc">Active safety standards and HACCP guidelines.</div>
+        <div class="count"><span>Active</span><strong>24</strong></div>
+      </div>
+      <div class="tool">
+        <div class="tool-icon" style="background:var(--teal-50);color:var(--teal);"><span class="material-symbols-rounded">settings_input_antenna</span></div>
+        <h4>Tech Check</h4>
+        <div class="desc">Digital twin setup and sensor diagnostics.</div>
+        <div class="count"><span>Sensors</span><strong>312</strong></div>
+      </div>
+      <div class="tool">
+        <div class="tool-icon" style="background:var(--accent-50);color:var(--accent);"><span class="material-symbols-rounded">how_to_vote</span></div>
+        <h4>Surveys</h4>
+        <div class="desc">Community polls and parent feedback rounds.</div>
+        <div class="count"><span>Open</span><strong>3</strong></div>
+      </div>
+      <div class="tool">
+        <div class="tool-icon"><span class="material-symbols-rounded">gavel</span></div>
+        <h4>Legal</h4>
+        <div class="desc">Contracts, supplier MoUs, compliance.</div>
+        <div class="count"><span>Files</span><strong>47</strong></div>
+      </div>
+    </div>
+
+    <div class="map-grid" style="grid-template-columns: 2fr 1fr;">
+      <div class="card resource-card">
+        <div class="resource-head">
+          <h3>Resource library</h3>
+          <div class="filters" id="resourceFilters">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="director">Director</button>
+            <button class="filter-pill" data-filter="supplier">Supplier</button>
+            <button class="filter-pill" data-filter="tech">Tech</button>
+            <button class="filter-pill" data-filter="legal">Legal</button>
+          </div>
+        </div>
+        <div class="doc-list" id="docList"></div>
+        <div style="text-align:center;margin-top:14px;">
+          <button class="btn-link">View all 24 documents →</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <div class="card validate-card">
+          <h3>Quick validation</h3>
+          <p class="scenario">Is the "Cold Chain v2" protocol clear enough for your kitchen staff?</p>
+          <div class="vote-row">
+            <button class="btn btn-primary" data-vote="yes"><span class="material-symbols-rounded">thumb_up</span>Yes, clear</button>
+            <button class="btn btn-ghost" data-vote="no"><span class="material-symbols-rounded">thumb_down</span>Needs work</button>
+          </div>
+          <div class="expert-block">
+            Need help? <a href="#">Contact an expert →</a>
+          </div>
+        </div>
+
+        <div class="gov-side-stats">
+          <div class="side-stat"><div class="icon"><span class="material-symbols-rounded">menu_book</span></div><div><div class="num">24</div><div class="lbl">Active protocols</div></div></div>
+          <div class="side-stat"><div class="icon" style="background:var(--teal-50);color:var(--teal);"><span class="material-symbols-rounded">handshake</span></div><div><div class="num">38</div><div class="lbl">Verified suppliers</div></div></div>
+          <div class="side-stat"><div class="icon" style="background:var(--primary-50);color:var(--primary);"><span class="material-symbols-rounded">history</span></div><div><div class="num">2.3 days</div><div class="lbl">Avg approval time</div></div></div>
+        </div>
+      </div>
+    </div>
+  `
+);
+
+const docs = [
+  { title: 'HACCP Protocol v2.1', sub: 'Cold chain & temperature thresholds', role: 'director', kind: 'pdf', updated: '2 days ago' },
+  { title: 'Supplier MoU Template', sub: 'Standard agreement, EU-aligned', role: 'supplier', kind: 'doc', updated: '5 days ago' },
+  { title: 'Sensor Calibration Guide', sub: 'Setup & maintenance for IoT nodes', role: 'tech', kind: 'pdf', updated: '1 week ago' },
+  { title: 'Menu Audit Worksheet', sub: 'Weekly nutritional check', role: 'director', kind: 'xls', updated: '1 week ago' },
+  { title: 'Data Privacy Annex', sub: 'GDPR clauses for school data', role: 'legal', kind: 'pdf', updated: '2 weeks ago' },
+  { title: 'Procurement Checklist', sub: 'Vegetables & dairy verification', role: 'supplier', kind: 'pdf', updated: '3 weeks ago' },
+  { title: 'Twin Deployment Bundle', sub: 'Onboarding kit for new hubs', role: 'tech', kind: 'zip', updated: '1 month ago' }
+];
+
+const list = document.getElementById('docList');
+function renderDocs(filter='all') {
+  list.innerHTML = docs.filter(d => filter === 'all' || d.role === filter).map(d => `
+    <div class="doc-row fade-in">
+      <div class="doc-icon ${d.kind}">${d.kind.toUpperCase()}</div>
+      <div class="doc-meta">
+        <div class="title">${d.title}</div>
+        <div class="sub">${d.sub}</div>
+      </div>
+      <div class="role-tag"><span class="chip">${d.role}</span></div>
+      <div class="updated">${d.updated}</div>
+      <button class="download" aria-label="Download"><span class="material-symbols-rounded" style="font-size:18px;">file_download</span></button>
+    </div>
+  `).join('');
+}
+renderDocs();
+document.querySelectorAll('.filter-pill').forEach(p => p.addEventListener('click', () => {
+  document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active'));
+  p.classList.add('active');
+  renderDocs(p.dataset.filter);
+}));
+
+document.querySelectorAll('[data-vote]').forEach(b => b.addEventListener('click', () => {
+  const yes = b.dataset.vote === 'yes';
+  b.innerHTML = yes
+    ? '<span class="material-symbols-rounded">check</span>Vote recorded'
+    : '<span class="material-symbols-rounded">check</span>Feedback noted';
+  document.querySelectorAll('[data-vote]').forEach(x => x.disabled = true);
+}));
+</script>
+</body>
+</html>

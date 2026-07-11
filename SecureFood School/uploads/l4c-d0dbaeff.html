@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureFoodSchool | Student Lab</title>
+
+    <link rel="stylesheet" href="styles.css?version=31012026">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/loader.js"></script>
+</head>
+
+<body>
+
+    <aside class="sidebar-nav">
+        <div class="logo-area">
+            <img src="../SecureFood-logo.png" class="logo-collapsed" alt="SF">
+            <img src="../SecureFood-logo.png" class="logo-expanded" alt="SecureFood">
+        </div>
+
+        <a href="./insights.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+            <span class="nav-text">Insights</span>
+        </a>
+        <a href="./l4c.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path
+                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+            <span class="nav-text">Student Lab</span>
+        </a>
+        <a href="./ffs.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="nav-text">Future Food</span>
+        </a>
+        <a href="./governance.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="nav-text">Governance</span>
+        </a>
+
+        <!-- Theme Toggle Injected by utils.js -->
+    </aside>
+
+    <main>
+        <div class="profile-section">
+            <div class="card profile-card">
+                <div class="profile-main">
+                    <div class="profile-avatar">OS</div>
+                    <div>
+                        <span class="badge badge-accent">Analyst-Translator</span>
+                        <h2 style="margin:5px 0 5px 0; font-size:2rem;">Olexandr Shaposhnyk</h2>
+                        <p style="margin:0; color:var(--clr-text-muted);">ID: #L4C-2026-88</p>
+                    </div>
+                </div>
+
+                <div class="profile-chip-row">
+                    <span class="profile-chip"><span class="material-icons">hub</span>Kyiv Living Lab #2</span>
+                    <span class="profile-chip"><span class="material-icons">group</span>Cohort Spring 2026</span>
+                    <span class="profile-chip"><span class="material-icons">emoji_events</span>2 Badges This Week</span>
+                </div>
+
+                <div class="profile-meta-grid">
+                    <div class="profile-meta-item">
+                        <small>Mentor</small>
+                        <strong>Maria Stepanenko</strong>
+                    </div>
+                    <div class="profile-meta-item">
+                        <small>Completed Courses</small>
+                        <strong>5 / 8</strong>
+                    </div>
+                    <div class="profile-meta-item">
+                        <small>Peer Reviews</small>
+                        <strong>14 Submitted</strong>
+                    </div>
+                    <div class="profile-meta-item">
+                        <small>Simulation Accuracy</small>
+                        <strong>92%</strong>
+                    </div>
+                </div>
+
+                <div class="profile-progress-box">
+                    <div class="profile-progress-head">
+                        <span>Next Level: System Validator</span>
+                        <span style="color:var(--clr-highlight);">65%</span>
+                    </div>
+                    <div class="profile-progress-track">
+                        <div style="width:65%; height:100%; background:var(--clr-highlight);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card radar-container">
+                <div class="competency-header">
+                    <div>
+                        <p class="competency-kicker">COMPETENCY MATRIX</p>
+                        <h3 class="competency-title">Skill Signal Radar</h3>
+                    </div>
+                    <div class="competency-chip-row">
+                        <span class="competency-chip"><span class="material-icons">auto_graph</span>Growth +12%</span>
+                        <span class="competency-chip"><span class="material-icons">psychology</span>AI Readiness 4.4</span>
+                    </div>
+                </div>
+                <div class="competency-chart-wrap">
+                    <canvas id="competencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <!-- Widget 1 -->
+            <div class="card sensor-card">
+                <div class="sensor-head">
+                    <h4 style="color:var(--clr-text-muted); font-size:0.8rem; text-transform:uppercase; margin:0;">Live
+                        Sensor Feed</h4>
+                    <span class="sensor-live-pill"><span class="sensor-live-dot"></span>Live</span>
+                </div>
+
+                <div class="sensor-reading-row">
+                    <div>
+                        <span class="feed-value sensor-value">4.3°C</span>
+                        <p class="sensor-caption">Fridge #2 • Cold Chain Node</p>
+                    </div>
+                    <div class="sensor-trend" id="sensorTrendBox">
+                        <span class="material-icons">trending_up</span>
+                        <small id="sensorTrendDelta">+0.1°C</small>
+                    </div>
+                </div>
+
+                <div class="sensor-chart-wrap">
+                    <canvas id="liveTempChart"></canvas>
+                </div>
+
+                <div class="sensor-stats-grid">
+                    <div class="sensor-stat">
+                        <small>Humidity</small>
+                        <strong id="sensorHumidity">63%</strong>
+                    </div>
+                    <div class="sensor-stat">
+                        <small>Door</small>
+                        <strong id="sensorDoorState">Closed</strong>
+                    </div>
+                    <div class="sensor-stat">
+                        <small>Alerts</small>
+                        <strong id="sensorAlertState">None</strong>
+                    </div>
+                </div>
+
+                <div class="sensor-pulse-track">
+                    <span id="sensorPulseFill" style="width:40%;"></span>
+                </div>
+            </div>
+
+            <!-- Widget 2 -->
+            <div class="card team-card">
+                <div class="widget-head">
+                    <h4 class="widget-title">My Team</h4>
+                    <span class="team-live-pill"><span class="team-live-dot"></span><span id="teamOnlineLabel">3
+                            online</span></span>
+                </div>
+
+                <div class="team-avatar-row">
+                    <div class="team-avatar avatar-mentor" title="Maria Stepanenko">
+                        <span>MS</span>
+                    </div>
+                    <div class="team-avatar avatar-peer" title="Andriy Kovalenko">
+                        <span>AK</span>
+                    </div>
+                    <div class="team-avatar avatar-peer" title="Olena Bondar">
+                        <span>OB</span>
+                    </div>
+                    <div class="team-avatar avatar-more" title="More members">
+                        <span>+2</span>
+                    </div>
+                </div>
+
+                <div class="team-meta-grid">
+                    <div class="team-meta-item">
+                        <small>Next Sync</small>
+                        <strong id="teamNextSync">Tomorrow, 14:00</strong>
+                    </div>
+                    <div class="team-meta-item">
+                        <small>Focus</small>
+                        <strong>Report Translation</strong>
+                    </div>
+                </div>
+
+                <div class="team-pulse-track">
+                    <span id="teamPulseFill" style="width:62%;"></span>
+                </div>
+                <small class="team-pulse-label">Coordination readiness: <strong id="teamPulseLabel">62%</strong></small>
+
+                <button id="btnViewCalendar" class="btn btn-outline team-action-btn">View Calendar</button>
+            </div>
+
+            <!-- Widget 3 -->
+            <div class="card review-card">
+                <div class="widget-head">
+                    <h4 class="widget-title">Pending Review</h4>
+                    <span class="review-counter" id="reviewCounterLabel">1 pending</span>
+                </div>
+
+                <ul class="review-list">
+                    <li class="review-item status-pending">
+                        <span class="material-icons">schedule</span>
+                        <div>
+                            <strong>Maria S. Project</strong>
+                            <small>Due in 3h</small>
+                        </div>
+                        <span class="review-state">Pending</span>
+                    </li>
+                    <li class="review-item status-active">
+                        <span class="material-icons">autorenew</span>
+                        <div>
+                            <strong>Peer Lab #2</strong>
+                            <small>In review</small>
+                        </div>
+                        <span class="review-state">In Progress</span>
+                    </li>
+                    <li class="review-item status-done">
+                        <span class="material-icons">check_circle</span>
+                        <div>
+                            <strong>Group #4</strong>
+                            <small>Feedback submitted</small>
+                        </div>
+                        <span class="review-state">Completed</span>
+                    </li>
+                </ul>
+
+                <div class="review-footer">
+                    <small>Weekly throughput</small>
+                    <strong id="reviewThroughputLabel">7 / 10 reviewed</strong>
+                </div>
+                <div class="review-track">
+                    <span id="reviewTrackFill" style="width:70%;"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journey Map -->
+        <section class="card learning-program-card">
+            <div class="learning-program-header">
+                <div class="learning-program-meta">
+                    <p class="learning-program-tag">Learning Program</p>
+                    <h2 style="margin:0;">L4C Journey Map</h2>
+                    <p style="margin:0; color:var(--clr-text-muted);">Three connected courses, one pathway from sensing
+                        to field validation.</p>
+                </div>
+                <div class="learning-program-progress">
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--clr-text-muted);">
+                        <span>Program Completion</span>
+                        <span id="journeyProgressLabel">33%</span>
+                    </div>
+                    <div class="learning-program-track">
+                        <span id="journeyProgressBar" style="width:33%;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="program-courses">
+                <article class="program-course completed">
+                    <div class="program-course-top">
+                        <span class="course-code">Course 1</span>
+                        <div class="course-top-controls">
+                            <span class="course-status status-completed">Completed</span>
+                            <button class="course-toggle" type="button" aria-label="Toggle course content"
+                                aria-expanded="false">
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="course-media cover-data">
+                        <span class="material-icons course-media-icon">sensors</span>
+                        <span class="course-media-label">Digital Twin Foundations</span>
+                    </div>
+                    <div class="course-meta">
+                        <span class="course-meta-item"><span class="material-icons">view_module</span>4 Modules</span>
+                        <span class="course-meta-item"><span class="material-icons">schedule</span>2h 40m</span>
+                        <span class="course-meta-item"><span class="material-icons">school</span>Core</span>
+                    </div>
+                    <h3>Digital Twins & Data Foundations</h3>
+                    <p class="course-description">Interpret sensor signals and convert anomalies into safe operational
+                        actions.</p>
+                    <ul class="course-modules">
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 1: IoT Sensor
+                            Baseline</li>
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 2: Data Quality
+                            Checks</li>
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 3: Risk Signal
+                            Mapping</li>
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 4: Incident
+                            Storyboard</li>
+                    </ul>
+                </article>
+
+                <article class="program-course active">
+                    <div class="program-course-top">
+                        <span class="course-code">Course 2</span>
+                        <div class="course-top-controls">
+                            <span class="course-status status-active">In Progress</span>
+                            <button class="course-toggle" type="button" aria-label="Toggle course content"
+                                aria-expanded="true">
+                                <span class="material-icons">expand_less</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="course-media cover-sim">
+                        <span class="material-icons course-media-icon">science</span>
+                        <span class="course-media-label">Translation Lab</span>
+                    </div>
+                    <div class="course-meta">
+                        <span class="course-meta-item"><span class="material-icons">view_module</span>5 Modules</span>
+                        <span class="course-meta-item"><span class="material-icons">schedule</span>3h 10m</span>
+                        <span class="course-meta-item"><span class="material-icons">record_voice_over</span>Practice</span>
+                    </div>
+                    <h3>System Lab Simulation</h3>
+                    <p class="course-description">Practice translating technical evidence into communication that works for
+                        school teams.</p>
+                    <ul class="course-modules">
+                        <li class="module-done"><span class="material-icons">check_circle</span>Module 1: Context Brief
+                            Decoding</li>
+                        <li class="module-current"><span class="material-icons">play_circle</span>Module 2: Report
+                            Translation Lab</li>
+                        <li class="module-pending"><span class="material-icons">radio_button_unchecked</span>Module 3:
+                            Stakeholder Role-play</li>
+                        <li class="module-pending"><span class="material-icons">radio_button_unchecked</span>Module 4:
+                            Feedback Rewrite</li>
+                        <li class="module-pending"><span class="material-icons">radio_button_unchecked</span>Module 5:
+                            Final Submission</li>
+                    </ul>
+                    <div class="course-action-panel">
+                        <p style="margin:0 0 15px 0;">Task: Adapt the technical water quality report for the school
+                            administration.</p>
+                        <button id="btnStartSim" class="btn btn-primary">Start Course Lab</button>
+                    </div>
+                </article>
+
+                <article class="program-course locked">
+                    <div class="program-course-top">
+                        <span class="course-code">Course 3</span>
+                        <div class="course-top-controls">
+                            <span class="course-status status-locked">Locked</span>
+                            <button class="course-toggle" type="button" aria-label="Toggle course content"
+                                aria-expanded="false">
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="course-media cover-field">
+                        <span class="material-icons course-media-icon">public</span>
+                        <span class="course-media-label">Living Lab Validation</span>
+                    </div>
+                    <div class="course-meta">
+                        <span class="course-meta-item"><span class="material-icons">view_module</span>4 Modules</span>
+                        <span class="course-meta-item"><span class="material-icons">schedule</span>2h 30m</span>
+                        <span class="course-meta-item"><span class="material-icons">flag</span>Capstone</span>
+                    </div>
+                    <h3>Living Labs Validation Sprint</h3>
+                    <p class="course-description">Run on-site validation with mentors and convert findings into
+                        governance-ready evidence.</p>
+                    <ul class="course-modules">
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 1: Field Audit Kickoff
+                        </li>
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 2: Cross-team
+                            Verification</li>
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 3: Evidence Packaging
+                        </li>
+                        <li class="module-locked"><span class="material-icons">lock</span>Module 4: Governance Debrief
+                        </li>
+                    </ul>
+                    <small class="course-note">Locked. Complete Course 2 first.</small>
+                </article>
+            </div>
+        </section>
+
+        <!-- Calendar Modal -->
+        <div id="calendarModal" class="modal-overlay">
+            <div class="modal-card">
+                <div class="section-header" style="margin-bottom:15px; display:flex; justify-content:space-between;">
+                    <h3>Sync Calendar</h3>
+                    <button id="btnCloseCalendar" class="btn btn-outline"
+                        style="padding:5px 10px; border:none; font-size:1.2rem;">&times;</button>
+                </div>
+                <div style="text-align:center; margin-bottom:10px;">
+                    <strong style="font-size:1.1rem;">February 2026</strong>
+                </div>
+                <div class="calendar-grid">
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">Mo</div>
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">Tu</div>
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">We</div>
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">Th</div>
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">Fr</div>
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">Sa</div>
+                    <div style="font-weight:bold; font-size:0.8rem; color:var(--clr-text-muted);">Su</div>
+
+                    <!-- Days injected by JS, or hardcoded fake data -->
+                    <div class="cal-day empty"></div>
+                    <div class="cal-day">1</div>
+                    <div class="cal-day">2</div>
+                    <div class="cal-day event">3</div>
+                    <div class="cal-day">4</div>
+                    <div class="cal-day">5</div>
+                    <div class="cal-day">6</div>
+                    <div class="cal-day">7</div>
+                    <div class="cal-day">8</div>
+                    <div class="cal-day event">9</div>
+                    <div class="cal-day">10</div>
+                    <div class="cal-day">11</div>
+                    <div class="cal-day today">12</div>
+                    <div class="cal-day">13</div>
+                    <div class="cal-day">14</div>
+                    <div class="cal-day">15</div>
+                    <div class="cal-day event">16</div>
+                    <div class="cal-day">17</div>
+                    <div class="cal-day">18</div>
+                    <div class="cal-day">19</div>
+                    <div class="cal-day">20</div>
+                    <div class="cal-day">21</div>
+                    <div class="cal-day">22</div>
+                    <div class="cal-day">23</div>
+                    <div class="cal-day">24</div>
+                    <div class="cal-day">25</div>
+                    <div class="cal-day event">26</div>
+                    <div class="cal-day">27</div>
+                    <div class="cal-day">28</div>
+                </div>
+                <div style="margin-top:20px;">
+                    <button id="btnAddReminder" class="btn btn-primary" style="width:100%;">Add Reminder</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/l4c.js"></script>
+
+</body>
+
+</html>

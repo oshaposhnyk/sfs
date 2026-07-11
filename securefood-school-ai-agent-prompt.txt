@@ -1,0 +1,631 @@
+You are an AI agent responsible for producing a detailed technical implementation report for the SecureFood School platform.
+
+Write the report in English, using precise technical language suitable for a project owner, Moodle developer, backend engineer, frontend/PWA engineer, and system administrator.
+
+The report must describe how SecureFood School should be implemented as a real Moodle-based learning platform, not as static HTML mockups.
+
+Project Context
+---------------
+
+Project name: SecureFood School
+
+Base LMS: Moodle LMS 5.2.1.
+
+Use Moodle 5.2.1 as the target version. At the time of analysis, Moodle 5.2.1 is the latest official Moodle LMS release listed on the official Moodle downloads page.
+
+Runtime requirements for Moodle 5.2.1:
+- PHP 8.3
+- MariaDB 10.11+ or MySQL 8.4+ or PostgreSQL 16+ or MSSQL 2019+
+- HTTPS-enabled web server
+- Moodle cron configured and running reliably
+- Moodledata storage configured outside the web root
+- Recommended production cache layer: Redis/MUC cache
+- Email and notification transport configured
+
+The frontend will be a custom Moodle App experience, but the target build is a PWA/web application rather than native iOS/Android packages.
+
+The visual design will be fully rewritten for SecureFood School. The provided HTML files are design prototypes only. The final implementation must use Moodle data, Moodle Web Services, Moodle plugins, Moodle user preferences, cohorts, enrolments, course completion, notifications, and custom APIs.
+
+Design References
+-----------------
+
+There are two key design prototypes:
+
+1. Student Lab / Learning Plans page
+2. Settings page
+
+Treat these files as UI references for layout, interaction, information architecture, and data requirements. Do not treat them as production code.
+
+Student Lab Requirements
+------------------------
+
+The Student Lab screen is the main learner-facing learning plan dashboard.
+
+The screen must include a SecureFood School application shell:
+- Sidebar navigation
+- Topbar
+- Breadcrumbs
+- Search entry point
+- Theme toggle
+- Notifications entry point
+- User identity block
+
+Main navigation sections:
+- About the Project
+- Student Lab
+- Future Food
+- Resources & Standards
+- Notifications
+- Messages
+- Settings
+
+The Student Lab page must show the user's active learning plan.
+
+The top learning plan bar must include:
+- Active learning plan name
+- Learning plan switcher/dropdown
+- Number of completed courses versus total courses
+- Overall completion percentage
+- Learner level or plan level
+- Current stage label
+- Progress bar
+- Continue learning action
+- Activity action
+
+Learning plans must be divided into stages/sections.
+
+Each stage/section must include:
+- Stage number or completion/locked icon
+- Stage title
+- Course count
+- Estimated effort
+- Stage status: completed, in progress, up next, locked
+- A grid/list of course tiles
+
+Each course tile must include:
+- Course order or code
+- Course title
+- Short description
+- Course status: done, active, up next, locked
+- Module count
+- Estimated duration/effort
+- Progress percentage
+- Action label: Review, Resume, Start
+- Locked state when prerequisites are not satisfied
+
+Continue learning must open the most relevant unfinished activity:
+- First active course if available
+- Otherwise the first incomplete course in the active plan
+- Otherwise the first available review course
+
+Locked courses must not be launchable from the UI.
+
+Settings Requirements
+---------------------
+
+The Settings screen must be integrated with Moodle APIs and custom preferences. It must not rely on localStorage-only state.
+
+Settings sections:
+
+1. Profile
+- Full name
+- Display name
+- Email
+- Cohort
+- Role
+
+The cohort value must be derived from Moodle cohort membership and should normally be read-only for learners.
+
+The role value must be derived from Moodle role assignments, either at system level or course/context level.
+
+2. Language & Region
+- Interface language
+- Timezone
+- Date format
+
+Language and timezone should map to Moodle user profile/preferences where possible. Date format can be stored as a custom user preference if there is no direct Moodle-native equivalent.
+
+3. Password
+- Current password
+- New password
+- Confirm new password
+
+Password updates must use Moodle password policy and secure Moodle password-change flow. Passwords must never be stored in the PWA.
+
+4. Appearance
+- Light theme
+- Dark theme
+- System theme
+
+Appearance preference should be stored as a Moodle user preference and cached locally in the PWA for immediate rendering.
+
+5. Notifications
+- Learning updates
+- Grades
+- Badges and achievements
+- System alerts
+
+These preferences must integrate with Moodle notifications/messages and custom SecureFood School events.
+
+6. Privacy
+- Show profile in cohort directory
+- Allow direct messages from cohort members
+- Share learning progress with mentors
+
+These can be implemented as custom Moodle user preferences.
+
+7. Sessions
+- Current active session/device
+- Other active sessions/devices
+- Revoke session action
+
+Session revocation must invalidate the related Moodle session/token where technically possible.
+
+Moodle Architecture
+-------------------
+
+The platform must be implemented on Moodle LMS 5.2.1.
+
+Required Moodle features:
+- Web services enabled
+- Moodle Mobile services enabled
+- Completion tracking enabled
+- Course completion configured
+- Activity completion configured
+- Cohorts enabled
+- Enrolment plugins configured
+- Notifications/messages enabled
+- Badges enabled if achievements are part of the platform
+- Gradebook enabled for course and activity grading
+- Cron and scheduled tasks configured
+
+Core Moodle entities used by the platform:
+- Users
+- Courses
+- Course categories
+- Course sections
+- Course modules
+- Cohorts
+- Enrolments
+- Roles and capabilities
+- Groups/groupings where needed
+- Completion tracking
+- Gradebook
+- Badges
+- Notifications
+- Messages
+- User preferences
+
+Custom Learning Plans Plugin
+----------------------------
+
+Implement a custom Moodle plugin for SecureFood School learning plans.
+
+Do not confuse this with Moodle core competency learning plans unless the project explicitly decides to integrate with competencies later.
+
+Recommended plugin split:
+
+1. local_sfsplans
+This plugin owns learning plan management, data model, web services, scheduled tasks, event observers, progress aggregation, and admin reports.
+
+2. enrol_sfsplan
+This optional enrolment plugin owns enrolment behavior when a user is enrolled into a learning plan. If the team chooses to avoid a separate enrol plugin, local_sfsplans must still use Moodle enrolment APIs cleanly and explicitly.
+
+Learning plan features:
+- Create, edit, archive, and hide learning plans
+- Group courses into ordered stages/sections
+- Sort courses within each stage
+- Mark courses as required or optional
+- Define prerequisites/unlock rules
+- Enrol a user directly into a learning plan
+- Automatically enrol a learning plan user into all courses in that plan
+- Link one or more Moodle cohorts to a learning plan
+- Automatically enrol a user into a learning plan when the user is added to a linked cohort
+- Automatically enrol the user into all courses of that learning plan
+- Reconcile missing enrolments with a scheduled task
+- Keep a sync log with success/error details
+- Support a removal policy when a user is removed from a linked cohort
+
+Removal policy options:
+- Suspend learning plan enrolment only
+- Suspend course enrolments
+- Fully unenrol from learning plan and courses
+- Keep enrolment but mark source cohort as removed
+
+Recommended Data Model
+----------------------
+
+Use Moodle XMLDB install.xml definitions and upgrade.php migrations.
+
+Recommended tables:
+
+local_sfsplans_plan
+- id
+- name
+- shortname
+- description
+- status
+- visible
+- icon
+- colour
+- sortorder
+- timecreated
+- timemodified
+
+local_sfsplans_section
+- id
+- planid
+- name
+- description
+- sortorder
+- unlockrule
+- timecreated
+- timemodified
+
+local_sfsplans_course
+- id
+- planid
+- sectionid
+- courseid
+- sortorder
+- required
+- prerequisitejson
+- unlockpolicy
+- timecreated
+- timemodified
+
+local_sfsplans_cohort
+- id
+- planid
+- cohortid
+- roleid
+- startdate
+- enddate
+- removepolicy
+- timecreated
+- timemodified
+
+local_sfsplans_user
+- id
+- planid
+- userid
+- source
+- cohortid
+- status
+- timeenrolled
+- timecompleted
+- timecreated
+- timemodified
+
+local_sfsplans_sync_log
+- id
+- planid
+- userid
+- action
+- status
+- message
+- timecreated
+
+Events and Synchronization
+--------------------------
+
+Implement Moodle event observers.
+
+Observer: cohort_member_added
+- Detect when a user is added to a cohort.
+- Find all active learning plans linked to that cohort.
+- Create or update the user's learning plan enrolment.
+- Enrol the user into all required Moodle courses in the plan.
+- Use the configured roleid for course enrolment.
+- Write sync log entries.
+- Trigger notification if enabled.
+
+Observer: cohort_member_removed
+- Detect when a user is removed from a cohort.
+- Find learning plan enrolments sourced from that cohort.
+- Apply the configured removal policy.
+- Write sync log entries.
+- Trigger notification if needed.
+
+Scheduled reconciliation task:
+- Iterate active cohort-plan mappings.
+- Compare cohort members against local_sfsplans_user records.
+- Create missing learning plan enrolments.
+- Repair missing course enrolments.
+- Detect invalid course mappings.
+- Detect suspended/deleted users.
+- Write sync log entries.
+- Produce admin-visible summary statistics.
+
+Completion aggregation task/API:
+- Calculate course progress from Moodle completion APIs.
+- Calculate stage progress from courses in each stage.
+- Calculate learning plan completion percentage.
+- Mark learning plan completed when all required courses are complete.
+- Persist completion timestamp in local_sfsplans_user.
+
+Required Web Services for PWA
+-----------------------------
+
+Expose secure external functions through Moodle Web Services.
+
+Recommended service functions:
+
+local_sfsplans_get_my_plans
+- Returns all learning plans available/enrolled for the current user.
+
+local_sfsplans_get_plan
+- Returns one learning plan with sections, courses, progress, lock status, and next activity.
+
+local_sfsplans_set_active_plan
+- Stores active plan preference for the current user.
+
+local_sfsplans_get_continue_learning
+- Returns the recommended next course/activity URL and metadata.
+
+local_sfsplans_get_activity
+- Returns recent learning activity for the current user.
+
+local_sfsplans_get_admin_stats
+- Returns platform statistics for admins/managers.
+
+local_sfsplans_enrol_user
+- Enrols a user directly into a learning plan.
+
+local_sfsplans_link_cohort
+- Links a cohort to a learning plan.
+
+local_sfsplans_run_sync
+- Allows an authorized admin to trigger learning plan sync manually.
+
+All functions must enforce Moodle capabilities, context checks, parameter validation, return structure validation, and sesskey/token security as appropriate.
+
+PWA / Custom Moodle App Architecture
+------------------------------------
+
+Use the Moodle App codebase as the foundation where appropriate, but implement the SecureFood School experience as a custom PWA build.
+
+The implementation should use Angular/Ionic components rather than static HTML.
+
+PWA requirements:
+- Web app manifest
+- Service worker
+- App shell caching
+- Offline-tolerant UI for already-loaded plan/course metadata
+- Token-based Moodle authentication
+- Secure handling of Moodle web service token
+- Responsive layout for desktop, tablet, and mobile
+- Light, dark, and system theme modes
+- Accessible navigation and keyboard support
+- Error states, loading states, and empty states
+
+Important limitation:
+The official Moodle App documentation treats browser execution mainly as a development workflow. Production PWA behavior must be explicitly tested, especially for SCORM, H5P, file access, and any feature that normally depends on native Cordova/Capacitor APIs.
+
+If self-hosting the PWA, verify these headers where needed:
+- Cross-Origin-Opener-Policy: same-origin
+- Cross-Origin-Embedder-Policy: require-corp
+
+Student Lab Data Mapping
+------------------------
+
+Map the UI to real data as follows:
+
+Plan bar:
+- plan name -> local_sfsplans_plan.name
+- completed/total courses -> aggregated required courses completion
+- completion percentage -> completion aggregation
+- level -> custom plan field or derived learner level
+- current stage -> first incomplete/unlocked stage
+- progress bar -> completion percentage
+
+Plan switcher:
+- available plans -> local_sfsplans_user records plus cohort-derived availability
+- active plan -> Moodle user preference
+
+Stage sections:
+- stages -> local_sfsplans_section
+- stage status -> derived from child course completion and unlock rules
+
+Course tiles:
+- title/description -> Moodle course fields plus optional plugin metadata
+- module count -> count of visible course modules
+- duration/effort -> custom course field or plugin metadata
+- status -> derived from enrolment, completion, and unlock rules
+- progress -> Moodle course completion/activity completion
+- action -> derived from status
+- launch URL -> Moodle course URL or app route to course/activity
+
+Settings Data Mapping
+---------------------
+
+Profile:
+- full name -> Moodle user firstname/lastname or fullname formatter
+- display name -> custom profile field or Moodle preference
+- email -> Moodle user email
+- cohort -> Moodle cohort membership
+- role -> Moodle role assignments
+
+Locale:
+- language -> user lang
+- timezone -> user timezone
+- date format -> custom preference
+
+Password:
+- Moodle password policy
+- Moodle secure password change flow
+
+Appearance:
+- local_sfs_theme user preference
+- local PWA cache for fast initial render
+
+Notifications:
+- Moodle notifications/messages
+- custom event subscriptions for SecureFood School learning plan events
+
+Privacy:
+- local_sfs_privacy_directory
+- local_sfs_privacy_direct_messages
+- local_sfs_privacy_progress_mentors
+
+Sessions:
+- Moodle session/token metadata
+- token revocation where supported
+
+Statistics and Reporting
+------------------------
+
+The technical report must describe the statistics that should be collected and displayed.
+
+Required platform statistics:
+- Moodle version and build
+- PHP version
+- Database type/version
+- Number of users
+- Number of active users
+- Number of cohorts
+- Number of courses
+- Number of course categories
+- Number of learning plans
+- Number of learning plan stages
+- Number of courses linked to learning plans
+- Number of learning plan enrolments
+- Number of enrolments created by cohort sync
+- Number of direct learning plan enrolments
+- Completion rate per learning plan
+- Completion rate per cohort
+- Average course progress
+- Active/inactive users
+- Failed sync attempts
+- Last successful sync timestamp
+- Last failed sync timestamp
+- Last cron run timestamp
+- Badges/achievements issued
+- Notifications sent
+- Messages sent
+- Course activity volume
+
+Admin report sections:
+- System health
+- Moodle environment
+- Learning plan overview
+- Cohort synchronization status
+- Enrolment statistics
+- Completion analytics
+- Error/sync log
+- User activity
+- Notification delivery
+
+Security and Permissions
+------------------------
+
+Define Moodle capabilities for the custom plugin.
+
+Recommended capabilities:
+- local/sfsplans:view
+- local/sfsplans:viewown
+- local/sfsplans:manage
+- local/sfsplans:managecohorts
+- local/sfsplans:enrolusers
+- local/sfsplans:viewreports
+- local/sfsplans:runsync
+
+Security requirements:
+- Enforce context and capability checks in every external function.
+- Do not expose other users' progress to learners.
+- Mentors/managers can view only allowed cohorts/courses.
+- Admins can view global reports.
+- Validate all input parameters.
+- Use Moodle parameter types.
+- Escape all rendered output.
+- Avoid storing sensitive tokens in insecure localStorage if a safer storage option is available.
+- Never store passwords client-side.
+- Log administrative actions.
+
+Testing Checklist
+-----------------
+
+The report must include a testing checklist.
+
+Functional tests:
+- Create learning plan.
+- Add stages.
+- Add courses to stages.
+- Link cohort to learning plan.
+- Add user to cohort.
+- Verify automatic learning plan enrolment.
+- Verify automatic course enrolments.
+- Remove user from cohort.
+- Verify configured removal policy.
+- Complete a course.
+- Verify stage and plan progress updates.
+- Use Continue learning.
+- Switch active learning plan.
+- Save settings.
+- Change language/timezone.
+- Change theme.
+- Change notification preferences.
+- Verify privacy settings.
+- Revoke session/token if supported.
+
+Technical tests:
+- Moodle cron runs successfully.
+- Scheduled reconciliation task works.
+- Event observers fire correctly.
+- Web service functions return valid data.
+- Capability checks reject unauthorized users.
+- PWA loads on desktop/tablet/mobile.
+- PWA handles offline/slow network state.
+- PWA service worker does not cache sensitive responses incorrectly.
+- Theme rendering works before and after login.
+- Completion data matches Moodle course completion.
+- Sync logs are written correctly.
+
+Known Risks and Limitations
+---------------------------
+
+The report must explicitly mention these risks:
+- Moodle App browser/PWA behavior must be tested separately from native app behavior.
+- SCORM/H5P and file-heavy activities may behave differently in a browser/PWA context.
+- Cohort synchronization must be idempotent to avoid duplicate enrolments.
+- Course completion depends on correct completion settings in every course.
+- User progress visibility must follow privacy and role rules.
+- Learning plan removal policy must be agreed before production rollout.
+- Local cached data must not become the source of truth.
+- Moodle remains the source of truth for users, courses, enrolments, completion, grades, and notifications.
+
+Final Report Structure
+----------------------
+
+Produce the final report using this structure:
+
+1. Executive Summary
+2. Deployment Environment
+3. Moodle Version and Runtime Requirements
+4. Installed and Configured Moodle Components
+5. SecureFood School PWA Architecture
+6. Learning Plans Plugin Architecture
+7. Cohorts and Automatic Enrolment Flow
+8. Course Structure, Sections, and Stages
+9. Student Lab Screen Implementation
+10. Settings Screen Implementation
+11. Statistics and Analytics
+12. Security, Roles, and Permissions
+13. Synchronization and Scheduled Tasks
+14. Testing Checklist
+15. Known Risks and Limitations
+16. Next Steps
+
+Important Instruction
+---------------------
+
+Make it clear throughout the report that the current HTML pages are design prototypes. The production implementation must replace hardcoded mock data and localStorage-only behavior with Moodle APIs, Moodle Web Services, Moodle user preferences, Moodle cohorts, Moodle enrolments, Moodle completion tracking, and custom SecureFood School plugins.
+
+Official References
+-------------------
+
+Use these official references when validating technical statements:
+- Moodle latest release: https://download.moodle.org/releases/latest/
+- Moodle App customisation: https://moodledev.io/general/app/customisation
+- Moodle App development setup: https://moodledev.io/general/app/development/setup
+- Moodle App browser development notes: https://moodledev.io/general/app/development/setup/app-in-browser
