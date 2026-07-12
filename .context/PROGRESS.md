@@ -404,3 +404,11 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   Lab overview — now sums MUC-cached progress across all plans: 41→21 reads
   and semantically better (all plans, not just active). perfdebug flag was
   temporary in config.php and removed.
+
+- **2026-07-12** — **Phase 7 opened; 7.1 shipped (real achievements)**:
+  badge artwork in the achievements grid (pluginfile f1, greyscale when
+  locked); two real site badges seeded (manual criteria, badge API records +
+  badges_process_badge_image with the design logo) and one issued to the
+  test learner — XP hero now shows genuine Level 1 · 100 XP with a moving
+  bar. Verified by screenshot. Next: 7.2 AJAX plan switcher, 7.3 unified
+  settings hub, 7.4 cron (docker — owner approval).
