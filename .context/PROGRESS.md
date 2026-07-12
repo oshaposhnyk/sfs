@@ -412,3 +412,9 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   test learner — XP hero now shows genuine Level 1 · 100 XP with a moving
   bar. Verified by screenshot. Next: 7.2 AJAX plan switcher, 7.3 unified
   settings hub, 7.4 cron (docker — owner approval).
+
+- **2026-07-12** — **Phase 7.2 shipped (AJAX plan switcher)**: planswitcher
+  AMD (src + build) calls the 6.3 external over core/ajax with PRG links as
+  no-JS fallback. Playwright E2E: switch via WS confirmed (service.php call
+  observed), clean URL, switch-back OK. Remaining: 7.3 settings hub,
+  7.4 cron (owner approval for docker).
