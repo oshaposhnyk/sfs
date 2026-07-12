@@ -179,3 +179,53 @@ comes from.
 
 **Consequences.** Zero `db/` changes; learners get the designed experience with
 real data; stages/effort/level appear once their data model is agreed.
+
+## ADR-009 — Future Food v1 is backed by core badges + completion data
+
+**Status.** Accepted (2026-07-12, Phase 4; recorded retroactively during
+Phase 9 after the conformance audit flagged the missing entry — the code has
+referenced ADR-009 since local_sfsgame v1).
+
+**Context.** The Future Food page needs XP, levels, achievements and missions,
+but the platform has no gamification backend and inventing one before the
+pilot would be speculative.
+
+**Decision.**
+- Achievements = core **site badges**; earned badges and completed courses
+  drive XP through the pure `xp_policy` domain class (100 XP per badge,
+  50 XP per completed plan course, a level per 500 XP).
+- Missions = administrator-curated JSON setting only; no invented backend.
+- No new tables; everything derives from data Moodle already stores.
+
+**Consequences.** Zero schema risk; admins control missions/badges entirely
+through settings and the badges UI. Known limit (Phase 9 finding): a completed
+course that belongs to several plans is counted once per plan — XP should
+move to counting distinct completed courses.
+
+## ADR-010 — Content language strategy: multilang (uk + en)
+
+**Status.** Accepted (2026-07-12, owner decision for Phase 9.1).
+
+**Context.** The pilot serves Ukrainian schools but the network is
+international; plugin lang packs already ship en+uk. The open question was
+user-authored content (course names, plan/stage names, settings-driven copy).
+
+**Decision.**
+- The official **uk core language pack is installed**; users pick their
+  interface language (learner default may be uk).
+- The core **multilang filter is enabled** for content *and* strings
+  (`stringfilters=multilang`, `filterall=1`), so `format_string()` sites
+  (plan names, course names, headings) resolve per-language variants.
+- Bilingual content is authored with core span syntax, both variants in one
+  value:
+  `<span lang="en" class="multilang">…</span><span lang="uk" class="multilang">…</span>`
+- Settings-driven copy (About, Future Food hero, Resources docs) accepts the
+  same markup — plugin code must keep passing such values through
+  `format_string()`/`format_text()`, never raw.
+- Interface strings stay in lang packs (en+uk in sync — hard rule); the
+  owner performs the human uk review (9.6).
+
+**Consequences.** No code changes required; content authors carry the
+duty of providing both variants (single-language values simply render as-is).
+Verified E2E on Student Lab: uk interface + uk plan/course names via
+`?lang=uk`.

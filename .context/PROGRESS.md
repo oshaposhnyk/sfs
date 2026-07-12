@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-12 (Phase 8 style audit complete — see PHASE8_AUDIT.md)
+Last updated: 2026-07-12 (P1 fidelity slice 1 in progress)
 
 ## Domain status
 
@@ -31,24 +31,40 @@ Last updated: 2026-07-12 (Phase 8 style audit complete — see PHASE8_AUDIT.md)
   Mustache pages: index/view/edit/my/enrol/cohorts.
 - Design prototypes complete in `SecureFood School/` (6 pages, design system CSS,
   shell JS, logo assets, screenshots).
-- No custom theme exists yet.
+- `theme_securefood` v0.1.0 (MATURITY_ALPHA) is installed and active; the
+  independent audit below found material fidelity, customisation and QA gaps.
 
 ## Blockers / risks
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| `enrol_learningplan` untested | Enrol round-trip may fail silently in edge cases | Domain 10 remaining tasks: PHPUnit + manual E2E before Phase 3 relies on it |
-| Prototype CSS is not BEM and uses inline styles in HTML | 1:1 visual port must still be rewritten to BEM + tokens | `design/components.md` defines the mapping; never copy prototype classes verbatim |
-| Prototype loads Google Fonts + Material Icons from CDN | Forbidden (privacy/no-CDN rule) | Self-host in theme fonts/ — Phase 1 |
-| Prototype persists theme/sidebar in localStorage only | Product brief requires server-side preferences | Domain 03 user preferences with client cache |
-| Boost (BS5) markup differs from prototype grid shell | Custom layouts required, not just CSS overrides | Domain 01/02 own the layout strategy (see DECISIONS.md ADR-002) |
-| Gamification (XP/levels/missions) has no backend yet | Future Food page has no data source | Phase 4 decision: badges-based first iteration |
+| Phase 8 “1:1 complete” status is overstated | Current prototypes and live output still differ materially (About L4C band absent, extra feed/core content, Future Food decision missing, Resources validation/side stats missing, incomplete course/activity composition) | Reopen the visual backlog page-by-page and verify light/dark/mobile against the current prototype files |
+| ADR-007 no-code catalogue is incomplete | Brand assets, Blocks controls, page/section toggles, footer, Student Lab/course content controls and a typed settings provider are absent; raw colours bypass token overrides | Complete domain 11 before pilot sign-off |
+| Frontend hard rules are violated | 108 raw colour/rgba literals outside `_tokens.scss`, 4 active `!important` declarations and 6 inline `style` attributes in production Mustache | Tokenise all recipes and replace runtime widths/positions with approved classes or a documented safe pattern |
+| Accessibility/interaction gaps remain | P0 fixed the mobile drawer state and blank Login; About map remains `aria-hidden` and the scheme toggle cannot cycle back to system | Focused WCAG keyboard/SR pass plus browser E2E at required viewports |
+| Theme QA coverage is incomplete | 15 unit tests cover only tokens/navigation/mode; no theme Behat tests, renderer/context/privacy tests or PHPCS binary | Add missing tests and install moodle/codechecker in CI |
+| Context/ADR drift | Domain files still report implemented work as not started and code references missing ADR-009 | Reconcile domain contexts and append the missing accepted ADRs; never rewrite existing ADRs |
+| Ukrainian core language pack is not installed on the dev site | en/uk component keys are in sync, but live Ukrainian rendering cannot be exercised | Install the official `uk` language pack, then run the required human language review |
 
 ## Blockers needing owner decision
 
-_None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
+- **9.2 Onboarding & email (open, 2026-07-12)** — owner undecided on how
+  learners get accounts. Recommendation for the pilot: manual/CSV upload via
+  admin (no self-registration — closed school cohorts), plus a real SMTP
+  relay configured in `$CFG`/settings; badge/notification mail currently
+  cannot leave the container (no sendmail, see Phase 9.1 findings).
+  `noreplyaddress` is already set to a valid placeholder.
+
+Resolved 2026-07-12: content language = **multilang uk+en (ADR-010)**;
+production deployment (9.3) explicitly skipped by the owner for now;
+uk string review (9.6) owner takes it.
 
 ## Ops notes
+
+- **MathJax filter disabled on the dev site** (2026-07-12, P0): Moodle's
+  default filter URL pointed at jsDelivr and no local MathJax distribution is
+  present. Keep it disabled until a self-hosted package is deployed; re-check
+  rendered HTML for external URLs before enabling it again.
 
 - **PHPUnit environment is live** (2026-07-12): composer dev deps installed in
   the php-fpm container (vendor/ and config.php are gitignored — on a fresh
@@ -63,6 +79,74 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-12** — **P1 fidelity slice 1 `[~]`**: implementing the missing
+  settings-driven, localised "Learning for Change" section from the current
+  `insights.html` prototype, with token-only SCSS and automated context tests.
+
+- **2026-07-12** — **Phase 9.1 multilang delivered (ADR-010, owner decision)**
+  (site config/data only — no repo code changes): official **uk core language
+  pack installed** (tool_langimport; note: `get_list_of_translations()` needs
+  a cache purge before the new pack shows up); **multilang filter enabled for
+  content and strings** (`stringfilters=multilang`, `filterall=1`,
+  `autolang=1`). Demonstrated E2E: plan 1 name and SFS101 fullname authored
+  with `<span lang="…" class="multilang">` pairs → `?lang=uk` renders the uk
+  interface (our en/uk packs) + uk plan/course names on Student Lab. Demo
+  learner default language switched to uk. Remaining en-only bits are content
+  authoring (stage names, course summaries, settings copy) — same span
+  syntax, owner's content pass. Also recorded the previously missing
+  **ADR-009** (badges-backed Future Food) retroactively in DECISIONS.md.
+
+- **2026-07-12** — **Phase 9.1 delivered: cohort→plan auto-enrolment E2E +
+  completion-driven badges** (site config/data only — no repo code changes):
+  - Cohort "Spring 2026 Pilot" linked to plan 1 via `link_cohort()`; new user
+    `sfspilot1` added to the cohort → adhoc `reconcile_cohort_plan` executed
+    by the real cron container → membership active + enrolled into SFS101
+    only (correct for sequential release). Removal path verified too:
+    membership → status 0 (kept for history), learningplan enrolment removed.
+  - Course completion was unconfigured (criteria tables empty — courses could
+    never auto-complete). Now: SFS101 9 activity criteria, SFS102–104 manual
+    completion enabled on modules + criteria, aggregation ALL everywhere.
+  - Badge "Pathfinder" rewired from manual-by-role to **courseset** criteria
+    (complete SFS101). Gotcha: `BADGE_CRITERIA_TYPE_COURSE` silently never
+    matches for SITE badges (its course comes from `badge.courseid` = null →
+    site course) — site badges need `COURSESET`.
+  - Full loop verified in UI: learner completed SFS101 → plan strip 100% →
+    Student Lab shows course 1 Done/Review, course 2 Active/Start (sequential
+    unlock) → Pathfinder auto-awarded → Future Food 300 XP / 2 badges.
+  - Findings for later phases: (a) badge award email failed until
+    `noreplyaddress` was set to a valid address (was noreply@localhost);
+    sendmail itself still unavailable in the container — real SMTP is the ⚑
+    9.2 decision. (b) XP double-counts a completed course that belongs to two
+    plans (progress rows are summed per plan; SFS101 is in plans 1 and 2 →
+    2×50 XP). Candidate fix: count distinct completed courses in
+    local_sfsgame. Deferred — sfsgame is being reworked by P0 hardening in
+    parallel.
+
+- **2026-07-12** — **P0 hardening `[x]`**:
+  - Shell: guest Login now has contrast in dark/system mode; a hidden mobile
+    drawer is `aria-hidden` + `inert`, and its toggle state stays synchronised.
+  - i18n: About and Future Food fallback copy now comes through String API;
+    en/uk key sets are identical. Live uk QA awaits the core language pack.
+  - Data integrity: unconfigured Future Food missions, curated Resources docs
+    and KPI cards no longer render prototype mock data; honest empty states or
+    real uploaded/admin-configured data are shown instead.
+  - No-CDN: no local MathJax distribution exists, so the filter was disabled
+    on the dev site (`active=-9999`). Live HTML has zero jsDelivr/MathJax-loader
+    references. Self-host MathJax before re-enabling if TeX is required.
+  - Verified: PHP lint + JS syntax + `git diff --check` clean; theme 15/15
+    (65 assertions), sfsgame 5/5 (19), resources 2/2 (10). Desktop screenshot
+    confirms Login; delayed mobile DOM confirms `aria-hidden=true`, `inert`,
+    `aria-expanded=false`. PHPCS remains unavailable.
+
+- **2026-07-12** — **Independent theme/design conformance audit `[x]`**:
+  the project is feature-rich but is not yet a 1:1, production-ready theme.
+  Confirmed the current About prototype/live page with fresh 1440×1000 headless
+  screenshots and audited the other prototypes against their production
+  Mustache/SCSS. Key gaps are recorded in Blockers / risks above. Verification:
+  all theme PHP files lint clean; theme PHPUnit 15/15, 65 assertions, with 4
+  deprecations; PHPCS unavailable; no theme Behat files. No production code
+  changed by this audit.
 
 - **2026-07-12** — **Phase 8 style audit COMPLETE** (batches S, A, F, R, C, X;
   4 commits c116b89..2a70da6). Highlights: Future Food head/hero/XP panel per
