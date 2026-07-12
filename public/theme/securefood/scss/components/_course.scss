@@ -1,0 +1,300 @@
+// Course + activity pages (domain 06). Visual spec: SecureFood School/course.html
+// and activity.html. v1 restyles core markup (no template overrides) so course
+// editing and every module keep working untouched. Scoped to .sfs-mode.
+
+.sfs-mode {
+    &.path-course,
+    &.path-mod {
+        // Boost caps the course header width separately from the content —
+        // the design uses one shared content width.
+        .header-maxwidth {
+            max-width: none;
+            padding: 0;
+        }
+
+        // Moodle chrome hidden per owner decision (1:1 design): course tabs
+        // (Participants/Grades/…), collapse-all control, per-section collapse
+        // toggles. Staff reach those pages via standard mode.
+        .secondary-navigation,
+        .section-collapsemenu,
+        .course-section-header .icons-collapse-expand,
+        .bulkselect {
+            display: none;
+        }
+
+        // Sections always expanded, as in the design.
+        .course-section .course-content-item-content.collapse {
+            display: block;
+        }
+
+        // Core page header becomes the course banner.
+        #page-header {
+            background: linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 100%);
+            border-radius: var(--sfs-radius-lg);
+            padding: 26px 30px;
+            margin-bottom: 24px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+
+            &::after {
+                content: '';
+                position: absolute;
+                right: -80px;
+                top: -80px;
+                width: 260px;
+                height: 260px;
+                background: radial-gradient(circle, rgba(224, 164, 88, 0.25), transparent 65%);
+                pointer-events: none;
+            }
+
+            .page-header-headings h1 {
+                color: #fff;
+                font-size: 1.9rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin: 0;
+            }
+
+            a,
+            .breadcrumb,
+            .breadcrumb-item {
+                color: rgba(255, 255, 255, 0.85);
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Section cards.
+    // ---------------------------------------------------------------
+    &.path-course {
+        .section-list {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding-left: 0;
+        }
+
+        li.course-section {
+            background: var(--sfs-surface);
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            box-shadow: var(--sfs-shadow-1);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .course-section-header {
+            padding: 16px 22px;
+            background: linear-gradient(180deg, var(--sfs-surface) 0%, var(--sfs-surface2) 100%);
+            border-bottom: 1px solid var(--sfs-line);
+
+            .sectionname {
+                font-size: 1.1rem;
+                font-weight: 700;
+
+                a {
+                    color: var(--sfs-ink);
+
+                    &:hover {
+                        color: var(--sfs-primary);
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+
+        .course-section .content {
+            padding: 10px 22px 18px;
+        }
+
+        .section-summary,
+        .summarytext {
+            color: var(--sfs-muted);
+            font-size: 0.9rem;
+        }
+
+        // ---------------------------------------------------------------
+        // Activity rows.
+        // ---------------------------------------------------------------
+        .activity-item {
+            border-radius: var(--sfs-radius-sm);
+            padding: 10px 12px;
+
+            @include sfs-motion {
+                transition: background var(--sfs-duration-fast);
+            }
+
+            &:hover {
+                background: var(--sfs-surface2);
+            }
+        }
+
+        // Icon tile per the design: 44px rounded square, primary tint,
+        // mod icon centred and recoloured to the primary teal.
+        .activityiconcontainer {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            padding: 0;
+            border-radius: var(--sfs-radius-sm);
+            background: var(--sfs-primary50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .activityicon,
+            .icon {
+                width: 22px;
+                height: 22px;
+                margin: 0;
+            }
+
+            // Same specificity shape as Boost's per-purpose colour filters
+            // (container:not(.isbranded) + icon:not(.nofilter)); the theme
+            // loads later, so the single design tint wins for every purpose
+            // while branded icons keep their own colours.
+            &:not(.isbranded) .activityicon:not(.nofilter),
+            &:not(.isbranded) .icon:not(.nofilter) {
+                // Tint the monochrome mod icon towards --sfs-primary (#0f4c5e).
+                filter: brightness(0) saturate(100%) invert(24%) sepia(19%)
+                    saturate(1832%) hue-rotate(155deg) brightness(94%) contrast(92%);
+            }
+        }
+
+        .activityname {
+            a {
+                font-weight: 600;
+                color: var(--sfs-ink);
+
+                &:hover {
+                    color: var(--sfs-primary);
+                    text-decoration: none;
+                }
+            }
+
+            .accesshide {
+                position: absolute;
+            }
+        }
+
+        .activity-completion .btn {
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-color: var(--sfs-line);
+
+            &.btn-success,
+            &[data-toggletype="manual:mark-done"].btn-success {
+                background: var(--sfs-teal50);
+                color: var(--sfs-teal);
+                border-color: transparent;
+            }
+        }
+
+        .activity-information .activity-dates {
+            color: var(--sfs-muted);
+            font-size: 0.8rem;
+        }
+
+        // Availability/lock notices inside sections.
+        .availabilityinfo {
+            background: var(--sfs-accent50);
+            border-radius: var(--sfs-radius-sm);
+            padding: 8px 12px;
+            font-size: 0.84rem;
+            color: var(--sfs-warn);
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Activity page: readable measure + styled navigation.
+    // ---------------------------------------------------------------
+    &.path-mod {
+        #page-header {
+            padding: 20px 26px;
+
+            .page-header-headings h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        [role="main"] {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .activity-header {
+            background: var(--sfs-surface);
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .activity-navigation {
+            margin-top: 28px;
+
+            .btn {
+                border-radius: 999px;
+                border-color: var(--sfs-line);
+                background: var(--sfs-surface);
+                color: var(--sfs-ink);
+
+                &:hover {
+                    background: var(--sfs-surface2);
+                    border-color: var(--sfs-linestrong);
+                }
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Mobile.
+    // ---------------------------------------------------------------
+    @include sfs-media-mobile {
+        &.path-course,
+        &.path-mod {
+            #page-header {
+                padding: 18px 16px;
+                border-radius: var(--sfs-radius-md);
+                margin-bottom: 18px;
+
+                .page-header-headings h1 {
+                    font-size: 1.35rem;
+                }
+            }
+        }
+
+        &.path-course {
+            .section-list {
+                gap: 14px;
+            }
+
+            .activityiconcontainer {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+
+                .activityicon,
+                .icon {
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+
+            .course-section-header {
+                padding: 12px 14px;
+            }
+
+            .course-section .content {
+                padding: 6px 14px 14px;
+            }
+
+            .activity-item {
+                padding: 8px 6px;
+            }
+        }
+    }
+}

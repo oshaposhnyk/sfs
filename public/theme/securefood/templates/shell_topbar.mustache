@@ -1,0 +1,88 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/shell_topbar
+
+    SecureFood topbar: sidebar toggle, breadcrumbs, search, scheme toggle,
+    mode switch, core plugin output (messaging/notifications), user menu.
+
+    Example context (json):
+    {
+        "hascrumbs": true,
+        "crumbs": [{"text": "Dashboard", "url": "#"}, {"text": "Student Lab", "last": true}],
+        "searchurl": "#",
+        "modeswitch": {"url": "#"},
+        "output": {"edit_switch": "", "navbar_plugin_output": ""}
+    }
+}}
+<header class="sfs-topbar">
+    <button class="sfs-iconbtn sfs-topbar__toggle" type="button" data-sfs-action="sidebar"
+            aria-expanded="{{^sidebarcollapsed}}true{{/sidebarcollapsed}}{{#sidebarcollapsed}}false{{/sidebarcollapsed}}"
+            aria-controls="sfs-sidebar" aria-label="{{#str}}togglesidebar, theme_securefood{{/str}}">
+        <span class="sfs-icon" aria-hidden="true">menu</span>
+    </button>
+
+    {{#hascrumbs}}
+        <nav class="sfs-breadcrumbs" aria-label="{{#str}}breadcrumb, access{{/str}}">
+            {{#crumbs}}
+                {{^last}}
+                    {{#url}}<a class="sfs-breadcrumbs__item" href="{{url}}">{{{text}}}</a>{{/url}}
+                    {{^url}}<span class="sfs-breadcrumbs__item">{{{text}}}</span>{{/url}}
+                    <span class="sfs-icon sfs-breadcrumbs__sep" aria-hidden="true">chevron_right</span>
+                {{/last}}
+                {{#last}}
+                    <span class="sfs-breadcrumbs__item sfs-breadcrumbs__item--current" aria-current="page">{{{text}}}</span>
+                {{/last}}
+            {{/crumbs}}
+        </nav>
+    {{/hascrumbs}}
+
+    {{#searchurl}}
+        <form class="sfs-search" action="{{searchurl}}" method="get" role="search">
+            <span class="sfs-icon" aria-hidden="true">search</span>
+            <label class="visually-hidden" for="sfs-search-input">{{#str}}search, core{{/str}}</label>
+            <input id="sfs-search-input" class="sfs-search__input" type="text" name="q"
+                   placeholder="{{#str}}searchplaceholder, theme_securefood{{/str}}">
+        </form>
+    {{/searchurl}}
+
+    <div class="sfs-topbar__actions">
+        <button class="sfs-iconbtn" type="button" data-sfs-action="scheme"
+                aria-label="{{#str}}togglescheme, theme_securefood{{/str}}">
+            <span class="sfs-icon sfs-iconbtn__icon--dark" aria-hidden="true">dark_mode</span>
+            <span class="sfs-icon sfs-iconbtn__icon--light" aria-hidden="true">light_mode</span>
+        </button>
+        {{#modeswitch}}
+            <a class="sfs-iconbtn" href="{{url}}" title="{{#str}}switchtostandard, theme_securefood{{/str}}"
+               aria-label="{{#str}}switchtostandard, theme_securefood{{/str}}">
+                <span class="sfs-icon" aria-hidden="true">swap_horiz</span>
+            </a>
+        {{/modeswitch}}
+        {{{ output.edit_switch }}}
+        {{#output.navbar_plugin_output}}
+            <div class="sfs-topbar__plugins">{{{ . }}}</div>
+        {{/output.navbar_plugin_output}}
+        {{#langmenu}}
+            {{> theme_boost/language_menu }}
+        {{/langmenu}}
+        {{#usermenu}}
+            <div class="d-flex align-items-stretch usermenu-container" data-region="usermenu">
+                {{> core/user_menu }}
+            </div>
+        {{/usermenu}}
+    </div>
+</header>

@@ -1,0 +1,128 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/shell
+
+    SecureFood application shell: sidebar + topbar + content column.
+
+    Context variables required for this template:
+    * output - The core renderer for the page
+    * bodyattributes - attributes for the body tag as a string of html attributes
+    * navsections - sidebar navigation sections
+    * crumbs - breadcrumb items
+    * sidepreblocks - HTML for the blocks region
+    * hasblocks - true if there are blocks on this page
+
+    Example context (json):
+    {
+        "sitename": "SecureFood School",
+        "output": {
+            "doctype": "<!DOCTYPE html>",
+            "page_title": "Test page",
+            "favicon": "favicon.ico",
+            "main_content": "<h1>Content</h1>"
+        },
+        "bodyattributes": "class=\"sfs-mode\"",
+        "navsections": [{"label": "Learning", "haslabel": true, "items": [
+            {"title": "Student Lab", "url": "#", "icon": "school", "active": true}
+        ]}],
+        "crumbs": [{"text": "Dashboard", "url": "#", "last": true}],
+        "hascrumbs": true,
+        "sidepreblocks": "",
+        "hasblocks": false
+    }
+}}
+{{> theme_boost/head }}
+
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+
+<a class="sfs-skip visually-hidden-focusable" href="#sfs-main">{{#str}}skiptocontent, theme_securefood{{/str}}</a>
+
+{{! Anything core injects here must stay OUTSIDE the .sfs-shell grid container,
+    otherwise it becomes a grid item and breaks the two-column placement. }}
+<div class="sfs-shell__systemarea">{{{ output.standard_top_of_body_html }}}</div>
+
+<div id="page-wrapper" class="sfs-shell">
+
+    {{> theme_securefood/shell_sidebar }}
+
+    <div class="sfs-shell__main">
+        {{> theme_securefood/shell_topbar }}
+
+        <div id="page" data-region="mainpage" data-usertour="scroller" class="sfs-shell__page drag-container">
+            <div id="topofscroll" class="sfs-shell__content">
+                {{{ output.full_header }}}
+                {{#secondarymoremenu}}
+                    <div class="secondary-navigation d-print-none">
+                        {{> core/moremenu}}
+                    </div>
+                {{/secondarymoremenu}}
+                <div id="page-content" class="sfs-shell__pagecontent d-print-block">
+                    <div id="region-main-box">
+                        {{#hasregionmainsettingsmenu}}
+                            <div id="region-main-settings-menu" class="d-print-none">
+                                <div>{{{ regionmainsettingsmenu }}}</div>
+                            </div>
+                        {{/hasregionmainsettingsmenu}}
+                        <div id="region-main">
+                            {{#hasregionmainsettingsmenu}}
+                                <div class="region_main_settings_menu_proxy"></div>
+                            {{/hasregionmainsettingsmenu}}
+                            {{{ output.course_content_header }}}
+                            {{#headercontent}}
+                                {{> core/activity_header }}
+                            {{/headercontent}}
+                            {{#overflow}}
+                                <div class="container-fluid tertiary-navigation">
+                                    <div class="navitem">
+                                        {{> core/tertiary_navigation_selector}}
+                                    </div>
+                                </div>
+                            {{/overflow}}
+                            <main id="sfs-main" class="sfs-shell__maincontent">
+                                {{{ output.main_content }}}
+                            </main>
+                            {{{ output.activity_navigation }}}
+                            {{{ output.course_content_footer }}}
+                        </div>
+                    </div>
+                    {{#hasblocks}}
+                        <aside class="sfs-shell__blocks d-print-none" aria-label="{{#str}}blocks, core{{/str}}">
+                            {{{ addblockbutton }}}
+                            {{{ sidepreblocks }}}
+                        </aside>
+                    {{/hasblocks}}
+                </div>
+            </div>
+            {{> theme_boost/footer }}
+        </div>
+        {{{ output.standard_after_main_region_html }}}
+    </div>
+</div>
+
+<div class="sfs-shell__backdrop" data-sfs-action="backdrop" aria-hidden="true"></div>
+
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_securefood/shell');
+require(['theme_boost/loader', 'theme_securefood/shell'], function(Loader, Shell) {
+    Shell.init();
+    M.util.js_complete('theme_securefood/shell');
+});
+{{/js}}

@@ -1,0 +1,95 @@
+// SecureFood design tokens (source: .context/design/design-system.md).
+// The ONLY file in the theme where raw colour values are allowed.
+// Prototype used bare names (--bg, --primary); the theme namespaces every
+// custom property as --sfs-* to avoid collisions with Bootstrap/Moodle vars.
+// Admin overrides (ADR-007) are appended after compilation by
+// theme_securefood\tokens::overrides_css() and win the cascade.
+
+:root {
+    // Surfaces.
+    --sfs-bg:           #FAF7F2;
+    --sfs-bg2:          #F3EEE5;
+    --sfs-surface:      #FFFFFF;
+    --sfs-surface2:     #F7F3EC;
+
+    // Text.
+    --sfs-ink:          #0F2A33;
+    --sfs-ink2:         #2C4751;
+    --sfs-muted:        #6B7F87;
+    --sfs-muted2:       #94A3AA;
+
+    // Borders.
+    --sfs-line:         #E8E1D4;
+    --sfs-linestrong:   #D6CDBA;
+
+    // Brand.
+    --sfs-primary:      #0F4C5E;
+    --sfs-primary700:   #0B3A48;
+    --sfs-primary50:    #E6F0F2;
+    --sfs-accent:       #C68A3B;
+    --sfs-accent50:     #F8EFDF;
+    --sfs-teal:         #2A8C8A;
+    --sfs-teal50:       #E1F1F0;
+
+    // Semantic.
+    --sfs-success:      #3F8C5A;
+    --sfs-warn:         #C97A2B;
+    --sfs-danger:       #B8463F;
+
+    // Geometry.
+    --sfs-radius-xs:    6px;
+    --sfs-radius-sm:    10px;
+    --sfs-radius-md:    14px;
+    --sfs-radius-lg:    22px;
+
+    // Elevation.
+    --sfs-shadow-1: 0 1px 2px rgba(15, 42, 51, 0.04), 0 1px 1px rgba(15, 42, 51, 0.03);
+    --sfs-shadow-2: 0 4px 14px rgba(15, 42, 51, 0.06), 0 1px 3px rgba(15, 42, 51, 0.04);
+    --sfs-shadow-3: 0 14px 40px rgba(15, 42, 51, 0.10), 0 2px 6px rgba(15, 42, 51, 0.05);
+
+    // Layout.
+    --sfs-sidebar-w:            248px;
+    --sfs-sidebar-w-collapsed:  76px;
+    --sfs-content-max:          1320px;
+
+    // Motion (all consumers must respect prefers-reduced-motion).
+    --sfs-duration-fast:    150ms;
+    --sfs-duration-base:    220ms;
+    --sfs-duration-slow:    400ms;
+}
+
+// Dark palette, applied both explicitly (data-theme="dark") and for
+// scheme-preference "system" via prefers-color-scheme when no explicit
+// light choice is stamped (ADR-004).
+@mixin sfs-dark-tokens {
+    --sfs-bg:           #0B1E24;
+    --sfs-bg2:          #0E2530;
+    --sfs-surface:      #102C36;
+    --sfs-surface2:     #143744;
+
+    --sfs-ink:          #F2EFE9;
+    --sfs-ink2:         #D7D1C2;
+    --sfs-muted:        #9BAEB6;
+    --sfs-muted2:       #7A8E96;
+
+    --sfs-line:         rgba(255, 255, 255, 0.08);
+    --sfs-linestrong:   rgba(255, 255, 255, 0.14);
+
+    --sfs-primary:      #4FC3C0;
+    --sfs-primary700:   #2A8C8A;
+    --sfs-primary50:    rgba(79, 195, 192, 0.12);
+    --sfs-accent:       #E0A458;
+    --sfs-accent50:     rgba(224, 164, 88, 0.16);
+    --sfs-teal:         #4FC3C0;
+    --sfs-teal50:       rgba(79, 195, 192, 0.14);
+}
+
+:root[data-theme="dark"] {
+    @include sfs-dark-tokens;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include sfs-dark-tokens;
+    }
+}

@@ -1,0 +1,28 @@
+// SecureFood post-layer: composed after the Boost preset by
+// theme_securefood_get_main_scss_content(). Component files are added here
+// as the app shell and pages land (domains 01+); everything custom must be
+// scoped under .sfs-mode (ADR-002) so standard mode stays stock Boost.
+
+@import "mixins";
+@import "layout/shell";
+@import "components/studentlab";
+@import "components/course";
+
+// Icon primitive shared by all SecureFood components (self-hosted, ADR-006).
+// Markup comes from the sfs/icon template partial with aria-hidden handling.
+.sfs-icon {
+    font-family: "SFS Material Icons";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+}

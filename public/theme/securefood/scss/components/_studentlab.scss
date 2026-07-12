@@ -1,0 +1,317 @@
+// Student Lab re-skin (domain 05): styles the local_learningplans lp-* blocks
+// to match the prototype (SecureFood School/l4c.html). Scoped to .sfs-mode.
+
+.sfs-mode {
+    // The Student Lab template carries its own page head (kicker/title/lede,
+    // per the prototype); the core page header would duplicate it.
+    &.path-local-learningplans #page-header {
+        display: none;
+    }
+
+    .lp-studentlab__kicker {
+        color: var(--sfs-accent);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: '';
+            width: 22px;
+            height: 2px;
+            background: var(--sfs-accent);
+        }
+    }
+
+    .lp-studentlab__title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .lp-studentlab__lede {
+        color: var(--sfs-muted);
+        font-size: 0.98rem;
+        line-height: 1.55;
+    }
+
+    .lp-studentlab__continue {
+        border-radius: 999px;
+        background: var(--sfs-primary);
+        border-color: var(--sfs-primary);
+        font-weight: 600;
+        padding: 10px 18px;
+
+        &:hover,
+        &:focus {
+            background: var(--sfs-primary700);
+            border-color: var(--sfs-primary700);
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Plan bar.
+    // ---------------------------------------------------------------
+    .lp-planbar {
+        background: linear-gradient(135deg, var(--sfs-primary) 0%, #1a6373 100%);
+        color: #fff;
+        border: 0;
+        border-radius: var(--sfs-radius-lg);
+        padding: 16px 22px;
+        box-shadow: 0 6px 20px -8px rgba(15, 76, 94, 0.4);
+    }
+
+    .lp-planbar__left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 0;
+    }
+
+    .lp-planbar__pin {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--sfs-radius-sm);
+        background: rgba(255, 255, 255, 0.14);
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+
+        &::before {
+            content: 'workspace_premium';
+            font-family: 'SFS Material Icons';
+            font-size: 24px;
+            color: var(--sfs-accent);
+            line-height: 1;
+            font-feature-settings: 'liga';
+        }
+    }
+
+    .lp-planbar__label {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 600;
+        letter-spacing: 0.12em;
+    }
+
+    .lp-planbar__name {
+        color: #fff;
+        font-family: 'Manrope', sans-serif;
+        font-size: 1.15rem;
+    }
+
+    .lp-planbar__num {
+        font-family: 'Manrope', sans-serif;
+        color: var(--sfs-accent);
+        font-size: 1.2rem;
+    }
+
+    .lp-planbar__lbl {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .lp-planbar__bar {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    .lp-planbar__fill {
+        background: linear-gradient(90deg, var(--sfs-accent), #c68a3b);
+    }
+
+    .lp-planbar__pct {
+        color: #fff;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    // Switcher dropdown.
+    .lp-planmenu__trigger {
+        color: #fff;
+
+        &::after {
+            content: 'expand_more';
+            font-family: 'SFS Material Icons';
+            font-size: 18px;
+            vertical-align: middle;
+            margin-left: 6px;
+            opacity: 0.7;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .lp-planmenu__list {
+        background: var(--sfs-surface);
+        color: var(--sfs-ink);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        box-shadow: var(--sfs-shadow-3);
+        min-width: 320px;
+    }
+
+    .lp-planmenu__item--active {
+        background: var(--sfs-primary50);
+    }
+
+    .lp-planmenu__item:hover {
+        background: var(--sfs-surface2);
+    }
+
+    .lp-planmenu__link {
+        color: var(--sfs-ink);
+    }
+
+    .lp-planmenu__name {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .lp-planmenu__meta {
+        color: var(--sfs-muted);
+        font-size: 0.76rem;
+    }
+
+    // ---------------------------------------------------------------
+    // Stage + tiles.
+    // ---------------------------------------------------------------
+    .lp-stage__title {
+        font-size: 1.2rem;
+    }
+
+    .lp-stage__meta {
+        color: var(--sfs-muted);
+        font-size: 0.84rem;
+    }
+
+    .lp-coursetile {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+
+        @include sfs-motion {
+            transition:
+                transform var(--sfs-duration-fast),
+                box-shadow var(--sfs-duration-fast),
+                border-color var(--sfs-duration-fast);
+        }
+
+        &:hover:not(.lp-coursetile--locked) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.15);
+            border-color: var(--sfs-primary);
+        }
+    }
+
+    .lp-coursetile__cover {
+        height: 100px;
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.18));
+            pointer-events: none;
+        }
+    }
+
+    .lp-coursetile__status {
+        backdrop-filter: blur(6px);
+        z-index: 1;
+    }
+
+    .lp-coursetile--active .lp-coursetile__status {
+        background: var(--sfs-accent);
+        color: #fff;
+    }
+
+    .lp-coursetile__name {
+        line-height: 1.35;
+
+        .lp-coursetile__link {
+            color: var(--sfs-ink);
+            text-decoration: none;
+
+            &:hover {
+                color: var(--sfs-primary);
+            }
+        }
+    }
+
+    .lp-coursetile__desc {
+        color: var(--sfs-muted);
+        line-height: 1.5;
+    }
+
+    .lp-coursetile__progress {
+        background: var(--sfs-bg2);
+    }
+
+    .lp-coursetile__fill {
+        background: var(--sfs-accent);
+    }
+
+    .lp-coursetile--done .lp-coursetile__fill {
+        background: var(--sfs-success);
+    }
+
+    .lp-coursetile__state {
+        color: var(--sfs-muted);
+    }
+
+    .lp-coursetile--done .lp-coursetile__state {
+        color: var(--sfs-success);
+        font-weight: 600;
+    }
+
+    .lp-coursetile--active .lp-coursetile__state {
+        color: var(--sfs-accent);
+        font-weight: 600;
+    }
+
+    .lp-coursetile__action {
+        color: var(--sfs-primary);
+
+        &::after {
+            content: 'arrow_forward';
+            font-family: 'SFS Material Icons';
+            font-size: 14px;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+    }
+
+    @include sfs-media-mobile {
+        .lp-studentlab__title {
+            font-size: 1.6rem;
+        }
+
+        .lp-studentlab__actions,
+        .lp-studentlab__continue {
+            width: 100%;
+        }
+
+        .lp-planbar {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 14px 16px;
+        }
+
+        .lp-planbar__progress {
+            max-width: none;
+        }
+
+        .lp-planbar__stats {
+            justify-content: space-around;
+        }
+
+        .lp-planmenu__list {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .lp-stage__grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}

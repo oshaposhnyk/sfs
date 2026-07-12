@@ -1,0 +1,68 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/shell_sidebar
+
+    SecureFood sidebar: brand, settings-driven navigation, user card.
+
+    Example context (json):
+    {
+        "homeurl": "#",
+        "sitename": "SecureFood School",
+        "logofulllight": "logo.svg",
+        "logofulldark": "logo.svg",
+        "logoiconlight": "icon.svg",
+        "logoicondark": "icon.svg",
+        "navsections": [{"label": "Learning", "haslabel": true, "items": [
+            {"title": "Student Lab", "url": "#", "icon": "school", "active": true}
+        ]}],
+        "usercard": {"fullname": "Olexandr S.", "initials": "OS", "subtitle": "Cohort 2026", "profileurl": "#"}
+    }
+}}
+<nav class="sfs-sidebar" id="sfs-sidebar" aria-label="{{#str}}sidebarnav, theme_securefood{{/str}}">
+    <a class="sfs-sidebar__brand" href="{{homeurl}}">
+        <img src="{{logofulllight}}" alt="{{sitename}}" class="sfs-sidebar__logo sfs-sidebar__logo--full sfs-sidebar__logo--light">
+        <img src="{{logofulldark}}" alt="{{sitename}}" class="sfs-sidebar__logo sfs-sidebar__logo--full sfs-sidebar__logo--dark">
+        <img src="{{logoiconlight}}" alt="{{sitename}}" class="sfs-sidebar__logo sfs-sidebar__logo--icon sfs-sidebar__logo--light">
+        <img src="{{logoicondark}}" alt="{{sitename}}" class="sfs-sidebar__logo sfs-sidebar__logo--icon sfs-sidebar__logo--dark">
+    </a>
+
+    {{#navsections}}
+        {{#haslabel}}
+            <div class="sfs-sidebar__label">{{label}}</div>
+        {{/haslabel}}
+        {{#items}}
+            <a href="{{url}}" class="sfs-nav__item{{#active}} sfs-nav__item--active{{/active}}"
+               data-sfs-tip="{{title}}"{{#active}} aria-current="page"{{/active}}>
+                {{> theme_securefood/icon }}
+                <span class="sfs-nav__label">{{title}}</span>
+            </a>
+        {{/items}}
+    {{/navsections}}
+
+    <div class="sfs-sidebar__spacer"></div>
+
+    {{#usercard}}
+        <a class="sfs-usercard" href="{{profileurl}}">
+            <span class="sfs-usercard__avatar" aria-hidden="true">{{initials}}</span>
+            <span class="sfs-usercard__meta">
+                <span class="sfs-usercard__name">{{fullname}}</span>
+                {{#subtitle}}<span class="sfs-usercard__role">{{subtitle}}</span>{{/subtitle}}
+            </span>
+        </a>
+    {{/usercard}}
+</nav>

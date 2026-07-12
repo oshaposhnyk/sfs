@@ -1,0 +1,700 @@
+// SecureFood application shell (domain 01). Visual spec:
+// SecureFood School/styles.css "APP SHELL"; BEM map: .context/design/components.md.
+// Everything scoped under .sfs-mode (ADR-002).
+
+.sfs-mode {
+    background: var(--sfs-bg);
+    color: var(--sfs-ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+
+    h1, h2, h3, h4, h5 {
+        font-family: 'Manrope', sans-serif;
+        color: var(--sfs-ink);
+        letter-spacing: -0.01em;
+    }
+
+    // ---------------------------------------------------------------
+    // Shell grid.
+    // ---------------------------------------------------------------
+    // The #page-wrapper id is required: Boost ships
+    // `#page-wrapper { display: flex; flex-direction: column; }` and only an
+    // id-strength selector can beat it without resorting to !important.
+    #page-wrapper.sfs-shell {
+        display: grid;
+        grid-template-columns: var(--sfs-sidebar-w) 1fr;
+        grid-template-rows: 1fr;
+        height: auto;
+        min-height: 100vh;
+
+        @include sfs-motion {
+            transition: grid-template-columns var(--sfs-duration-base) ease;
+        }
+    }
+
+    &.sfs-sidebar-collapsed #page-wrapper.sfs-shell {
+        grid-template-columns: var(--sfs-sidebar-w-collapsed) 1fr;
+    }
+
+    // Explicit placement so a stray child can never shift the columns.
+    .sfs-sidebar {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .sfs-shell__main {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
+    }
+
+
+    .sfs-shell__content {
+        padding: 32px 36px 60px;
+        width: 100%;
+    }
+
+    .sfs-shell__blocks {
+        margin-top: 32px;
+
+        .card {
+            background: var(--sfs-surface);
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+        }
+    }
+
+    .sfs-shell__backdrop {
+        display: none;
+    }
+
+    .sfs-skip {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 200;
+        background: var(--sfs-surface);
+        color: var(--sfs-primary);
+        padding: 8px 14px;
+        border-radius: var(--sfs-radius-sm);
+        box-shadow: var(--sfs-shadow-2);
+    }
+
+    // ---------------------------------------------------------------
+    // Sidebar.
+    // ---------------------------------------------------------------
+    .sfs-sidebar {
+        position: sticky;
+        top: 0;
+        align-self: start;
+        height: 100vh;
+        background: var(--sfs-surface);
+        border-right: 1px solid var(--sfs-line);
+        padding: 22px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 50;
+        overflow-y: auto;
+    }
+
+    .sfs-sidebar__brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 8px 18px;
+        border-bottom: 1px solid var(--sfs-line);
+        margin-bottom: 16px;
+    }
+
+    .sfs-sidebar__logo {
+        height: 36px;
+        width: auto;
+        max-width: 100%;
+    }
+
+    .sfs-sidebar__logo--icon {
+        height: 40px;
+        width: 40px;
+        display: none;
+    }
+
+    // Scheme-conditional logo visibility (system default = light logo).
+    .sfs-sidebar__logo--dark {
+        display: none;
+    }
+
+    .sfs-sidebar__label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--sfs-muted2);
+        padding: 14px 12px 6px;
+    }
+
+    .sfs-sidebar__spacer {
+        flex: 1;
+    }
+
+    // ---------------------------------------------------------------
+    // Nav items.
+    // ---------------------------------------------------------------
+    .sfs-nav__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--sfs-radius-sm);
+        color: var(--sfs-ink2);
+        font-size: 0.92rem;
+        font-weight: 500;
+        position: relative;
+        text-decoration: none;
+
+        @include sfs-motion {
+            transition: background var(--sfs-duration-fast), color var(--sfs-duration-fast);
+        }
+
+        .sfs-icon {
+            color: var(--sfs-muted);
+        }
+
+        &:hover {
+            background: var(--sfs-surface2);
+            color: var(--sfs-ink);
+            text-decoration: none;
+
+            .sfs-icon {
+                color: var(--sfs-ink2);
+            }
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .sfs-nav__item--active {
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+        font-weight: 600;
+
+        .sfs-icon {
+            color: var(--sfs-primary);
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // User card.
+    // ---------------------------------------------------------------
+    .sfs-usercard {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-sm);
+        background: var(--sfs-surface2);
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+            border-color: var(--sfs-linestrong);
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .sfs-usercard__avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--sfs-primary);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 0.82rem;
+        font-family: 'Manrope', sans-serif;
+        flex-shrink: 0;
+    }
+
+    .sfs-usercard__meta {
+        min-width: 0;
+        display: block;
+    }
+
+    .sfs-usercard__name {
+        display: block;
+        font-size: 0.86rem;
+        font-weight: 600;
+        color: var(--sfs-ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sfs-usercard__role {
+        display: block;
+        font-size: 0.72rem;
+        color: var(--sfs-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    // ---------------------------------------------------------------
+    // Topbar.
+    // ---------------------------------------------------------------
+    .sfs-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: rgba(250, 247, 242, 0.85);
+        backdrop-filter: saturate(140%) blur(8px);
+        border-bottom: 1px solid var(--sfs-line);
+        padding: 10px 36px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .sfs-topbar__actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .sfs-topbar__plugins {
+        display: flex;
+        align-items: center;
+    }
+
+    .sfs-iconbtn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid var(--sfs-line);
+        background: var(--sfs-surface);
+        display: grid;
+        place-items: center;
+        color: var(--sfs-ink2);
+        cursor: pointer;
+        padding: 0;
+
+        @include sfs-motion {
+            transition: background var(--sfs-duration-fast), border-color var(--sfs-duration-fast);
+        }
+
+        &:hover {
+            background: var(--sfs-surface2);
+            border-color: var(--sfs-linestrong);
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    // Scheme toggle icon: show the action (moon in light, sun in dark).
+    .sfs-iconbtn__icon--light {
+        display: none;
+    }
+
+    // ---------------------------------------------------------------
+    // Breadcrumbs.
+    // ---------------------------------------------------------------
+    .sfs-breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--sfs-muted);
+        font-size: 0.85rem;
+        min-width: 0;
+        flex-wrap: wrap;
+    }
+
+    .sfs-breadcrumbs__item {
+        color: var(--sfs-muted);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--sfs-ink);
+        }
+    }
+
+    .sfs-breadcrumbs__item--current {
+        color: var(--sfs-ink);
+        font-weight: 600;
+    }
+
+    .sfs-breadcrumbs__sep {
+        font-size: 14px;
+        color: var(--sfs-muted2);
+    }
+
+    // ---------------------------------------------------------------
+    // Search.
+    // ---------------------------------------------------------------
+    .sfs-search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: 999px;
+        padding: 7px 14px;
+        width: 280px;
+        color: var(--sfs-muted);
+    }
+
+    .sfs-search__input {
+        border: none;
+        background: transparent;
+        outline: none;
+        font: inherit;
+        color: var(--sfs-ink);
+        width: 100%;
+        font-size: 0.86rem;
+    }
+
+    // ---------------------------------------------------------------
+    // Collapsed sidebar (desktop).
+    // ---------------------------------------------------------------
+    &.sfs-sidebar-collapsed {
+        .sfs-sidebar {
+            padding: 18px 10px;
+        }
+
+        .sfs-sidebar__brand {
+            justify-content: center;
+            padding: 0 0 12px;
+        }
+
+        .sfs-sidebar__logo--full {
+            display: none;
+        }
+
+        .sfs-sidebar__logo--icon.sfs-sidebar__logo--light {
+            display: inline-block;
+        }
+
+        .sfs-sidebar__label {
+            display: none;
+        }
+
+        .sfs-nav__item {
+            justify-content: center;
+            padding: 10px;
+            gap: 0;
+
+            .sfs-nav__label {
+                display: none;
+            }
+
+            &::after {
+                content: attr(data-sfs-tip);
+                position: absolute;
+                left: calc(100% + 10px);
+                top: 50%;
+                transform: translateY(-50%);
+                background: var(--sfs-ink);
+                color: var(--sfs-bg);
+                font-size: 0.78rem;
+                font-weight: 500;
+                padding: 6px 10px;
+                border-radius: 8px;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                z-index: 60;
+                box-shadow: var(--sfs-shadow-2);
+
+                @include sfs-motion {
+                    transition: opacity var(--sfs-duration-fast);
+                }
+            }
+
+            &:hover::after,
+            &:focus-visible::after {
+                opacity: 1;
+            }
+        }
+
+        .sfs-usercard {
+            justify-content: center;
+            padding: 10px;
+
+            .sfs-usercard__meta {
+                display: none;
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Core furniture inside the shell, restyled gently.
+    // ---------------------------------------------------------------
+    #page.sfs-shell__page {
+        margin: 0;
+    }
+
+    .secondary-navigation {
+        border-bottom: 1px solid var(--sfs-line);
+        margin-bottom: 20px;
+    }
+
+    // The design places content straight on the page background — kill the
+    // white Boost surfaces (.main-inner / #region-main ship background #fff)
+    // that read as a framed white panel, especially in the dark scheme.
+    #topofscroll,
+    .main-inner,
+    #page-content,
+    #region-main-box,
+    #region-main {
+        background-color: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .main-inner {
+        margin-top: 0;
+        padding: 0;
+        max-width: none;
+    }
+
+    // ---------------------------------------------------------------
+    // Core topbar widgets (notifications/messages popovers, user menu)
+    // restyled as design icon buttons; tokens keep them scheme-aware.
+    // ---------------------------------------------------------------
+    .sfs-topbar__plugins {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .nav-link.popover-region-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--sfs-line);
+            background: var(--sfs-surface);
+            display: grid;
+            place-items: center;
+            color: var(--sfs-ink2);
+            padding: 0;
+
+            @include sfs-motion {
+                transition: background var(--sfs-duration-fast), border-color var(--sfs-duration-fast);
+            }
+
+            &:hover {
+                background: var(--sfs-surface2);
+                border-color: var(--sfs-linestrong);
+            }
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
+
+            .icon {
+                color: inherit;
+                margin: 0;
+            }
+        }
+
+        .count-container {
+            top: 0;
+            right: 0;
+            background: var(--sfs-accent);
+        }
+    }
+
+    .sfs-topbar .usermenu-container {
+        color: var(--sfs-ink2);
+
+        .usertext,
+        .login,
+        .meta,
+        a.dropdown-toggle {
+            color: var(--sfs-ink2);
+        }
+
+        .userinitials {
+            background: var(--sfs-primary50);
+            color: var(--sfs-primary);
+        }
+    }
+
+    .sfs-topbar .editmode-switch-form label {
+        color: var(--sfs-ink2);
+    }
+
+    // ---------------------------------------------------------------
+    // Mobile drawer (≤820px).
+    // ---------------------------------------------------------------
+    @include sfs-media-mobile {
+        #page-wrapper.sfs-shell {
+            grid-template-columns: 1fr;
+        }
+
+        .sfs-sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            z-index: 90;
+            transform: translateX(-100%);
+            box-shadow: var(--sfs-shadow-3);
+
+            @include sfs-motion {
+                transition: transform var(--sfs-duration-base) ease;
+            }
+        }
+
+        &.sfs-drawer-open .sfs-sidebar {
+            transform: translateX(0);
+        }
+
+        &.sfs-drawer-open .sfs-shell__backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+        }
+
+        // Drawer always shows the expanded form, even if collapsed is stored.
+        &.sfs-sidebar-collapsed {
+            .sfs-sidebar {
+                padding: 22px 16px;
+            }
+
+            .sfs-sidebar__logo--full.sfs-sidebar__logo--light {
+                display: inline-block;
+            }
+
+            .sfs-sidebar__logo--icon {
+                display: none;
+            }
+
+            .sfs-sidebar__label {
+                display: block;
+            }
+
+            .sfs-nav__item {
+                justify-content: flex-start;
+                padding: 10px 12px;
+                gap: 12px;
+
+                .sfs-nav__label {
+                    display: inline;
+                }
+
+                &::after {
+                    display: none;
+                }
+            }
+
+            .sfs-usercard {
+                justify-content: flex-start;
+
+                .sfs-usercard__meta {
+                    display: block;
+                }
+            }
+        }
+
+        .sfs-topbar {
+            padding: 8px 12px;
+            gap: 8px;
+        }
+
+        // Compact breadcrumbs: current page only.
+        .sfs-breadcrumbs__item:not(.sfs-breadcrumbs__item--current),
+        .sfs-breadcrumbs__sep {
+            display: none;
+        }
+
+        .sfs-breadcrumbs__item--current {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sfs-topbar__actions {
+            gap: 6px;
+        }
+
+        // Long user-menu text (e.g. "You are logged in as …") has no room.
+        .sfs-topbar .usermenu-container .usertext {
+            display: none;
+        }
+
+        .sfs-search {
+            display: none;
+        }
+
+        .sfs-shell__content {
+            padding: 22px 16px 56px;
+        }
+    }
+}
+
+// ---------------------------------------------------------------
+// Dark-scheme swaps (html-level attribute, body-level scope).
+// ---------------------------------------------------------------
+@mixin sfs-shell-dark {
+    .sfs-mode {
+        // Expanded: dark full logo only.
+        .sfs-sidebar__logo--full.sfs-sidebar__logo--dark {
+            display: inline-block;
+        }
+
+        .sfs-sidebar__logo--full.sfs-sidebar__logo--light,
+        .sfs-sidebar__logo--icon {
+            display: none;
+        }
+
+        .sfs-topbar {
+            background: rgba(11, 30, 36, 0.85);
+        }
+
+        .sfs-iconbtn__icon--dark {
+            display: none;
+        }
+
+        .sfs-iconbtn__icon--light {
+            display: inline-block;
+        }
+    }
+
+    .sfs-mode.sfs-sidebar-collapsed {
+        // Collapsed: dark icon logo only.
+        .sfs-sidebar__logo--icon.sfs-sidebar__logo--dark {
+            display: inline-block;
+        }
+
+        .sfs-sidebar__logo--icon.sfs-sidebar__logo--light,
+        .sfs-sidebar__logo--full {
+            display: none;
+        }
+    }
+}
+
+:root[data-theme="dark"] {
+    @include sfs-shell-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include sfs-shell-dark;
+    }
+}
