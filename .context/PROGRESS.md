@@ -315,3 +315,13 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   Verified via screenshots (About full page with map; PDF filter active;
   tools absent for a learner). Deferred to Phase 5+: real document storage
   backend, validation card, badge artwork, mods dark-scheme pass.
+
+- **2026-07-12** — **Phase 5 slice 1**: Appearance preferences page
+  (scheme + mode radios, PRG + sesskey, no JS needed — closes the domain 03
+  no-JS gap and the brief's Appearance section), linked into the core
+  preferences hub via theme_securefood_extend_navigation_user_settings;
+  hub cards restyled. Verified: POST round-trip persisted the preference;
+  hub link present; i18n audit en↔uk in sync (90/194/16/18 keys, 4
+  components); missing-string sweep over 7 pages: zero. Remaining Phase 5:
+  notifications/messages restyle, WCAG pass, dark-scheme core-content pass,
+  Behat, performance.
