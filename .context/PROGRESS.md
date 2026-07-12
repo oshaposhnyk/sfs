@@ -280,3 +280,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   lab/partner pills + abouthubs settings; About nav uses /?redirect=0 (was
   bouncing logged-in users to the dashboard); heading double-escape fixed.
   Map visual itself still deferred (no-CDN decision).
+
+- **2026-07-12** — **Domain 07 slice 1 (owner picked option 1)**: local_sfsgame
+  plugin — XP hero (pure xp_policy: 100/badge + 50/completed course, level per
+  500 XP), achievements from site badges (earned/locked), honest empty state;
+  theme skin ffg-* per ffs.html + nav item. Verified live as learner (Level 1,
+  0 XP, empty-state). Follow-ups: missions grid (settings JSON), badge images,
+  xp_policy PHPUnit, decision module link, header-hide re-verify.
