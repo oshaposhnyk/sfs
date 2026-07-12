@@ -418,3 +418,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   no-JS fallback. Playwright E2E: switch via WS confirmed (service.php call
   observed), clean URL, switch-back OK. Remaining: 7.3 settings hub,
   7.4 cron (owner approval for docker).
+
+- **2026-07-12** — **Phase 7.3 shipped (settings hub)**: mysettings.php with
+  six design cards per the brief (real profile/language/scheme facts, links
+  into core flows), nav Settings retargeted. Verified by screenshot; icon
+  gotcha: the self-hosted Material Icons v145 set lacks newer glyphs
+  (shield_person) — stick to classic names (verified_user). Remaining: 7.4
+  cron service (docker — owner approval).
