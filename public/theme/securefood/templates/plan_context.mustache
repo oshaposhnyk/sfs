@@ -1,0 +1,41 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/plan_context
+
+    Learner's plan context above course content (Phase 6.1).
+
+    Example context (json):
+    {
+        "planname": "Analyst-Translator Pathway",
+        "positionlabel": "Course 1 of 4",
+        "percentage": 40
+    }
+}}
+<div class="sfs-plancontext">
+    <a class="sfs-plancontext__chip" href="{{config.wwwroot}}/local/learningplans/my.php">
+        <span class="sfs-icon" aria-hidden="true">workspace_premium</span>
+        {{planname}}
+    </a>
+    <span class="sfs-plancontext__pos">{{positionlabel}}</span>
+    <span class="sfs-plancontext__progress" role="progressbar" aria-valuenow="{{percentage}}"
+          aria-valuemin="0" aria-valuemax="100"
+          aria-label="{{#str}}plancontext_progress, theme_securefood{{/str}}">
+        <span class="sfs-plancontext__fill" style="width: {{percentage}}%"></span>
+    </span>
+    <span class="sfs-plancontext__pct">{{percentage}}%</span>
+</div>

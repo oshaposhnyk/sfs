@@ -298,3 +298,68 @@
         }
     }
 }
+
+// Plan context strip above course content (Phase 6.1).
+.sfs-mode {
+    .sfs-plancontext {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        margin-bottom: 18px;
+    }
+
+    .sfs-plancontext__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+        font-size: 0.8rem;
+        font-weight: 600;
+
+        .sfs-icon {
+            font-size: 15px;
+        }
+
+        &:hover {
+            background: var(--sfs-primary);
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+
+    .sfs-plancontext__pos {
+        font-size: 0.82rem;
+        color: var(--sfs-muted);
+        font-weight: 600;
+    }
+
+    .sfs-plancontext__progress {
+        flex: 1 1 140px;
+        max-width: 220px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--sfs-bg2);
+        overflow: hidden;
+    }
+
+    .sfs-plancontext__fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: var(--sfs-accent);
+    }
+
+    .sfs-plancontext__pct {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+}

@@ -17,6 +17,7 @@
 namespace local_learningplans\infrastructure\moodle\factory;
 
 use local_learningplans\application\service\learning_plan_service;
+use local_learningplans\application\usecase\get_course_plan_context;
 use local_learningplans\application\usecase\get_student_lab_overview;
 use local_learningplans\application\usecase\set_active_learning_plan;
 use local_learningplans\domain\policy\default_progress_calculation_policy;
@@ -82,6 +83,19 @@ final class learning_plan_service_factory {
             new moodle_completion_reader(),
             new moodle_course_repository(),
             new moodle_user_preference_repository()
+        );
+    }
+
+    /**
+     * Build the course plan-context use case (Phase 6.1).
+     *
+     * @return get_course_plan_context
+     */
+    public static function course_plan_context(): get_course_plan_context {
+        return new get_course_plan_context(
+            new moodle_learning_plan_repository(),
+            new moodle_learning_plan_membership_repository(),
+            new moodle_completion_reader()
         );
     }
 

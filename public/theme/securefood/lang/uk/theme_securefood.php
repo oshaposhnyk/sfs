@@ -136,3 +136,5 @@ $string['scheme_light'] = 'Світла';
 $string['scheme_dark'] = 'Темна';
 $string['scheme_system'] = 'Як у системі';
 $string['allpreferences'] = 'Усі налаштування';
+$string['plancontext_position'] = 'Курс {$a->position} з {$a->total}';
+$string['plancontext_progress'] = 'Прогрес курсу';

@@ -136,3 +136,5 @@ $string['scheme_light'] = 'Light';
 $string['scheme_dark'] = 'Dark';
 $string['scheme_system'] = 'Follow the system';
 $string['allpreferences'] = 'All preferences';
+$string['plancontext_position'] = 'Course {$a->position} of {$a->total}';
+$string['plancontext_progress'] = 'Course progress';
