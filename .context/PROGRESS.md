@@ -362,3 +362,11 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   notifications surfaces tokenised (message-app card, unread tint, popover
   container) and verified in the shell. Remaining Phase 5: Behat (needs
   browser infra in docker), PHPCS via moodle/codechecker, performance pass.
+
+- **2026-07-12** — **Phase 6 opened (infra items waived by owner); slice 6.1
+  shipped**: course pages now show the learner's plan context (chip → Student
+  Lab, "Course N of M", live completion bar) via a new read-only
+  get_course_plan_context use case and a course_content_header renderer
+  override. Verified on SFS101 as the test learner (real 33% completion).
+  Next candidates need owner input: 6.2 stage grouping (db/), 6.3 external
+  functions (db/services.php), 6.4 resources file storage.
