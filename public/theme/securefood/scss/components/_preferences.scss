@@ -85,3 +85,101 @@
         color: var(--sfs-primary);
     }
 }
+
+// Unified settings hub (Phase 7.3).
+.sfs-mode {
+    .sfs-hub__lede {
+        color: var(--sfs-muted);
+        max-width: 64ch;
+        margin-bottom: 20px;
+    }
+
+    .sfs-hub__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+    }
+
+    .sfs-hub__card {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .sfs-hub__title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.05rem;
+        margin: 0;
+
+        .sfs-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--sfs-radius-sm);
+            background: var(--sfs-primary50);
+            color: var(--sfs-primary);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+    }
+
+    .sfs-hub__facts {
+        margin: 0;
+        display: grid;
+        gap: 8px;
+    }
+
+    .sfs-hub__fact {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 0.86rem;
+
+        dt {
+            color: var(--sfs-muted);
+            font-weight: 500;
+        }
+
+        dd {
+            margin: 0;
+            font-weight: 600;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .sfs-hub__links {
+        margin-top: auto;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .sfs-hub__link {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--sfs-primary);
+        border: 1px solid var(--sfs-line);
+        border-radius: 999px;
+        padding: 6px 14px;
+        background: var(--sfs-surface);
+
+        &:hover {
+            background: var(--sfs-primary);
+            color: #fff;
+            border-color: var(--sfs-primary);
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+}

@@ -117,7 +117,7 @@ final class navigation {
                         'icon' => 'notifications', 'visibility' => 'loggedin'],
                     ['titlestr' => 'nav_messages', 'url' => '/message/index.php',
                         'icon' => 'forum', 'visibility' => 'loggedin'],
-                    ['titlestr' => 'nav_settings', 'url' => '/user/preferences.php',
+                    ['titlestr' => 'nav_settings', 'url' => '/theme/securefood/mysettings.php',
                         'icon' => 'settings', 'visibility' => 'loggedin'],
                 ],
             ],
