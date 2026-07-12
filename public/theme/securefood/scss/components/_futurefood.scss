@@ -136,3 +136,141 @@
         }
     }
 }
+
+// Missions grid (ffs.html "mission-grid").
+.sfs-mode {
+    .ffg-missions__title {
+        font-size: 1.4rem;
+        margin: 28px 0 16px;
+    }
+
+    .ffg-missions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 18px;
+    }
+
+    .ffg-mission {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        overflow: hidden;
+
+        @include sfs-motion {
+            transition: transform var(--sfs-duration-fast), box-shadow var(--sfs-duration-fast);
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sfs-shadow-2);
+        }
+    }
+
+    .ffg-mission__thumb {
+        height: 150px;
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 14px;
+    }
+
+    .ffg-mission__thumb--aqua {
+        background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2), transparent 60%),
+            linear-gradient(135deg, #2a8c8a 0%, #4fc3c0 100%);
+    }
+
+    .ffg-mission__thumb--amber {
+        background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.18), transparent 60%),
+            linear-gradient(135deg, #c68a3b 0%, #e0a458 100%);
+    }
+
+    .ffg-mission__thumb--teal {
+        background: radial-gradient(circle at 60% 30%, rgba(255, 255, 255, 0.2), transparent 60%),
+            linear-gradient(135deg, #0f4c5e 0%, #2a8c8a 100%);
+    }
+
+    .ffg-mission__thumb--green {
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
+            linear-gradient(135deg, #2f6f46 0%, #4d9f6b 100%);
+    }
+
+    .ffg-mission__badge {
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--sfs-primary);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .ffg-mission__duration {
+        background: rgba(0, 0, 0, 0.45);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 600;
+    }
+
+    .ffg-mission__body {
+        padding: 18px 20px 20px;
+    }
+
+    .ffg-mission__tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+    .ffg-mission__tag {
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: var(--sfs-surface2);
+        color: var(--sfs-ink2);
+        border: 1px solid var(--sfs-line);
+    }
+
+    .ffg-mission__name {
+        font-size: 1.05rem;
+        margin: 0 0 6px;
+    }
+
+    .ffg-mission__text {
+        font-size: 0.86rem;
+        color: var(--sfs-muted);
+        margin: 0 0 14px;
+        line-height: 1.5;
+    }
+
+    .ffg-mission__foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--sfs-line);
+        padding-top: 14px;
+    }
+
+    .ffg-mission__xp {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        color: var(--sfs-accent);
+        font-size: 0.92rem;
+    }
+
+    .ffg-mission__action {
+        border-radius: 999px;
+        background: var(--sfs-primary);
+        border-color: var(--sfs-primary);
+        font-weight: 600;
+        padding: 6px 16px;
+
+        &:hover {
+            background: var(--sfs-primary700);
+            border-color: var(--sfs-primary700);
+        }
+    }
+}

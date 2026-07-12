@@ -38,3 +38,7 @@ $string['noachievements'] = 'Бейджі ще не налаштовані. До
 $string['earned'] = 'Отримано';
 $string['locked'] = 'Заблоковано';
 $string['privacy:metadata'] = 'Плагін Future Food лише відображає дані бейджів і завершень, що зберігаються в інших компонентах.';
+$string['missions'] = 'Місії (JSON)';
+$string['missions_desc'] = 'JSON-список, напр. [{"badge": "Featured", "tags": ["Data"], "title": "…", "text": "…", "duration": "11 хв", "xp": 40, "url": "/course/view.php?id=2"}]. Порожнє поле — типові значення дизайну.';
+$string['missionstitle'] = 'Активні місії';
+$string['startmission'] = 'Почати';

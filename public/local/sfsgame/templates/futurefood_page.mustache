@@ -63,4 +63,33 @@
             </div>
         {{/achievements}}
     </div>
+
+    {{#missions.0}}
+        <h3 class="ffg-missions__title">{{#str}}missionstitle, local_sfsgame{{/str}}</h3>
+        <div class="ffg-missions">
+            {{#missions}}
+                <article class="ffg-mission">
+                    <div class="ffg-mission__thumb ffg-mission__thumb--{{variant}}">
+                        {{#badge}}<span class="ffg-mission__badge">{{badge}}</span>{{/badge}}
+                        {{#duration}}<span class="ffg-mission__duration">{{duration}}</span>{{/duration}}
+                    </div>
+                    <div class="ffg-mission__body">
+                        <div class="ffg-mission__tags">
+                            {{#tags}}<span class="ffg-mission__tag">{{name}}</span>{{/tags}}
+                        </div>
+                        <h4 class="ffg-mission__name">{{title}}</h4>
+                        <p class="ffg-mission__text">{{text}}</p>
+                        <div class="ffg-mission__foot">
+                            <span class="ffg-mission__xp">+{{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>
+                            {{#url}}
+                                <a class="ffg-mission__action btn btn-primary" href="{{url}}">
+                                    {{#str}}startmission, local_sfsgame{{/str}}
+                                </a>
+                            {{/url}}
+                        </div>
+                    </div>
+                </article>
+            {{/missions}}
+        </div>
+    {{/missions.0}}
 </div>

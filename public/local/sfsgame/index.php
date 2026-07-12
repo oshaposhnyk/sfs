@@ -70,6 +70,21 @@ if (class_exists('\local_learningplans\infrastructure\moodle\factory\learning_pl
 
 $xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed);
 
+$missionvariants = ['aqua', 'amber', 'teal', 'green'];
+$missions = [];
+foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'missions')) as $i => $mission) {
+    $missions[] = [
+        'badge' => format_string($mission['badge']),
+        'title' => format_string($mission['title']),
+        'text' => format_string($mission['text']),
+        'duration' => format_string($mission['duration']),
+        'xp' => $mission['xp'],
+        'url' => $mission['url'] !== '' ? (new moodle_url($mission['url']))->out(false) : null,
+        'tags' => array_map(static fn($t) => ['name' => format_string($t['name'])], $mission['tags']),
+        'variant' => $missionvariants[$i % count($missionvariants)],
+    ];
+}
+
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
     'kicker' => get_string('kicker', 'local_sfsgame'),
@@ -82,5 +97,6 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
         \local_sfsgame\domain\xp_policy::to_next_level($xp)),
     'achievements' => $achievements,
     'hasachievements' => $achievements !== [],
+    'missions' => $missions,
 ]);
 echo $OUTPUT->footer();

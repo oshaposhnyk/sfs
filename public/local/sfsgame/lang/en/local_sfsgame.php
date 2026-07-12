@@ -38,3 +38,7 @@ $string['noachievements'] = 'No badges are configured yet. Achievements appear h
 $string['earned'] = 'Earned';
 $string['locked'] = 'Locked';
 $string['privacy:metadata'] = 'The Future Food plugin only displays badge and completion data stored elsewhere.';
+$string['missions'] = 'Missions (JSON)';
+$string['missions_desc'] = 'JSON list, e.g. [{"badge": "Featured", "tags": ["Data"], "title": "…", "text": "…", "duration": "11 min", "xp": 40, "url": "/course/view.php?id=2"}]. Leave empty for the design defaults.';
+$string['missionstitle'] = 'Active missions';
+$string['startmission'] = 'Start';
