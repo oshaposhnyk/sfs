@@ -291,3 +291,180 @@
     filter: grayscale(1);
     opacity: 0.55;
 }
+
+// Audit fixes F1–F3: page head, mission hero, XP panel captions, play circles.
+.sfs-mode {
+    .ffg-head {
+        margin-bottom: 22px;
+    }
+
+    .ffg-head__kicker {
+        color: var(--sfs-accent-ink);
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: '';
+            width: 22px;
+            height: 2px;
+            background: var(--sfs-accent);
+        }
+    }
+
+    .ffg-head__title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 6px 0 8px;
+    }
+
+    .ffg-head__lede {
+        color: var(--sfs-muted);
+        max-width: 64ch;
+        margin: 0;
+    }
+
+    .ffg-icon--play::before,
+    .ffg-icon--badge::before {
+        font-family: 'SFS Material Icons';
+        font-feature-settings: 'liga';
+        vertical-align: middle;
+    }
+
+    .ffg-icon--play::before {
+        content: 'play_arrow';
+        font-size: 18px;
+        margin-right: 6px;
+    }
+
+    .ffg-icon--badge::before {
+        content: 'workspace_premium';
+        font-size: 15px;
+        margin-right: 5px;
+    }
+
+    .ffg-hero__actions {
+        margin-top: 18px;
+    }
+
+    .ffg-hero__cta {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        border-radius: 999px;
+        background: var(--sfs-accent);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9rem;
+
+        &:hover {
+            filter: brightness(0.95);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .ffg-hero__xphead {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .ffg-hero__xptotal {
+        text-align: right;
+    }
+
+    .ffg-hero__xplabel {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.65);
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .ffg-hero__xpnum {
+        font-family: 'Manrope', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .ffg-hero__levelnum {
+        font-size: 1.8rem;
+    }
+
+    .ffg-hero__chips {
+        display: flex;
+        gap: 8px;
+    }
+
+    .ffg-hero__chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    .ffg-ach__xp {
+        color: var(--sfs-accent-ink);
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+    }
+
+    // Mission thumbs: play circle + duration bottom-left (prototype).
+    .ffg-mission__thumb {
+        align-items: flex-start;
+    }
+
+    .ffg-mission__play {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--sfs-primary);
+        display: grid;
+        place-items: center;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+
+        @include sfs-motion {
+            transition: transform var(--sfs-duration-fast);
+        }
+
+        &::before {
+            content: 'play_arrow';
+            font-family: 'SFS Material Icons';
+            font-feature-settings: 'liga';
+            font-size: 24px;
+        }
+    }
+
+    .ffg-mission:hover .ffg-mission__play {
+        transform: scale(1.08);
+    }
+
+    .ffg-mission__duration {
+        position: absolute;
+        left: 14px;
+        bottom: 14px;
+        backdrop-filter: blur(4px);
+    }
+
+    .ffg-mission__thumb {
+        position: relative;
+    }
+}

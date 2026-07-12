@@ -30,6 +30,15 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_sfsgame', get_string('pluginname', 'local_sfsgame'));
     $ADMIN->add('localplugins', $settings);
 
+    foreach (['herokicker', 'herotitle', 'herotext'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsgame/{$name}",
+            get_string($name, 'local_sfsgame'),
+            get_string('herofallback_desc', 'local_sfsgame'),
+            '',
+            PARAM_TEXT
+        ));
+    }
     $settings->add(new admin_setting_configtextarea(
         'local_sfsgame/missions',
         get_string('missions', 'local_sfsgame'),

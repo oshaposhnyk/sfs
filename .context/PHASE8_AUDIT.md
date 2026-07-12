@@ -29,13 +29,13 @@ Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
 ## Future Food (ffs.html ↔ /local/sfsgame/index.php)
 
-- ☐ F1 Page head should be separate (kicker "ADAPTIVE MISSIONS" + lede);
+- ☑ F1 Page head separated (Adaptive missions copy); Mission: Zero Hunger hero with CURRENT RANK/TOTAL XP panel, real progress caption and badge-count chip (streak/leaderboard deferred — no data source);
   hero = "Mission: Zero Hunger" panel with CTA buttons; XP panel labels
   "CURRENT RANK / TOTAL XP", progress caption "N / 1000 XP", chips (streak
   deferred — no source; badge count real).
-- ☐ F2 Mission thumbs: play circle button missing; duration pill should sit
+- ☑ F2 Play circle (when a mission has a URL) + duration pill moved
   bottom-left (ours top-right); status badge styles match.
-- ☐ F3 Achievement cards: "+N XP" caption under name (we can show the real
+- ☑ F3 Real +100 XP captions on earned badges (from xp_policy; was: the real
   per-badge XP from xp_policy).
 
 ## Resources & Standards (governance.html ↔ /local/sfsresources/index.php)

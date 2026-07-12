@@ -28,22 +28,47 @@
     }
 }}
 <div class="ffg">
+    <div class="ffg-head">
+        <div class="ffg-head__kicker">{{kicker}}</div>
+        <h2 class="ffg-head__title">{{title}}</h2>
+        <p class="ffg-head__lede">{{lede}}</p>
+    </div>
+
     <section class="ffg-hero">
         <div class="ffg-hero__body">
-            <div class="ffg-hero__kicker">{{kicker}}</div>
-            <h2 class="ffg-hero__title">{{title}}</h2>
-            <p class="ffg-hero__lede">{{lede}}</p>
+            <div class="ffg-hero__kicker">{{herokicker}}</div>
+            <h3 class="ffg-hero__title">{{herotitle}}</h3>
+            <p class="ffg-hero__lede">{{herotext}}</p>
+            {{#starturl}}
+                <div class="ffg-hero__actions">
+                    <a class="ffg-hero__cta" href="{{starturl}}">
+                        <span class="ffg-icon ffg-icon--play" aria-hidden="true"></span>
+                        {{#str}}startdailymission, local_sfsgame{{/str}}
+                    </a>
+                </div>
+            {{/starturl}}
         </div>
         <div class="ffg-hero__xp">
-            <div class="ffg-hero__levelrow">
-                <span class="ffg-hero__levelnum">{{level}}</span>
-                <span class="ffg-hero__leveltag">{{#str}}level, local_sfsgame{{/str}} · {{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>
+            <div class="ffg-hero__xphead">
+                <div>
+                    <div class="ffg-hero__xplabel">{{#str}}currentrank, local_sfsgame{{/str}}</div>
+                    <div class="ffg-hero__levelnum">{{#str}}level, local_sfsgame{{/str}} {{level}}</div>
+                </div>
+                <div class="ffg-hero__xptotal">
+                    <div class="ffg-hero__xplabel">{{#str}}totalxp, local_sfsgame{{/str}}</div>
+                    <div class="ffg-hero__xpnum">{{xp}}</div>
+                </div>
             </div>
             <div class="ffg-hero__bar" role="progressbar" aria-valuenow="{{levelprogress}}"
                  aria-valuemin="0" aria-valuemax="100" aria-label="{{#str}}level, local_sfsgame{{/str}}">
                 <span class="ffg-hero__fill" style="width: {{levelprogress}}%"></span>
             </div>
             <div class="ffg-hero__next">{{xptonext}}</div>
+            <div class="ffg-hero__chips">
+                <span class="ffg-hero__chip">
+                    <span class="ffg-icon ffg-icon--badge" aria-hidden="true"></span>{{badgecount}}
+                </span>
+            </div>
         </div>
     </section>
 
@@ -59,7 +84,7 @@
                 </span>
                 <span class="ffg-ach__name">{{name}}</span>
                 <span class="ffg-ach__state">
-                    {{#earned}}{{#str}}earned, local_sfsgame{{/str}}{{/earned}}
+                    {{#earned}}{{#xplabel}}<span class="ffg-ach__xp">{{xplabel}}</span>{{/xplabel}}{{/earned}}
                     {{^earned}}{{#str}}locked, local_sfsgame{{/str}}{{/earned}}
                 </span>
             </div>
@@ -73,6 +98,7 @@
                 <article class="ffg-mission">
                     <div class="ffg-mission__thumb ffg-mission__thumb--{{variant}}">
                         {{#badge}}<span class="ffg-mission__badge">{{badge}}</span>{{/badge}}
+                        {{#url}}<span class="ffg-mission__play" aria-hidden="true"></span>{{/url}}
                         {{#duration}}<span class="ffg-mission__duration">{{duration}}</span>{{/duration}}
                     </div>
                     <div class="ffg-mission__body">

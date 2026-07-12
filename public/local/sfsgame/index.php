@@ -55,6 +55,7 @@ foreach ($earned as $badge) {
         'name' => format_string($badge->name),
         'earned' => true,
         'imageurl' => $badgeimage((int)$badge->id),
+        'xplabel' => '+' . \local_sfsgame\domain\xp_policy::XP_PER_BADGE . ' XP',
     ];
 }
 foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
@@ -95,16 +96,39 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
     ];
 }
 
+$get = static function(string $name, string $default): string {
+    $value = trim((string)get_config('local_sfsgame', $name));
+    return $value !== '' ? $value : $default;
+};
+$level = \local_sfsgame\domain\xp_policy::level($xp);
+$firstmissionurl = null;
+foreach ($missions as $mission) {
+    if (!empty($mission['url'])) {
+        $firstmissionurl = $mission['url'];
+        break;
+    }
+}
+
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
     'kicker' => get_string('kicker', 'local_sfsgame'),
     'title' => get_string('futurefood', 'local_sfsgame'),
     'lede' => get_string('lede', 'local_sfsgame'),
-    'level' => \local_sfsgame\domain\xp_policy::level($xp),
+    'herokicker' => format_string($get('herokicker', 'Agent mode active'), true, ['escape' => false]),
+    'herotitle' => format_string($get('herotitle', 'Mission: Zero Hunger'), true, ['escape' => false]),
+    'herotext' => format_string($get('herotext',
+        'Collect evidence, run decision simulations, and earn XP toward your next agent rank. '
+        . 'Every action you take shapes a real protocol used across the Living Labs.'), true, ['escape' => false]),
+    'starturl' => $firstmissionurl,
+    'level' => $level,
     'xp' => $xp,
     'levelprogress' => \local_sfsgame\domain\xp_policy::level_progress($xp),
-    'xptonext' => get_string('xptonext', 'local_sfsgame',
-        \local_sfsgame\domain\xp_policy::to_next_level($xp)),
+    'xptonext' => get_string('progresstolevel', 'local_sfsgame', [
+        'next' => $level + 1,
+        'current' => $xp % \local_sfsgame\domain\xp_policy::XP_PER_LEVEL,
+        'target' => \local_sfsgame\domain\xp_policy::XP_PER_LEVEL,
+    ]),
+    'badgecount' => get_string('badgecount', 'local_sfsgame', count($earnedids)),
     'achievements' => $achievements,
     'hasachievements' => $achievements !== [],
     'missions' => $missions,
