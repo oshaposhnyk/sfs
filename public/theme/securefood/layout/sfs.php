@@ -130,10 +130,9 @@ if (class_exists('\core_search\manager') && \core_search\manager::is_global_sear
 // Front page carries the settings-driven About content above site content.
 $abouthtml = '';
 if ($PAGE->pagelayout === 'frontpage') {
-    $abouthtml = $OUTPUT->render_from_template(
-        'theme_securefood/about',
-        \theme_securefood\about::context($PAGE->theme->settings ?? null)
-    );
+    $aboutcontext = \theme_securefood\about::context($PAGE->theme->settings ?? null);
+    $aboutcontext['logourl'] = $OUTPUT->image_url('logo-icon-dark', 'theme')->out(false);
+    $abouthtml = $OUTPUT->render_from_template('theme_securefood/about', $aboutcontext);
 }
 
 $templatecontext = [

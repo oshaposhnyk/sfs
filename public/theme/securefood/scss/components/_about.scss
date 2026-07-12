@@ -2,27 +2,64 @@
 
 .sfs-mode {
     .sfs-hero {
-        background: linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 60%, var(--sfs-primary700) 100%);
+        background:
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 60%, var(--sfs-primary700) 100%);
+        background-size: 42px 42px, 42px 42px, 100% 100%;
         color: #fff;
         border-radius: var(--sfs-radius-md);
-        padding: 28px;
+        padding: 44px 48px 28px;
         margin-bottom: 22px;
         position: relative;
         overflow: hidden;
-        display: grid;
-        grid-template-columns: 1.4fr 1fr;
-        gap: 28px;
 
         &::before {
             content: '';
             position: absolute;
             right: -80px;
             top: -80px;
-            width: 280px;
-            height: 280px;
+            width: 320px;
+            height: 320px;
             background: radial-gradient(circle, rgba(224, 164, 88, 0.28), transparent 70%);
             pointer-events: none;
         }
+    }
+
+    .sfs-hero__inner {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 32px;
+        align-items: center;
+    }
+
+    .sfs-hero__title {
+        font-size: 2.6rem;
+        max-width: 16ch;
+    }
+
+    .sfs-hero__accent {
+        color: var(--sfs-accent-ondark);
+    }
+
+    .sfs-hero__panel {
+        justify-self: center;
+        width: 200px;
+        height: 200px;
+        border-radius: var(--sfs-radius-lg);
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        display: grid;
+        place-items: center;
+        backdrop-filter: blur(4px);
+        position: relative;
+        z-index: 1;
+    }
+
+    .sfs-hero__logo {
+        width: 96px;
+        height: 96px;
+        object-fit: contain;
     }
 
     .sfs-hero__kicker {
@@ -46,19 +83,26 @@
         max-width: 52ch;
     }
 
+    // Inline stats row along the hero's bottom edge (prototype layout).
     .sfs-hero__stats {
-        display: grid;
-        gap: 14px;
-        align-content: center;
+        display: flex;
+        gap: 0;
+        margin-top: 34px;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        padding-top: 22px;
         position: relative;
         z-index: 1;
+        max-width: 640px;
     }
 
     .sfs-hero__stat {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: var(--sfs-radius-sm);
-        padding: 12px 14px;
+        padding: 0 28px;
+        border-left: 1px solid rgba(255, 255, 255, 0.14);
+
+        &:first-child {
+            padding-left: 0;
+            border-left: 0;
+        }
     }
 
     .sfs-hero__value {
@@ -116,8 +160,17 @@
     }
 
     @include sfs-media-compact {
-        .sfs-hero {
+        .sfs-hero__inner {
             grid-template-columns: 1fr;
+        }
+
+        .sfs-hero__panel {
+            display: none;
+        }
+
+        .sfs-hero__stats {
+            flex-wrap: wrap;
+            gap: 14px 0;
         }
 
         .sfs-kpi__row {
@@ -352,5 +405,102 @@
     .sfs-hubs__row--lab .sfs-hubs__status {
         background: var(--sfs-accent50);
         color: var(--sfs-accent-ink);
+    }
+}
+
+
+// "A shield…" card + "Three reinforcing layers" (insights.html two-column).
+.sfs-mode {
+    .sfs-shield {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 22px;
+        margin-bottom: 22px;
+    }
+
+    .sfs-shield__card {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 28px;
+    }
+
+    .sfs-shield__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 14px;
+    }
+
+    .sfs-shield__title {
+        font-size: 1.7rem;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
+    }
+
+    .sfs-shield__body p {
+        color: var(--sfs-ink2);
+        line-height: 1.6;
+        margin: 0 0 12px;
+    }
+
+    .sfs-layers {
+        background: linear-gradient(160deg, var(--sfs-primary) 0%, #143e4d 100%);
+        color: #fff;
+        border-radius: var(--sfs-radius-md);
+        padding: 26px;
+        display: grid;
+        gap: 20px;
+        align-content: start;
+    }
+
+    .sfs-layers__title {
+        color: #fff;
+        font-size: 1.25rem;
+        margin: 0;
+    }
+
+    .sfs-layers__item {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .sfs-layers__num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--sfs-accent-ondark);
+        display: grid;
+        place-items: center;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .sfs-layers__name {
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .sfs-layers__text {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    @include sfs-media-compact {
+        .sfs-shield {
+            grid-template-columns: 1fr;
+        }
     }
 }

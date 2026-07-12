@@ -19,11 +19,11 @@ Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
 ## About (insights.html ↔ /?redirect=0)
 
-- ☐ A1 Hero is the wrong section: prototype hero = "Learning for resilience
+- ☑ A1 Hero rebuilt per design (accent title, hub lede, glass logo panel, grid texture, inline divider stats): prototype hero = "Learning for resilience
   in an evolving world" (accent on last words), hub lede, logo panel right,
   4 stats inline at the bottom with dividers. Our hero uses the "shield"
   copy and stacks stats as right-column cards.
-- ☐ A2 Missing two-column section: white "A shield for the food systems of
+- ☑ A2 Shield card + Three reinforcing layers added (settings-driven, design defaults): white "A shield for the food systems of
   tomorrow" card (pill chip, two paragraphs) + dark "Three reinforcing
   layers" card (3 numbered items).
 

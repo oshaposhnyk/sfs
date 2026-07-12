@@ -143,18 +143,56 @@ final class about {
             $hubs[] = $hub;
         }
 
+        $layerdefaults = [
+            ['title' => 'Digital Twins',
+                'text' => 'Model stress scenarios in virtual environments to predict impacts before they hit the field.'],
+            ['title' => 'Governance frameworks',
+                'text' => 'New standards for crisis management and policy-making across European food chains.'],
+            ['title' => 'Living Labs',
+                'text' => 'Community-led spaces where innovative solutions are tested in real-world conditions.'],
+        ];
+        $layeritems = json_decode((string)($settings->aboutlayers ?? ''), true);
+        if (!is_array($layeritems) || $layeritems === []) {
+            $layeritems = $layerdefaults;
+        }
+        $layers = [];
+        foreach (array_values($layeritems) as $i => $item) {
+            if (!is_array($item) || empty($item['title'])) {
+                continue;
+            }
+            $layers[] = [
+                'number' => $i + 1,
+                'title' => format_string((string)$item['title']),
+                'text' => format_string((string)($item['text'] ?? '')),
+            ];
+        }
+
         return [
+            'titleaccent' => format_string($get('abouttitleaccent', 'evolving world'), true, ['escape' => false]),
+            'shieldchip' => format_string($get('aboutshieldchip',
+                'About the SecureFood project · Horizon Europe'), true, ['escape' => false]),
+            'shieldtitle' => format_string($get('aboutshieldtitle',
+                'A shield for the food systems of tomorrow'), true, ['escape' => false]),
+            'shieldbody' => format_text($get('aboutshieldbody',
+                '<p>Our world is facing unprecedented challenges — from climate shocks to global '
+                . 'supply-chain disruptions. SecureFood is developing a "shield" for the food systems '
+                . 'of tomorrow by integrating digital twins, governance frameworks, and community-led '
+                . 'Living Labs into one operational ecosystem.</p>'
+                . '<p>The School was established as a <strong>core flagship result of the project</strong>: '
+                . 'its goal is to transform that science into skills that real people can use in real '
+                . 'schools, kitchens and supply chains.</p>'), FORMAT_HTML),
+            'layerstitle' => format_string($get('aboutlayerstitle', 'Three reinforcing layers'), true, ['escape' => false]),
+            'layers' => $layers,
             'hubstitle' => format_string($get('abouthubstitle', 'Living Labs & partners across Europe'), true, ['escape' => false]),
             'hubs' => $hubs,
             'feedtitle' => format_string($get('aboutfeedtitle', 'Latest from the network'), true, ['escape' => false]),
             'feed' => $feed,
-            'kicker' => format_string($get('aboutkicker', 'About the SecureFood project · Horizon Europe'), true, ['escape' => false]),
-            'title' => format_string($get('abouttitle', 'A shield for the food systems of tomorrow'), true, ['escape' => false]),
+            'kicker' => format_string($get('aboutkicker', 'SecureFood School'), true, ['escape' => false]),
+            'title' => format_string($get('abouttitle', 'Learning for resilience in an'), true, ['escape' => false]),
             'lede' => format_text($get('aboutlede',
-                'Our world is facing unprecedented challenges — from climate shocks to global '
-                . 'supply-chain disruptions. SecureFood is developing a "shield" for the food '
-                . 'systems of tomorrow by integrating digital twins, governance frameworks, and '
-                . 'community-led Living Labs into one operational ecosystem.'),
+                'The educational hub of the SecureFood project — turning complex science and '
+                . 'digital tools into actionable skills for the professionals, policymakers and '
+                . 'change-makers building tomorrow\'s food systems.'),
                 FORMAT_HTML),
             'stats' => $stats,
             'kpis' => $kpis,

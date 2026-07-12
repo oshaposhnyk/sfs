@@ -130,6 +130,29 @@ if ($ADMIN->fulltree) {
         '',
         PARAM_RAW
     ));
+    foreach (['abouttitleaccent', 'aboutshieldchip', 'aboutshieldtitle', 'aboutlayerstitle'] as $name) {
+        $page->add(new admin_setting_configtext(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string('aboutfallback_desc', 'theme_securefood'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/aboutshieldbody',
+        get_string('aboutshieldbody', 'theme_securefood'),
+        get_string('aboutfallback_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/aboutlayers',
+        get_string('aboutlayers', 'theme_securefood'),
+        get_string('aboutjson_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
     foreach (['aboutstats', 'aboutkpis'] as $name) {
         $page->add(new admin_setting_configtextarea(
             "theme_securefood/{$name}",
