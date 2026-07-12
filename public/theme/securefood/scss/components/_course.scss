@@ -363,3 +363,164 @@
         font-size: 0.85rem;
     }
 }
+
+// Audit fixes C1-C2 (PHASE8_AUDIT.md) — right rail + per-section fractions.
+// Spec: course.html (.course-layout, .rail-card, .sec-progress).
+.sfs-mode {
+    .sfs-courselayout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .sfs-railcard {
+        padding: 20px;
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        background: var(--sfs-surface);
+        margin-bottom: 16px;
+    }
+
+    .sfs-railcard__title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--sfs-muted);
+        margin: 0 0 14px;
+        font-weight: 700;
+    }
+
+    .sfs-railcard__due {
+        padding: 14px;
+        border-radius: var(--sfs-radius-sm);
+        background: var(--sfs-accent50);
+        border: 1px solid rgba(198, 138, 59, 0.2);
+    }
+
+    .sfs-railcard__duetitle {
+        font-weight: 700;
+        font-size: 0.92rem;
+    }
+
+    .sfs-railcard__duemeta {
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        margin-top: 4px;
+    }
+
+    .sfs-railcard__continue {
+        width: 100%;
+        margin-top: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: var(--sfs-primary);
+        border-color: var(--sfs-primary);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 999px;
+
+        &:hover,
+        &:focus {
+            background: var(--sfs-primary700);
+            border-color: var(--sfs-primary700);
+            color: #fff;
+        }
+    }
+
+    .sfs-railcard__play::before {
+        content: 'play_arrow';
+        font-family: 'SFS Material Icons';
+        font-feature-settings: 'liga';
+        font-size: 18px;
+        vertical-align: middle;
+    }
+
+    .sfs-railcard__info {
+        display: grid;
+        gap: 10px;
+    }
+
+    .sfs-railcard__row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 0.84rem;
+    }
+
+    .sfs-railcard__lbl {
+        color: var(--sfs-muted);
+    }
+
+    .sfs-railcard__val {
+        color: var(--sfs-ink);
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .sfs-railcard__person {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        + .sfs-railcard__person {
+            margin-top: 12px;
+        }
+    }
+
+    .sfs-railcard__avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--sfs-primary), var(--sfs-teal));
+        color: #fff;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+    }
+
+    .sfs-railcard__personinfo {
+        strong {
+            display: block;
+            font-size: 0.88rem;
+            color: var(--sfs-ink);
+        }
+
+        small {
+            font-size: 0.76rem;
+            color: var(--sfs-muted);
+        }
+    }
+
+    .sfs-secprog {
+        text-align: right;
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        margin-left: auto;
+        margin-right: 8px;
+        align-self: center;
+        white-space: nowrap;
+    }
+
+    .sfs-secprog__frac {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        color: var(--sfs-ink);
+        font-size: 0.94rem;
+    }
+
+    @media (max-width: 1100px) {
+        .sfs-courselayout {
+            grid-template-columns: 1fr;
+        }
+
+        .sfs-courselayout__rail {
+            order: 2;
+        }
+    }
+}

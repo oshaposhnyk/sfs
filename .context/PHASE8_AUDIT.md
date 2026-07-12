@@ -59,13 +59,22 @@ Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
 ## Course/activity (course.html/activity.html)
 
-- ☐ C1 Right rail (progress ring, teacher card, info list) still missing
-  (long-standing domain 06 item).
-- ☐ C2 Prototype section headers show per-section progress fractions; ours
-  plain names.
+- ☑ C1 Right rail added (layout-level, shell only): "Next up" card (first
+  incomplete activity + Continue), "Course info" list (sections, activities,
+  progress %, language, format — all real data), "Teachers" card (role-based,
+  renders only when the course has teachers). Built by
+  `theme_securefood\courserail`, template `course_rail.mustache`; stacks
+  below content ≤1100px. Prototype's mentor/peers + resources cards deferred
+  (no data source).
+- ☑ C2 Per-section "done / total" fractions with Complete/In progress/
+  Up next labels, decorated by the `sectionprogress` AMD module (progressive
+  enhancement — plain headers without JS). Viewer's own completion only.
 
 ## Cross-cutting
 
 - ☐ X1 Topbar order: prototype = search left of icon cluster, help "?"
   button present, no user chip (user card only in sidebar). Ours keeps the
   functional user menu (accepted deviation) and lacks the help button.
+- ☑ X2 (bug, found during C) Mobile ≤820px reserved the collapsed icon-rail
+  grid column under the drawer (`.sfs-sidebar-collapsed` rule outranked the
+  mobile `1fr`); content now spans the full width.

@@ -127,6 +127,18 @@ if (class_exists('\core_search\manager') && \core_search\manager::is_global_sear
     $searchurl = (new moodle_url('/search/index.php'))->out(false);
 }
 
+// Course pages: right rail (audit C1) + section fractions (audit C2).
+$railhtml = '';
+if ($PAGE->pagelayout === 'course' && $isloggedin
+        && !empty($PAGE->course->id) && (int)$PAGE->course->id !== (int)$SITE->id) {
+    global $USER;
+    $raildata = \theme_securefood\courserail::context($PAGE->course, (int)$USER->id);
+    $railhtml = $OUTPUT->render_from_template('theme_securefood/course_rail', $raildata['rail']);
+    if ($raildata['sections'] !== []) {
+        $PAGE->requires->js_call_amd('theme_securefood/sectionprogress', 'init', [$raildata['sections']]);
+    }
+}
+
 // Front page carries the settings-driven About content above site content.
 $abouthtml = '';
 if ($PAGE->pagelayout === 'frontpage') {
@@ -137,6 +149,7 @@ if ($PAGE->pagelayout === 'frontpage') {
 
 $templatecontext = [
     'abouthtml' => $abouthtml,
+    'railhtml' => $railhtml,
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), 'escape' => false]),
     'output' => $OUTPUT,
     'bodyattributes' => $bodyattributes,

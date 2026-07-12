@@ -569,7 +569,11 @@
     // Mobile drawer (≤820px).
     // ---------------------------------------------------------------
     @include sfs-media-mobile {
-        #page-wrapper.sfs-shell {
+        // Both selectors needed: the collapsed-state rule above is more
+        // specific than a bare #page-wrapper.sfs-shell and would otherwise
+        // keep reserving the icon-rail column under the drawer.
+        #page-wrapper.sfs-shell,
+        &.sfs-sidebar-collapsed #page-wrapper.sfs-shell {
             grid-template-columns: 1fr;
         }
 

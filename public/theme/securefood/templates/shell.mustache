@@ -96,7 +96,17 @@
                             {{/overflow}}
                             <main id="sfs-main" class="sfs-shell__maincontent">
                                 {{#abouthtml}}{{{abouthtml}}}{{/abouthtml}}
-                                {{{ output.main_content }}}
+                                {{#railhtml}}
+                                    <div class="sfs-courselayout">
+                                        <div class="sfs-courselayout__main">{{{ output.main_content }}}</div>
+                                        <aside class="sfs-courselayout__rail" aria-label="{{#str}}rail_aria, theme_securefood{{/str}}">
+                                            {{{railhtml}}}
+                                        </aside>
+                                    </div>
+                                {{/railhtml}}
+                                {{^railhtml}}
+                                    {{{ output.main_content }}}
+                                {{/railhtml}}
                             </main>
                             {{{ output.activity_navigation }}}
                             {{{ output.course_content_footer }}}

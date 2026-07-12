@@ -1,0 +1,66 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/course_rail
+
+    Course right rail: next activity, course info list, teachers.
+
+    Example context (json):
+    {
+        "nextup": {"title": "Draft a 1-page brief", "meta": "Assignment · Module 2", "url": "#"},
+        "info": [{"label": "Sections", "value": "4"}],
+        "hasteachers": true,
+        "teachers": [{"fullname": "Maria Stepanenko", "initials": "MS", "subtitle": "Teacher"}]
+    }
+}}
+{{#nextup}}
+    <div class="sfs-railcard">
+        <h4 class="sfs-railcard__title">{{#str}}rail_nextup, theme_securefood{{/str}}</h4>
+        <div class="sfs-railcard__due">
+            <div class="sfs-railcard__duetitle">{{title}}</div>
+            <div class="sfs-railcard__duemeta">{{meta}}</div>
+        </div>
+        <a class="btn btn-primary sfs-railcard__continue" href="{{url}}">
+            <span class="sfs-railcard__play" aria-hidden="true"></span>{{#str}}rail_continue, theme_securefood{{/str}}
+        </a>
+    </div>
+{{/nextup}}
+<div class="sfs-railcard">
+    <h4 class="sfs-railcard__title">{{#str}}rail_courseinfo, theme_securefood{{/str}}</h4>
+    <div class="sfs-railcard__info">
+        {{#info}}
+            <div class="sfs-railcard__row">
+                <span class="sfs-railcard__lbl">{{label}}</span>
+                <span class="sfs-railcard__val">{{value}}</span>
+            </div>
+        {{/info}}
+    </div>
+</div>
+{{#hasteachers}}
+    <div class="sfs-railcard">
+        <h4 class="sfs-railcard__title">{{#str}}rail_teachers, theme_securefood{{/str}}</h4>
+        {{#teachers}}
+            <div class="sfs-railcard__person">
+                <span class="sfs-railcard__avatar" aria-hidden="true">{{initials}}</span>
+                <span class="sfs-railcard__personinfo">
+                    <strong>{{fullname}}</strong>
+                    <small>{{subtitle}}</small>
+                </span>
+            </div>
+        {{/teachers}}
+    </div>
+{{/hasteachers}}
