@@ -131,7 +131,9 @@ final class moodle_learning_plan_progress_repository implements learning_plan_pr
      * @return string
      */
     private function cache_key(int $planid, int $userid): string {
-        return $planid . ':' . $userid;
+        // The MUC definition uses simple keys: [a-zA-Z0-9_] only — a colon
+        // separator throws under developer debugging (caught by PHPUnit).
+        return $planid . '_' . $userid;
     }
 
     /**
