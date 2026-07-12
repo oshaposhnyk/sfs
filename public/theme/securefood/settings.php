@@ -116,6 +116,20 @@ if ($ADMIN->fulltree) {
         '',
         PARAM_RAW
     ));
+    $page->add(new admin_setting_configtext(
+        'theme_securefood/abouthubstitle',
+        get_string('abouthubstitle', 'theme_securefood'),
+        get_string('aboutfallback_desc', 'theme_securefood'),
+        '',
+        PARAM_TEXT
+    ));
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/abouthubs',
+        get_string('abouthubs', 'theme_securefood'),
+        get_string('abouthubs_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
     foreach (['aboutstats', 'aboutkpis'] as $name) {
         $page->add(new admin_setting_configtextarea(
             "theme_securefood/{$name}",

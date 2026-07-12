@@ -99,7 +99,7 @@ final class navigation {
             [
                 'labelstr' => 'nav_learning',
                 'items' => [
-                    ['titlestr' => 'nav_about', 'url' => '/', 'icon' => 'info', 'visibility' => 'all'],
+                    ['titlestr' => 'nav_about', 'url' => '/?redirect=0', 'icon' => 'info', 'visibility' => 'all'],
                     ['titlestr' => 'nav_studentlab', 'url' => '/local/learningplans/my.php',
                         'icon' => 'school', 'visibility' => 'loggedin'],
                     ['titlestr' => 'nav_mycourses', 'url' => '/my/courses.php',

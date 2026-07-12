@@ -224,3 +224,82 @@
         font-weight: 600;
     }
 }
+
+// Living Labs & partners (insights.html "map-grid" hub list; map deferred).
+.sfs-mode {
+    .sfs-hubs__title {
+        font-size: 1.4rem;
+        margin: 28px 0 16px;
+    }
+
+    .sfs-hubs__card {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 12px;
+        margin-bottom: 22px;
+    }
+
+    .sfs-hubs__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 4px 16px;
+    }
+
+    .sfs-hubs__row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--sfs-radius-sm);
+
+        &:hover {
+            background: var(--sfs-surface2);
+        }
+    }
+
+    .sfs-hubs__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--sfs-teal);
+        flex-shrink: 0;
+    }
+
+    .sfs-hubs__row--lab .sfs-hubs__dot {
+        background: var(--sfs-accent);
+    }
+
+    .sfs-hubs__name {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .sfs-hubs__country {
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .sfs-hubs__status {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--sfs-teal50);
+        color: var(--sfs-teal);
+        white-space: nowrap;
+    }
+
+    .sfs-hubs__row--lab .sfs-hubs__status {
+        background: var(--sfs-accent50);
+        color: var(--sfs-accent);
+    }
+}

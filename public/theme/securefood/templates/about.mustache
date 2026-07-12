@@ -58,6 +58,27 @@
     </div>
 {{/kpis.0}}
 
+{{#hubs.0}}
+    <section class="sfs-hubs">
+        <h3 class="sfs-hubs__title">{{hubstitle}}</h3>
+        <div class="sfs-hubs__card">
+            <ul class="sfs-hubs__list">
+                {{#hubs}}
+                    <li class="sfs-hubs__row {{#islab}}sfs-hubs__row--lab{{/islab}}">
+                        <span class="sfs-hubs__dot" aria-hidden="true"></span>
+                        <span class="sfs-hubs__name">{{name}}</span>
+                        {{#country}}<span class="sfs-hubs__country">{{country}}</span>{{/country}}
+                        <span class="sfs-hubs__status">
+                            {{#islab}}{{#str}}abouthub_lab, theme_securefood{{/str}}{{/islab}}
+                            {{^islab}}{{#str}}abouthub_partner, theme_securefood{{/str}}{{/islab}}
+                        </span>
+                    </li>
+                {{/hubs}}
+            </ul>
+        </div>
+    </section>
+{{/hubs.0}}
+
 {{#feed.0}}
     <section class="sfs-feed">
         <h3 class="sfs-feed__title">{{feedtitle}}</h3>

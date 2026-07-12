@@ -48,21 +48,15 @@ final class about {
         $stats = self::pairs(
             (string)($settings->aboutstats ?? ''),
             [
-                ['value' => '14', 'label' => 'Living Labs across Europe'],
-                ['value' => '620+', 'label' => 'Learners in the pilot'],
-                ['value' => '24', 'label' => 'Courses and missions'],
+                ['value' => '€8M', 'label' => 'Horizon Europe'],
+                ['value' => '21', 'label' => 'Partners'],
+                ['value' => '10+', 'label' => 'Living Labs'],
+                ['value' => 'L4C', 'label' => 'Methodology'],
             ]
         );
 
-        $kpis = self::pairs(
-            (string)($settings->aboutkpis ?? ''),
-            [
-                ['value' => '96%', 'label' => 'Sensor uptime', 'sub' => 'Across all Living Labs'],
-                ['value' => '38', 'label' => 'Active alerts resolved', 'sub' => 'Last 30 days'],
-                ['value' => '4.6', 'label' => 'Learner satisfaction', 'sub' => 'Pilot cohort survey'],
-                ['value' => '12', 'label' => 'Partner institutions', 'sub' => 'Research and industry'],
-            ]
-        );
+        // The design's About page has no KPI row — render only when configured.
+        $kpis = self::pairs((string)($settings->aboutkpis ?? ''), []);
 
         $feeddefaults = [
             ['chip' => 'Digital twin', 'title' => 'Kyiv Living Lab twin goes live',
@@ -97,14 +91,55 @@ final class about {
             ];
         }
 
+
+        $hubdefaults = [];
+        $labs = [['Kyiv Lab', 'Ukraine'], ['Lviv Lab', 'Ukraine'], ['Odesa Lab', 'Ukraine'], ['Kharkiv Lab', 'Ukraine']];
+        $partners = [
+            ['ICCS', 'Athens, Greece'], ['GALANAKIS', 'Chania, Greece'],
+            ['European Dynamics', 'Brussels, Belgium'], ['ZLC', 'Zaragoza, Spain'],
+            ['DNV', 'Oslo, Norway'], ['IRIS', 'Castelldefels, Spain'],
+            ['IAMO', 'Halle, Germany'], ['EXUS AI Labs', 'London, UK'],
+            ['INNOV-ACTS', 'Nicosia, Cyprus'], ['Carr Comms', 'Dublin, Ireland'],
+            ['LUKE', 'Helsinki, Finland'], ['LAUREA', 'Espoo, Finland'],
+            ['EMPRACTIS', 'Lisbon, Portugal'], ['MC SONAE', 'Porto, Portugal'],
+            ['EKPIZO', 'Athens, Greece'], ['ELGO–DIMITRA', 'Thessaloniki, Greece'],
+            ['NULES', 'Kyiv, Ukraine'], ['SPES', 'Padova, Italy'],
+        ];
+        foreach ($labs as [$name, $country]) {
+            $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'lab'];
+        }
+        foreach ($partners as [$name, $country]) {
+            $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'partner'];
+        }
+        $hubitems = json_decode((string)($settings->abouthubs ?? ''), true);
+        if (!is_array($hubitems) || $hubitems === []) {
+            $hubitems = $hubdefaults;
+        }
+        $hubs = [];
+        foreach ($hubitems as $item) {
+            if (!is_array($item) || empty($item['name'])) {
+                continue;
+            }
+            $islab = ($item['type'] ?? 'partner') === 'lab';
+            $hubs[] = [
+                'name' => format_string((string)$item['name']),
+                'country' => format_string((string)($item['country'] ?? '')),
+                'islab' => $islab,
+            ];
+        }
+
         return [
-            'feedtitle' => format_string($get('aboutfeedtitle', 'Latest from the network')),
+            'hubstitle' => format_string($get('abouthubstitle', 'Living Labs & partners across Europe'), true, ['escape' => false]),
+            'hubs' => $hubs,
+            'feedtitle' => format_string($get('aboutfeedtitle', 'Latest from the network'), true, ['escape' => false]),
             'feed' => $feed,
-            'kicker' => format_string($get('aboutkicker', 'SecureFood Living Labs')),
-            'title' => format_string($get('abouttitle', 'A shield for the food systems of tomorrow')),
+            'kicker' => format_string($get('aboutkicker', 'About the SecureFood project · Horizon Europe'), true, ['escape' => false]),
+            'title' => format_string($get('abouttitle', 'A shield for the food systems of tomorrow'), true, ['escape' => false]),
             'lede' => format_text($get('aboutlede',
-                'SecureFood School connects learners, researchers and practitioners around live '
-                . 'food-chain data — learning by sensing, translating and validating together.'),
+                'Our world is facing unprecedented challenges — from climate shocks to global '
+                . 'supply-chain disruptions. SecureFood is developing a "shield" for the food '
+                . 'systems of tomorrow by integrating digital twins, governance frameworks, and '
+                . 'community-led Living Labs into one operational ecosystem.'),
                 FORMAT_HTML),
             'stats' => $stats,
             'kpis' => $kpis,
@@ -134,6 +169,6 @@ final class about {
                 'sub' => isset($item['sub']) ? format_string((string)$item['sub']) : '',
             ];
         }
-        return $out !== [] ? $out : $default;
+        return $out !== [] || $default === [] ? $out : $default;
     }
 }
