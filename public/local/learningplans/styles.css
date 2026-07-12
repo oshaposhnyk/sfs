@@ -91,6 +91,10 @@
 }
 
 .learning-plan__course-item {
+    margin-bottom: .5rem;
+}
+
+.learning-plan__course-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;
     gap: .5rem;
@@ -98,20 +102,38 @@
     padding: .5rem .75rem;
     border: 1px solid var(--border-color, #d8d8d8);
     border-radius: 6px;
-    margin-bottom: .5rem;
 }
 
-.learning-plan__stage-badge {
-    display: inline-block;
-    margin-left: .5rem;
-    padding: .1rem .55rem;
-    border: 1px solid var(--border-color, #d8d8d8);
-    border-radius: 999px;
-    font-size: .78rem;
-    font-weight: 600;
+/* Courses inside a named stage get a subtle accent edge so the group
+   reads as one block between headings. */
+.learning-plan__course-row--staged {
+    border-left: 3px solid var(--primary, #0f6cbf);
+}
+
+.learning-plan__stage-heading {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    margin: 1rem 0 .5rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid var(--border-color, #d8d8d8);
+}
+
+.learning-plan__course-item:first-child .learning-plan__stage-heading {
+    margin-top: 0;
+}
+
+.learning-plan__stage-heading-name {
+    font-weight: 700;
+    font-size: .92rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
     color: var(--gray-700, #495057);
-    background: var(--light, #f8f9fa);
-    vertical-align: middle;
+}
+
+.learning-plan__stage-heading-count {
+    font-size: .8rem;
+    color: var(--gray-600, #6c757d);
 }
 
 .learning-plan__stage-form {
@@ -184,7 +206,7 @@
 }
 
 @media (max-width: 767px) {
-    .learning-plan__course-item {
+    .learning-plan__course-row {
         grid-template-columns: 1fr;
     }
 
@@ -472,4 +494,19 @@
     font-weight: 700;
     font-size: 0.9rem;
     flex-shrink: 0;
+}
+
+
+/* ------------------------------------------------------------------
+   Management pages use the full viewport width: course lists and the
+   membership table need more room than Boost's limited-width column.
+   ------------------------------------------------------------------ */
+
+/* Two ids beat Boost's `#page.drawers .main-inner { max-width: 830px }`. */
+#page-local-learningplans-index #page.drawers .main-inner,
+#page-local-learningplans-view #page.drawers .main-inner,
+#page-local-learningplans-edit #page.drawers .main-inner,
+#page-local-learningplans-enrol #page.drawers .main-inner,
+#page-local-learningplans-cohorts #page.drawers .main-inner {
+    max-width: none;
 }

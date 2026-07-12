@@ -80,6 +80,20 @@ uk string review (9.6) owner takes it.
 
 ## Recent work
 
+- **2026-07-12** — **Owner feedback: stage groups + full-width management**
+  (local_learningplans, follow-up to the stage editing round): the plan page
+  course list now renders visual stage groups — consecutive courses sharing
+  a stage name sit under an uppercase group heading with a course count, and
+  staged rows carry a primary-coloured left edge; headings are computed
+  server-side inside the same flat sortable list, so drag-and-drop reorder
+  keeps working (the post-drop reload regroups). Unnamed groups show as
+  "No stage" only when at least one stage exists; a plan with no stages at
+  all keeps the plain flat list. All five management pages (index/view/
+  edit/enrol/cohorts) drop Boost's 830px column via body-id-scoped CSS in
+  plugin styles.css (double-id selector to outrank
+  `#page.drawers .main-inner`). Strings en+uk; suite 17/17; verified in the
+  browser at 1440px (grouped + full width).
+
 - **2026-07-12** — **Owner feedback: stage management on the plan page**
   (local_learningplans): view.php now shows each course's stage (badge next
   to the name) and lets managers edit it inline — per-row POST form (sesskey,

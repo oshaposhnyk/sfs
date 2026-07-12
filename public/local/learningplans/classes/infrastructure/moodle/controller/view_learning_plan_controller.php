@@ -150,15 +150,46 @@ final class view_learning_plan_controller {
         }, $courses);
         $courserecords = $courserepository->list_by_ids($courseids);
 
+        // Consecutive courses sharing a stage name form one visual group
+        // (same convention as the Student Lab grouping policy).
+        $stagestarts = [];
+        $groupsizes = [];
+        $groupindex = 0;
+        foreach ($courses as $index => $courseitem) {
+            if ($index === 0 || $courseitem->stage_name() !== $courses[$index - 1]->stage_name()) {
+                $groupindex++;
+                $stagestarts[$index] = $groupindex;
+            }
+            $groupsizes[$groupindex] = ($groupsizes[$groupindex] ?? 0) + 1;
+        }
+        $hasstages = false;
+        foreach ($courses as $courseitem) {
+            if ($courseitem->stage_name() !== '') {
+                $hasstages = true;
+                break;
+            }
+        }
+
         $courserows = [];
         foreach ($courses as $index => $courseitem) {
             $cid = $courseitem->course_id();
             $coursename = isset($courserecords[$cid]) ? format_string($courserecords[$cid]->fullname) : ('#' . $cid);
+            $stagestart = null;
+            if ($hasstages && isset($stagestarts[$index])) {
+                $number = $stagestarts[$index];
+                $stagestart = [
+                    'heading' => $courseitem->stage_name() !== ''
+                        ? format_string($courseitem->stage_name())
+                        : get_string('plan:view:nostage', 'local_learningplans'),
+                    'countlabel' => get_string('plan:view:stagecount', 'local_learningplans', $groupsizes[$number]),
+                ];
+            }
             $courserows[] = [
                 'courseid' => $cid,
                 'name' => $coursename,
                 'order' => $index + 1,
                 'stagename' => $courseitem->stage_name(),
+                'stagestart' => $stagestart,
                 'draghandle' => $OUTPUT->render_from_template('core/drag_handle', [
                     'movetitle' => get_string('movecontent', 'moodle', $coursename),
                     'extraclasses' => 'learning-plan__drag-handle',
