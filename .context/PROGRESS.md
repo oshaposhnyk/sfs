@@ -273,3 +273,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   Verified full-page screenshot: hero → KPI row → feed → site content, matches
   insights.html. Remaining for 04: Living Labs map (SVG, no-CDN decision),
   per-role home routing.
+
+- **2026-07-12** — **Domain 04 slice 3** (owner feedback): About defaults now
+  the exact insights.html copy (kicker/lede/4 hero stats); KPI row hidden by
+  default (not in the design); Living Labs & partners hub-list block with
+  lab/partner pills + abouthubs settings; About nav uses /?redirect=0 (was
+  bouncing logged-in users to the dashboard); heading double-escape fixed.
+  Map visual itself still deferred (no-CDN decision).
