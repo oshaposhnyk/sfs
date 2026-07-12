@@ -245,3 +245,160 @@
         color: var(--sfs-muted);
     }
 }
+
+// Audit fixes R1-R5 (PHASE8_AUDIT.md) — KPI cards, tool icons and counts,
+// audience chips, circular download button. Spec: governance.html.
+.sfs-mode {
+    .sfsres__stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .sfsres-stat {
+        display: flex;
+        flex-direction: column;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 18px;
+    }
+
+    .sfsres-stat__label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--sfs-muted);
+    }
+
+    .sfsres-stat__value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-top: 4px;
+    }
+
+    .sfsres-stat__suffix {
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: var(--sfs-muted);
+        margin-left: 4px;
+    }
+
+    .sfsres-stat__bar {
+        display: block;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--sfs-surface2);
+        overflow: hidden;
+        margin-top: 10px;
+    }
+
+    .sfsres-stat__fill {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--sfs-teal);
+    }
+
+    .sfsres-stat--amber .sfsres-stat__fill {
+        background: var(--sfs-accent);
+    }
+
+    .sfsres-stat--deep .sfsres-stat__fill {
+        background: var(--sfs-primary);
+    }
+
+    .sfsres-stat__sub {
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        margin-top: 8px;
+    }
+
+    .sfsres-tool__icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--sfs-radius-xs);
+        display: grid;
+        place-items: center;
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+        margin-bottom: 6px;
+
+        &::before {
+            content: 'assignment';
+            font-family: 'SFS Material Icons';
+            font-feature-settings: 'liga';
+            font-size: 20px;
+        }
+    }
+
+    .sfsres-tool__icon--cohorts {
+        background: var(--sfs-teal50);
+        color: var(--sfs-teal);
+
+        &::before {
+            content: 'groups';
+        }
+    }
+
+    .sfsres-tool__icon--badges {
+        background: var(--sfs-accent50);
+        color: var(--sfs-accent-ink);
+
+        &::before {
+            content: 'workspace_premium';
+        }
+    }
+
+    .sfsres-tool__icon--courses::before {
+        content: 'school';
+    }
+
+    .sfsres-tool__count {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--sfs-line);
+        margin-top: 8px;
+        padding-top: 10px;
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+    }
+
+    .sfsres-tool__countnum {
+        font-size: 1rem;
+        color: var(--sfs-ink);
+    }
+
+    .sfsres-doc__audience {
+        border: 1px solid var(--sfs-line);
+        background: var(--sfs-surface2);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--sfs-ink2);
+    }
+
+    // Circular download button per the design; the text stays for standard
+    // mode and screen readers.
+    .sfsres-doc__open {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+
+        &::before {
+            content: 'file_download';
+            font-family: 'SFS Material Icons';
+            font-feature-settings: 'liga';
+            font-size: 18px;
+        }
+    }
+
+    .sfsres-doc__opentext {
+        @include sfs-visually-hidden;
+    }
+}

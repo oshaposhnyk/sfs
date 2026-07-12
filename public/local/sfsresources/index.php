@@ -39,29 +39,29 @@ $PAGE->set_title(get_string('resources', 'local_sfsresources'));
 $PAGE->set_heading(get_string('resources', 'local_sfsresources'));
 
 $kindfilter = optional_param('kind', '', PARAM_ALPHA);
+$audfilter = strtolower(optional_param('aud', '', PARAM_ALPHANUMEXT));
 
 $alldocs = \local_sfsresources\documents::parse(
     (string)get_config('local_sfsresources', 'documents')
 );
 
-// Type filter pills (server-side — works without JS).
-$filekinds = [];
-foreach (get_file_storage()->get_area_files(
-    $context->id, 'local_sfsresources', 'documents', 0, 'id', false
-) as $file) {
-    $filekinds[] = \local_sfsresources\documents::kind_from_filename($file->get_filename());
+// Audience filter pills (server-side — works without JS), as designed.
+$audiences = [];
+foreach ($alldocs as $doc) {
+    if (trim($doc['audience']) !== '') {
+        $audiences[strtolower($doc['audience'])] = $doc['audience'];
+    }
 }
-$kinds = array_values(array_unique(array_merge($filekinds, array_column($alldocs, 'kind'))));
 $filters = [[
     'label' => get_string('all'),
     'url' => (new moodle_url('/local/sfsresources/index.php'))->out(false),
-    'active' => $kindfilter === '',
+    'active' => $audfilter === '',
 ]];
-foreach ($kinds as $kind) {
+foreach ($audiences as $audkey => $audlabel) {
     $filters[] = [
-        'label' => strtoupper($kind === 'link' ? 'www' : $kind),
-        'url' => (new moodle_url('/local/sfsresources/index.php', ['kind' => $kind]))->out(false),
-        'active' => $kindfilter === $kind,
+        'label' => format_string($audlabel, true, ['escape' => false]),
+        'url' => (new moodle_url('/local/sfsresources/index.php', ['aud' => $audkey]))->out(false),
+        'active' => $audfilter === $audkey,
     ];
 }
 
@@ -73,6 +73,10 @@ $storedfiles = get_file_storage()->get_area_files(
     $context->id, 'local_sfsresources', 'documents', 0, 'timemodified DESC, id DESC', false
 );
 foreach ($storedfiles as $file) {
+    if ($audfilter !== '') {
+        // Uploaded files carry no audience tag: they only appear in the All view.
+        continue;
+    }
     $kind = \local_sfsresources\documents::kind_from_filename($file->get_filename());
     if ($kindfilter !== '' && $kind !== $kindfilter) {
         continue;
@@ -95,6 +99,9 @@ foreach ($alldocs as $doc) {
     if ($kindfilter !== '' && $doc['kind'] !== $kindfilter) {
         continue;
     }
+    if ($audfilter !== '' && strtolower($doc['audience']) !== $audfilter) {
+        continue;
+    }
     $documents[] = [
         'title' => format_string($doc['title'], true, ['escape' => false]),
         'sub' => format_string($doc['sub'], true, ['escape' => false]),
@@ -106,21 +113,59 @@ foreach ($alldocs as $doc) {
     ];
 }
 
+// KPI stat cards (design: governance.html top row). Settings-driven JSON,
+// design defaults until real pilot metrics exist.
+$statdefaults = [
+    ['label' => 'Infrastructure readiness', 'value' => '82%', 'percent' => 82,
+        'sub' => '+4 pts vs last quarter', 'variant' => 'teal'],
+    ['label' => 'Social acceptance', 'value' => '4.2', 'suffix' => '/5.0', 'percent' => 84,
+        'sub' => '1,420 surveys', 'variant' => 'amber'],
+    ['label' => 'Staff trained', 'value' => '145', 'percent' => 72,
+        'sub' => 'L4C courses completed', 'variant' => 'deep'],
+];
+$statitems = json_decode((string)get_config('local_sfsresources', 'stats'), true);
+if (!is_array($statitems) || $statitems === []) {
+    $statitems = $statdefaults;
+}
+$stats = [];
+foreach ($statitems as $item) {
+    if (!is_array($item) || trim((string)($item['label'] ?? '')) === '') {
+        continue;
+    }
+    $stats[] = [
+        'label' => format_string((string)$item['label'], true, ['escape' => false]),
+        'value' => format_string((string)($item['value'] ?? ''), true, ['escape' => false]),
+        'suffix' => format_string((string)($item['suffix'] ?? ''), true, ['escape' => false]),
+        'percent' => max(0, min(100, (int)($item['percent'] ?? 0))),
+        'sub' => format_string((string)($item['sub'] ?? ''), true, ['escape' => false]),
+        'variant' => in_array($item['variant'] ?? '', ['teal', 'amber', 'deep'], true)
+            ? $item['variant'] : 'teal',
+    ];
+}
+
 // Management tools — only for staff who can manage learning plans.
 $tools = [];
 if (has_capability('local/learningplans:manage', $context)) {
     $tools = [
-        ['title' => get_string('tool_plans', 'local_sfsresources'),
+        ['key' => 'plans', 'title' => get_string('tool_plans', 'local_sfsresources'),
             'desc' => get_string('tool_plans_desc', 'local_sfsresources'),
+            'count' => $DB->count_records('local_learningplans_plan'),
+            'countlabel' => get_string('tool_count_active', 'local_sfsresources'),
             'url' => (new moodle_url('/local/learningplans/index.php'))->out(false)],
-        ['title' => get_string('tool_cohorts', 'local_sfsresources'),
+        ['key' => 'cohorts', 'title' => get_string('tool_cohorts', 'local_sfsresources'),
             'desc' => get_string('tool_cohorts_desc', 'local_sfsresources'),
+            'count' => $DB->count_records('cohort'),
+            'countlabel' => get_string('tool_count_active', 'local_sfsresources'),
             'url' => (new moodle_url('/cohort/index.php'))->out(false)],
-        ['title' => get_string('tool_badges', 'local_sfsresources'),
+        ['key' => 'badges', 'title' => get_string('tool_badges', 'local_sfsresources'),
             'desc' => get_string('tool_badges_desc', 'local_sfsresources'),
+            'count' => $DB->count_records('badge'),
+            'countlabel' => get_string('tool_count_configured', 'local_sfsresources'),
             'url' => (new moodle_url('/badges/index.php', ['type' => 1]))->out(false)],
-        ['title' => get_string('tool_courses', 'local_sfsresources'),
+        ['key' => 'courses', 'title' => get_string('tool_courses', 'local_sfsresources'),
             'desc' => get_string('tool_courses_desc', 'local_sfsresources'),
+            'count' => max(0, $DB->count_records('course') - 1),
+            'countlabel' => get_string('tool_count_active', 'local_sfsresources'),
             'url' => (new moodle_url('/course/management.php'))->out(false)],
     ];
 }
@@ -134,6 +179,8 @@ echo $OUTPUT->render_from_template('local_sfsresources/resources_page', [
     'documents' => $documents,
     'hasdocuments' => $documents !== [],
     'filters' => $filters,
+    'stats' => $stats,
+    'hasstats' => $stats !== [],
     'tools' => $tools,
     'hastools' => $tools !== [],
 ]);

@@ -36,12 +36,30 @@
         <p class="sfsres__lede">{{lede}}</p>
     </div>
 
+    {{#hasstats}}
+        <div class="sfsres__stats">
+            {{#stats}}
+                <div class="sfsres-stat sfsres-stat--{{variant}}">
+                    <span class="sfsres-stat__label">{{label}}</span>
+                    <span class="sfsres-stat__value">{{value}}{{#suffix}}<span class="sfsres-stat__suffix">{{suffix}}</span>{{/suffix}}</span>
+                    <span class="sfsres-stat__bar" role="presentation"><span class="sfsres-stat__fill" style="width: {{percent}}%;"></span></span>
+                    {{#sub}}<span class="sfsres-stat__sub">{{sub}}</span>{{/sub}}
+                </div>
+            {{/stats}}
+        </div>
+    {{/hasstats}}
+
     {{#hastools}}
         <div class="sfsres__tools">
             {{#tools}}
                 <a class="sfsres-tool" href="{{url}}">
+                    <span class="sfsres-tool__icon sfsres-tool__icon--{{key}}" aria-hidden="true"></span>
                     <span class="sfsres-tool__title">{{title}}</span>
                     <span class="sfsres-tool__desc">{{desc}}</span>
+                    <span class="sfsres-tool__count">
+                        <span class="sfsres-tool__countlabel">{{countlabel}}</span>
+                        <strong class="sfsres-tool__countnum">{{count}}</strong>
+                    </span>
                 </a>
             {{/tools}}
         </div>
@@ -72,7 +90,7 @@
                     {{#updated}}<span class="sfsres-doc__updated">{{updated}}</span>{{/updated}}
                     {{#url}}
                         <a class="sfsres-doc__open" href="{{url}}" aria-label="{{#str}}open, local_sfsresources{{/str}}: {{title}}">
-                            {{#str}}open, local_sfsresources{{/str}}
+                            <span class="sfsres-doc__opentext">{{#str}}open, local_sfsresources{{/str}}</span>
                         </a>
                     {{/url}}
                 </div>

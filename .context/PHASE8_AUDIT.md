@@ -40,16 +40,20 @@ Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
 ## Resources & Standards (governance.html ↔ /local/sfsresources/index.php)
 
-- ☐ R1 Kicker should be "Governance hub" style and lede per design
-  (settings defaults). "System operational" pill + "Download report"
+- ☑ R1 Kicker "Governance hub" + design lede + "Resource library" heading
+  (lang defaults, en+uk). "System operational" pill + "Download report"
   deferred (no data).
-- ☐ R2 KPI stat cards row (3 tiles with progress bars) missing — could be
-  settings-driven like About stats.
-- ☐ R3 Management tools: icons + count footers missing (ours text-only).
-- ☐ R4 Library filters: prototype filters by AUDIENCE (Director/Supplier/…)
-  with pill styles; ours filters by kind. Add audience filter alongside.
-- ☐ R5 Doc rows: circular download button at the right edge missing;
-  audience tag pill styling differs.
+- ☑ R2 KPI stat cards row: settings JSON `local_sfsresources/stats`
+  (label/value/suffix/percent/sub/variant teal|amber|deep), design defaults.
+- ☑ R3 Management tools: icon tiles (assignment/groups/workspace_premium/
+  school, colour variants) + count footers with live counts (plans, cohorts,
+  badges, courses).
+- ☑ R4 Library filters now filter by AUDIENCE (pills from doc audiences;
+  uploaded files appear in All only — they carry no audience tag). `kind`
+  param still honoured, no UI.
+- ☑ R5 Circular download button (glyph, text kept visually-hidden for SR and
+  standard mode) + audience tag as a pill chip. Curated rows without a URL
+  still have no button (nothing to link to).
 - ☐ R6 Quick validation card + side stats — deferred (needs a choice
   activity backend, Phase 9 UX item).
 

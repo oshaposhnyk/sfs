@@ -46,4 +46,12 @@ if ($hassiteconfig) {
         '',
         PARAM_RAW
     ));
+
+    $settings->add(new admin_setting_configtextarea(
+        'local_sfsresources/stats',
+        get_string('stats', 'local_sfsresources'),
+        get_string('stats_desc', 'local_sfsresources'),
+        '',
+        PARAM_RAW
+    ));
 }
