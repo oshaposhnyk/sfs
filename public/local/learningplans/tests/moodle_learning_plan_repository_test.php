@@ -71,5 +71,41 @@ final class moodle_learning_plan_repository_test extends \advanced_testcase {
         $this->assertSame((int)$course3->id, $courses[0]->course_id());
         $this->assertSame((int)$course2->id, $courses[1]->course_id());
     }
+
+    /**
+     * Stage rename round-trip and the not-in-plan guard.
+     */
+    public function test_set_course_stage(): void {
+        $this->resetAfterTest();
+        $repository = new moodle_learning_plan_repository();
+
+        $plan = $repository->create(new learning_plan(
+            null,
+            'Plan B',
+            '',
+            true,
+            true,
+            enrolment_mode::IMMEDIATE,
+            1,
+            time(),
+            time()
+        ));
+
+        $course = $this->getDataGenerator()->create_course();
+        $repository->add_course((int)$plan->id(), (int)$course->id, 'Stage 1');
+        $this->assertSame('Stage 1', $repository->get_courses((int)$plan->id())[0]->stage_name());
+
+        $repository->set_course_stage((int)$plan->id(), (int)$course->id, '  Stage 2 · Practice  ');
+        $this->assertSame('Stage 2 · Practice', $repository->get_courses((int)$plan->id())[0]->stage_name());
+
+        // Clearing the stage.
+        $repository->set_course_stage((int)$plan->id(), (int)$course->id, '');
+        $this->assertSame('', $repository->get_courses((int)$plan->id())[0]->stage_name());
+
+        // A course that is not part of the plan is rejected.
+        $other = $this->getDataGenerator()->create_course();
+        $this->expectException(\moodle_exception::class);
+        $repository->set_course_stage((int)$plan->id(), (int)$other->id, 'X');
+    }
 }
 

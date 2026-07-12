@@ -374,6 +374,25 @@ final class learning_plan_service {
     }
 
     /**
+     * Rename the stage a plan course belongs to ('' clears the stage).
+     *
+     * Presentation-level grouping only: enrolments and progress are not
+     * affected, so no members recalculation and no event.
+     *
+     * @param int $planid Plan id.
+     * @param int $courseid Course id.
+     * @param string $stagename New stage name.
+     * @param int $actorid Actor id (permission check context).
+     * @return void
+     */
+    public function set_course_stage(int $planid, int $courseid, string $stagename, int $actorid): void {
+        $this->permissionchecker->require_manage();
+        $this->require_plan($planid);
+        $this->planrepository->set_course_stage($planid, $courseid, $stagename);
+        $this->progressrepository->invalidate_plan($planid);
+    }
+
+    /**
      * Move course in plan.
      *
      * @param int $planid Plan id.

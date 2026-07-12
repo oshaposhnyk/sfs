@@ -94,6 +94,10 @@ final class view_learning_plan_controller {
                 } else if ($action === 'movedown') {
                     $service->move_course($planid, $courseid, 1, (int)$USER->id);
                     \core\notification::success(get_string('course:reordered', 'local_learningplans'));
+                } else if ($action === 'setstage') {
+                    $stagename = trim((string)optional_param('stagename', '', PARAM_TEXT));
+                    $service->set_course_stage($planid, $courseid, $stagename, (int)$USER->id);
+                    \core\notification::success(get_string('course:stageupdated', 'local_learningplans'));
                 }
             } catch (\Throwable $exception) {
                 $messagekey = (string)$exception->getMessage();
@@ -154,6 +158,7 @@ final class view_learning_plan_controller {
                 'courseid' => $cid,
                 'name' => $coursename,
                 'order' => $index + 1,
+                'stagename' => $courseitem->stage_name(),
                 'draghandle' => $OUTPUT->render_from_template('core/drag_handle', [
                     'movetitle' => get_string('movecontent', 'moodle', $coursename),
                     'extraclasses' => 'learning-plan__drag-handle',
@@ -252,6 +257,10 @@ final class view_learning_plan_controller {
             'labelremove' => get_string('plan:view:remove', 'local_learningplans'),
             'labelmoveup' => get_string('plan:view:moveup', 'local_learningplans'),
             'labelmovedown' => get_string('plan:view:movedown', 'local_learningplans'),
+            'labelstage' => get_string('course:stagename', 'local_learningplans'),
+            'labelsavestage' => get_string('plan:view:savestage', 'local_learningplans'),
+            'stageplaceholder' => get_string('plan:view:stageplaceholder', 'local_learningplans'),
+            'stageformurl' => $url->out(false),
             'hascourses' => !empty($courserows),
             'courselistid' => $courselistid,
             'hascoursereorder' => count($courserows) > 1,

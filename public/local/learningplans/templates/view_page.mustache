@@ -30,8 +30,21 @@
                         <span class="learning-plan__course-handle">{{{draghandle}}}</span>
                         <div class="learning-plan__course-title">
                             <strong>{{order}}.</strong> <span class="learning-plan__course-name">{{name}}</span>
+                            {{#stagename}}
+                                <span class="learning-plan__stage-badge">{{stagename}}</span>
+                            {{/stagename}}
                         </div>
                     </div>
+                    <form class="learning-plan__stage-form" method="post" action="{{stageformurl}}">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="setstage">
+                        <input type="hidden" name="courseid" value="{{courseid}}">
+                        <label class="visually-hidden" for="lp-stage-{{courseid}}">{{labelstage}}</label>
+                        <input id="lp-stage-{{courseid}}" class="form-control form-control-sm learning-plan__stage-input"
+                               type="text" name="stagename" value="{{stagename}}" maxlength="255"
+                               placeholder="{{stageplaceholder}}">
+                        <button class="btn btn-secondary btn-sm" type="submit">{{labelsavestage}}</button>
+                    </form>
                     <div class="learning-plan__actions">
                         <a class="btn btn-icon learning-plan__icon-action" href="{{moveupurl}}" title="{{labelmoveup}}" aria-label="{{labelmoveup}}">
                             {{{moveupicon}}}

@@ -128,5 +128,15 @@ interface learning_plan_repository_interface {
      * @return array<int, int>
      */
     public function get_plan_ids_by_course(int $courseid): array;
+
+    /**
+     * Rename the stage a plan course belongs to ('' clears the stage).
+     *
+     * @param int $planid Plan id.
+     * @param int $courseid Course id.
+     * @param string $stagename New stage name.
+     * @return void
+     */
+    public function set_course_stage(int $planid, int $courseid, string $stagename): void;
 }
 

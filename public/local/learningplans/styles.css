@@ -92,13 +92,37 @@
 
 .learning-plan__course-item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: .5rem;
     align-items: center;
     padding: .5rem .75rem;
     border: 1px solid var(--border-color, #d8d8d8);
     border-radius: 6px;
     margin-bottom: .5rem;
+}
+
+.learning-plan__stage-badge {
+    display: inline-block;
+    margin-left: .5rem;
+    padding: .1rem .55rem;
+    border: 1px solid var(--border-color, #d8d8d8);
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--gray-700, #495057);
+    background: var(--light, #f8f9fa);
+    vertical-align: middle;
+}
+
+.learning-plan__stage-form {
+    display: flex;
+    align-items: center;
+    gap: .375rem;
+}
+
+.learning-plan__stage-input {
+    width: 14rem;
+    max-width: 100%;
 }
 
 .learning-plan__course-main {
@@ -162,6 +186,15 @@
 @media (max-width: 767px) {
     .learning-plan__course-item {
         grid-template-columns: 1fr;
+    }
+
+    .learning-plan__stage-form {
+        flex-wrap: wrap;
+    }
+
+    .learning-plan__stage-input {
+        flex: 1 1 10rem;
+        width: auto;
     }
 
     .learning-plan__table-actions {

@@ -80,6 +80,18 @@ uk string review (9.6) owner takes it.
 
 ## Recent work
 
+- **2026-07-12** — **Owner feedback: stage management on the plan page**
+  (local_learningplans): view.php now shows each course's stage (badge next
+  to the name) and lets managers edit it inline — per-row POST form (sesskey,
+  no JS needed) → new `set_course_stage()` through the hexagonal stack
+  (port + Moodle repository + service with `require_manage()` and progress
+  cache invalidation; presentation-only change, so no members recalculation
+  or event). The add-course form already captured a stage; now it is visible
+  and controllable afterwards too. Strings en+uk; repository PHPUnit test
+  (rename round-trip, trim, clear, not-in-plan guard) — suite 17/17.
+  Verified E2E in the browser: edit → "Stage updated." → badge changes →
+  revert; Student Lab grouping picks the new name up immediately.
+
 - **2026-07-12** — **Owner feedback round: About page** (2 items):
   1. *Moodle chrome on the front page*: the site-management heading and
      Home/Settings/Participants tabs showed for admins in SFS mode. Hidden

@@ -113,6 +113,20 @@ final class moodle_learning_plan_repository implements learning_plan_repository_
     /**
      * @inheritDoc
      */
+    public function set_course_stage(int $planid, int $courseid, string $stagename): void {
+        global $DB;
+        $record = $DB->get_record(self::TABLE_COURSE, ['planid' => $planid, 'courseid' => $courseid]);
+        if (!$record) {
+            throw new \moodle_exception('course:notinplan', 'local_learningplans');
+        }
+        $record->stagename = trim($stagename);
+        $record->timemodified = time();
+        $DB->update_record(self::TABLE_COURSE, $record);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function add_course(int $planid, int $courseid, string $stagename = ''): learning_plan_course {
         global $DB;
 
