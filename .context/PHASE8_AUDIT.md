@@ -6,14 +6,14 @@ Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
 ## Student Lab (l4c.html ↔ /local/learningplans/my.php)
 
-- ☐ S1 Topbar search box missing (site global search disabled; prototype
+- ☑ S1 Topbar search box (global search simpledb enabled) (site global search disabled; prototype
   always shows the pill). Fix: enable global search (simpledb) on the site.
-- ☐ S2 "Continue learning" lacks the play icon; prototype also has a ghost
+- ☑ S2 Play icon on Continue (ghost Activity button still deferred); prototype also has a ghost
   "Activity" button (deferred — no activity page yet).
-- ☐ S3 Plan bar: "Stage X of Y" label missing next to the progress bar
+- ☑ S3 "Stage X of Y" label live (real stage data; L-level still deferred) next to the progress bar
   (real data available since 6.2); prototype also shows an L3 level stat
   (deferred — no level source on plans, see ADR-008).
-- ☐ S4 Course tiles: "N modules" meta row missing (real data via modinfo);
+- ☑ S4 "N modules" meta from modinfo (known nit: no singular form; effort/icons deferred) (real data via modinfo);
   "·2h 40m" effort deferred (no data source). Cover icons deferred (no
   per-course icon source).
 

@@ -374,3 +374,46 @@
         }
     }
 }
+
+// Audit fixes S2–S4: play glyph, stage label, module meta.
+.sfs-mode {
+    .lp-icon--play::before,
+    .lp-icon--modules::before {
+        font-family: 'SFS Material Icons';
+        font-feature-settings: 'liga';
+        font-style: normal;
+        vertical-align: middle;
+    }
+
+    .lp-icon--play::before {
+        content: 'play_arrow';
+        font-size: 18px;
+        margin-right: 6px;
+    }
+
+    .lp-icon--modules::before {
+        content: 'view_module';
+        font-size: 14px;
+        margin-right: 4px;
+    }
+
+    .lp-coursetile__meta {
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        margin-bottom: 10px;
+    }
+
+    .lp-planbar__stage {
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+        margin-right: 10px;
+        font-size: 0.72rem;
+        text-transform: none;
+    }
+
+    .lp-planbar__pct {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+}

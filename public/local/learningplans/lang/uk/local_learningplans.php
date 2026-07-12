@@ -238,3 +238,5 @@ $string['privacy:metadata:preference:activeplan'] = 'Навчальний пла
 $string['course:stagename'] = 'Назва етапу';
 $string['course:stagename_help'] = 'Необов’язково. Послідовні курси з однаковою назвою етапу показуються одним етапом на сторінці Студентської лабораторії (напр. "Етап 1 · Основи"). Порожнє поле — етап без назви.';
 $string['studentlab:stagedefault'] = 'Етап {$a}';
+$string['studentlab:stageoftotal'] = 'Етап {$a->current} з {$a->total}';
+$string['studentlab:modulecount'] = 'Модулів: {$a}';

@@ -238,3 +238,5 @@ $string['privacy:metadata:preference:activeplan'] = 'The learning plan the user 
 $string['course:stagename'] = 'Stage name';
 $string['course:stagename_help'] = 'Optional. Consecutive courses sharing the same stage name are shown as one stage on the Student Lab page (e.g. "Stage 1 · Foundations"). Leave empty for an unnamed stage.';
 $string['studentlab:stagedefault'] = 'Stage {$a}';
+$string['studentlab:stageoftotal'] = 'Stage {$a->current} of {$a->total}';
+$string['studentlab:modulecount'] = '{$a} modules';

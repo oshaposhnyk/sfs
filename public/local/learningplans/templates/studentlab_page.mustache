@@ -54,6 +54,7 @@
         {{#continueurl}}
             <div class="lp-studentlab__actions">
                 <a class="btn btn-primary lp-studentlab__continue" href="{{continueurl}}">
+                    <span class="lp-icon lp-icon--play" aria-hidden="true"></span>
                     {{#str}}studentlab:continue, local_learningplans{{/str}}
                 </a>
             </div>
@@ -114,7 +115,7 @@
                      aria-label="{{#str}}studentlab:planprogress, local_learningplans{{/str}}">
                     <span class="lp-planbar__fill" style="width: {{percentage}}%"></span>
                 </div>
-                <div class="lp-planbar__pct"><strong>{{percentage}}%</strong></div>
+                <div class="lp-planbar__pct">{{#stagelabel}}<span class="lp-planbar__stage">{{stagelabel}}</span>{{/stagelabel}}<strong>{{percentage}}%</strong></div>
             </div>
         </section>
 
@@ -143,6 +144,12 @@
                                 {{^courseurl}}{{fullname}}{{/courseurl}}
                             </h4>
                             {{#summary}}<p class="lp-coursetile__desc">{{summary}}</p>{{/summary}}
+                            {{#modulecount}}
+                                <div class="lp-coursetile__meta">
+                                    <span class="lp-icon lp-icon--modules" aria-hidden="true"></span>
+                                    {{#str}}studentlab:modulecount, local_learningplans, {{modulecount}}{{/str}}
+                                </div>
+                            {{/modulecount}}
                             <div class="lp-coursetile__progress" role="progressbar" aria-valuenow="{{percentage}}"
                                  aria-valuemin="0" aria-valuemax="100" aria-label="{{fullname}}">
                                 <span class="lp-coursetile__fill" style="width: {{percentage}}%"></span>

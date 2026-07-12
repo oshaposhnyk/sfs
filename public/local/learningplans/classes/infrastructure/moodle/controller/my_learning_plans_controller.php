@@ -124,7 +124,18 @@ final class my_learning_plans_controller {
             }
 
             $percentage = (int)round($course['percentage']);
+            $modulecount = 0;
+            try {
+                foreach (get_fast_modinfo($course['courseid'])->get_cms() as $cm) {
+                    if ($cm->uservisible && !$cm->is_stealth() && $cm->modname !== 'label') {
+                        $modulecount++;
+                    }
+                }
+            } catch (\Throwable $exception) {
+                $modulecount = 0;
+            }
             $courses[] = [
+                'modulecount' => $modulecount,
                 'fullname' => format_string($course['fullname']),
                 'summary' => shorten_text(
                     html_to_text(format_text($course['summary'], FORMAT_HTML, ['filter' => false]), 0, false),
@@ -172,8 +183,25 @@ final class my_learning_plans_controller {
             ];
         }
 
+        $stagelabel = '';
+        $allstages = $overview['stages'] ?? [];
+        if ($allstages !== []) {
+            $activeindex = count($allstages);
+            foreach ($allstages as $i => $stage) {
+                if ($stage['status'] === 'active') {
+                    $activeindex = $i + 1;
+                    break;
+                }
+            }
+            $stagelabel = get_string('studentlab:stageoftotal', 'local_learningplans', [
+                'current' => $activeindex,
+                'total' => count($allstages),
+            ]);
+        }
+
         $progress = $overview['progress'];
         return [
+            'stagelabel' => $stagelabel,
             'hasplans' => true,
             'title' => get_string('studentlab:title', 'local_learningplans'),
             'lede' => get_string('studentlab:lede', 'local_learningplans'),
