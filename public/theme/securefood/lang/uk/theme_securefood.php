@@ -129,3 +129,4 @@ $string['abouthubs_desc'] = 'JSON-список, напр. [{"name": "Kyiv Lab", 
 $string['abouthub_lab'] = 'Living Lab';
 $string['abouthub_partner'] = 'Партнер';
 $string['nav_futurefood'] = 'Future Food';
+$string['nav_resources'] = 'Ресурси та стандарти';

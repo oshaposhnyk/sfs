@@ -104,6 +104,8 @@ final class navigation {
                         'icon' => 'school', 'visibility' => 'loggedin'],
                     ['titlestr' => 'nav_futurefood', 'url' => '/local/sfsgame/index.php',
                         'icon' => 'videogame_asset', 'visibility' => 'loggedin'],
+                    ['titlestr' => 'nav_resources', 'url' => '/local/sfsresources/index.php',
+                        'icon' => 'gavel', 'visibility' => 'loggedin'],
                     ['titlestr' => 'nav_mycourses', 'url' => '/my/courses.php',
                         'icon' => 'grid_view', 'visibility' => 'loggedin'],
                 ],

@@ -1,0 +1,155 @@
+// Resources & Standards (local_sfsresources) skin — spec: governance.html.
+.sfs-mode {
+    // Template owns the page head.
+    &.path-local-sfsresources #page-header {
+        display: none;
+    }
+
+    .sfsres__kicker {
+        color: var(--sfs-accent);
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: '';
+            width: 22px;
+            height: 2px;
+            background: var(--sfs-accent);
+        }
+    }
+
+    .sfsres__title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 6px 0 8px;
+    }
+
+    .sfsres__lede {
+        color: var(--sfs-muted);
+        max-width: 64ch;
+        margin-bottom: 22px;
+    }
+
+    .sfsres__card {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 22px;
+    }
+
+    .sfsres__library {
+        font-size: 1.05rem;
+        margin: 0 0 16px;
+    }
+
+    .sfsres__list {
+        display: grid;
+        gap: 8px;
+    }
+
+    .sfsres-doc {
+        display: grid;
+        grid-template-columns: 44px 1fr auto auto auto;
+        gap: 14px;
+        align-items: center;
+        padding: 12px 14px;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-sm);
+
+        @include sfs-motion {
+            transition: background var(--sfs-duration-fast), border-color var(--sfs-duration-fast);
+        }
+
+        &:hover {
+            background: var(--sfs-surface2);
+            border-color: var(--sfs-linestrong);
+        }
+    }
+
+    .sfsres-doc__icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--sfs-radius-xs);
+        display: grid;
+        place-items: center;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 0.7rem;
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+    }
+
+    .sfsres-doc__icon--pdf {
+        background: rgba(184, 70, 63, 0.12);
+        color: var(--sfs-danger);
+    }
+
+    .sfsres-doc__icon--xls {
+        background: rgba(63, 140, 90, 0.12);
+        color: var(--sfs-success);
+    }
+
+    .sfsres-doc__icon--zip {
+        background: var(--sfs-accent50);
+        color: var(--sfs-accent);
+    }
+
+    .sfsres-doc__title {
+        display: block;
+        font-weight: 600;
+        font-size: 0.92rem;
+    }
+
+    .sfsres-doc__sub {
+        display: block;
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        margin-top: 2px;
+    }
+
+    .sfsres-doc__audience {
+        font-size: 0.78rem;
+        color: var(--sfs-ink2);
+    }
+
+    .sfsres-doc__updated {
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+        white-space: nowrap;
+    }
+
+    .sfsres-doc__open {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--sfs-primary);
+        border: 1px solid var(--sfs-line);
+        border-radius: 999px;
+        padding: 5px 14px;
+        background: var(--sfs-surface);
+
+        &:hover {
+            background: var(--sfs-primary);
+            color: #fff;
+            border-color: var(--sfs-primary);
+            text-decoration: none;
+        }
+    }
+
+    @include sfs-media-mobile {
+        .sfsres-doc {
+            grid-template-columns: 40px 1fr auto;
+        }
+
+        .sfsres-doc__audience,
+        .sfsres-doc__updated {
+            display: none;
+        }
+    }
+}

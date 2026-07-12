@@ -129,3 +129,4 @@ $string['abouthubs_desc'] = 'JSON list, e.g. [{"name": "Kyiv Lab", "country": "U
 $string['abouthub_lab'] = 'Living Lab';
 $string['abouthub_partner'] = 'Partner';
 $string['nav_futurefood'] = 'Future Food';
+$string['nav_resources'] = 'Resources & Standards';
