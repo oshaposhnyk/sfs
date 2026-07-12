@@ -172,3 +172,5 @@ $string['rail_format'] = 'Format';
 $string['rail_complete'] = 'Complete';
 $string['rail_inprogress'] = 'In progress';
 $string['rail_upnext'] = 'Up next';
+$string['helpurl'] = 'Help link';
+$string['helpurl_desc'] = 'Destination for the "?" button in the topbar. Leave empty to hide the button.';

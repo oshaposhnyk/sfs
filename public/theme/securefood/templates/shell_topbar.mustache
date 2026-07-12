@@ -72,6 +72,12 @@
                 <span class="sfs-icon" aria-hidden="true">swap_horiz</span>
             </a>
         {{/modeswitch}}
+        {{#helpurl}}
+            <a class="sfs-iconbtn" href="{{helpurl}}" title="{{#str}}help, core{{/str}}"
+               aria-label="{{#str}}help, core{{/str}}">
+                <span class="sfs-icon" aria-hidden="true">help</span>
+            </a>
+        {{/helpurl}}
         {{{ output.edit_switch }}}
         {{#output.navbar_plugin_output}}
             <div class="sfs-topbar__plugins">{{{ . }}}</div>

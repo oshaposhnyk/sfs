@@ -121,6 +121,9 @@ if (\theme_securefood\mode_manager::can_user_switch()) {
     ];
 }
 
+// Optional help destination for the topbar "?" button (Navigation tab).
+$helpurl = trim((string)($PAGE->theme->settings->helpurl ?? ''));
+
 // Global search entry point.
 $searchurl = null;
 if (class_exists('\core_search\manager') && \core_search\manager::is_global_search_enabled()) {
@@ -159,6 +162,7 @@ $templatecontext = [
     'crumbs' => $crumbs,
     'hascrumbs' => $crumbs !== [],
     'searchurl' => $searchurl,
+    'helpurl' => $helpurl !== '' ? $helpurl : null,
     'modeswitch' => $modeswitch,
     'logofulllight' => $OUTPUT->image_url('logo-full-light', 'theme')->out(false),
     'logofulldark' => $OUTPUT->image_url('logo-full-dark', 'theme')->out(false),

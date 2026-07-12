@@ -172,3 +172,5 @@ $string['rail_format'] = 'Формат';
 $string['rail_complete'] = 'Завершено';
 $string['rail_inprogress'] = 'У процесі';
 $string['rail_upnext'] = 'Попереду';
+$string['helpurl'] = 'Посилання довідки';
+$string['helpurl_desc'] = 'Адреса для кнопки «?» у верхній панелі. Порожнє поле — кнопка прихована.';

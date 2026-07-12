@@ -78,6 +78,14 @@ if ($ADMIN->fulltree) {
         PARAM_RAW
     ));
 
+    $page->add(new admin_setting_configtext(
+        'theme_securefood/helpurl',
+        get_string('helpurl', 'theme_securefood'),
+        get_string('helpurl_desc', 'theme_securefood'),
+        '',
+        PARAM_URL
+    ));
+
     $settings->add($page);
 
     // -------------------------------------------------------------------

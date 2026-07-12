@@ -72,9 +72,9 @@ Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
 ## Cross-cutting
 
-- ☐ X1 Topbar order: prototype = search left of icon cluster, help "?"
-  button present, no user chip (user card only in sidebar). Ours keeps the
-  functional user menu (accepted deviation) and lacks the help button.
+- ☑ X1 Help "?" button added to the topbar icon cluster, driven by the new
+  `theme_securefood/helpurl` setting (Navigation tab; empty = hidden, the
+  shipped default). User chip stays (accepted deviation — functional menu).
 - ☑ X2 (bug, found during C) Mobile ≤820px reserved the collapsed icon-rail
   grid column under the drawer (`.sfs-sidebar-collapsed` rule outranked the
   mobile `1fr`); content now spans the full width.
