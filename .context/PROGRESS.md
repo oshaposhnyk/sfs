@@ -256,3 +256,20 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
    scheme/shell modules land (finishing domain 03).
 3. Domain 11 remainder: Brand / Navigation / Pages & content / Blocks tabs.
 4. Deferred from Phase 0: PHPUnit + E2E for `enrol_learningplan`.
+
+- **2026-07-12** — **Domain 04 slice 1**: front page now renders a
+  settings-driven About hero (kicker/title/lede + 3 stat cards) and a 4-tile
+  KPI row above site content (`theme_securefood\about` + `about.mustache` +
+  `_about.scss`; Pages & content settings tab, en+uk). Verified with a
+  screenshot at /?redirect=0 — matches insights.html. Remaining for 04:
+  Living Labs map, updates feed, per-role home routing decision.
+  Domain 04 status: `[~]` slice 1 done.
+  Also: all prior work committed as five logical commits (unsigned — signing
+  key passphrase unavailable to the agent).
+
+- **2026-07-12** — **Domain 04 slice 2**: updates feed on the front page
+  (sfs-feedcard grid, 4 gradient thumb variants cycling, chip/title/text/time
+  from the aboutfeed JSON setting + aboutfeedtitle heading; design defaults).
+  Verified full-page screenshot: hero → KPI row → feed → site content, matches
+  insights.html. Remaining for 04: Living Labs map (SVG, no-CDN decision),
+  per-role home routing.
