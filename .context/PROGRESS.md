@@ -388,3 +388,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   "planid:userid" — invalid for simple-keys definitions (only errors under
   debug, silently unvalidated in prod); now "planid_userid". Domain 09 now
   fully closed except optional AJAX consumer in the theme (PRG still primary).
+
+- **2026-07-12** — **Phase 6.4 shipped (filearea storage, owner-picked)**:
+  Library files upload setting → system-context documents filearea; files
+  render above curated links (size/date/type badge via pure
+  kind_from_filename, tests green), join the kind filters, and download via
+  pluginfile with require_login (verified: learner 200 + file bytes,
+  anonymous 303 → login). Remaining Phase 6: only 6.5 performance pass.
