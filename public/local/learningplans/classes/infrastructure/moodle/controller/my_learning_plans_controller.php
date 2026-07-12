@@ -17,18 +17,23 @@
 namespace local_learningplans\infrastructure\moodle\controller;
 
 use local_learningplans\infrastructure\moodle\factory\learning_plan_service_factory;
-use local_learningplans\infrastructure\persistence\moodle_course_repository;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Controller: current user's learning plans.
+ * Controller: Student Lab — the learner's learning-plan dashboard (ADR-008).
+ *
+ * Thin controller: params → use cases → template context. Plan switching is a
+ * sesskey-guarded post/redirect/get action so the page works without JS.
  *
  * @package    local_learningplans
  * @copyright  2026
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class my_learning_plans_controller {
+    /** @var string[] Cover variant modifier cycle for course tiles. */
+    private const COVER_VARIANTS = ['teal', 'aqua', 'amber', 'green', 'deep'];
+
     /**
      * Execute page.
      *
@@ -37,50 +42,125 @@ final class my_learning_plans_controller {
     public function execute(): void {
         global $PAGE, $OUTPUT, $USER;
 
-        $service = learning_plan_service_factory::create();
-        $courserepository = new moodle_course_repository();
-        $context = \context_system::instance();
-        $url = new \moodle_url('/local/learningplans/my.php');
-
-        $rows = [];
-        foreach ($service->get_user_memberships((int)$USER->id) as $membership) {
-            $plan = $service->get_plan($membership->plan_id());
-            $progress = $service->get_user_progress($membership->plan_id(), (int)$USER->id);
-
-            $nextcourse = '';
-            $nextcourseid = $progress->next_course_id();
-            if ($nextcourseid !== null) {
-                $course = $courserepository->find_by_id($nextcourseid);
-                if ($course) {
-                    $nextcourse = format_string($course->fullname);
-                }
-            }
-
-            $rows[] = [
-                'planname' => format_string($plan->name()),
-                'progresslabel' => get_string('progress:label', 'local_learningplans', $progress->percentage()),
-                'nextcourse' => $nextcourse,
-                'viewurl' => (new \moodle_url('/local/learningplans/view.php', ['id' => $membership->plan_id()]))->out(false),
-                'viewlabel' => get_string('list:view', 'local_learningplans'),
-            ];
+        require_login(null, false);
+        if (isguestuser()) {
+            throw new \moodle_exception('noguest');
         }
 
+        $url = new \moodle_url('/local/learningplans/my.php');
+        $userid = (int)$USER->id;
+
+        // Plan switch action (PRG, no-JS friendly).
+        $setplan = optional_param('setplan', 0, PARAM_INT);
+        if ($setplan > 0) {
+            require_sesskey();
+            learning_plan_service_factory::set_active_plan()->execute($userid, $setplan);
+            redirect($url);
+        }
+
+        $overview = learning_plan_service_factory::student_lab_overview()->execute($userid);
+
+        $context = \context_system::instance();
         $PAGE->set_context($context);
         $PAGE->set_url($url);
         $PAGE->set_pagelayout('standard');
-        $PAGE->set_title(get_string('list:mytitle', 'local_learningplans'));
-        $PAGE->set_heading(get_string('list:mytitle', 'local_learningplans'));
+        $PAGE->set_title(get_string('studentlab:title', 'local_learningplans'));
+        $PAGE->set_heading(get_string('studentlab:title', 'local_learningplans'));
 
         echo $OUTPUT->header();
-        echo $OUTPUT->render_from_template('local_learningplans/my_page', [
-            'title' => get_string('list:mytitle', 'local_learningplans'),
-            'hasrows' => !empty($rows),
-            'rows' => $rows,
-            'empty' => get_string('my:empty', 'local_learningplans'),
-            'labelprogress' => get_string('plan:view:progress', 'local_learningplans'),
-            'labelnextcourse' => get_string('plan:view:nextcourse', 'local_learningplans'),
-        ]);
+        echo $OUTPUT->render_from_template(
+            'local_learningplans/studentlab_page',
+            $this->template_context($overview, $url)
+        );
         echo $OUTPUT->footer();
     }
-}
 
+    /**
+     * Shape the overview read model into template context.
+     *
+     * @param array $overview Read model from get_student_lab_overview.
+     * @param \moodle_url $pageurl This page's URL.
+     * @return array
+     */
+    private function template_context(array $overview, \moodle_url $pageurl): array {
+        if (!$overview['hasplans']) {
+            return [
+                'hasplans' => false,
+                'title' => get_string('studentlab:title', 'local_learningplans'),
+                'lede' => get_string('studentlab:lede', 'local_learningplans'),
+                'empty' => get_string('my:empty', 'local_learningplans'),
+            ];
+        }
+
+        $plans = [];
+        foreach ($overview['plans'] as $plan) {
+            $plans[] = [
+                'name' => format_string($plan['name']),
+                'active' => $plan['active'],
+                'switchurl' => (new \moodle_url($pageurl, [
+                    'setplan' => $plan['planid'],
+                    'sesskey' => sesskey(),
+                ]))->out(false),
+                'meta' => get_string('studentlab:planmeta', 'local_learningplans', [
+                    'completed' => $plan['completed'],
+                    'total' => $plan['total'],
+                ]),
+            ];
+        }
+
+        $continueurl = null;
+        $continueindex = $overview['continueindex'];
+
+        $courses = [];
+        foreach ($overview['courses'] as $index => $course) {
+            $status = $course['status'];
+            $locked = $status === 'locked';
+            $courseurl = $locked
+                ? null
+                : (new \moodle_url('/course/view.php', ['id' => $course['courseid']]))->out(false);
+            if ($continueindex !== null && $index === $continueindex) {
+                $continueurl = $courseurl;
+            }
+
+            $percentage = (int)round($course['percentage']);
+            $courses[] = [
+                'fullname' => format_string($course['fullname']),
+                'summary' => shorten_text(
+                    html_to_text(format_text($course['summary'], FORMAT_HTML, ['filter' => false]), 0, false),
+                    140
+                ),
+                'positionlabel' => get_string('studentlab:coursenumber', 'local_learningplans',
+                    sprintf('%02d', $course['position'])),
+                'courseurl' => $courseurl,
+                'locked' => $locked,
+                'status' => $status,
+                'statuslabel' => get_string('studentlab:status:' . $status, 'local_learningplans'),
+                'statetext' => $locked
+                    ? get_string('studentlab:lockedhint', 'local_learningplans')
+                    : get_string('studentlab:percentcomplete', 'local_learningplans', $percentage),
+                'actionlabel' => $course['action'] === 'none'
+                    ? null
+                    : get_string('studentlab:action:' . $course['action'], 'local_learningplans'),
+                'percentage' => $percentage,
+                'cover' => self::COVER_VARIANTS[$index % count(self::COVER_VARIANTS)],
+            ];
+        }
+
+        $progress = $overview['progress'];
+        return [
+            'hasplans' => true,
+            'title' => get_string('studentlab:title', 'local_learningplans'),
+            'lede' => get_string('studentlab:lede', 'local_learningplans'),
+            'activeplanname' => format_string($overview['activeplan']['name']),
+            'plans' => $plans,
+            'hasmultipleplans' => count($plans) > 1,
+            'completedcount' => $progress['completed'],
+            'totalcount' => $progress['total'],
+            'percentage' => $progress['percentage'],
+            'continueurl' => $continueurl,
+            'courses' => $courses,
+            'hascourses' => $courses !== [],
+            'nocourses' => get_string('studentlab:nocourses', 'local_learningplans'),
+        ];
+    }
+}

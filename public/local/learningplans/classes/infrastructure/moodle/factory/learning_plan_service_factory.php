@@ -17,7 +17,10 @@
 namespace local_learningplans\infrastructure\moodle\factory;
 
 use local_learningplans\application\service\learning_plan_service;
+use local_learningplans\application\usecase\get_student_lab_overview;
+use local_learningplans\application\usecase\set_active_learning_plan;
 use local_learningplans\domain\policy\default_progress_calculation_policy;
+use local_learningplans\infrastructure\moodle\preference\moodle_user_preference_repository;
 use local_learningplans\infrastructure\moodle\access\moodle_permission_checker;
 use local_learningplans\infrastructure\moodle\cohort\moodle_cohort_reader;
 use local_learningplans\infrastructure\moodle\completion\moodle_completion_reader;
@@ -65,6 +68,32 @@ final class learning_plan_service_factory {
             new moodle_transaction_manager(),
             new moodle_clock(),
             new default_progress_calculation_policy()
+        );
+    }
+
+    /**
+     * Build the Student Lab overview use case (ADR-008).
+     *
+     * @return get_student_lab_overview
+     */
+    public static function student_lab_overview(): get_student_lab_overview {
+        return new get_student_lab_overview(
+            self::create(),
+            new moodle_completion_reader(),
+            new moodle_course_repository(),
+            new moodle_user_preference_repository()
+        );
+    }
+
+    /**
+     * Build the set-active-plan use case (ADR-008).
+     *
+     * @return set_active_learning_plan
+     */
+    public static function set_active_plan(): set_active_learning_plan {
+        return new set_active_learning_plan(
+            self::create(),
+            new moodle_user_preference_repository()
         );
     }
 }

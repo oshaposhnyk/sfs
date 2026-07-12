@@ -33,6 +33,10 @@ $capabilities = [
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
+            // Learners hold the student role at course level only, which does
+            // not apply at system context — the authenticated-user role must
+            // carry the read capabilities or my.php fails for every learner.
+            'user' => CAP_ALLOW,
         ],
     ],
     'local/learningplans:manage' => [
@@ -73,6 +77,10 @@ $capabilities = [
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
+            // See local/learningplans:view — required for learners' own
+            // Student Lab; per-user reads are still limited to own data by
+            // the use cases.
+            'user' => CAP_ALLOW,
         ],
     ],
     'local/learningplans:viewallprogress' => [

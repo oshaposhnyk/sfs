@@ -1,0 +1,160 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_learningplans/studentlab_page
+
+    Student Lab — learner learning-plan dashboard (ADR-008).
+
+    Context variables required for this template:
+    * hasplans - whether the user belongs to any plan
+    * title - page title
+    * lede - page intro text
+
+    Example context (json):
+    {
+        "hasplans": true,
+        "title": "Student Lab",
+        "lede": "Your active courses.",
+        "activeplanname": "Analyst-Translator Pathway",
+        "plans": [{"name": "Analyst-Translator Pathway", "active": true,
+                   "switchurl": "#", "meta": "2 of 4 courses"}],
+        "hasmultipleplans": true,
+        "completedcount": 2, "totalcount": 4, "percentage": 50,
+        "continueurl": "#",
+        "hascourses": true,
+        "courses": [{"fullname": "IoT Sensor Baseline", "summary": "Sensors.",
+                     "positionlabel": "Course 01", "courseurl": "#",
+                     "locked": false, "status": "done", "statuslabel": "Done",
+                     "statetext": "100% complete", "actionlabel": "Review",
+                     "percentage": 100, "cover": "teal"}],
+        "nocourses": "No courses yet."
+    }
+}}
+<div class="lp-studentlab">
+    <div class="lp-studentlab__head">
+        <div class="lp-studentlab__titles">
+            <div class="lp-studentlab__kicker">{{#str}}studentlab:kicker, local_learningplans{{/str}}</div>
+            <h2 class="lp-studentlab__title">{{title}}</h2>
+            <p class="lp-studentlab__lede">{{lede}}</p>
+        </div>
+        {{#continueurl}}
+            <div class="lp-studentlab__actions">
+                <a class="btn btn-primary lp-studentlab__continue" href="{{continueurl}}">
+                    {{#str}}studentlab:continue, local_learningplans{{/str}}
+                </a>
+            </div>
+        {{/continueurl}}
+    </div>
+
+    {{^hasplans}}
+        <div class="lp-studentlab__empty alert alert-info">{{empty}}</div>
+    {{/hasplans}}
+
+    {{#hasplans}}
+        <section class="lp-planbar" aria-label="{{#str}}studentlab:activeplan, local_learningplans{{/str}}">
+            <div class="lp-planbar__left">
+                <span class="lp-planbar__pin" aria-hidden="true"></span>
+                <div class="lp-planbar__info">
+                    <div class="lp-planbar__label">{{#str}}studentlab:activeplan, local_learningplans{{/str}}</div>
+                    {{#hasmultipleplans}}
+                        <details class="lp-planmenu">
+                            <summary class="lp-planmenu__trigger">
+                                <span class="lp-planbar__name">{{activeplanname}}</span>
+                            </summary>
+                            <ul class="lp-planmenu__list">
+                                {{#plans}}
+                                    <li class="lp-planmenu__item {{#active}}lp-planmenu__item--active{{/active}}">
+                                        {{#active}}
+                                            <span class="lp-planmenu__name">{{name}}</span>
+                                            <span class="lp-planmenu__meta">{{meta}}</span>
+                                        {{/active}}
+                                        {{^active}}
+                                            <a class="lp-planmenu__link" href="{{switchurl}}">
+                                                <span class="lp-planmenu__name">{{name}}</span>
+                                                <span class="lp-planmenu__meta">{{meta}}</span>
+                                            </a>
+                                        {{/active}}
+                                    </li>
+                                {{/plans}}
+                            </ul>
+                        </details>
+                    {{/hasmultipleplans}}
+                    {{^hasmultipleplans}}
+                        <div class="lp-planbar__name">{{activeplanname}}</div>
+                    {{/hasmultipleplans}}
+                </div>
+            </div>
+            <div class="lp-planbar__stats">
+                <div class="lp-planbar__stat">
+                    <div class="lp-planbar__num">{{completedcount}}/{{totalcount}}</div>
+                    <div class="lp-planbar__lbl">{{#str}}studentlab:courses, local_learningplans{{/str}}</div>
+                </div>
+                <div class="lp-planbar__stat">
+                    <div class="lp-planbar__num">{{percentage}}%</div>
+                    <div class="lp-planbar__lbl">{{#str}}studentlab:complete, local_learningplans{{/str}}</div>
+                </div>
+            </div>
+            <div class="lp-planbar__progress">
+                <div class="lp-planbar__bar" role="progressbar" aria-valuenow="{{percentage}}"
+                     aria-valuemin="0" aria-valuemax="100"
+                     aria-label="{{#str}}studentlab:planprogress, local_learningplans{{/str}}">
+                    <span class="lp-planbar__fill" style="width: {{percentage}}%"></span>
+                </div>
+                <div class="lp-planbar__pct"><strong>{{percentage}}%</strong></div>
+            </div>
+        </section>
+
+        <section class="lp-stage">
+            <div class="lp-stage__head">
+                <h3 class="lp-stage__title">{{#str}}studentlab:courses, local_learningplans{{/str}}</h3>
+                <div class="lp-stage__meta">{{completedcount}}/{{totalcount}} · {{percentage}}%</div>
+            </div>
+            {{^hascourses}}
+                <div class="alert alert-info">{{nocourses}}</div>
+            {{/hascourses}}
+            <div class="lp-stage__grid">
+                {{#courses}}
+                    <article class="lp-coursetile lp-coursetile--{{status}}">
+                        <div class="lp-coursetile__cover lp-coursetile__cover--{{cover}}">
+                            <span class="lp-coursetile__tag">{{positionlabel}}</span>
+                            <span class="lp-coursetile__status">{{statuslabel}}</span>
+                        </div>
+                        <div class="lp-coursetile__body">
+                            <h4 class="lp-coursetile__name">
+                                {{#courseurl}}<a class="lp-coursetile__link" href="{{courseurl}}">{{fullname}}</a>{{/courseurl}}
+                                {{^courseurl}}{{fullname}}{{/courseurl}}
+                            </h4>
+                            {{#summary}}<p class="lp-coursetile__desc">{{summary}}</p>{{/summary}}
+                            <div class="lp-coursetile__progress" role="progressbar" aria-valuenow="{{percentage}}"
+                                 aria-valuemin="0" aria-valuemax="100" aria-label="{{fullname}}">
+                                <span class="lp-coursetile__fill" style="width: {{percentage}}%"></span>
+                            </div>
+                            <div class="lp-coursetile__foot">
+                                <span class="lp-coursetile__state">{{statetext}}</span>
+                                {{#actionlabel}}
+                                    {{#courseurl}}
+                                        <a class="lp-coursetile__action" href="{{courseurl}}">{{actionlabel}}</a>
+                                    {{/courseurl}}
+                                {{/actionlabel}}
+                            </div>
+                        </div>
+                    </article>
+                {{/courses}}
+            </div>
+        </section>
+    {{/hasplans}}
+</div>

@@ -71,6 +71,25 @@ function xmldb_local_learningplans_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026060100, 'local', 'learningplans');
     }
 
+    if ($oldversion < 2026071201) {
+        // Archetype defaults in db/access.php only apply to new installs.
+        // Existing sites must grant the read capabilities to the
+        // authenticated-user role explicitly, otherwise learners cannot open
+        // their own Student Lab (the student role is assigned at course
+        // context and does not apply at system context). Existing explicit
+        // permissions are respected (no overwrite).
+        $systemcontext = context_system::instance();
+        $userroles = $DB->get_records('role', ['archetype' => 'user']);
+        foreach ($userroles as $role) {
+            foreach (['local/learningplans:view', 'local/learningplans:viewprogress'] as $capability) {
+                assign_capability($capability, CAP_ALLOW, $role->id, $systemcontext->id, false);
+            }
+        }
+        $systemcontext->mark_dirty();
+
+        upgrade_plugin_savepoint(true, 2026071201, 'local', 'learningplans');
+    }
+
     return true;
 }
 

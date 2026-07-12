@@ -212,3 +212,26 @@ $string['privacy:metadata:local_learningplans_coh:planid'] = 'ID навчаль�
 $string['privacy:metadata:local_learningplans_coh:cohortid'] = 'ID повʼязаної когорти.';
 $string['privacy:metadata:local_learningplans_coh:createdby'] = 'Користувач, який повʼязав когорту.';
 $string['privacy:metadata:local_learningplans_coh:timecreated'] = 'Час створення звʼязку з когортою.';
+
+// Student Lab (ADR-008).
+$string['studentlab:title'] = 'Студентська лабораторія';
+$string['studentlab:kicker'] = 'Моє навчання';
+$string['studentlab:lede'] = 'Ваші активні курси, впорядковані за навчальним планом. Завершуйте кожен курс, щоб відкрити наступний крок вашого шляху.';
+$string['studentlab:activeplan'] = 'Активний навчальний план';
+$string['studentlab:continue'] = 'Продовжити навчання';
+$string['studentlab:courses'] = 'Курси';
+$string['studentlab:complete'] = 'Завершено';
+$string['studentlab:planprogress'] = 'Прогрес навчального плану';
+$string['studentlab:planmeta'] = '{$a->completed} з {$a->total} курсів';
+$string['studentlab:coursenumber'] = 'Курс {$a}';
+$string['studentlab:percentcomplete'] = 'Завершено {$a}%';
+$string['studentlab:lockedhint'] = 'Завершіть попередній курс, щоб відкрити цей';
+$string['studentlab:nocourses'] = 'У цьому навчальному плані ще немає курсів.';
+$string['studentlab:status:done'] = 'Завершено';
+$string['studentlab:status:active'] = 'Активний';
+$string['studentlab:status:upnext'] = 'Далі';
+$string['studentlab:status:locked'] = 'Заблоковано';
+$string['studentlab:action:review'] = 'Переглянути';
+$string['studentlab:action:resume'] = 'Продовжити';
+$string['studentlab:action:start'] = 'Почати';
+$string['privacy:metadata:preference:activeplan'] = 'Навчальний план, який користувач обрав активним.';

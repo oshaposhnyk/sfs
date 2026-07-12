@@ -168,3 +168,252 @@
         min-width: 240px;
     }
 }
+
+/* ------------------------------------------------------------------
+   Student Lab (ADR-008) — neutral base look for any theme.
+   theme_securefood re-skins these blocks under .sfs-mode.
+   ------------------------------------------------------------------ */
+
+.lp-studentlab__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.lp-studentlab__kicker {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+}
+
+.lp-studentlab__lede {
+    max-width: 60ch;
+    margin: 0.25rem 0 0;
+}
+
+.lp-planbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.lp-planbar__label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+}
+
+.lp-planbar__name {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.lp-planbar__stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.lp-planbar__num {
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.lp-planbar__lbl {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    margin-top: 0.25rem;
+}
+
+.lp-planbar__progress {
+    flex: 1 1 200px;
+    max-width: 260px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lp-planbar__bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.lp-planbar__fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.lp-planmenu {
+    position: relative;
+}
+
+.lp-planmenu__trigger {
+    cursor: pointer;
+    list-style: none;
+}
+
+.lp-planmenu__list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 50;
+    min-width: 280px;
+    margin: 0;
+    padding: 0.5rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.lp-planmenu__item {
+    border-radius: 0.375rem;
+}
+
+.lp-planmenu__link,
+.lp-planmenu__item--active > .lp-planmenu__name {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
+}
+
+.lp-planmenu__meta {
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.7;
+    padding: 0 0.75rem 0.5rem;
+}
+
+.lp-planmenu__link .lp-planmenu__meta {
+    padding: 0;
+}
+
+.lp-stage__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.lp-stage__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.lp-coursetile {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.lp-coursetile__cover {
+    height: 90px;
+    position: relative;
+    padding: 0.75rem;
+    color: #fff;
+    background: #5b6770;
+}
+
+.lp-coursetile__cover--teal { background: linear-gradient(135deg, #0f4c5e, #2a8c8a); }
+.lp-coursetile__cover--aqua { background: linear-gradient(135deg, #2a8c8a, #4fc3c0); }
+.lp-coursetile__cover--amber { background: linear-gradient(135deg, #c68a3b, #e0a458); }
+.lp-coursetile__cover--green { background: linear-gradient(135deg, #3f8c5a, #65b57f); }
+.lp-coursetile__cover--deep { background: linear-gradient(135deg, #143e4d, #0f4c5e); }
+
+.lp-coursetile__tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.lp-coursetile__status {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.lp-coursetile__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0.9rem 1rem 1rem;
+}
+
+.lp-coursetile__name {
+    font-size: 1rem;
+    margin: 0 0 0.35rem;
+}
+
+.lp-coursetile__desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    flex: 1;
+    margin: 0 0 0.75rem;
+}
+
+.lp-coursetile__progress {
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.lp-coursetile__fill {
+    display: block;
+    height: 100%;
+    background: currentColor;
+    border-radius: 999px;
+}
+
+.lp-coursetile__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.lp-coursetile__action {
+    font-weight: 600;
+}
+
+.lp-coursetile--locked {
+    opacity: 0.65;
+}
+
+.lp-coursetile--locked .lp-coursetile__cover {
+    filter: grayscale(0.6);
+}

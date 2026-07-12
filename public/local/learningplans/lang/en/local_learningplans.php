@@ -212,3 +212,26 @@ $string['privacy:metadata:local_learningplans_coh:planid'] = 'Learning plan id.'
 $string['privacy:metadata:local_learningplans_coh:cohortid'] = 'Linked cohort id.';
 $string['privacy:metadata:local_learningplans_coh:createdby'] = 'User who linked the cohort.';
 $string['privacy:metadata:local_learningplans_coh:timecreated'] = 'When the cohort link was created.';
+
+// Student Lab (ADR-008).
+$string['studentlab:title'] = 'Student Lab';
+$string['studentlab:kicker'] = 'My learning';
+$string['studentlab:lede'] = 'Your active courses, organised by your learning plan. Complete each course to unlock the next step of your pathway.';
+$string['studentlab:activeplan'] = 'Active learning plan';
+$string['studentlab:continue'] = 'Continue learning';
+$string['studentlab:courses'] = 'Courses';
+$string['studentlab:complete'] = 'Complete';
+$string['studentlab:planprogress'] = 'Learning plan progress';
+$string['studentlab:planmeta'] = '{$a->completed} of {$a->total} courses';
+$string['studentlab:coursenumber'] = 'Course {$a}';
+$string['studentlab:percentcomplete'] = '{$a}% complete';
+$string['studentlab:lockedhint'] = 'Complete the previous course to unlock';
+$string['studentlab:nocourses'] = 'This learning plan has no courses yet.';
+$string['studentlab:status:done'] = 'Done';
+$string['studentlab:status:active'] = 'Active';
+$string['studentlab:status:upnext'] = 'Up next';
+$string['studentlab:status:locked'] = 'Locked';
+$string['studentlab:action:review'] = 'Review';
+$string['studentlab:action:resume'] = 'Resume';
+$string['studentlab:action:start'] = 'Start';
+$string['privacy:metadata:preference:activeplan'] = 'The learning plan the user has chosen as their active one.';

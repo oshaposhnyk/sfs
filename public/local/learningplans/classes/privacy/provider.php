@@ -36,13 +36,36 @@ defined('MOODLE_INTERNAL') || die();
  */
 final class provider implements
     \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\user_preference_provider,
     core_userlist_provider,
     plugin_provider {
+
+    /**
+     * Export the plugin's user preferences.
+     *
+     * @param int $userid The user id.
+     * @return void
+     */
+    public static function export_user_preferences(int $userid): void {
+        $activeplan = get_user_preferences('local_learningplans_activeplan', null, $userid);
+        if ($activeplan !== null) {
+            writer::export_user_preference(
+                'local_learningplans',
+                'local_learningplans_activeplan',
+                (string)$activeplan,
+                get_string('privacy:metadata:preference:activeplan', 'local_learningplans')
+            );
+        }
+    }
 
     /**
      * @inheritDoc
      */
     public static function get_metadata(collection $collection): collection {
+        $collection->add_user_preference(
+            'local_learningplans_activeplan',
+            'privacy:metadata:preference:activeplan'
+        );
         $collection->add_database_table('local_learningplans_plan', [
             'name' => 'privacy:metadata:local_learningplans_plan:name',
             'description' => 'privacy:metadata:local_learningplans_plan:description',

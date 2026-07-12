@@ -15,18 +15,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details for local_learningplans.
+ * Port: per-user plugin preferences.
  *
  * @package    local_learningplans
  * @copyright  2026
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+declare(strict_types=1);
 
-$plugin->component = 'local_learningplans';
-$plugin->version = 2026071201;
-$plugin->requires = 2025100600;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.2.0';
+namespace local_learningplans\application\port;
 
+/**
+ * Stores which learning plan a user treats as their active one.
+ */
+interface user_preference_repository_interface {
+    /**
+     * The user's chosen active plan id, if any.
+     *
+     * @param int $userid User id.
+     * @return int|null Plan id or null when never chosen.
+     */
+    public function get_active_plan_id(int $userid): ?int;
+
+    /**
+     * Persist the user's active plan choice.
+     *
+     * @param int $userid User id.
+     * @param int $planid Plan id.
+     * @return void
+     */
+    public function set_active_plan_id(int $userid, int $planid): void;
+}
