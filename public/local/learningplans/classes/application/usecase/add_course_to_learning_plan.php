@@ -40,8 +40,8 @@ final class add_course_to_learning_plan {
      * @param int $actorid Actor id.
      * @return void
      */
-    public function execute(int $planid, int $courseid, int $actorid): void {
-        $this->service->add_course($planid, $courseid, $actorid);
+    public function execute(int $planid, int $courseid, int $actorid, string $stagename = ''): void {
+        $this->service->add_course($planid, $courseid, $actorid, $stagename);
     }
 }
 

@@ -92,6 +92,56 @@ final class student_lab_status_policy {
     }
 
     /**
+     * Group an ordered course list into stages.
+     *
+     * Consecutive courses sharing a stage name form one stage; an empty name
+     * starts (or continues) an unnamed stage. Stage status: done when every
+     * course is done, locked when every course is locked, otherwise active.
+     *
+     * @param string[] $stagenames Ordered stage names (parallel to statuses).
+     * @param array<int, array{status: string}> $resolved Output of resolve().
+     * @return array<int, array{name: string, indexes: int[], status: string,
+     *                          completed: int, total: int}>
+     */
+    public static function group_stages(array $stagenames, array $resolved): array {
+        $stages = [];
+        $current = null;
+        foreach (array_values($stagenames) as $index => $name) {
+            $name = trim((string)$name);
+            if ($current === null || $name !== $current['name']) {
+                if ($current !== null) {
+                    $stages[] = $current;
+                }
+                $current = ['name' => $name, 'indexes' => [], 'status' => '', 'completed' => 0, 'total' => 0];
+            }
+            $current['indexes'][] = $index;
+        }
+        if ($current !== null) {
+            $stages[] = $current;
+        }
+
+        foreach ($stages as $i => $stage) {
+            $statuses = array_map(
+                static fn(int $index): string => $resolved[$index]['status'] ?? self::STATUS_LOCKED,
+                $stage['indexes']
+            );
+            $done = count(array_filter($statuses, static fn(string $s): bool => $s === self::STATUS_DONE));
+            $locked = count(array_filter($statuses, static fn(string $s): bool => $s === self::STATUS_LOCKED));
+            $total = count($statuses);
+            $stages[$i]['completed'] = $done;
+            $stages[$i]['total'] = $total;
+            if ($done === $total && $total > 0) {
+                $stages[$i]['status'] = self::STATUS_DONE;
+            } else if ($locked === $total && $total > 0) {
+                $stages[$i]['status'] = self::STATUS_LOCKED;
+            } else {
+                $stages[$i]['status'] = self::STATUS_ACTIVE;
+            }
+        }
+        return $stages;
+    }
+
+    /**
      * Index of the recommended continue-learning target, or null.
      *
      * Preference order: the active course → first up-next → first done

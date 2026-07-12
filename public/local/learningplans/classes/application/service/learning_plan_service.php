@@ -333,12 +333,12 @@ final class learning_plan_service {
      * @param int $actorid Actor id.
      * @return void
      */
-    public function add_course(int $planid, int $courseid, int $actorid): void {
+    public function add_course(int $planid, int $courseid, int $actorid, string $stagename = ''): void {
         $this->permissionchecker->require_manage();
         $this->require_plan($planid);
         $this->require_course($courseid);
 
-        $this->planrepository->add_course($planid, $courseid);
+        $this->planrepository->add_course($planid, $courseid, $stagename);
         $this->progressrepository->invalidate_plan($planid);
 
         $this->eventdispatcher->dispatch('course_added', [

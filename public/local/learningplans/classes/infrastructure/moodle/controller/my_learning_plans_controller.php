@@ -146,6 +146,31 @@ final class my_learning_plans_controller {
             ];
         }
 
+        $stages = [];
+        foreach ($overview['stages'] ?? [] as $i => $stage) {
+            $stagecourses = [];
+            foreach ($stage['indexes'] as $index) {
+                if (isset($courses[$index])) {
+                    $stagecourses[] = $courses[$index];
+                }
+            }
+            $stages[] = [
+                'number' => $i + 1,
+                'name' => $stage['name'] !== ''
+                    ? format_string($stage['name'])
+                    : get_string('studentlab:stagedefault', 'local_learningplans', $i + 1),
+                'status' => $stage['status'],
+                'statuslabel' => get_string('studentlab:status:' . $stage['status'], 'local_learningplans'),
+                'meta' => get_string('studentlab:planmeta', 'local_learningplans', [
+                    'completed' => $stage['completed'],
+                    'total' => $stage['total'],
+                ]),
+                'done' => $stage['status'] === 'done',
+                'locked' => $stage['status'] === 'locked',
+                'courses' => $stagecourses,
+            ];
+        }
+
         $progress = $overview['progress'];
         return [
             'hasplans' => true,
@@ -158,7 +183,7 @@ final class my_learning_plans_controller {
             'totalcount' => $progress['total'],
             'percentage' => $progress['percentage'],
             'continueurl' => $continueurl,
-            'courses' => $courses,
+            'stages' => $stages,
             'hascourses' => $courses !== [],
             'nocourses' => get_string('studentlab:nocourses', 'local_learningplans'),
         ];

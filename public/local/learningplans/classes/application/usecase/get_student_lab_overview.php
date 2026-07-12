@@ -145,6 +145,7 @@ final class get_student_lab_overview {
                 $percentage = 100.0;
             }
             $courses[] = [
+                'stagename' => $planitem->stage_name(),
                 'courseid' => $courseid,
                 'fullname' => $record->fullname ?? '',
                 'summary' => (string)($record->summary ?? ''),
@@ -155,8 +156,14 @@ final class get_student_lab_overview {
             ];
         }
 
+        $stages = student_lab_status_policy::group_stages(
+            array_map(static fn($item): string => $item->stage_name(), $plancourses),
+            $resolved
+        );
+
         return [
             'hasplans' => true,
+            'stages' => $stages,
             'plans' => $plans,
             'activeplan' => [
                 'planid' => $activeplanid,

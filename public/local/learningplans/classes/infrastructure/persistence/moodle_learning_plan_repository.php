@@ -113,7 +113,7 @@ final class moodle_learning_plan_repository implements learning_plan_repository_
     /**
      * @inheritDoc
      */
-    public function add_course(int $planid, int $courseid): learning_plan_course {
+    public function add_course(int $planid, int $courseid, string $stagename = ''): learning_plan_course {
         global $DB;
 
         if ($DB->record_exists(self::TABLE_COURSE, ['planid' => $planid, 'courseid' => $courseid])) {
@@ -131,11 +131,12 @@ final class moodle_learning_plan_repository implements learning_plan_repository_
             'courseid' => $courseid,
             'sortorder' => $sortorder,
             'required' => 1,
+            'stagename' => trim($stagename),
             'timecreated' => $now,
             'timemodified' => $now,
         ];
         $id = (int)$DB->insert_record(self::TABLE_COURSE, $record);
-        return new learning_plan_course($id, $planid, $courseid, $sortorder, true);
+        return new learning_plan_course($id, $planid, $courseid, $sortorder, true, trim($stagename));
     }
 
     /**
@@ -224,7 +225,8 @@ final class moodle_learning_plan_repository implements learning_plan_repository_
                 (int)$record->planid,
                 (int)$record->courseid,
                 (int)$record->sortorder,
-                !empty($record->required)
+                !empty($record->required),
+                (string)($record->stagename ?? '')
             );
         }
         return $courses;

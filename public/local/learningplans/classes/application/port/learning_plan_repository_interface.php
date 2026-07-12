@@ -75,7 +75,7 @@ interface learning_plan_repository_interface {
      * @param int $courseid Course id.
      * @return learning_plan_course
      */
-    public function add_course(int $planid, int $courseid): learning_plan_course;
+    public function add_course(int $planid, int $courseid, string $stagename = ''): learning_plan_course;
 
     /**
      * Remove course from plan.

@@ -90,6 +90,19 @@ function xmldb_local_learningplans_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026071201, 'local', 'learningplans');
     }
 
+    if ($oldversion < 2026071202) {
+        // Stage grouping (Phase 6.2): consecutive courses sharing a stage
+        // name form one Student Lab stage. Denormalised v1 — a dedicated
+        // sections table can absorb this column in a later migration.
+        $table = new xmldb_table('local_learningplans_crs');
+        $field = new xmldb_field('stagename', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, '', 'required');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2026071202, 'local', 'learningplans');
+    }
+
     return true;
 }
 

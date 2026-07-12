@@ -128,7 +128,7 @@ final class view_learning_plan_controller {
         }
         if ($data = $addcourseform->get_data()) {
             try {
-                $service->add_course($planid, (int)$data->courseid, (int)$USER->id);
+                $service->add_course($planid, (int)$data->courseid, (int)$USER->id, trim((string)($data->stagename ?? '')));
                 \core\notification::success(get_string('course:added', 'local_learningplans'));
             } catch (\Throwable $exception) {
                 $messagekey = (string)$exception->getMessage();

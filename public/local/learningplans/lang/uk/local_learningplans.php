@@ -235,3 +235,6 @@ $string['studentlab:action:review'] = 'Переглянути';
 $string['studentlab:action:resume'] = 'Продовжити';
 $string['studentlab:action:start'] = 'Почати';
 $string['privacy:metadata:preference:activeplan'] = 'Навчальний план, який користувач обрав активним.';
+$string['course:stagename'] = 'Назва етапу';
+$string['course:stagename_help'] = 'Необов’язково. Послідовні курси з однаковою назвою етапу показуються одним етапом на сторінці Студентської лабораторії (напр. "Етап 1 · Основи"). Порожнє поле — етап без назви.';
+$string['studentlab:stagedefault'] = 'Етап {$a}';

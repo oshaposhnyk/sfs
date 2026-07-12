@@ -41,6 +41,9 @@ final class learning_plan_course {
     /** @var bool */
     private bool $required;
 
+    /** @var string */
+    private string $stagename;
+
     /**
      * Constructor.
      *
@@ -49,13 +52,22 @@ final class learning_plan_course {
      * @param int $courseid Course id.
      * @param int $sortorder Sort order.
      * @param bool $required Required flag.
+     * @param string $stagename Stage grouping name ('' = unnamed stage).
      */
-    public function __construct(int $id, int $planid, int $courseid, int $sortorder, bool $required = true) {
+    public function __construct(
+        int $id,
+        int $planid,
+        int $courseid,
+        int $sortorder,
+        bool $required = true,
+        string $stagename = ''
+    ) {
         $this->id = $id;
         $this->planid = $planid;
         $this->courseid = $courseid;
         $this->sortorder = $sortorder;
         $this->required = $required;
+        $this->stagename = trim($stagename);
     }
 
     /**
@@ -91,6 +103,10 @@ final class learning_plan_course {
      */
     public function is_required(): bool {
         return $this->required;
+    }
+
+    public function stage_name(): string {
+        return $this->stagename;
     }
 }
 

@@ -91,6 +91,37 @@ final class student_lab_status_policy_test extends \basic_testcase {
         $this->assertNull(student_lab_status_policy::continue_index($resolved));
     }
 
+    public function test_group_stages(): void {
+        $resolved = student_lab_status_policy::resolve([
+            self::state(true, true, 100.0),
+            self::state(true, true, 100.0),
+            self::state(false, true, 40.0),
+            self::state(false, false, null),
+        ]);
+        $stages = student_lab_status_policy::group_stages(
+            ['Stage 1', 'Stage 1', 'Stage 2', 'Stage 2'],
+            $resolved
+        );
+
+        $this->assertCount(2, $stages);
+        $this->assertSame('done', $stages[0]['status']);
+        $this->assertSame([0, 1], $stages[0]['indexes']);
+        $this->assertSame(2, $stages[0]['completed']);
+        $this->assertSame('active', $stages[1]['status']);
+
+        // Same name, non-consecutive: separate stages; empty names merge.
+        $stages = student_lab_status_policy::group_stages(['A', '', '', 'A'], $resolved);
+        $this->assertCount(3, $stages);
+        $this->assertSame('', $stages[1]['name']);
+
+        // All locked stage.
+        $lockedstage = student_lab_status_policy::group_stages(
+            ['X'],
+            student_lab_status_policy::resolve([self::state(false, false, null)])
+        );
+        $this->assertSame('locked', $lockedstage[0]['status']);
+    }
+
     public function test_empty_plan(): void {
         $this->assertSame([], student_lab_status_policy::resolve([]));
         $this->assertNull(student_lab_status_policy::continue_index([]));

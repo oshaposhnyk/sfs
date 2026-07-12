@@ -43,6 +43,10 @@ final class add_course_form extends \moodleform {
         $mform->setType('courseid', PARAM_INT);
         $mform->addRule('courseid', null, 'required', null, 'client');
 
+        $mform->addElement('text', 'stagename', get_string('course:stagename', 'local_learningplans'));
+        $mform->setType('stagename', PARAM_TEXT);
+        $mform->addHelpButton('stagename', 'course:stagename', 'local_learningplans');
+
         $this->add_action_buttons(false, get_string('course:add:submit', 'local_learningplans'));
     }
 }

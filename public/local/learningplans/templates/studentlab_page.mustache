@@ -118,14 +118,18 @@
             </div>
         </section>
 
-        <section class="lp-stage">
+        {{^hascourses}}
+            <div class="alert alert-info">{{nocourses}}</div>
+        {{/hascourses}}
+        {{#stages}}
+        <section class="lp-stage lp-stage--{{status}}">
             <div class="lp-stage__head">
-                <h3 class="lp-stage__title">{{#str}}studentlab:courses, local_learningplans{{/str}}</h3>
-                <div class="lp-stage__meta">{{completedcount}}/{{totalcount}} · {{percentage}}%</div>
+                <div class="lp-stage__titles">
+                    <span class="lp-stage__badge" aria-hidden="true">{{^done}}{{^locked}}{{number}}{{/locked}}{{/done}}</span>
+                    <h3 class="lp-stage__title">{{name}}</h3>
+                </div>
+                <div class="lp-stage__meta">{{meta}} · <span class="lp-stage__status">{{statuslabel}}</span></div>
             </div>
-            {{^hascourses}}
-                <div class="alert alert-info">{{nocourses}}</div>
-            {{/hascourses}}
             <div class="lp-stage__grid">
                 {{#courses}}
                     <article class="lp-coursetile lp-coursetile--{{status}}">
@@ -156,5 +160,6 @@
                 {{/courses}}
             </div>
         </section>
+        {{/stages}}
     {{/hasplans}}
 </div>
