@@ -59,11 +59,16 @@ define(['jquery', 'core/sortable_list'], function($, SortableList) {
 
             var orderedIds = [];
             var stageIds = [];
+            var seen = {};
             wrap.find('.learning-plan__stage-list').each(function() {
                 var stageId = parseInt($(this).attr('data-stageid'), 10) || 0;
-                $(this).children().each(function() {
+                // Skip the drag proxy: SortableList clones the dragged item
+                // (class sortable-list-is-dragged, same data-courseid) into
+                // the source list and only removes it after this callback.
+                $(this).children(':not(.sortable-list-is-dragged)').each(function() {
                     var courseId = parseInt($(this).attr('data-courseid'), 10);
-                    if (!isNaN(courseId) && courseId > 0) {
+                    if (!isNaN(courseId) && courseId > 0 && !seen[courseId]) {
+                        seen[courseId] = true;
                         orderedIds.push(courseId);
                         stageIds.push(stageId);
                     }
