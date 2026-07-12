@@ -95,6 +95,7 @@ final class my_learning_plans_controller {
         $plans = [];
         foreach ($overview['plans'] as $plan) {
             $plans[] = [
+                'planid' => $plan['planid'],
                 'name' => format_string($plan['name']),
                 'active' => $plan['active'],
                 'switchurl' => (new \moodle_url($pageurl, [

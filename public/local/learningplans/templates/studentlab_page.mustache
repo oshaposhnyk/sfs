@@ -83,7 +83,7 @@
                                             <span class="lp-planmenu__meta">{{meta}}</span>
                                         {{/active}}
                                         {{^active}}
-                                            <a class="lp-planmenu__link" href="{{switchurl}}">
+                                            <a class="lp-planmenu__link" href="{{switchurl}}" data-planid="{{planid}}">
                                                 <span class="lp-planmenu__name">{{name}}</span>
                                                 <span class="lp-planmenu__meta">{{meta}}</span>
                                             </a>
@@ -163,3 +163,9 @@
         {{/stages}}
     {{/hasplans}}
 </div>
+
+{{#js}}
+require(['local_learningplans/planswitcher'], function(Switcher) {
+    Switcher.init();
+});
+{{/js}}
