@@ -380,3 +380,11 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   Domain 05/09 stage items closed. Gotcha: entity file edit initially matched
   a comment-stripped pattern and silently half-applied — caught by the test
   suite (undefined variable warning), fixed properly.
+
+- **2026-07-12** — **Phase 6.3 shipped (external functions)**: get_student_lab
+  + set_active_plan externals (own-data, viewprogress-gated, ajax + mobile
+  service), db/services.php, externallib tests — suite 16/16 (53 assertions).
+  Tests exposed and fixed a latent prod bug: planprogress MUC cache key used
+  "planid:userid" — invalid for simple-keys definitions (only errors under
+  debug, silently unvalidated in prod); now "planid_userid". Domain 09 now
+  fully closed except optional AJAX consumer in the theme (PRG still primary).
