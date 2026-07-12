@@ -355,3 +355,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   use file paths or --testsuite <component>_testsuite. Remaining Phase 5:
   notifications/messages polish, Behat, performance pass, PHPCS via
   moodle codechecker, enrol_learningplan tests.
+
+- **2026-07-12** — **Phase 5 slice 4**: enrol_learningplan PHPUnit written and
+  green (3/3: instance customint1, enrol/unenrol round-trip incl. idempotent
+  re-enrol, can_add_instance=false) — Phase 0 test debt closed; messaging/
+  notifications surfaces tokenised (message-app card, unread tint, popover
+  container) and verified in the shell. Remaining Phase 5: Behat (needs
+  browser infra in docker), PHPCS via moodle/codechecker, performance pass.
