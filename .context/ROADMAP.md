@@ -75,3 +75,19 @@ locked stages behave per sequencing rules, Continue learning resolves correctly.
 3. `en` and `uk` language strings both updated.
 4. No hard-coded colours/spacing — tokens only; BEM-compliant class names.
 5. `PROGRESS.md` and the domain `CONTEXT.md` updated.
+
+## Phase 6 — Deepening (added 2026-07-12, after Phase 5 close)
+
+> Closes the deferred cross-domain backlog. Infra items (Behat, PHPCS) were
+> explicitly waived by the owner on 2026-07-12.
+
+- **6.1 Course plan context (domains 06+09)**: "part of plan X · course N of M"
+  chips + course progress on the course page, via a new read-only use case in
+  local_learningplans (no schema changes) rendered through the theme renderer.
+- **6.2 Stage grouping (domain 09)**: real sections in plans — REQUIRES a
+  db/ schema addition → owner approval before starting.
+- **6.3 External functions (domain 09)**: db/services.php — owner approval.
+- **6.4 Resources file storage (domain 08)**: owner decision (course files vs
+  plugin filearea).
+- **6.5 Performance pass**: query counts on Student Lab/About, MUC where
+  measured hot.
