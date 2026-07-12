@@ -60,12 +60,15 @@ foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
     }
 }
 
-// Completed plan courses feed the XP total.
+// Completed plan courses feed the XP total — summed across every plan the
+// user belongs to, via the MUC-cached progress records (no per-course
+// completion queries; Phase 6.5).
 $completed = 0;
 if (class_exists('\local_learningplans\infrastructure\moodle\factory\learning_plan_service_factory')) {
-    $overview = \local_learningplans\infrastructure\moodle\factory\learning_plan_service_factory
-        ::student_lab_overview()->execute($userid);
-    $completed = (int)($overview['progress']['completed'] ?? 0);
+    $service = \local_learningplans\infrastructure\moodle\factory\learning_plan_service_factory::create();
+    foreach ($service->get_user_memberships($userid) as $membership) {
+        $completed += $service->get_user_progress($membership->plan_id(), $userid)->completed_courses();
+    }
 }
 
 $xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed);
