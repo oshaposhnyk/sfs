@@ -32,6 +32,10 @@ items belong to Phase 9 (pilot readiness).
 - ☑ A2 Shield card + Three reinforcing layers added (settings-driven, design defaults): white "A shield for the food systems of
   tomorrow" card (pill chip, two paragraphs) + dark "Three reinforcing
   layers" card (3 numbered items).
+- ☑ A3 P1 follow-up: missing "Learning for Change" mission band is implemented
+  with settings/localisation/tests and desktop-verified. Mobile re-verified
+  2026-07-12 (390px full-page screenshot: full-width, no overflow) after the
+  shell grid-column fix.
 
 ## Future Food (ffs.html ↔ /local/sfsgame/index.php)
 

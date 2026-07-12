@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>amd/src/leaflet.js</location>
+    <name>Leaflet</name>
+    <description>JavaScript library for interactive maps (also bundled as
+      amd/build/leaflet.min.js and scss/vendor/_leaflet.scss; the AMD define
+      is namespaced theme_securefood/leaflet).</description>
+    <version>1.9.4</version>
+    <license>BSD-2-Clause</license>
+    <repository>https://github.com/Leaflet/Leaflet</repository>
+  </library>
+  <library>
+    <location>map/europe.json</location>
+    <name>Natural Earth 110m Admin 0 countries (Europe subset)</name>
+    <description>Country boundaries GeoJSON, filtered to the European
+      window and simplified for the About page map.</description>
+    <version>5.1.1</version>
+    <license>Public Domain</license>
+    <repository>https://github.com/nvkelso/natural-earth-vector</repository>
+  </library>
+</libraries>

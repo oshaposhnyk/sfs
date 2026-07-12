@@ -4,6 +4,7 @@
 // scoped under .sfs-mode (ADR-002) so standard mode stays stock Boost.
 
 @import "mixins";
+@import "vendor/leaflet";
 @import "layout/shell";
 @import "components/studentlab";
 @import "components/course";

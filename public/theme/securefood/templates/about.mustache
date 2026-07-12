@@ -71,6 +71,27 @@
     </section>
 </div>
 
+{{#showapproach}}
+    <section class="sfs-approach">
+        <div class="sfs-approach__grid">
+            <div class="sfs-approach__intro">
+                <div class="sfs-approach__kicker">{{approachkicker}}</div>
+                <h3 class="sfs-approach__title">{{approachtitle}}</h3>
+                <div class="sfs-approach__body">{{{approachbody}}}</div>
+            </div>
+            <div class="sfs-approach__steps">
+                {{#approachsteps}}
+                    <article class="sfs-approach__step">
+                        <div class="sfs-approach__number">{{number}}</div>
+                        <h4 class="sfs-approach__step-title">{{title}}</h4>
+                        <p class="sfs-approach__step-text">{{text}}</p>
+                    </article>
+                {{/approachsteps}}
+            </div>
+        </div>
+    </section>
+{{/showapproach}}
+
 {{#kpis.0}}
     <div class="sfs-kpi__row">
         {{#kpis}}

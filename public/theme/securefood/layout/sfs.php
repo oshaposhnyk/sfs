@@ -148,6 +148,30 @@ if ($PAGE->pagelayout === 'frontpage') {
     $aboutcontext = \theme_securefood\about::context($PAGE->theme->settings ?? null);
     $aboutcontext['logourl'] = $OUTPUT->image_url('logo-icon-dark', 'theme')->out(false);
     $abouthtml = $OUTPUT->render_from_template('theme_securefood/about', $aboutcontext);
+
+    // Interactive hubs map (self-hosted Leaflet + bundled GeoJSON; the
+    // static dot map in the template stays as the no-JS fallback).
+    $maphubs = [];
+    foreach ($aboutcontext['hubs'] ?? [] as $hub) {
+        if (isset($hub['lat'], $hub['lon'])) {
+            $maphubs[] = [
+                'name' => $hub['name'],
+                'country' => $hub['country'],
+                'islab' => $hub['islab'],
+                'lat' => $hub['lat'],
+                'lon' => $hub['lon'],
+            ];
+        }
+    }
+    if ($maphubs !== []) {
+        $PAGE->requires->js_call_amd('theme_securefood/aboutmap', 'init', [[
+            'hubs' => $maphubs,
+            'geourl' => (new moodle_url('/theme/securefood/map/europe.json'))->out(false),
+            'maplabel' => get_string('aboutmaplabel', 'theme_securefood'),
+            'lablabel' => get_string('abouthub_lab', 'theme_securefood'),
+            'partnerlabel' => get_string('abouthub_partner', 'theme_securefood'),
+        ]]);
+    }
 }
 
 $templatecontext = [

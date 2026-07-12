@@ -552,7 +552,7 @@
             padding: 7px 16px;
             border-radius: 999px;
             background: var(--sfs-primary);
-            color: #fff;
+            color: var(--sfs-bg);
 
             &:hover {
                 background: var(--sfs-primary700);
@@ -575,6 +575,17 @@
         #page-wrapper.sfs-shell,
         &.sfs-sidebar-collapsed #page-wrapper.sfs-shell {
             grid-template-columns: 1fr;
+        }
+
+        // Desktop explicitly places the main column in grid column 2. Once
+        // mobile collapses the shell to one column, reset that placement or
+        // CSS Grid creates an implicit max-content second column and the whole
+        // page overflows horizontally.
+        .sfs-shell__main {
+            grid-column: 1;
+            grid-row: 1;
+            width: 100%;
+            min-width: 0;
         }
 
         .sfs-sidebar {

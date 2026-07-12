@@ -48,10 +48,14 @@ final class about {
         $stats = self::pairs(
             (string)($settings->aboutstats ?? ''),
             [
-                ['value' => '€8M', 'label' => 'Horizon Europe'],
-                ['value' => '21', 'label' => 'Partners'],
-                ['value' => '10+', 'label' => 'Living Labs'],
-                ['value' => 'L4C', 'label' => 'Methodology'],
+                ['value' => get_string('aboutdefault_stat_horizon_value', 'theme_securefood'),
+                    'label' => get_string('aboutdefault_stat_horizon_label', 'theme_securefood')],
+                ['value' => get_string('aboutdefault_stat_partners_value', 'theme_securefood'),
+                    'label' => get_string('aboutdefault_stat_partners_label', 'theme_securefood')],
+                ['value' => get_string('aboutdefault_stat_labs_value', 'theme_securefood'),
+                    'label' => get_string('aboutdefault_stat_labs_label', 'theme_securefood')],
+                ['value' => get_string('aboutdefault_stat_method_value', 'theme_securefood'),
+                    'label' => get_string('aboutdefault_stat_method_label', 'theme_securefood')],
             ]
         );
 
@@ -59,18 +63,10 @@ final class about {
         $kpis = self::pairs((string)($settings->aboutkpis ?? ''), []);
 
         $feeddefaults = [
-            ['chip' => 'Digital twin', 'title' => 'Kyiv Living Lab twin goes live',
-                'text' => 'Real-time mirroring of the cold-chain sensors is now open to learners.',
-                'time' => '2 days ago'],
-            ['chip' => 'Culture', 'title' => 'School kitchens join the pilot',
-                'text' => 'Three school kitchens start logging temperature and hygiene data.',
-                'time' => '5 days ago'],
-            ['chip' => 'Water', 'title' => 'Irrigation quality module updated',
-                'text' => 'New thresholds aligned with the latest EFSA guidance.',
-                'time' => '1 week ago'],
-            ['chip' => 'Supply chain', 'title' => 'Route risk workshop recap',
-                'text' => 'Learners mapped disruption scenarios across two supply corridors.',
-                'time' => '2 weeks ago'],
+            self::feed_default(1),
+            self::feed_default(2),
+            self::feed_default(3),
+            self::feed_default(4),
         ];
         $feeditems = json_decode((string)($settings->aboutfeed ?? ''), true);
         if (!is_array($feeditems) || $feeditems === []) {
@@ -132,6 +128,9 @@ final class about {
             ];
             // Dot-map position: equirectangular Europe window (lon -12..42, lat 34..62).
             if (isset($item['lat'], $item['lon']) && is_numeric($item['lat']) && is_numeric($item['lon'])) {
+                // Raw coordinates feed the interactive Leaflet map (aboutmap AMD).
+                $hub['lat'] = (float)$item['lat'];
+                $hub['lon'] = (float)$item['lon'];
                 $x = ((float)$item['lon'] + 12) / 54 * 100;
                 $y = (62 - (float)$item['lat']) / 28 * 100;
                 if ($x >= 0 && $x <= 100 && $y >= 0 && $y <= 100) {
@@ -144,12 +143,9 @@ final class about {
         }
 
         $layerdefaults = [
-            ['title' => 'Digital Twins',
-                'text' => 'Model stress scenarios in virtual environments to predict impacts before they hit the field.'],
-            ['title' => 'Governance frameworks',
-                'text' => 'New standards for crisis management and policy-making across European food chains.'],
-            ['title' => 'Living Labs',
-                'text' => 'Community-led spaces where innovative solutions are tested in real-world conditions.'],
+            self::layer_default(1),
+            self::layer_default(2),
+            self::layer_default(3),
         ];
         $layeritems = json_decode((string)($settings->aboutlayers ?? ''), true);
         if (!is_array($layeritems) || $layeritems === []) {
@@ -167,35 +163,106 @@ final class about {
             ];
         }
 
+        $approachdefaults = [
+            self::approach_step_default(1),
+            self::approach_step_default(2),
+            self::approach_step_default(3),
+            self::approach_step_default(4),
+        ];
+        $approachitems = json_decode((string)($settings->aboutapproachsteps ?? ''), true);
+        if (!is_array($approachitems) || $approachitems === []) {
+            $approachitems = $approachdefaults;
+        }
+        $approachsteps = [];
+        foreach ($approachitems as $item) {
+            if (!is_array($item) || trim((string)($item['title'] ?? '')) === '') {
+                continue;
+            }
+            $approachsteps[] = [
+                'number' => format_string((string)($item['number'] ?? '')),
+                'title' => format_string((string)$item['title']),
+                'text' => format_string((string)($item['text'] ?? '')),
+            ];
+        }
+        $showapproach = (int)($settings->showaboutapproach ?? 1) === 1 && $approachsteps !== [];
+
         return [
-            'titleaccent' => format_string($get('abouttitleaccent', 'evolving world'), true, ['escape' => false]),
+            'titleaccent' => format_string($get('abouttitleaccent',
+                get_string('aboutdefault_titleaccent', 'theme_securefood')), true, ['escape' => false]),
             'shieldchip' => format_string($get('aboutshieldchip',
-                'About the SecureFood project · Horizon Europe'), true, ['escape' => false]),
+                get_string('aboutdefault_shieldchip', 'theme_securefood')), true, ['escape' => false]),
             'shieldtitle' => format_string($get('aboutshieldtitle',
-                'A shield for the food systems of tomorrow'), true, ['escape' => false]),
+                get_string('aboutdefault_shieldtitle', 'theme_securefood')), true, ['escape' => false]),
             'shieldbody' => format_text($get('aboutshieldbody',
-                '<p>Our world is facing unprecedented challenges — from climate shocks to global '
-                . 'supply-chain disruptions. SecureFood is developing a "shield" for the food systems '
-                . 'of tomorrow by integrating digital twins, governance frameworks, and community-led '
-                . 'Living Labs into one operational ecosystem.</p>'
-                . '<p>The School was established as a <strong>core flagship result of the project</strong>: '
-                . 'its goal is to transform that science into skills that real people can use in real '
-                . 'schools, kitchens and supply chains.</p>'), FORMAT_HTML),
-            'layerstitle' => format_string($get('aboutlayerstitle', 'Three reinforcing layers'), true, ['escape' => false]),
+                get_string('aboutdefault_shieldbody', 'theme_securefood')), FORMAT_HTML),
+            'layerstitle' => format_string($get('aboutlayerstitle',
+                get_string('aboutdefault_layerstitle', 'theme_securefood')), true, ['escape' => false]),
             'layers' => $layers,
-            'hubstitle' => format_string($get('abouthubstitle', 'Living Labs & partners across Europe'), true, ['escape' => false]),
+            'showapproach' => $showapproach,
+            'approachkicker' => format_string($get('aboutapproachkicker',
+                get_string('aboutdefault_approachkicker', 'theme_securefood')), true, ['escape' => false]),
+            'approachtitle' => format_string($get('aboutapproachtitle',
+                get_string('aboutdefault_approachtitle', 'theme_securefood')), true, ['escape' => false]),
+            'approachbody' => format_text($get('aboutapproachbody',
+                get_string('aboutdefault_approachbody', 'theme_securefood')), FORMAT_HTML),
+            'approachsteps' => $approachsteps,
+            'hubstitle' => format_string($get('abouthubstitle',
+                get_string('aboutdefault_hubstitle', 'theme_securefood')), true, ['escape' => false]),
             'hubs' => $hubs,
-            'feedtitle' => format_string($get('aboutfeedtitle', 'Latest from the network'), true, ['escape' => false]),
+            'feedtitle' => format_string($get('aboutfeedtitle',
+                get_string('aboutdefault_feedtitle', 'theme_securefood')), true, ['escape' => false]),
             'feed' => $feed,
-            'kicker' => format_string($get('aboutkicker', 'SecureFood School'), true, ['escape' => false]),
-            'title' => format_string($get('abouttitle', 'Learning for resilience in an'), true, ['escape' => false]),
+            'kicker' => format_string($get('aboutkicker',
+                get_string('aboutdefault_kicker', 'theme_securefood')), true, ['escape' => false]),
+            'title' => format_string($get('abouttitle',
+                get_string('aboutdefault_title', 'theme_securefood')), true, ['escape' => false]),
             'lede' => format_text($get('aboutlede',
-                'The educational hub of the SecureFood project — turning complex science and '
-                . 'digital tools into actionable skills for the professionals, policymakers and '
-                . 'change-makers building tomorrow\'s food systems.'),
+                get_string('aboutdefault_lede', 'theme_securefood')),
                 FORMAT_HTML),
             'stats' => $stats,
             'kpis' => $kpis,
+        ];
+    }
+
+    /**
+     * One localised design-default feed item.
+     *
+     * @param int $number Item number, 1..4.
+     * @return array
+     */
+    private static function feed_default(int $number): array {
+        return [
+            'chip' => get_string("aboutdefault_feed{$number}_chip", 'theme_securefood'),
+            'title' => get_string("aboutdefault_feed{$number}_title", 'theme_securefood'),
+            'text' => get_string("aboutdefault_feed{$number}_text", 'theme_securefood'),
+            'time' => get_string("aboutdefault_feed{$number}_time", 'theme_securefood'),
+        ];
+    }
+
+    /**
+     * One localised reinforcing-layer default.
+     *
+     * @param int $number Layer number, 1..3.
+     * @return array
+     */
+    private static function layer_default(int $number): array {
+        return [
+            'title' => get_string("aboutdefault_layer{$number}_title", 'theme_securefood'),
+            'text' => get_string("aboutdefault_layer{$number}_text", 'theme_securefood'),
+        ];
+    }
+
+    /**
+     * One localised Learning for Change step.
+     *
+     * @param int $number Step number, 1..4.
+     * @return array
+     */
+    private static function approach_step_default(int $number): array {
+        return [
+            'number' => get_string("aboutdefault_approach{$number}_number", 'theme_securefood'),
+            'title' => get_string("aboutdefault_approach{$number}_title", 'theme_securefood'),
+            'text' => get_string("aboutdefault_approach{$number}_text", 'theme_securefood'),
         ];
     }
 

@@ -80,9 +80,36 @@ uk string review (9.6) owner takes it.
 
 ## Recent work
 
-- **2026-07-12** — **P1 fidelity slice 1 `[~]`**: implementing the missing
-  settings-driven, localised "Learning for Change" section from the current
-  `insights.html` prototype, with token-only SCSS and automated context tests.
+- **2026-07-12** — **Owner feedback round: About page** (2 items):
+  1. *Moodle chrome on the front page*: the site-management heading and
+     Home/Settings/Participants tabs showed for admins in SFS mode. Hidden
+     via `.sfs-mode.pagelayout-frontpage` (same policy as course pages —
+     management lives in standard mode / edit mode, which still falls back
+     to Boost). Verified as admin: hero now starts immediately.
+  2. *Real interactive hubs map*: **self-hosted Leaflet 1.9.4** (patched to a
+     named AMD define `theme_securefood/leaflet`; declared in the new
+     `thirdpartylibs.xml`) + bundled Natural Earth Europe GeoJSON
+     (`map/europe.json`, 48 KB, 62 countries) — deliberately **no external
+     tile servers** (privacy/no-CDN rule; visitor IPs stay on-site). New
+     `aboutmap` AMD module renders country polygons + circle markers
+     (amber = Living Lab, teal = partner) with escaped popups, zoom
+     controls, token-driven colours read from CSS custom properties, and
+     an accessible region label; the static dot map stays as the no-JS
+     fallback. Leaflet gotcha: vector layers added before the first
+     `setView()` crash in `_clipPoints` — view must be set first.
+     Verified: 84 SVG paths live, uk+en, admin+learner, mobile 390px clean.
+  Known nit (pre-existing): theme favicon 404s — no favicon image shipped.
+
+- **2026-07-12** — **P1 fidelity slice 1 `[~]`**: the missing settings-driven,
+  localised "Learning for Change" section from current `insights.html` is now
+  implemented (toggle + copy + steps JSON, Mustache, token-only responsive
+  SCSS, context tests). Theme suite: 17/17, 73 assertions; desktop screenshot
+  verified. Mobile screenshot exposed a shell-wide overflow root cause:
+  `.sfs-shell__main` retained desktop `grid-column:2` after the mobile shell
+  became one column, creating an implicit max-content column. Reset to column 1
+  is implemented; final cache purge + repeat mobile screenshot remain pending
+  because local-command approvals hit the current usage limit. Do not mark the
+  slice complete until that browser re-check runs.
 
 - **2026-07-12** — **Phase 9.1 multilang delivered (ADR-010, owner decision)**
   (site config/data only — no repo code changes): official **uk core language

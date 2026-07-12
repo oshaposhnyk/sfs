@@ -189,6 +189,144 @@
     }
 }
 
+// Learning for Change mission band from the current insights.html prototype.
+.sfs-mode {
+    .sfs-approach {
+        position: relative;
+        padding: 36px;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        margin-bottom: 28px;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            right: -40px;
+            top: -120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--sfs-teal50), transparent 65%);
+            pointer-events: none;
+        }
+    }
+
+    .sfs-approach__grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 36px;
+        align-items: center;
+    }
+
+    .sfs-approach__kicker {
+        color: var(--sfs-accent-ink);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+
+        &::before {
+            content: '';
+            width: 22px;
+            height: 2px;
+            background: var(--sfs-accent);
+        }
+    }
+
+    .sfs-approach__title {
+        font-size: 1.8rem;
+        margin: 0 0 12px;
+    }
+
+    .sfs-approach__body {
+        color: var(--sfs-ink2);
+        font-size: 0.96rem;
+        line-height: 1.65;
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .sfs-approach__steps {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .sfs-approach__step {
+        position: relative;
+        overflow: hidden;
+        padding: 16px;
+        border-radius: var(--sfs-radius-sm);
+        background: var(--sfs-surface2);
+        border: 1px solid var(--sfs-line);
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            right: -20px;
+            top: -20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--sfs-accent50), transparent 70%);
+            pointer-events: none;
+        }
+    }
+
+    .sfs-approach__number {
+        position: relative;
+        z-index: 1;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 0.78rem;
+        color: var(--sfs-accent-ink);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .sfs-approach__step-title {
+        position: relative;
+        z-index: 1;
+        font-size: 1rem;
+        margin: 6px 0 4px;
+    }
+
+    .sfs-approach__step-text {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: var(--sfs-muted);
+        font-size: 0.82rem;
+        line-height: 1.45;
+    }
+
+    @include sfs-media-compact {
+        .sfs-approach__grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @include sfs-media-mobile {
+        .sfs-approach {
+            padding: 24px 18px;
+        }
+
+        .sfs-approach__steps {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
 // Hubs grid collapses on smaller screens.
 .sfs-mode {
     @include sfs-media-compact {
@@ -501,6 +639,59 @@
     @include sfs-media-compact {
         .sfs-shield {
             grid-template-columns: 1fr;
+        }
+    }
+}
+
+// Interactive hubs map (aboutmap AMD + self-hosted Leaflet). The gradient
+// dot map above stays as the no-JS fallback; once the module mounts, the
+// container carries --live and Leaflet owns the canvas.
+.sfs-mode {
+    .sfs-hubs__map--live {
+        background: var(--sfs-surface2);
+        z-index: 0;
+
+        .leaflet-popup-content-wrapper {
+            background: var(--sfs-surface);
+            color: var(--sfs-ink);
+            border-radius: var(--sfs-radius-sm);
+            box-shadow: var(--sfs-shadow-2);
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 0.84rem;
+        }
+
+        .leaflet-popup-tip {
+            background: var(--sfs-surface);
+        }
+
+        .leaflet-container a.leaflet-popup-close-button {
+            color: var(--sfs-muted);
+        }
+
+        .leaflet-bar a {
+            background: var(--sfs-surface);
+            color: var(--sfs-ink);
+            border-bottom-color: var(--sfs-line);
+
+            &:hover {
+                background: var(--sfs-surface2);
+            }
+        }
+
+        .leaflet-control-attribution {
+            background: transparent;
+            color: var(--sfs-muted);
+            font-size: 0.62rem;
+        }
+    }
+
+    // The About page owns the front page in SFS mode: site-management chrome
+    // (page heading + Home/Settings/Participants tabs) is standard-mode/edit
+    // territory, same decision as course pages.
+    &.pagelayout-frontpage {
+        #page-header,
+        .secondary-navigation {
+            display: none;
         }
     }
 }

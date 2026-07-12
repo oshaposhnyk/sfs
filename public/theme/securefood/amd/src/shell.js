@@ -34,6 +34,37 @@ const CLASSES = {
 const isMobile = () => window.matchMedia('(max-width: 820px)').matches;
 
 /**
+ * Keep the drawer's accessibility state aligned with its visual state.
+ *
+ * The off-canvas navigation must not remain keyboard-focusable while hidden.
+ * On desktop the sidebar is always exposed and aria-expanded reflects only
+ * the persisted collapsed/expanded presentation.
+ *
+ * @param {boolean} opened Whether the mobile drawer is open.
+ */
+const syncSidebarAccessibility = (opened = false) => {
+    const sidebar = document.getElementById('sfs-sidebar');
+    const button = document.querySelector('[data-sfs-action="sidebar"]');
+    if (!sidebar || !button) {
+        return;
+    }
+
+    if (isMobile()) {
+        button.setAttribute('aria-expanded', opened ? 'true' : 'false');
+        sidebar.setAttribute('aria-hidden', opened ? 'false' : 'true');
+        sidebar.toggleAttribute('inert', !opened);
+        return;
+    }
+
+    sidebar.removeAttribute('aria-hidden');
+    sidebar.removeAttribute('inert');
+    button.setAttribute(
+        'aria-expanded',
+        document.body.classList.contains(CLASSES.collapsed) ? 'false' : 'true'
+    );
+};
+
+/**
  * Persist a preference, ignoring failures for guests.
  *
  * @param {string} name Preference name.
@@ -78,6 +109,7 @@ const trapFocus = (e) => {
  */
 const closeDrawer = () => {
     document.body.classList.remove(CLASSES.drawerOpen);
+    syncSidebarAccessibility(false);
     if (lastfocus) {
         lastfocus.focus();
         lastfocus = null;
@@ -93,6 +125,7 @@ const toggleSidebar = (button) => {
     const body = document.body;
     if (isMobile()) {
         const opened = body.classList.toggle(CLASSES.drawerOpen);
+        syncSidebarAccessibility(opened);
         if (opened) {
             lastfocus = button;
             const first = document.querySelector('#sfs-sidebar a[href]');
@@ -126,6 +159,8 @@ const toggleScheme = () => {
  * Initialise the shell interactions.
  */
 export const init = () => {
+    syncSidebarAccessibility(document.body.classList.contains(CLASSES.drawerOpen));
+
     document.addEventListener('click', (e) => {
         const target = e.target.closest('[data-sfs-action]');
         if (!target) {
@@ -148,5 +183,11 @@ export const init = () => {
             closeDrawer();
         }
         trapFocus(e);
+    });
+
+    window.matchMedia('(max-width: 820px)').addEventListener('change', () => {
+        document.body.classList.remove(CLASSES.drawerOpen);
+        lastfocus = null;
+        syncSidebarAccessibility(false);
     });
 };

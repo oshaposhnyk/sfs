@@ -161,6 +161,35 @@ if ($ADMIN->fulltree) {
         '',
         PARAM_RAW
     ));
+    $page->add(new admin_setting_configcheckbox(
+        'theme_securefood/showaboutapproach',
+        get_string('showaboutapproach', 'theme_securefood'),
+        get_string('showaboutapproach_desc', 'theme_securefood'),
+        1
+    ));
+    foreach (['aboutapproachkicker', 'aboutapproachtitle'] as $name) {
+        $page->add(new admin_setting_configtext(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string('aboutfallback_desc', 'theme_securefood'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/aboutapproachbody',
+        get_string('aboutapproachbody', 'theme_securefood'),
+        get_string('aboutfallback_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/aboutapproachsteps',
+        get_string('aboutapproachsteps', 'theme_securefood'),
+        get_string('aboutapproachsteps_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
     foreach (['aboutstats', 'aboutkpis'] as $name) {
         $page->add(new admin_setting_configtextarea(
             "theme_securefood/{$name}",

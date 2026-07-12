@@ -87,7 +87,7 @@
             color: var(--sfs-muted) !important;
         }
 
-        a:not(.btn):not(.sfs-nav__item):not(.nav-link) {
+        .sfs-shell__page a:not(.btn):not(.sfs-nav__item):not(.nav-link) {
             color: var(--sfs-primary);
         }
 
