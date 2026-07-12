@@ -287,3 +287,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   theme skin ffg-* per ffs.html + nav item. Verified live as learner (Level 1,
   0 XP, empty-state). Follow-ups: missions grid (settings JSON), badge images,
   xp_policy PHPUnit, decision module link, header-hide re-verify.
+
+- **2026-07-12** — **Domain 07 slice 2**: Active missions grid on Future Food —
+  local_sfsgame\missions parser (admin JSON, ffs.html defaults), template +
+  ffg-mission theme skin (4 gradient variants, badge/duration pills, tag chips,
+  +XP foot, Start button only with a URL), plugin settings page, xp_policy
+  PHPUnit (standalone 6/6). Verified full-page screenshot. Domain 07 remaining:
+  badge artwork in achievements, decision module link, wiring real badges.
