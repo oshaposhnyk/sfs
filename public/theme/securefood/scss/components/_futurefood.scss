@@ -1,0 +1,138 @@
+// Future Food (local_sfsgame) skin — spec: ffs.html.
+.sfs-mode {
+    // Template owns the page head (as on Student Lab).
+    &.path-local-sfsgame #page-header {
+        display: none;
+    }
+
+    .ffg-hero {
+        background: linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 100%);
+        color: #fff;
+        border-radius: var(--sfs-radius-md);
+        padding: 28px;
+        margin-bottom: 24px;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 28px;
+    }
+
+    .ffg-hero__kicker {
+        color: var(--sfs-accent);
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .ffg-hero__title {
+        color: #fff;
+        margin: 8px 0 12px;
+        font-size: 2rem;
+    }
+
+    .ffg-hero__lede {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .ffg-hero__xp {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--sfs-radius-sm);
+        padding: 18px;
+        display: grid;
+        gap: 14px;
+        align-content: center;
+    }
+
+    .ffg-hero__levelnum {
+        font-family: 'Manrope', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .ffg-hero__leveltag {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.65);
+        font-weight: 600;
+        margin-left: 10px;
+    }
+
+    .ffg-hero__bar {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .ffg-hero__fill {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--sfs-accent), #f2d08e);
+        border-radius: 999px;
+    }
+
+    .ffg-hero__next {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .ffg-achievements__title {
+        font-size: 1.4rem;
+        margin: 0 0 14px;
+    }
+
+    .ffg-achievements {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 12px;
+    }
+
+    .ffg-ach {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-sm);
+        padding: 16px 12px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ffg-ach__badge {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--sfs-accent50);
+        border: 2px solid var(--sfs-accent);
+    }
+
+    .ffg-ach--locked .ffg-ach__badge {
+        background: var(--sfs-surface2);
+        border: 2px dashed var(--sfs-linestrong);
+    }
+
+    .ffg-ach__name {
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .ffg-ach__state {
+        font-size: 0.72rem;
+        color: var(--sfs-muted);
+    }
+
+    .ffg-ach--locked {
+        opacity: 0.7;
+    }
+
+    @include sfs-media-mobile {
+        .ffg-hero {
+            grid-template-columns: 1fr;
+            padding: 20px 16px;
+        }
+    }
+}

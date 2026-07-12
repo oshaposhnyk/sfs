@@ -128,3 +128,4 @@ $string['abouthubs'] = 'Сторінка About — Living Labs та партне
 $string['abouthubs_desc'] = 'JSON-список, напр. [{"name": "Kyiv Lab", "country": "Ukraine", "type": "lab"}]. "type" — "lab" або "partner". Порожнє поле — типові значення дизайну.';
 $string['abouthub_lab'] = 'Living Lab';
 $string['abouthub_partner'] = 'Партнер';
+$string['nav_futurefood'] = 'Future Food';

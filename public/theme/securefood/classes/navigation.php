@@ -102,6 +102,8 @@ final class navigation {
                     ['titlestr' => 'nav_about', 'url' => '/?redirect=0', 'icon' => 'info', 'visibility' => 'all'],
                     ['titlestr' => 'nav_studentlab', 'url' => '/local/learningplans/my.php',
                         'icon' => 'school', 'visibility' => 'loggedin'],
+                    ['titlestr' => 'nav_futurefood', 'url' => '/local/sfsgame/index.php',
+                        'icon' => 'videogame_asset', 'visibility' => 'loggedin'],
                     ['titlestr' => 'nav_mycourses', 'url' => '/my/courses.php',
                         'icon' => 'grid_view', 'visibility' => 'loggedin'],
                 ],

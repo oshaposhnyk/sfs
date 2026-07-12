@@ -1,0 +1,66 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_sfsgame/futurefood_page
+
+    Future Food: XP hero + achievements grid (badges-backed).
+
+    Example context (json):
+    {
+        "kicker": "Play & learn", "title": "Future Food", "lede": "Missions.",
+        "level": 2, "xp": 650, "levelprogress": 30, "xptonext": "350 XP to the next level",
+        "hasachievements": true,
+        "achievements": [{"name": "First mission", "earned": true}]
+    }
+}}
+<div class="ffg">
+    <section class="ffg-hero">
+        <div class="ffg-hero__body">
+            <div class="ffg-hero__kicker">{{kicker}}</div>
+            <h2 class="ffg-hero__title">{{title}}</h2>
+            <p class="ffg-hero__lede">{{lede}}</p>
+        </div>
+        <div class="ffg-hero__xp">
+            <div class="ffg-hero__levelrow">
+                <span class="ffg-hero__levelnum">{{level}}</span>
+                <span class="ffg-hero__leveltag">{{#str}}level, local_sfsgame{{/str}} · {{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>
+            </div>
+            <div class="ffg-hero__bar" role="progressbar" aria-valuenow="{{levelprogress}}"
+                 aria-valuemin="0" aria-valuemax="100" aria-label="{{#str}}level, local_sfsgame{{/str}}">
+                <span class="ffg-hero__fill" style="width: {{levelprogress}}%"></span>
+            </div>
+            <div class="ffg-hero__next">{{xptonext}}</div>
+        </div>
+    </section>
+
+    <h3 class="ffg-achievements__title">{{#str}}achievements, local_sfsgame{{/str}}</h3>
+    {{^hasachievements}}
+        <div class="alert alert-info">{{#str}}noachievements, local_sfsgame{{/str}}</div>
+    {{/hasachievements}}
+    <div class="ffg-achievements">
+        {{#achievements}}
+            <div class="ffg-ach {{^earned}}ffg-ach--locked{{/earned}}">
+                <span class="ffg-ach__badge" aria-hidden="true"></span>
+                <span class="ffg-ach__name">{{name}}</span>
+                <span class="ffg-ach__state">
+                    {{#earned}}{{#str}}earned, local_sfsgame{{/str}}{{/earned}}
+                    {{^earned}}{{#str}}locked, local_sfsgame{{/str}}{{/earned}}
+                </span>
+            </div>
+        {{/achievements}}
+    </div>
+</div>
