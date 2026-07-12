@@ -126,55 +126,8 @@
     linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 36px 36px;
-  -webkit-mask-image: radial-gradient(circle at 30% 50%, black, transparent 75%);
   mask-image: radial-gradient(circle at 30% 50%, black, transparent 75%);
   pointer-events: none; z-index: 1;
-  overflow: hidden;
-}
-.hero-bg-grid .grid-ray {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--len, clamp(220px, 24vw, 360px));
-  height: 3px;
-  border-radius: 999px;
-  opacity: 0;
-  transform-origin: 0 50%;
-  will-change: transform, opacity;
-  mix-blend-mode: screen;
-  filter: blur(0.6px);
-  background: linear-gradient(90deg, rgba(79,195,192,0), rgba(79,195,192,var(--intensity,0.42)) 52%, rgba(79,195,192,0));
-  animation: rayScatter var(--dur,7.4s) ease-out var(--delay,-2s) infinite;
-}
-.hero-bg-grid .grid-ray.warm {
-  background: linear-gradient(90deg, rgba(224,164,88,0), rgba(224,164,88,var(--intensity,0.36)) 50%, rgba(224,164,88,0));
-}
-@keyframes rayScatter {
-  0% {
-    opacity: 0;
-    transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--angle, 0deg)) scaleX(0.18);
-  }
-  10% {
-    opacity: var(--peak, 0.16);
-  }
-  60% {
-    opacity: calc(var(--peak, 0.16) * 0.58);
-  }
-  84% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(calc(var(--x, 0px) + var(--dx, 150px)), calc(var(--y, 0px) + var(--dy, 110px))) rotate(var(--angle, 0deg)) scaleX(1);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-bg-grid .grid-ray {
-    animation-duration: 18s;
-    animation-timing-function: linear;
-    --peak: 0.12;
-    --intensity: 0.2;
-  }
 }
 
 /* ── Mission band (L4C) ────────────────────────────────── */
@@ -352,16 +305,7 @@ SF.mount(
   { crumb: ['Dashboard', 'About'] },
   `
     <section class="school-hero">
-      <div class="hero-bg-grid" id="heroGridRays">
-        <span class="grid-ray"></span>
-        <span class="grid-ray warm"></span>
-        <span class="grid-ray"></span>
-        <span class="grid-ray warm"></span>
-        <span class="grid-ray"></span>
-        <span class="grid-ray warm"></span>
-        <span class="grid-ray"></span>
-        <span class="grid-ray warm"></span>
-      </div>
+      <div class="hero-bg-grid"></div>
       <div class="hero-inner">
         <div>
           <div class="kicker">SecureFood School</div>
@@ -460,58 +404,6 @@ SF.mount(
     </div>
   `
 );
-</script>
-
-<script>
-const heroRayGrid = document.getElementById('heroGridRays');
-if (heroRayGrid) {
-  const gridStep = 36;
-  const targetRayCount = 18;
-  let rays = Array.from(heroRayGrid.querySelectorAll('.grid-ray'));
-
-  while (rays.length < targetRayCount) {
-    const ray = document.createElement('span');
-    ray.className = `grid-ray${rays.length % 2 ? ' warm' : ''}`;
-    heroRayGrid.appendChild(ray);
-    rays.push(ray);
-  }
-
-  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-  const cornerFactories = [
-    (maxX, maxY) => ({ x: -gridStep + randomInt(0, 2) * gridStep, y: -gridStep + randomInt(0, 2) * gridStep, dirs: [{ vx: 1, vy: 0, angle: 0 }, { vx: 0, vy: 1, angle: 90 }, { vx: 1, vy: 1, angle: 45 }] }),
-    (maxX, maxY) => ({ x: maxX + gridStep - randomInt(0, 2) * gridStep, y: -gridStep + randomInt(0, 2) * gridStep, dirs: [{ vx: -1, vy: 0, angle: 180 }, { vx: 0, vy: 1, angle: 90 }, { vx: -1, vy: 1, angle: 135 }] }),
-    (maxX, maxY) => ({ x: -gridStep + randomInt(0, 2) * gridStep, y: maxY + gridStep - randomInt(0, 2) * gridStep, dirs: [{ vx: 1, vy: 0, angle: 0 }, { vx: 0, vy: -1, angle: -90 }, { vx: 1, vy: -1, angle: -45 }] }),
-    (maxX, maxY) => ({ x: maxX + gridStep - randomInt(0, 2) * gridStep, y: maxY + gridStep - randomInt(0, 2) * gridStep, dirs: [{ vx: -1, vy: 0, angle: 180 }, { vx: 0, vy: -1, angle: -90 }, { vx: -1, vy: -1, angle: -135 }] })
-  ];
-
-  function setupRay(ray, immediate) {
-    const rect = heroRayGrid.getBoundingClientRect();
-    const maxX = Math.ceil(rect.width / gridStep) * gridStep;
-    const maxY = Math.ceil(rect.height / gridStep) * gridStep;
-    const origin = pick(cornerFactories)(maxX, maxY);
-    const dir = pick(origin.dirs);
-    const travelCells = randomInt(4, 11);
-    const lenCells = randomInt(4, 9);
-
-    ray.style.setProperty('--x', `${origin.x.toFixed(1)}px`);
-    ray.style.setProperty('--y', `${origin.y.toFixed(1)}px`);
-    ray.style.setProperty('--dx', `${(dir.vx * travelCells * gridStep).toFixed(1)}px`);
-    ray.style.setProperty('--dy', `${(dir.vy * travelCells * gridStep).toFixed(1)}px`);
-    ray.style.setProperty('--angle', `${dir.angle.toFixed(1)}deg`);
-    ray.style.setProperty('--dur', `${(3.8 + travelCells * 0.42 + Math.random() * 1.6).toFixed(2)}s`);
-    ray.style.setProperty('--peak', (0.18 + Math.random() * 0.2).toFixed(3));
-    ray.style.setProperty('--intensity', (0.3 + Math.random() * 0.22).toFixed(3));
-    ray.style.setProperty('--len', `${(lenCells * gridStep).toFixed(1)}px`);
-    ray.style.setProperty('--delay', immediate ? `${(-Math.random() * 12).toFixed(2)}s` : '0s');
-  }
-
-  rays.forEach((ray) => {
-    setupRay(ray, true);
-    ray.addEventListener('animationiteration', () => setupRay(ray, false));
-  });
-}
 </script>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
