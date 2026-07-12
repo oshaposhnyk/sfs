@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Document registry: admin JSON with the design defaults.
+ * Document registry: administrator-curated JSON only.
  *
  * @package    local_sfsresources
  * @copyright  2026 SecureFood School
@@ -34,27 +34,12 @@ final class documents {
     private const KINDS = ['pdf', 'doc', 'xls', 'zip', 'link'];
 
     /**
-     * Design defaults (governance.html).
+     * Safe default: no curated documents until an administrator publishes them.
      *
      * @return array[]
      */
     public static function defaults(): array {
-        return [
-            ['title' => 'HACCP Protocol v2.1', 'sub' => 'Cold chain & temperature thresholds',
-                'audience' => 'Director', 'kind' => 'pdf', 'updated' => '2 days ago', 'url' => ''],
-            ['title' => 'Supplier MoU Template', 'sub' => 'Standard agreement, EU-aligned',
-                'audience' => 'Supplier', 'kind' => 'doc', 'updated' => '5 days ago', 'url' => ''],
-            ['title' => 'Sensor Calibration Guide', 'sub' => 'Setup & maintenance for IoT nodes',
-                'audience' => 'Tech', 'kind' => 'pdf', 'updated' => '1 week ago', 'url' => ''],
-            ['title' => 'Menu Audit Worksheet', 'sub' => 'Weekly nutritional check',
-                'audience' => 'Director', 'kind' => 'xls', 'updated' => '1 week ago', 'url' => ''],
-            ['title' => 'Data Privacy Annex', 'sub' => 'GDPR clauses for school data',
-                'audience' => 'Legal', 'kind' => 'pdf', 'updated' => '2 weeks ago', 'url' => ''],
-            ['title' => 'Procurement Checklist', 'sub' => 'Vegetables & dairy verification',
-                'audience' => 'Supplier', 'kind' => 'pdf', 'updated' => '3 weeks ago', 'url' => ''],
-            ['title' => 'Twin Deployment Bundle', 'sub' => 'Onboarding kit for new hubs',
-                'audience' => 'Tech', 'kind' => 'zip', 'updated' => '1 month ago', 'url' => ''],
-        ];
+        return [];
     }
 
     /**
@@ -75,7 +60,7 @@ final class documents {
     }
 
     /**
-     * Parse the admin JSON, falling back to the design defaults.
+     * Parse the admin JSON, falling back to an empty safe state.
      *
      * @param string|null $json Setting value.
      * @return array[]

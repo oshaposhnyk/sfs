@@ -91,7 +91,10 @@
         {{/achievements}}
     </div>
 
-    {{#missions.0}}
+    {{^hasmissions}}
+        <div class="alert alert-info">{{#str}}nomissions, local_sfsgame{{/str}}</div>
+    {{/hasmissions}}
+    {{#hasmissions}}
         <h3 class="ffg-missions__title">{{#str}}missionstitle, local_sfsgame{{/str}}</h3>
         <div class="ffg-missions">
             {{#missions}}
@@ -119,5 +122,5 @@
                 </article>
             {{/missions}}
         </div>
-    {{/missions.0}}
+    {{/hasmissions}}
 </div>

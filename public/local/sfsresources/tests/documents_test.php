@@ -43,6 +43,7 @@ final class documents_test extends \basic_testcase {
     }
 
     public function test_parse_falls_back_to_defaults(): void {
+        $this->assertSame([], documents::defaults());
         $this->assertSame(documents::defaults(), documents::parse(null));
         $this->assertSame(documents::defaults(), documents::parse('nonsense'));
         $parsed = documents::parse('[{"title": "X", "kind": "weird"}]');

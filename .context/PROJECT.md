@@ -26,7 +26,7 @@ the theme consumes it — it never re-implements plan logic.
 | Infrastructure  | Docker Compose: nginx, php-fpm, mysql, redis (`docker-compose.yml`) |
 | Web root        | `public/` (Moodle 5.x public-root layout)                    |
 | Base theme      | Boost (Bootstrap 5) — `public/theme/boost`                   |
-| Existing themes | boost, classic only — **no custom theme yet**                |
+| Existing themes | boost, classic, `theme_securefood` v0.1.0 (MATURITY_ALPHA)   |
 
 ## Key paths
 
@@ -38,7 +38,7 @@ the theme consumes it — it never re-implements plan logic.
 | `SecureFood School/assets/`           | Logos (full/icon × light/dark, SVG + PNG)         |
 | `SecureFood School/*.html`            | Page prototypes — see `design/page-mapping.md`    |
 | `public/local/learningplans/`         | Learning Plans plugin v0.2.0 — hexagonal DDD architecture, working |
-| `public/theme/securefood/`            | **To be created** — the custom theme              |
+| `public/theme/securefood/`            | Custom Boost-child theme; implemented, audit gaps remain |
 | `public/enrol/learningplan/`          | Enrol adapter v0.1.0 (added 2026-07-12) — tests/E2E pending, see domain 10 |
 | `securefood-school-ai-agent-prompt.txt` | Original product brief — requirements source of truth |
 

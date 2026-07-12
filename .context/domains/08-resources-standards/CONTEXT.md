@@ -28,6 +28,9 @@ document library with type/role filters, quick-validation card, side stats).
 
 ## Tasks
 
+- [x] P0 hardening (2026-07-12): prototype documents and KPI values no longer
+      render as live data when the administrator has configured none.
+
 - [ ] ADR: document library storage model (course resources vs plugin filearea).
 - [ ] Renderables + templates + SCSS (`_tool.scss`, `_doclist.scss`,
       `_validate.scss`, `_sidestat.scss`).

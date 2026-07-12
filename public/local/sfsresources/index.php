@@ -113,19 +113,11 @@ foreach ($alldocs as $doc) {
     ];
 }
 
-// KPI stat cards (design: governance.html top row). Settings-driven JSON,
-// design defaults until real pilot metrics exist.
-$statdefaults = [
-    ['label' => 'Infrastructure readiness', 'value' => '82%', 'percent' => 82,
-        'sub' => '+4 pts vs last quarter', 'variant' => 'teal'],
-    ['label' => 'Social acceptance', 'value' => '4.2', 'suffix' => '/5.0', 'percent' => 84,
-        'sub' => '1,420 surveys', 'variant' => 'amber'],
-    ['label' => 'Staff trained', 'value' => '145', 'percent' => 72,
-        'sub' => 'L4C courses completed', 'variant' => 'deep'],
-];
+// KPI stat cards are administrator-curated. Prototype metrics are mock data
+// and must never appear as live production facts when this setting is empty.
 $statitems = json_decode((string)get_config('local_sfsresources', 'stats'), true);
 if (!is_array($statitems) || $statitems === []) {
-    $statitems = $statdefaults;
+    $statitems = [];
 }
 $stats = [];
 foreach ($statitems as $item) {

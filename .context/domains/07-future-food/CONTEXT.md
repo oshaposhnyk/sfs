@@ -32,6 +32,9 @@ A real XP/levelling engine (events → points ledger) is a **future `local_` plu
 
 ## Tasks
 
+- [x] P0 hardening (2026-07-12): localised hero fallbacks and stopped rendering
+      prototype missions as live content; an honest empty state now appears.
+
 - [ ] ADR: where the page + XP policy live (recommend thin `local_sfsgame`).
 - [ ] Badge issuers/criteria set up for the pilot cohort (admin task, document).
 - [ ] Renderables + templates + SCSS (`_ffhero.scss`, `_xp.scss`,

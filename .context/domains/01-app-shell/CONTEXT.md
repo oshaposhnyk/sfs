@@ -40,6 +40,9 @@ visual reference: `styles.css` "APP SHELL" section; BEM map: `design/components.
 
 ## Tasks
 
+- [x] P0 hardening (2026-07-12): fixed blank guest Login styling in dark/system
+      mode; hidden mobile drawer is now inert and its ARIA state stays synced.
+
 - [ ] `output\shell` renderable + nav model (+ unit tests on context array).
 - [ ] Mustache templates for sidebar/topbar/usercard/backdrop.
 - [ ] `layout/sfs.php` wiring Boost internals (standard blocks region optional).

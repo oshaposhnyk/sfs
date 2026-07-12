@@ -28,6 +28,13 @@ Landing/dashboard page in SecureFood mode. Prototype: `insights.html`
 
 ## Tasks
 
+- [~] P1 fidelity slice 1 (2026-07-12): L4C mission band implemented,
+      settings-driven and localised; 17/17 theme tests + desktop browser pass.
+      Mobile grid overflow fix awaits cache purge and repeat screenshot.
+
+- [x] P0 hardening (2026-07-12): moved built-in About fallback copy to matching
+      en/uk language keys. Live uk QA awaits installation of the core pack.
+
 - [ ] Owner decision: home-page routing per role (learner vs visitor vs manager).
 - [ ] Renderables + templates + SCSS per block (see `design/components.md`).
 - [ ] Theme settings for hero/KPIs/hubs/feed fallbacks (en/uk help strings).

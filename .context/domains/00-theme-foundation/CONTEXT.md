@@ -33,6 +33,12 @@ public/theme/securefood/
 
 ## Tasks
 
+- [x] Independent theme/design conformance audit (2026-07-12): verified the
+      current prototypes against the implemented theme and page integrations;
+      material gaps remain in fidelity, token compliance, no-code settings,
+      accessibility and test coverage. Findings recorded in `PROGRESS.md`;
+      no production code changed.
+
 - [x] Scaffold theme (config/version/lib/lang) — installed via CLI upgrade,
       Boost-identical, set as site default (2026-07-12).
 - [x] `_tokens.scss`: all custom properties from design-system.md, light + dark
@@ -65,3 +71,6 @@ None (parallel with domain 10). Blocks 01, 02, 03 and all page domains.
 
 - [ ] Material Icons: full font vs subset of the ~40 glyphs actually used
       (list them from prototypes before deciding).
+- [ ] Reconcile the 108 raw colour/rgba literals outside `_tokens.scss`, four
+      active `!important` declarations and six inline Mustache style attributes
+      with the binding frontend rules before calling the foundation complete.

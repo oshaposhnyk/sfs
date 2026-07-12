@@ -114,11 +114,12 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
     'kicker' => get_string('kicker', 'local_sfsgame'),
     'title' => get_string('futurefood', 'local_sfsgame'),
     'lede' => get_string('lede', 'local_sfsgame'),
-    'herokicker' => format_string($get('herokicker', 'Agent mode active'), true, ['escape' => false]),
-    'herotitle' => format_string($get('herotitle', 'Mission: Zero Hunger'), true, ['escape' => false]),
+    'herokicker' => format_string($get('herokicker',
+        get_string('default_herokicker', 'local_sfsgame')), true, ['escape' => false]),
+    'herotitle' => format_string($get('herotitle',
+        get_string('default_herotitle', 'local_sfsgame')), true, ['escape' => false]),
     'herotext' => format_string($get('herotext',
-        'Collect evidence, run decision simulations, and earn XP toward your next agent rank. '
-        . 'Every action you take shapes a real protocol used across the Living Labs.'), true, ['escape' => false]),
+        get_string('default_herotext', 'local_sfsgame')), true, ['escape' => false]),
     'starturl' => $firstmissionurl,
     'level' => $level,
     'xp' => $xp,
@@ -132,5 +133,6 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
     'achievements' => $achievements,
     'hasachievements' => $achievements !== [],
     'missions' => $missions,
+    'hasmissions' => $missions !== [],
 ]);
 echo $OUTPUT->footer();
