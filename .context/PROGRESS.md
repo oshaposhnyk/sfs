@@ -395,3 +395,12 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   kind_from_filename, tests green), join the kind filters, and download via
   pluginfile with require_login (verified: learner 200 + file bytes,
   anonymous 303 → login). Remaining Phase 6: only 6.5 performance pass.
+
+- **2026-07-12** — **Phase 6.5 shipped — Phase 6 complete.** Performance
+  baseline (warm, learner, perfdebug): Student Lab 39 reads/78ms, About 44/91,
+  course 36/130, Resources 20/64, Appearance 20/66 — all healthy (0 writes
+  everywhere; per-course cost on Student Lab ≈3 reads/course, plan progress
+  MUC-cached). One fix applied: Future Food computed XP via the full Student
+  Lab overview — now sums MUC-cached progress across all plans: 41→21 reads
+  and semantically better (all plans, not just active). perfdebug flag was
+  temporary in config.php and removed.
