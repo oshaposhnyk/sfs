@@ -534,6 +534,37 @@
         color: var(--sfs-ink2);
     }
 
+    // Guest / logged-out state: the verbose core text ("You are currently
+    // using guest access (Log in)") overflows the topbar — keep only a
+    // compact Log in pill.
+    .sfs-topbar .usermenu .logininfo,
+    .sfs-topbar .usermenu .login {
+        font-size: 0;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+
+        a {
+            font-size: 0.86rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 16px;
+            border-radius: 999px;
+            background: var(--sfs-primary);
+            color: #fff;
+
+            &:hover {
+                background: var(--sfs-primary700);
+                text-decoration: none;
+            }
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
+        }
+    }
+
     // ---------------------------------------------------------------
     // Mobile drawer (≤820px).
     // ---------------------------------------------------------------
