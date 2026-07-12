@@ -57,3 +57,23 @@
         {{/kpis}}
     </div>
 {{/kpis.0}}
+
+{{#feed.0}}
+    <section class="sfs-feed">
+        <h3 class="sfs-feed__title">{{feedtitle}}</h3>
+        <div class="sfs-feed__grid">
+            {{#feed}}
+                <article class="sfs-feedcard">
+                    <div class="sfs-feedcard__thumb sfs-feedcard__thumb--{{variant}}">
+                        {{#chip}}<span class="sfs-feedcard__chip">{{chip}}</span>{{/chip}}
+                    </div>
+                    <div class="sfs-feedcard__body">
+                        <h4 class="sfs-feedcard__name">{{title}}</h4>
+                        {{#text}}<p class="sfs-feedcard__text">{{text}}</p>{{/text}}
+                        {{#time}}<div class="sfs-feedcard__time">{{time}}</div>{{/time}}
+                    </div>
+                </article>
+            {{/feed}}
+        </div>
+    </section>
+{{/feed.0}}

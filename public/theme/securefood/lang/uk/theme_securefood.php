@@ -120,3 +120,6 @@ $string['aboutstats'] = 'Сторінка About — статистика hero (J
 $string['aboutkpis'] = 'Сторінка About — ряд KPI (JSON)';
 $string['aboutfallback_desc'] = 'Залиште порожнім, щоб використати текст із дизайну SecureFood.';
 $string['aboutjson_desc'] = 'JSON-список, напр. [{"value": "14", "label": "Living Labs", "sub": "Примітка"}]. Порожнє поле — типові значення дизайну; некоректний JSON повертає їх.';
+$string['aboutfeedtitle'] = 'Сторінка About — заголовок стрічки';
+$string['aboutfeed'] = 'Сторінка About — стрічка оновлень (JSON)';
+$string['aboutfeed_desc'] = 'JSON-список, напр. [{"chip": "Digital twin", "title": "…", "text": "…", "time": "2 дні тому"}]. Порожнє поле — типові значення дизайну.';

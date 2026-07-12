@@ -135,3 +135,92 @@
         }
     }
 }
+
+// Updates feed (insights.html "feed").
+.sfs-mode {
+    .sfs-feed__title {
+        font-size: 1.4rem;
+        margin: 28px 0 16px;
+    }
+
+    .sfs-feed__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .sfs-feedcard {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        overflow: hidden;
+
+        @include sfs-motion {
+            transition: transform var(--sfs-duration-fast), box-shadow var(--sfs-duration-fast);
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sfs-shadow-2);
+        }
+    }
+
+    .sfs-feedcard__thumb {
+        height: 140px;
+        display: flex;
+        align-items: flex-end;
+        padding: 14px;
+    }
+
+    .sfs-feedcard__thumb--twin {
+        background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.18), transparent 60%),
+            linear-gradient(135deg, #0f4c5e 0%, #2a8c8a 100%);
+    }
+
+    .sfs-feedcard__thumb--culture {
+        background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
+            linear-gradient(135deg, #c68a3b 0%, #e0a458 100%);
+    }
+
+    .sfs-feedcard__thumb--water {
+        background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.16), transparent 60%),
+            linear-gradient(135deg, #2a8c8a 0%, #4fc3c0 100%);
+    }
+
+    .sfs-feedcard__thumb--supply {
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
+            linear-gradient(135deg, #143e4d 0%, #0f4c5e 100%);
+    }
+
+    .sfs-feedcard__chip {
+        display: inline-flex;
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--sfs-primary);
+    }
+
+    .sfs-feedcard__body {
+        padding: 16px 18px 18px;
+    }
+
+    .sfs-feedcard__name {
+        font-size: 1rem;
+        margin: 0 0 6px;
+    }
+
+    .sfs-feedcard__text {
+        font-size: 0.86rem;
+        color: var(--sfs-muted);
+        margin: 0 0 10px;
+    }
+
+    .sfs-feedcard__time {
+        font-size: 0.74rem;
+        color: var(--sfs-accent);
+        font-weight: 600;
+    }
+}

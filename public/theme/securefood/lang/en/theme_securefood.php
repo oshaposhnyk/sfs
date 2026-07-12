@@ -120,3 +120,6 @@ $string['aboutstats'] = 'About page — hero statistics (JSON)';
 $string['aboutkpis'] = 'About page — KPI row (JSON)';
 $string['aboutfallback_desc'] = 'Leave empty to use the SecureFood design copy.';
 $string['aboutjson_desc'] = 'JSON list, e.g. [{"value": "14", "label": "Living Labs", "sub": "Optional note"}]. Leave empty for the design defaults; invalid JSON falls back to them.';
+$string['aboutfeedtitle'] = 'About page — feed heading';
+$string['aboutfeed'] = 'About page — updates feed (JSON)';
+$string['aboutfeed_desc'] = 'JSON list, e.g. [{"chip": "Digital twin", "title": "…", "text": "…", "time": "2 days ago"}]. Leave empty for the design defaults.';

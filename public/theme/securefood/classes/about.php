@@ -64,7 +64,42 @@ final class about {
             ]
         );
 
+        $feeddefaults = [
+            ['chip' => 'Digital twin', 'title' => 'Kyiv Living Lab twin goes live',
+                'text' => 'Real-time mirroring of the cold-chain sensors is now open to learners.',
+                'time' => '2 days ago'],
+            ['chip' => 'Culture', 'title' => 'School kitchens join the pilot',
+                'text' => 'Three school kitchens start logging temperature and hygiene data.',
+                'time' => '5 days ago'],
+            ['chip' => 'Water', 'title' => 'Irrigation quality module updated',
+                'text' => 'New thresholds aligned with the latest EFSA guidance.',
+                'time' => '1 week ago'],
+            ['chip' => 'Supply chain', 'title' => 'Route risk workshop recap',
+                'text' => 'Learners mapped disruption scenarios across two supply corridors.',
+                'time' => '2 weeks ago'],
+        ];
+        $feeditems = json_decode((string)($settings->aboutfeed ?? ''), true);
+        if (!is_array($feeditems) || $feeditems === []) {
+            $feeditems = $feeddefaults;
+        }
+        $variants = ['twin', 'culture', 'water', 'supply'];
+        $feed = [];
+        foreach ($feeditems as $i => $item) {
+            if (!is_array($item) || empty($item['title'])) {
+                continue;
+            }
+            $feed[] = [
+                'chip' => format_string((string)($item['chip'] ?? '')),
+                'title' => format_string((string)$item['title']),
+                'text' => format_string((string)($item['text'] ?? '')),
+                'time' => format_string((string)($item['time'] ?? '')),
+                'variant' => $variants[$i % count($variants)],
+            ];
+        }
+
         return [
+            'feedtitle' => format_string($get('aboutfeedtitle', 'Latest from the network')),
+            'feed' => $feed,
             'kicker' => format_string($get('aboutkicker', 'SecureFood Living Labs')),
             'title' => format_string($get('abouttitle', 'A shield for the food systems of tomorrow')),
             'lede' => format_text($get('aboutlede',
