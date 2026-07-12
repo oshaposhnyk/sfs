@@ -1,0 +1,54 @@
+// Messaging + notifications polish inside the shell (Phase 5).
+.sfs-mode {
+    // Message drawer/index app.
+    .message-app {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        overflow: hidden;
+
+        .message,
+        .list-group-item-action {
+            border-color: var(--sfs-line);
+        }
+
+        .btn-link {
+            color: var(--sfs-primary);
+        }
+
+        input[type="text"],
+        textarea {
+            background: var(--sfs-surface2);
+            border-color: var(--sfs-linestrong);
+            color: var(--sfs-ink);
+        }
+    }
+
+    // Notifications page + popover lists.
+    .notification-area,
+    [data-region="notification-content-item-container"] {
+        .notification,
+        .content-item-container {
+            border-radius: var(--sfs-radius-sm);
+            border: 1px solid var(--sfs-line);
+            background: var(--sfs-surface);
+            margin-bottom: 8px;
+
+            &.unread {
+                background: var(--sfs-primary50);
+                border-color: transparent;
+            }
+
+            &:hover {
+                background: var(--sfs-surface2);
+            }
+        }
+    }
+
+    .popover-region-container {
+        border-radius: var(--sfs-radius-md);
+        border: 1px solid var(--sfs-line);
+        box-shadow: var(--sfs-shadow-3);
+        overflow: hidden;
+    }
+}
