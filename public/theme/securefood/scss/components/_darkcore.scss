@@ -1,0 +1,116 @@
+// Dark-scheme support for core Bootstrap/Moodle furniture inside the shell
+// (Phase 5). Applied both for the explicit dark choice and the system
+// fallback, mirroring _tokens.scss.
+
+@mixin sfs-dark-core {
+    .sfs-mode {
+        color: var(--sfs-ink2);
+
+        .card,
+        .list-group-item,
+        .modal-content,
+        .popover-region-container,
+        .dropdown-menu {
+            background-color: var(--sfs-surface);
+            color: var(--sfs-ink2);
+            border-color: var(--sfs-line);
+        }
+
+        .dropdown-item,
+        .list-group-item,
+        .dropdown-item-text {
+            color: var(--sfs-ink2);
+
+            &:hover,
+            &:focus {
+                background-color: var(--sfs-surface2);
+                color: var(--sfs-ink);
+            }
+        }
+
+        .card-header,
+        .modal-header,
+        .popover-region-header-container {
+            background-color: var(--sfs-surface2);
+            border-color: var(--sfs-line);
+            color: var(--sfs-ink);
+        }
+
+        .form-control,
+        .form-select,
+        .custom-select {
+            background-color: var(--sfs-surface2);
+            color: var(--sfs-ink);
+            border-color: var(--sfs-linestrong);
+
+            &::placeholder {
+                color: var(--sfs-muted2);
+            }
+        }
+
+        .table {
+            color: var(--sfs-ink2);
+            border-color: var(--sfs-line);
+
+            th,
+            td {
+                border-color: var(--sfs-line);
+            }
+        }
+
+        .alert-info {
+            background-color: var(--sfs-teal50);
+            color: var(--sfs-ink);
+            border-color: transparent;
+        }
+
+        .alert-success {
+            background-color: rgba(63, 140, 90, 0.18);
+            color: var(--sfs-ink);
+            border-color: transparent;
+        }
+
+        .alert-warning {
+            background-color: var(--sfs-accent50);
+            color: var(--sfs-ink);
+            border-color: transparent;
+        }
+
+        hr,
+        .border-bottom,
+        .border-top {
+            border-color: var(--sfs-line) !important;
+        }
+
+        .text-muted,
+        .dimmed_text {
+            color: var(--sfs-muted) !important;
+        }
+
+        a:not(.btn):not(.sfs-nav__item):not(.nav-link) {
+            color: var(--sfs-primary);
+        }
+
+        .btn-secondary,
+        .btn-light {
+            background-color: var(--sfs-surface2);
+            color: var(--sfs-ink);
+            border-color: var(--sfs-linestrong);
+        }
+
+        .close,
+        .btn-close {
+            filter: invert(1) grayscale(100%);
+        }
+    }
+}
+
+:root[data-theme="dark"] {
+    @include sfs-dark-core;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include sfs-dark-core;
+    }
+}

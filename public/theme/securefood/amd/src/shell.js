@@ -43,6 +43,47 @@ const persist = (name, value) => {
     setUserPreference(name, value).catch(() => null);
 };
 
+let lastfocus = null;
+
+/**
+ * Keep Tab cycling inside the sidebar while the mobile drawer is open.
+ *
+ * @param {KeyboardEvent} e Keydown event.
+ */
+const trapFocus = (e) => {
+    if (e.key !== 'Tab' || !document.body.classList.contains(CLASSES.drawerOpen)) {
+        return;
+    }
+    const sidebar = document.getElementById('sfs-sidebar');
+    if (!sidebar) {
+        return;
+    }
+    const focusables = sidebar.querySelectorAll('a[href], button:not([disabled])');
+    if (!focusables.length) {
+        return;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+    }
+};
+
+/**
+ * Close the mobile drawer and restore focus to the opener.
+ */
+const closeDrawer = () => {
+    document.body.classList.remove(CLASSES.drawerOpen);
+    if (lastfocus) {
+        lastfocus.focus();
+        lastfocus = null;
+    }
+};
+
 /**
  * Toggle the sidebar: drawer on mobile, collapse on desktop (persisted).
  *
@@ -51,7 +92,16 @@ const persist = (name, value) => {
 const toggleSidebar = (button) => {
     const body = document.body;
     if (isMobile()) {
-        body.classList.toggle(CLASSES.drawerOpen);
+        const opened = body.classList.toggle(CLASSES.drawerOpen);
+        if (opened) {
+            lastfocus = button;
+            const first = document.querySelector('#sfs-sidebar a[href]');
+            if (first) {
+                first.focus();
+            }
+        } else {
+            closeDrawer();
+        }
         return;
     }
     const collapsed = body.classList.toggle(CLASSES.collapsed);
@@ -89,13 +139,14 @@ export const init = () => {
             e.preventDefault();
             toggleScheme();
         } else if (action === 'backdrop') {
-            document.body.classList.remove(CLASSES.drawerOpen);
+            closeDrawer();
         }
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && document.body.classList.contains(CLASSES.drawerOpen)) {
-            document.body.classList.remove(CLASSES.drawerOpen);
+            closeDrawer();
         }
+        trapFocus(e);
     });
 };

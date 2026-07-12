@@ -78,7 +78,7 @@ $THEME->layouts = [
         'options' => ['nonavbar' => true],
     ],
     'admin' => [
-        'file' => 'drawers.php',
+        'file' => 'sfs.php',
         'regions' => ['side-pre'],
         'defaultregion' => 'side-pre',
     ],

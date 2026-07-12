@@ -15,7 +15,7 @@
     // Text.
     --sfs-ink:          #0F2A33;
     --sfs-ink2:         #2C4751;
-    --sfs-muted:        #6B7F87;
+    --sfs-muted:        #5D7079; // darkened from the prototype's #6B7F87 for AA contrast
     --sfs-muted2:       #94A3AA;
 
     // Borders.
@@ -28,6 +28,10 @@
     --sfs-primary50:    #E6F0F2;
     --sfs-accent:       #C68A3B;
     --sfs-accent50:     #F8EFDF;
+    // Derived text-safe accents (WCAG AA): accent as TEXT on light surfaces
+    // needs a darker amber; on dark panels a lighter one. Not admin-facing.
+    --sfs-accent-ink:   #8A5E20;
+    --sfs-accent-ondark: #E8B06A;
     --sfs-teal:         #2A8C8A;
     --sfs-teal50:       #E1F1F0;
 
@@ -80,6 +84,7 @@
     --sfs-primary50:    rgba(79, 195, 192, 0.12);
     --sfs-accent:       #E0A458;
     --sfs-accent50:     rgba(224, 164, 88, 0.16);
+    --sfs-accent-ink:   #E0A458;
     --sfs-teal:         #4FC3C0;
     --sfs-teal50:       rgba(79, 195, 192, 0.14);
 }

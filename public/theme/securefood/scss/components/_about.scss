@@ -26,7 +26,7 @@
     }
 
     .sfs-hero__kicker {
-        color: var(--sfs-accent);
+        color: var(--sfs-accent-ondark);
         font-size: 0.74rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -233,7 +233,7 @@
 
     .sfs-feedcard__time {
         font-size: 0.74rem;
-        color: var(--sfs-accent);
+        color: var(--sfs-accent-ink);
         font-weight: 600;
     }
 }
@@ -351,6 +351,6 @@
 
     .sfs-hubs__row--lab .sfs-hubs__status {
         background: var(--sfs-accent50);
-        color: var(--sfs-accent);
+        color: var(--sfs-accent-ink);
     }
 }

@@ -45,7 +45,7 @@ final class mode_manager {
      * @var string[]
      */
     private const EXCLUDED_LAYOUTS = [
-        'admin', 'maintenance', 'embedded', 'popup', 'frametop',
+        'maintenance', 'embedded', 'popup', 'frametop',
         'secure', 'login', 'redirect', 'print',
     ];
 
@@ -107,6 +107,18 @@ final class mode_manager {
     public static function uses_shell(\moodle_page $page): bool {
         if (in_array($page->pagelayout, self::EXCLUDED_LAYOUTS, true)) {
             return false;
+        }
+        // The 'admin' layout covers both Site administration and user-facing
+        // preference pages; only real /admin/ pages must stay stock Boost.
+        if ($page->pagelayout === 'admin') {
+            try {
+                $path = $page->url->get_path();
+            } catch (\Throwable $exception) {
+                return false;
+            }
+            if (strpos($path, '/admin/') !== false) {
+                return false;
+            }
         }
         if ($page->user_is_editing()) {
             return false;
