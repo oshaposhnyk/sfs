@@ -325,3 +325,15 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   components); missing-string sweep over 7 pages: zero. Remaining Phase 5:
   notifications/messages restyle, WCAG pass, dark-scheme core-content pass,
   Behat, performance.
+
+- **2026-07-12** — **Phase 5 slice 2 (WCAG + dark core)**: contrast audit of
+  all token pairs (script in session log) found muted 4.19:1 and accent-as-
+  text 2.96:1 in light — fixed via darkened --sfs-muted and new derived
+  --sfs-accent-ink/--sfs-accent-ondark tokens swapped into every failing
+  usage; dark scheme now covers core furniture (dropdown/menu/cards/forms/
+  alerts/tables) through a token mixin; mobile drawer got a focus trap with
+  focus restore; 'admin'-layout user pages (preferences hub) now render in
+  the shell (only /admin/ paths stay Boost) and the hub restyle applies.
+  Verified: dark preferences hub + open user menu screenshot; light hub in
+  shell; build JS syntax-checked. Remaining Phase 5: notifications/messages
+  pages polish, Behat, performance pass, PHPCS/PHPUnit environment.
