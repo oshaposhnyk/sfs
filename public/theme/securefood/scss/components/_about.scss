@@ -1,0 +1,137 @@
+// About the Project hero + KPI row (domain 04). Spec: insights.html.
+
+.sfs-mode {
+    .sfs-hero {
+        background: linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 60%, var(--sfs-primary700) 100%);
+        color: #fff;
+        border-radius: var(--sfs-radius-md);
+        padding: 28px;
+        margin-bottom: 22px;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 28px;
+
+        &::before {
+            content: '';
+            position: absolute;
+            right: -80px;
+            top: -80px;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(224, 164, 88, 0.28), transparent 70%);
+            pointer-events: none;
+        }
+    }
+
+    .sfs-hero__kicker {
+        color: var(--sfs-accent);
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .sfs-hero__title {
+        color: #fff;
+        margin: 8px 0 12px;
+        font-size: 1.85rem;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+    }
+
+    .sfs-hero__lede {
+        color: rgba(255, 255, 255, 0.78);
+        max-width: 52ch;
+    }
+
+    .sfs-hero__stats {
+        display: grid;
+        gap: 14px;
+        align-content: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .sfs-hero__stat {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--sfs-radius-sm);
+        padding: 12px 14px;
+    }
+
+    .sfs-hero__value {
+        font-family: 'Manrope', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .sfs-hero__label {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .sfs-kpi__row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .sfs-kpi {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 18px;
+    }
+
+    .sfs-kpi__head {
+        color: var(--sfs-muted);
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 12px;
+    }
+
+    .sfs-kpi__value {
+        font-family: 'Manrope', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--sfs-ink);
+        letter-spacing: -0.02em;
+    }
+
+    .sfs-kpi__sub {
+        margin-top: 8px;
+        font-size: 0.78rem;
+        color: var(--sfs-muted);
+    }
+
+    @include sfs-media-compact {
+        .sfs-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .sfs-kpi__row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @include sfs-media-mobile {
+        .sfs-hero {
+            padding: 20px 16px;
+        }
+
+        .sfs-kpi__row {
+            grid-template-columns: 1fr;
+        }
+    }
+}

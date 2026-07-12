@@ -1,0 +1,59 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/about
+
+    About the Project hero + KPI row (front page, SecureFood mode).
+
+    Example context (json):
+    {
+        "kicker": "SecureFood Living Labs",
+        "title": "A shield for the food systems of tomorrow",
+        "lede": "<p>Learning by sensing.</p>",
+        "stats": [{"value": "14", "label": "Living Labs"}],
+        "kpis": [{"value": "96%", "label": "Sensor uptime", "sub": "All labs"}]
+    }
+}}
+<section class="sfs-hero">
+    <div class="sfs-hero__body">
+        <div class="sfs-hero__kicker">{{kicker}}</div>
+        <h2 class="sfs-hero__title">{{title}}</h2>
+        <div class="sfs-hero__lede">{{{lede}}}</div>
+    </div>
+    {{#stats.0}}
+        <div class="sfs-hero__stats">
+            {{#stats}}
+                <div class="sfs-hero__stat">
+                    <div class="sfs-hero__value">{{value}}</div>
+                    <div class="sfs-hero__label">{{label}}</div>
+                </div>
+            {{/stats}}
+        </div>
+    {{/stats.0}}
+</section>
+
+{{#kpis.0}}
+    <div class="sfs-kpi__row">
+        {{#kpis}}
+            <div class="sfs-kpi">
+                <div class="sfs-kpi__head">{{label}}</div>
+                <div class="sfs-kpi__value">{{value}}</div>
+                {{#sub}}<div class="sfs-kpi__sub">{{sub}}</div>{{/sub}}
+            </div>
+        {{/kpis}}
+    </div>
+{{/kpis.0}}

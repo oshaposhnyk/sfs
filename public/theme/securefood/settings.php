@@ -81,6 +81,40 @@ if ($ADMIN->fulltree) {
     $settings->add($page);
 
     // -------------------------------------------------------------------
+    // Tab: Pages & content — About the Project front page (ADR-007).
+    // Empty values fall back to the design copy.
+    // -------------------------------------------------------------------
+    $page = new admin_settingpage('theme_securefood_pages', get_string('pagestab', 'theme_securefood'));
+
+    foreach (['aboutkicker', 'abouttitle'] as $name) {
+        $page->add(new admin_setting_configtext(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string('aboutfallback_desc', 'theme_securefood'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/aboutlede',
+        get_string('aboutlede', 'theme_securefood'),
+        get_string('aboutfallback_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
+    foreach (['aboutstats', 'aboutkpis'] as $name) {
+        $page->add(new admin_setting_configtextarea(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string('aboutjson_desc', 'theme_securefood'),
+            '',
+            PARAM_RAW
+        ));
+    }
+
+    $settings->add($page);
+
+    // -------------------------------------------------------------------
     // Tab: Colours — one override per design token, light and dark.
     // Empty value = use the SecureFood default from scss/_tokens.scss.
     // -------------------------------------------------------------------

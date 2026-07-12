@@ -110,3 +110,13 @@ $string['rawscss_desc'] = 'SCSS-код, що додається в кінці т
 $string['privacy:metadata:preference:colourscheme'] = 'Колірна схема, якій надає перевагу користувач: світла, темна або згідно з операційною системою.';
 $string['privacy:metadata:preference:sidebar'] = 'Чи тримає користувач бічну панель SecureFood розгорнутою або згорнутою.';
 $string['privacy:metadata:preference:uimode'] = 'Чи використовує користувач стандартний інтерфейс Moodle або режим SecureFood.';
+
+// Pages & content tab.
+$string['pagestab'] = 'Сторінки та вміст';
+$string['aboutkicker'] = 'Сторінка About — надзаголовок';
+$string['abouttitle'] = 'Сторінка About — заголовок';
+$string['aboutlede'] = 'Сторінка About — вступний текст';
+$string['aboutstats'] = 'Сторінка About — статистика hero (JSON)';
+$string['aboutkpis'] = 'Сторінка About — ряд KPI (JSON)';
+$string['aboutfallback_desc'] = 'Залиште порожнім, щоб використати текст із дизайну SecureFood.';
+$string['aboutjson_desc'] = 'JSON-список, напр. [{"value": "14", "label": "Living Labs", "sub": "Примітка"}]. Порожнє поле — типові значення дизайну; некоректний JSON повертає їх.';

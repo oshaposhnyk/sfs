@@ -127,7 +127,17 @@ if (class_exists('\core_search\manager') && \core_search\manager::is_global_sear
     $searchurl = (new moodle_url('/search/index.php'))->out(false);
 }
 
+// Front page carries the settings-driven About content above site content.
+$abouthtml = '';
+if ($PAGE->pagelayout === 'frontpage') {
+    $abouthtml = $OUTPUT->render_from_template(
+        'theme_securefood/about',
+        \theme_securefood\about::context($PAGE->theme->settings ?? null)
+    );
+}
+
 $templatecontext = [
+    'abouthtml' => $abouthtml,
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), 'escape' => false]),
     'output' => $OUTPUT,
     'bodyattributes' => $bodyattributes,

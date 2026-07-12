@@ -110,3 +110,13 @@ $string['rawscss_desc'] = 'SCSS code appended at the end of the stylesheet. It w
 $string['privacy:metadata:preference:colourscheme'] = 'The colour scheme the user prefers: light, dark, or follow the operating system.';
 $string['privacy:metadata:preference:sidebar'] = 'Whether the user keeps the SecureFood sidebar expanded or collapsed.';
 $string['privacy:metadata:preference:uimode'] = 'Whether the user uses the standard Moodle experience or the SecureFood mode.';
+
+// Pages & content tab.
+$string['pagestab'] = 'Pages & content';
+$string['aboutkicker'] = 'About page — kicker';
+$string['abouttitle'] = 'About page — title';
+$string['aboutlede'] = 'About page — intro text';
+$string['aboutstats'] = 'About page — hero statistics (JSON)';
+$string['aboutkpis'] = 'About page — KPI row (JSON)';
+$string['aboutfallback_desc'] = 'Leave empty to use the SecureFood design copy.';
+$string['aboutjson_desc'] = 'JSON list, e.g. [{"value": "14", "label": "Living Labs", "sub": "Optional note"}]. Leave empty for the design defaults; invalid JSON falls back to them.';
