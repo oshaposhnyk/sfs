@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-12 (Phase 3 core delivered: Student Lab live with real data)
+Last updated: 2026-07-12 (Phase 8 style audit complete — see PHASE8_AUDIT.md)
 
 ## Domain status
 
@@ -17,10 +17,10 @@ Last updated: 2026-07-12 (Phase 3 core delivered: Student Lab live with real dat
 | 02| mode-switch                 | 2     | `[~]` core done | Both directions E2E-verified incl. forced modes; navbar "SFS" toggle in standard mode; Behat pending |
 | 05| student-lab                 | 3     | `[~]` core done | v1 single-stage grid (ADR-008); E2E-verified with real data both schemes; stage grouping + effort/level await schema decision |
 | 09| learningplans-integration   | 3     | `[~]` core done | Overview/set-active use cases + preference port live; external functions deferred (needs db/services.php approval) |
-| 06| course-experience           | 3     | `[~]` v1 done | CSS-only restyle, both schemes verified; right rail + plan chips + mods pass pending |
+| 06| course-experience           | 3–8   | `[x]` done | Restyle + plan-context strip + right rail (next-up/info/teachers) + per-section fractions (Phase 8 C1–C2) |
 | 04| dashboard-insights          | 4     | `[~]` v1 done | Hero/stats/hubs+dot-map/feed all settings-driven; per-role routing = via nav (decided) |
 | 07| future-food                 | 4     | `[~]` v1 done | XP/level from badges+completions, achievements, missions grid; real badges to be configured by admin |
-| 08| resources-standards         | 4     | `[~]` v1 done | Curated library + kind filters + capability-gated tools; file-storage backend deferred (owner decision) |
+| 08| resources-standards         | 4–8   | `[x]` done | Filearea library + audience filters + KPI stat cards + tool icons/counts (Phase 8 R1–R5); R6 validation card → Phase 9 |
 
 ## What already exists (baseline, verified 2026-07-12)
 
@@ -63,6 +63,18 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-12** — **Phase 8 style audit COMPLETE** (batches S, A, F, R, C, X;
+  4 commits c116b89..2a70da6). Highlights: Future Food head/hero/XP panel per
+  ffs.html; Resources = governance.html (KPI stat cards via new `stats` JSON
+  setting, audience filter pills, tool icons + live counts, circular download
+  buttons); course pages gained the right rail (`courserail` class +
+  `course_rail.mustache`: next-up, info list, teachers) and per-section
+  "done / total" fractions (`sectionprogress` AMD, progressive enhancement);
+  topbar help "?" via new `helpurl` setting. Bug fixes along the way: mobile
+  ≤820px no longer reserves the collapsed icon-rail column (specificity),
+  rail Continue styled with brand tokens. All deferred items (no data
+  source) listed in PHASE8_AUDIT.md → Phase 9. Theme suite 15/15 green.
 
 - **2026-07-12** — **Activity icon fix + richer demo course** (owner feedback):
   mod icons were overflowing their tiles and kept Boost's per-purpose colours.

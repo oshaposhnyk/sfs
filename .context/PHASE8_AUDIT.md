@@ -4,6 +4,12 @@ Method: prototypes served from `SecureFood School/` and screenshotted in the
 same browser/viewport (1440×1000) as the live pages, then compared visually.
 Status: ☐ open · ☑ fixed (re-verified by screenshot).
 
+**Outcome (2026-07-12): audit complete.** All items fixed except explicit
+deferrals with no real data source: R6 (quick-validation card), S-level
+extras (activity ghost button, plan level stat, per-course effort/icons),
+About KPI defaults hidden, mentor/peers + resources rail cards. Deferred
+items belong to Phase 9 (pilot readiness).
+
 ## Student Lab (l4c.html ↔ /local/learningplans/my.php)
 
 - ☑ S1 Topbar search box (global search simpledb enabled) (site global search disabled; prototype
