@@ -102,3 +102,33 @@ function theme_securefood_user_preferences(): array {
         ],
     ];
 }
+
+/**
+ * Add the Appearance page to the user preferences hub.
+ *
+ * @param navigation_node $navigation The user settings node.
+ * @param stdClass $user The user.
+ * @param context $usercontext User context.
+ * @param stdClass $course Course.
+ * @param context $coursecontext Course context.
+ * @return void
+ */
+function theme_securefood_extend_navigation_user_settings(
+    navigation_node $navigation,
+    stdClass $user,
+    context $usercontext,
+    stdClass $course,
+    context $coursecontext
+): void {
+    global $USER;
+    if ((int)$USER->id !== (int)$user->id || isguestuser()) {
+        return;
+    }
+    $navigation->add(
+        get_string('appearancetitle', 'theme_securefood'),
+        new moodle_url('/theme/securefood/preferences.php'),
+        navigation_node::TYPE_SETTING,
+        null,
+        'securefoodappearance'
+    );
+}

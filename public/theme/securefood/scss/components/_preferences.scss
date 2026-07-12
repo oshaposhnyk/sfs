@@ -1,0 +1,87 @@
+// Appearance preferences form + core preferences hub restyle (Phase 5).
+.sfs-mode {
+    .sfs-prefs {
+        max-width: 560px;
+        display: grid;
+        gap: 18px;
+    }
+
+    .sfs-prefs__group {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 18px 20px;
+        margin: 0;
+    }
+
+    .sfs-prefs__legend {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0 4px;
+        width: auto;
+    }
+
+    .sfs-prefs__option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: var(--sfs-radius-sm);
+        cursor: pointer;
+        margin: 0;
+
+        &:hover {
+            background: var(--sfs-surface2);
+        }
+
+        input:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .sfs-prefs__actions {
+        display: flex;
+        gap: 10px;
+
+        .btn {
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--sfs-primary);
+            border-color: var(--sfs-primary);
+
+            &:hover {
+                background: var(--sfs-primary700);
+                border-color: var(--sfs-primary700);
+            }
+        }
+    }
+
+    // Core /user/preferences.php hub: design cards.
+    &.path-user .preferences-group.card,
+    &.path-user .section.card {
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line) !important;
+        border-radius: var(--sfs-radius-md) !important;
+        box-shadow: var(--sfs-shadow-1);
+        margin-bottom: 18px;
+        overflow: hidden;
+    }
+
+    &.path-user .card-header {
+        background: linear-gradient(180deg, var(--sfs-surface) 0%, var(--sfs-surface2) 100%);
+        border-bottom: 1px solid var(--sfs-line);
+
+        .card-title {
+            font-size: 1.05rem;
+            margin: 0;
+        }
+    }
+
+    &.path-user .card-body a {
+        color: var(--sfs-primary);
+    }
+}

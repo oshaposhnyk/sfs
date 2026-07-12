@@ -1,0 +1,60 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_securefood/preferences
+
+    Appearance preferences form (no-JS path for scheme and mode).
+
+    Example context (json):
+    {
+        "actionurl": "#", "sesskey": "abc", "canswitchmode": true,
+        "schemeoptions": [{"value": "light", "label": "Light", "checked": true}],
+        "modeoptions": [{"value": "securefood", "label": "SecureFood mode", "checked": true}],
+        "backurl": "#"
+    }
+}}
+<form class="sfs-prefs" method="post" action="{{actionurl}}">
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+    <input type="hidden" name="save" value="1">
+
+    <fieldset class="sfs-prefs__group">
+        <legend class="sfs-prefs__legend">{{#str}}colourscheme, theme_securefood{{/str}}</legend>
+        {{#schemeoptions}}
+            <label class="sfs-prefs__option">
+                <input type="radio" name="colourscheme" value="{{value}}" {{#checked}}checked{{/checked}}>
+                <span>{{label}}</span>
+            </label>
+        {{/schemeoptions}}
+    </fieldset>
+
+    {{#canswitchmode}}
+        <fieldset class="sfs-prefs__group">
+            <legend class="sfs-prefs__legend">{{#str}}switchmode, theme_securefood{{/str}}</legend>
+            {{#modeoptions}}
+                <label class="sfs-prefs__option">
+                    <input type="radio" name="uimode" value="{{value}}" {{#checked}}checked{{/checked}}>
+                    <span>{{label}}</span>
+                </label>
+            {{/modeoptions}}
+        </fieldset>
+    {{/canswitchmode}}
+
+    <div class="sfs-prefs__actions">
+        <button type="submit" class="btn btn-primary">{{#str}}savechanges, core{{/str}}</button>
+        <a class="btn btn-secondary" href="{{backurl}}">{{#str}}allpreferences, theme_securefood{{/str}}</a>
+    </div>
+</form>
