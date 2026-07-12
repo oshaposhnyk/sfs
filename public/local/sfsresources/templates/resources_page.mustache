@@ -36,8 +36,27 @@
         <p class="sfsres__lede">{{lede}}</p>
     </div>
 
+    {{#hastools}}
+        <div class="sfsres__tools">
+            {{#tools}}
+                <a class="sfsres-tool" href="{{url}}">
+                    <span class="sfsres-tool__title">{{title}}</span>
+                    <span class="sfsres-tool__desc">{{desc}}</span>
+                </a>
+            {{/tools}}
+        </div>
+    {{/hastools}}
+
     <section class="sfsres__card">
-        <h3 class="sfsres__library">{{library}}</h3>
+        <div class="sfsres__libraryhead">
+            <h3 class="sfsres__library">{{library}}</h3>
+            <div class="sfsres__filters">
+                {{#filters}}
+                    <a class="sfsres__filter {{#active}}sfsres__filter--active{{/active}}" href="{{url}}"
+                       {{#active}}aria-current="true"{{/active}}>{{label}}</a>
+                {{/filters}}
+            </div>
+        </div>
         {{^hasdocuments}}
             <div class="alert alert-info">{{#str}}nodocuments, local_sfsresources{{/str}}</div>
         {{/hasdocuments}}

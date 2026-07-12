@@ -18,9 +18,9 @@ Last updated: 2026-07-12 (Phase 3 core delivered: Student Lab live with real dat
 | 05| student-lab                 | 3     | `[~]` core done | v1 single-stage grid (ADR-008); E2E-verified with real data both schemes; stage grouping + effort/level await schema decision |
 | 09| learningplans-integration   | 3     | `[~]` core done | Overview/set-active use cases + preference port live; external functions deferred (needs db/services.php approval) |
 | 06| course-experience           | 3     | `[~]` v1 done | CSS-only restyle, both schemes verified; right rail + plan chips + mods pass pending |
-| 04| dashboard-insights          | 4     | `[ ]` not started | |
-| 07| future-food                 | 4     | `[ ]` not started | |
-| 08| resources-standards         | 4     | `[ ]` not started | |
+| 04| dashboard-insights          | 4     | `[~]` v1 done | Hero/stats/hubs+dot-map/feed all settings-driven; per-role routing = via nav (decided) |
+| 07| future-food                 | 4     | `[~]` v1 done | XP/level from badges+completions, achievements, missions grid; real badges to be configured by admin |
+| 08| resources-standards         | 4     | `[~]` v1 done | Curated library + kind filters + capability-gated tools; file-storage backend deferred (owner decision) |
 
 ## What already exists (baseline, verified 2026-07-12)
 
@@ -302,3 +302,16 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   served HTML. Follow-ups: real file storage decision (course resources vs
   filearea), filter pills, management-tools grid (capability-gated),
   validation card.
+
+- **2026-07-12** — **Phase 4 completed (v1)**. Final slice:
+  - About: Living Labs dot map — hubs plotted from their real design
+    coordinates (equirectangular Europe window, lon −12…42 / lat 34…62) on a
+    stylised CDN-free panel; two-column map+list layout, mobile stacks.
+    Decision: no tile map (Leaflet) — dot map keeps the no-CDN rule; per-role
+    home routing decided as "via sidebar nav", no forced redirects.
+  - Resources: server-side kind filter pills (?kind=, no JS needed) and a
+    capability-gated management-tools grid (plans/cohorts/badges/courses,
+    shown only with local/learningplans:manage).
+  Verified via screenshots (About full page with map; PDF filter active;
+  tools absent for a learner). Deferred to Phase 5+: real document storage
+  backend, validation card, badge artwork, mods dark-scheme pass.

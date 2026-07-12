@@ -136,6 +136,19 @@
     }
 }
 
+// Hubs grid collapses on smaller screens.
+.sfs-mode {
+    @include sfs-media-compact {
+        .sfs-hubs__grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sfs-hubs__map {
+            min-height: 260px;
+        }
+    }
+}
+
 // Updates feed (insights.html "feed").
 .sfs-mode {
     .sfs-feed__title {
@@ -232,12 +245,51 @@
         margin: 28px 0 16px;
     }
 
+    .sfs-hubs__grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 22px;
+        margin-bottom: 22px;
+        align-items: stretch;
+    }
+
+    // Dot map: hubs plotted from their real coordinates on a stylised
+    // Europe window (no external tiles — CDN-free by design).
+    .sfs-hubs__map {
+        position: relative;
+        min-height: 380px;
+        border-radius: var(--sfs-radius-md);
+        border: 1px solid var(--sfs-line);
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 75% 20%, rgba(224, 164, 88, 0.14), transparent 55%),
+            radial-gradient(circle at 20% 80%, rgba(79, 195, 192, 0.16), transparent 55%),
+            linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 100%);
+    }
+
+    .sfs-hubs__marker {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+        border-radius: 50%;
+        background: var(--sfs-teal);
+        box-shadow: 0 0 0 4px rgba(79, 195, 192, 0.25);
+    }
+
+    .sfs-hubs__marker--lab {
+        background: var(--sfs-accent);
+        box-shadow: 0 0 0 5px rgba(224, 164, 88, 0.3);
+        z-index: 1;
+    }
+
     .sfs-hubs__card {
         background: var(--sfs-surface);
         border: 1px solid var(--sfs-line);
         border-radius: var(--sfs-radius-md);
         padding: 12px;
-        margin-bottom: 22px;
+        max-height: 380px;
+        overflow-y: auto;
     }
 
     .sfs-hubs__list {
@@ -245,8 +297,7 @@
         margin: 0;
         padding: 0;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 4px 16px;
+        gap: 4px;
     }
 
     .sfs-hubs__row {

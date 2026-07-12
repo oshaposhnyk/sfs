@@ -93,23 +93,26 @@ final class about {
 
 
         $hubdefaults = [];
-        $labs = [['Kyiv Lab', 'Ukraine'], ['Lviv Lab', 'Ukraine'], ['Odesa Lab', 'Ukraine'], ['Kharkiv Lab', 'Ukraine']];
-        $partners = [
-            ['ICCS', 'Athens, Greece'], ['GALANAKIS', 'Chania, Greece'],
-            ['European Dynamics', 'Brussels, Belgium'], ['ZLC', 'Zaragoza, Spain'],
-            ['DNV', 'Oslo, Norway'], ['IRIS', 'Castelldefels, Spain'],
-            ['IAMO', 'Halle, Germany'], ['EXUS AI Labs', 'London, UK'],
-            ['INNOV-ACTS', 'Nicosia, Cyprus'], ['Carr Comms', 'Dublin, Ireland'],
-            ['LUKE', 'Helsinki, Finland'], ['LAUREA', 'Espoo, Finland'],
-            ['EMPRACTIS', 'Lisbon, Portugal'], ['MC SONAE', 'Porto, Portugal'],
-            ['EKPIZO', 'Athens, Greece'], ['ELGO–DIMITRA', 'Thessaloniki, Greece'],
-            ['NULES', 'Kyiv, Ukraine'], ['SPES', 'Padova, Italy'],
+        $labs = [
+            ['Kyiv Lab', 'Ukraine', 50.4501, 30.5234], ['Lviv Lab', 'Ukraine', 49.8397, 24.0297],
+            ['Odesa Lab', 'Ukraine', 46.4825, 30.7233], ['Kharkiv Lab', 'Ukraine', 49.9935, 36.2304],
         ];
-        foreach ($labs as [$name, $country]) {
-            $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'lab'];
+        $partners = [
+            ['ICCS', 'Athens, Greece', 37.9838, 23.7275], ['GALANAKIS', 'Chania, Greece', 35.5138, 24.0180],
+            ['European Dynamics', 'Brussels, Belgium', 50.8503, 4.3517], ['ZLC', 'Zaragoza, Spain', 41.6488, -0.8891],
+            ['DNV', 'Oslo, Norway', 59.9139, 10.7522], ['IRIS', 'Castelldefels, Spain', 41.2810, 2.0],
+            ['IAMO', 'Halle, Germany', 51.4969, 11.9690], ['EXUS AI Labs', 'London, UK', 51.5074, -0.1278],
+            ['INNOV-ACTS', 'Nicosia, Cyprus', 35.1856, 33.3823], ['Carr Comms', 'Dublin, Ireland', 53.3498, -6.2603],
+            ['LUKE', 'Helsinki, Finland', 60.1699, 24.9384], ['LAUREA', 'Espoo, Finland', 60.2055, 24.6559],
+            ['EMPRACTIS', 'Lisbon, Portugal', 38.7223, -9.1393], ['MC SONAE', 'Porto, Portugal', 41.1579, -8.6291],
+            ['EKPIZO', 'Athens, Greece', 37.9755, 23.7350], ['ELGO–DIMITRA', 'Thessaloniki, Greece', 40.6401, 22.9444],
+            ['NULES', 'Kyiv, Ukraine', 50.3850, 30.4900], ['SPES', 'Padova, Italy', 45.4064, 11.8768],
+        ];
+        foreach ($labs as [$name, $country, $lat, $lon]) {
+            $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'lab', 'lat' => $lat, 'lon' => $lon];
         }
-        foreach ($partners as [$name, $country]) {
-            $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'partner'];
+        foreach ($partners as [$name, $country, $lat, $lon]) {
+            $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'partner', 'lat' => $lat, 'lon' => $lon];
         }
         $hubitems = json_decode((string)($settings->abouthubs ?? ''), true);
         if (!is_array($hubitems) || $hubitems === []) {
@@ -121,11 +124,23 @@ final class about {
                 continue;
             }
             $islab = ($item['type'] ?? 'partner') === 'lab';
-            $hubs[] = [
+            $hub = [
                 'name' => format_string((string)$item['name']),
                 'country' => format_string((string)($item['country'] ?? '')),
                 'islab' => $islab,
+                'onmap' => false,
             ];
+            // Dot-map position: equirectangular Europe window (lon -12..42, lat 34..62).
+            if (isset($item['lat'], $item['lon']) && is_numeric($item['lat']) && is_numeric($item['lon'])) {
+                $x = ((float)$item['lon'] + 12) / 54 * 100;
+                $y = (62 - (float)$item['lat']) / 28 * 100;
+                if ($x >= 0 && $x <= 100 && $y >= 0 && $y <= 100) {
+                    $hub['onmap'] = true;
+                    $hub['x'] = round($x, 1);
+                    $hub['y'] = round($y, 1);
+                }
+            }
+            $hubs[] = $hub;
         }
 
         return [

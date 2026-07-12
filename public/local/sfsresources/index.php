@@ -38,10 +38,32 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('resources', 'local_sfsresources'));
 $PAGE->set_heading(get_string('resources', 'local_sfsresources'));
 
-$documents = [];
-foreach (\local_sfsresources\documents::parse(
+$kindfilter = optional_param('kind', '', PARAM_ALPHA);
+
+$alldocs = \local_sfsresources\documents::parse(
     (string)get_config('local_sfsresources', 'documents')
-) as $doc) {
+);
+
+// Type filter pills (server-side — works without JS).
+$kinds = array_values(array_unique(array_column($alldocs, 'kind')));
+$filters = [[
+    'label' => get_string('all'),
+    'url' => (new moodle_url('/local/sfsresources/index.php'))->out(false),
+    'active' => $kindfilter === '',
+]];
+foreach ($kinds as $kind) {
+    $filters[] = [
+        'label' => strtoupper($kind === 'link' ? 'www' : $kind),
+        'url' => (new moodle_url('/local/sfsresources/index.php', ['kind' => $kind]))->out(false),
+        'active' => $kindfilter === $kind,
+    ];
+}
+
+$documents = [];
+foreach ($alldocs as $doc) {
+    if ($kindfilter !== '' && $doc['kind'] !== $kindfilter) {
+        continue;
+    }
     $documents[] = [
         'title' => format_string($doc['title'], true, ['escape' => false]),
         'sub' => format_string($doc['sub'], true, ['escape' => false]),
@@ -53,6 +75,25 @@ foreach (\local_sfsresources\documents::parse(
     ];
 }
 
+// Management tools — only for staff who can manage learning plans.
+$tools = [];
+if (has_capability('local/learningplans:manage', $context)) {
+    $tools = [
+        ['title' => get_string('tool_plans', 'local_sfsresources'),
+            'desc' => get_string('tool_plans_desc', 'local_sfsresources'),
+            'url' => (new moodle_url('/local/learningplans/index.php'))->out(false)],
+        ['title' => get_string('tool_cohorts', 'local_sfsresources'),
+            'desc' => get_string('tool_cohorts_desc', 'local_sfsresources'),
+            'url' => (new moodle_url('/cohort/index.php'))->out(false)],
+        ['title' => get_string('tool_badges', 'local_sfsresources'),
+            'desc' => get_string('tool_badges_desc', 'local_sfsresources'),
+            'url' => (new moodle_url('/badges/index.php', ['type' => 1]))->out(false)],
+        ['title' => get_string('tool_courses', 'local_sfsresources'),
+            'desc' => get_string('tool_courses_desc', 'local_sfsresources'),
+            'url' => (new moodle_url('/course/management.php'))->out(false)],
+    ];
+}
+
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_sfsresources/resources_page', [
     'kicker' => get_string('kicker', 'local_sfsresources'),
@@ -61,5 +102,8 @@ echo $OUTPUT->render_from_template('local_sfsresources/resources_page', [
     'library' => get_string('library', 'local_sfsresources'),
     'documents' => $documents,
     'hasdocuments' => $documents !== [],
+    'filters' => $filters,
+    'tools' => $tools,
+    'hastools' => $tools !== [],
 ]);
 echo $OUTPUT->footer();

@@ -61,7 +61,16 @@
 {{#hubs.0}}
     <section class="sfs-hubs">
         <h3 class="sfs-hubs__title">{{hubstitle}}</h3>
-        <div class="sfs-hubs__card">
+        <div class="sfs-hubs__grid">
+            <div class="sfs-hubs__map" aria-hidden="true">
+                {{#hubs}}
+                    {{#onmap}}
+                        <span class="sfs-hubs__marker {{#islab}}sfs-hubs__marker--lab{{/islab}}"
+                              style="left: {{x}}%; top: {{y}}%;" title="{{name}}"></span>
+                    {{/onmap}}
+                {{/hubs}}
+            </div>
+            <div class="sfs-hubs__card">
             <ul class="sfs-hubs__list">
                 {{#hubs}}
                     <li class="sfs-hubs__row {{#islab}}sfs-hubs__row--lab{{/islab}}">
@@ -75,6 +84,7 @@
                     </li>
                 {{/hubs}}
             </ul>
+            </div>
         </div>
     </section>
 {{/hubs.0}}

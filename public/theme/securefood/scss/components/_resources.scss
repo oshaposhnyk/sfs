@@ -153,3 +153,95 @@
         }
     }
 }
+
+// Filters + management tools (governance.html).
+.sfs-mode {
+    .sfsres__libraryhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+
+        .sfsres__library {
+            margin: 0;
+        }
+    }
+
+    .sfsres__filters {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .sfsres__filter {
+        padding: 6px 12px;
+        border: 1px solid var(--sfs-line);
+        background: var(--sfs-surface);
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--sfs-muted);
+
+        &:hover {
+            background: var(--sfs-surface2);
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .sfsres__filter--active {
+        background: var(--sfs-primary);
+        color: #fff;
+        border-color: var(--sfs-primary);
+
+        &:hover {
+            background: var(--sfs-primary700);
+        }
+    }
+
+    .sfsres__tools {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .sfsres-tool {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        padding: 18px;
+        color: inherit;
+
+        @include sfs-motion {
+            transition: transform var(--sfs-duration-fast), box-shadow var(--sfs-duration-fast),
+                border-color var(--sfs-duration-fast);
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sfs-shadow-2);
+            border-color: var(--sfs-primary);
+            text-decoration: none;
+        }
+    }
+
+    .sfsres-tool__title {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--sfs-ink);
+    }
+
+    .sfsres-tool__desc {
+        font-size: 0.84rem;
+        color: var(--sfs-muted);
+    }
+}
