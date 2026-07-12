@@ -370,3 +370,13 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   override. Verified on SFS101 as the test learner (real 33% completion).
   Next candidates need owner input: 6.2 stage grouping (db/), 6.3 external
   functions (db/services.php), 6.4 resources file storage.
+
+- **2026-07-12** — **Phase 6.2 shipped (stage grouping)**: stagename column on
+  _crs (upgrade 2026071202), full chain entity→repo→service→form, pure
+  group_stages() with tests (suite 12/12), Student Lab renders named stages
+  with number/done/lock badges and per-stage meta — verified on the demo plan
+  (Foundations active, Pattern practice + Reporting locked), matching
+  l4c.html. Design decision: denormalised column v1, sections table later.
+  Domain 05/09 stage items closed. Gotcha: entity file edit initially matched
+  a comment-stripped pattern and silently half-applied — caught by the test
+  suite (undefined variable warning), fixed properly.
