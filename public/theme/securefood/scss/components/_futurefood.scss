@@ -274,3 +274,20 @@
         }
     }
 }
+
+// Badge artwork inside the achievement circle (Phase 7.1).
+.sfs-mode .ffg-ach__badge {
+    overflow: hidden;
+
+    .ffg-ach__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+}
+
+.sfs-mode .ffg-ach--locked .ffg-ach__img {
+    filter: grayscale(1);
+    opacity: 0.55;
+}

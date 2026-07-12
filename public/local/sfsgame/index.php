@@ -44,11 +44,17 @@ $PAGE->set_heading(get_string('futurefood', 'local_sfsgame'));
 $earned = badges_get_user_badges($userid);
 $earnedids = [];
 $achievements = [];
+$badgeimage = static function(int $badgeid) use ($context): string {
+    return moodle_url::make_pluginfile_url(
+        $context->id, 'badges', 'badgeimage', $badgeid, '/', 'f1', false
+    )->out(false);
+};
 foreach ($earned as $badge) {
     $earnedids[(int)$badge->id] = true;
     $achievements[] = [
         'name' => format_string($badge->name),
         'earned' => true,
+        'imageurl' => $badgeimage((int)$badge->id),
     ];
 }
 foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
@@ -56,6 +62,7 @@ foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
         $achievements[] = [
             'name' => format_string($badge->name),
             'earned' => false,
+            'imageurl' => $badgeimage((int)$badge->id),
         ];
     }
 }

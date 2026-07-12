@@ -54,7 +54,9 @@
     <div class="ffg-achievements">
         {{#achievements}}
             <div class="ffg-ach {{^earned}}ffg-ach--locked{{/earned}}">
-                <span class="ffg-ach__badge" aria-hidden="true"></span>
+                <span class="ffg-ach__badge" aria-hidden="true">
+                    {{#imageurl}}<img class="ffg-ach__img" src="{{imageurl}}" alt="">{{/imageurl}}
+                </span>
                 <span class="ffg-ach__name">{{name}}</span>
                 <span class="ffg-ach__state">
                     {{#earned}}{{#str}}earned, local_sfsgame{{/str}}{{/earned}}
