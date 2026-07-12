@@ -102,8 +102,26 @@ locked stages behave per sequencing rules, Continue learning resolves correctly.
   (Profile/Language/Password/Appearance sections as design cards).
 - **7.4 Cron service**: needs a docker-compose change → owner approval.
 
-## Phase 8 — Pilot readiness (planned 2026-07-12)
+## Phase 8 — Style audit: 1:1 fidelity & visual bugs (owner-redefined 2026-07-12)
 
+> Systematic page-by-page comparison of the implemented UI against the
+> prototypes in `SecureFood School/`, in light + dark + mobile. Method:
+> render each prototype HTML in a real browser, screenshot, and compare with
+> the corresponding live page at the same viewport; log every deviation,
+> fix, re-verify.
+
+| Prototype | Live page |
+|---|---|
+| l4c.html | /local/learningplans/my.php |
+| insights.html | /?redirect=0 |
+| ffs.html | /local/sfsgame/index.php |
+| governance.html | /local/sfsresources/index.php |
+| course.html | /course/view.php?id=2 |
+| activity.html | /mod/page/view.php (representative) |
+
+Findings tracked in PROGRESS.md; each fix re-verified by screenshot.
+
+## Phase 9 — Pilot readiness (moved from the previous Phase 8 plan)
 > Goal: from "feature-complete dev site" to "real learners can use it".
 > Ordered by risk; items marked ⚑ need an owner decision first.
 
