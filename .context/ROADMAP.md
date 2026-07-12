@@ -101,3 +101,33 @@ locked stages behave per sequencing rules, Continue learning resolves correctly.
 - **7.3 Unified settings hub**: custom Settings page per the product brief
   (Profile/Language/Password/Appearance sections as design cards).
 - **7.4 Cron service**: needs a docker-compose change → owner approval.
+
+## Phase 8 — Pilot readiness (planned 2026-07-12)
+
+> Goal: from "feature-complete dev site" to "real learners can use it".
+> Ordered by risk; items marked ⚑ need an owner decision first.
+
+- **8.1 Real content & data**: production courses/plans/cohorts; ⚑ content
+  language strategy (uk-only vs multilang); cohort→plan auto-enrolment E2E
+  now testable since cron runs; badge criteria wired to course completion.
+- **8.2 Onboarding & auth** ⚑: how learners get accounts (manual/CSV upload/
+  self-registration/OAuth via school accounts) + email transport (SMTP)
+  config for confirmations and badge/notification mail.
+- **8.3 Production deployment** ⚑: target host; HTTPS + wwwroot change
+  (cookiesecure then becomes meaningful), secrets out of compose defaults
+  (.env), DB+moodledata backup job, log rotation, container monitoring,
+  documented upgrade procedure (composer install --no-dev, purge, upgrade.php).
+- **8.4 CI quality gates**: GitHub Actions (or similar) running php -l,
+  PHPUnit (all suites), moodle/codechecker PHPCS, and Behat with a selenium
+  sidecar — the infra that was waived locally belongs in CI.
+- **8.5 UX completion**: course right rail (course.html), Resources
+  validation card → real choice activity, Future Food decision module →
+  real quiz, empty-states audit across pages.
+- **8.6 Language review** ⚑: human review of all uk strings (agent-written,
+  never shipped unreviewed per org policy).
+- **8.7 Hardening**: focused security review of mode.php/pluginfile/externals,
+  account lockout policy, privacy-provider completeness check, load test with
+  realistic cohort sizes.
+- **8.8 Tech debt (optional)**: normalise stagename into a sections table;
+  Boost-variable mapping for custom mode; AJAX re-render (no reload) for the
+  plan switcher.

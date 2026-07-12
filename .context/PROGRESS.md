@@ -58,9 +58,9 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   init CLI under public/admin/tool/, unlike the root admin/cli scripts.
   PHPCS binary is NOT included by moodle-testing — codechecker still pending.
 
-- **Cron is not running** on the dev site (last `task_log` entry 21:40; observed
-  02:15 next day). Scheduled tasks — including learning-plan reconciliation and
-  progress refresh — will not fire until cron is started/fixed.
+- ~~Cron is not running~~ **Resolved 2026-07-12 (Phase 7.4)**: dedicated cron
+  container in docker-compose (60s loop over admin/cli/cron.php); task_log
+  confirms fresh successful runs.
 
 ## Recent work
 
@@ -425,3 +425,10 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   gotcha: the self-hosted Material Icons v145 set lacks newer glyphs
   (shield_person) — stick to classic names (verified_user). Remaining: 7.4
   cron service (docker — owner approval).
+
+- **2026-07-12** — **Phase 7.4 shipped — Phase 7 complete.** Cron service
+  added to docker-compose (owner-approved): php image, 60s loop, logs to the
+  container stdout; verified via fresh successful task_log entries (badge
+  notification adhoc tasks ran immediately). Phase 8 (pilot readiness)
+  planned in ROADMAP with owner-decision markers: content/auth/deployment/
+  CI/UX-completion/uk-review/hardening/tech-debt.
