@@ -294,3 +294,11 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   +XP foot, Start button only with a URL), plugin settings page, xp_policy
   PHPUnit (standalone 6/6). Verified full-page screenshot. Domain 07 remaining:
   badge artwork in achievements, decision module link, wiring real badges.
+
+- **2026-07-12** — **Domain 08 v1 (option в)**: local_sfsresources — curated
+  document library (admin JSON, governance.html defaults; type badges,
+  audience/updated, Open pill only with URL; en+uk; theme skin sfsres-* +
+  nav item; single-escape fix for ampersands). Verified via screenshot +
+  served HTML. Follow-ups: real file storage decision (course resources vs
+  filearea), filter pills, management-tools grid (capability-gated),
+  validation card.
