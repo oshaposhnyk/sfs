@@ -91,3 +91,13 @@ locked stages behave per sequencing rules, Continue learning resolves correctly.
   plugin filearea).
 - **6.5 Performance pass**: query counts on Student Lab/About, MUC where
   measured hot.
+
+## Phase 7 — Activation & polish (added 2026-07-12)
+
+- **7.1 Real achievements**: badge images in Future Food; seed real site
+  badges (manual criteria) so XP/achievements run on live data.
+- **7.2 AJAX plan switcher**: progressive enhancement over PRG using the
+  Phase 6.3 externals.
+- **7.3 Unified settings hub**: custom Settings page per the product brief
+  (Profile/Language/Password/Appearance sections as design cards).
+- **7.4 Cron service**: needs a docker-compose change → owner approval.
