@@ -98,6 +98,11 @@ uk string review (9.6) owner takes it.
      fallback. Leaflet gotcha: vector layers added before the first
      `setView()` crash in `_clipPoints` — view must be set first.
      Verified: 84 SVG paths live, uk+en, admin+learner, mobile 390px clean.
+  3. *"Available courses" list removed from the front page* (follow-up):
+     site config, not code — `frontpage` and `frontpageloggedin` set to
+     none (were "6" = course list). About now ends with the news feed as
+     designed; learners reach courses via Student Lab. Re-enable any time
+     under Site administration → Front page settings.
   Known nit (pre-existing): theme favicon 404s — no favicon image shipped.
 
 - **2026-07-12** — **P1 fidelity slice 1 `[~]`**: the missing settings-driven,
