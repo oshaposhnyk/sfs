@@ -30,6 +30,15 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_sfsresources', get_string('pluginname', 'local_sfsresources'));
     $ADMIN->add('localplugins', $settings);
 
+    $settings->add(new admin_setting_configstoredfile(
+        'local_sfsresources/documentfiles',
+        get_string('documentfiles', 'local_sfsresources'),
+        get_string('documentfiles_desc', 'local_sfsresources'),
+        'documents',
+        0,
+        ['maxfiles' => -1]
+    ));
+
     $settings->add(new admin_setting_configtextarea(
         'local_sfsresources/documents',
         get_string('documents', 'local_sfsresources'),

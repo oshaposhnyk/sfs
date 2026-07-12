@@ -44,3 +44,5 @@ $string['tool_badges'] = 'Badges';
 $string['tool_badges_desc'] = 'Configure the achievements shown in Future Food.';
 $string['tool_courses'] = 'Courses';
 $string['tool_courses_desc'] = 'Manage course structure and categories.';
+$string['documentfiles'] = 'Library files';
+$string['documentfiles_desc'] = 'Upload the actual documents here. They appear at the top of the library; downloads are available to logged-in users only.';

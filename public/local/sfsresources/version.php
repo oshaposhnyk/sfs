@@ -27,7 +27,7 @@ declare(strict_types=1);
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_sfsresources';
-$plugin->version = 2026071200;
+$plugin->version = 2026071201;
 $plugin->requires = 2026041000;
 $plugin->release = '0.1.0';
 $plugin->maturity = MATURITY_ALPHA;

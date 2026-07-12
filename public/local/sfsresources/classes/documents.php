@@ -58,6 +58,23 @@ final class documents {
     }
 
     /**
+     * Map a file name to a library type badge.
+     *
+     * @param string $filename File name.
+     * @return string One of pdf/doc/xls/zip/link.
+     */
+    public static function kind_from_filename(string $filename): string {
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $map = [
+            'pdf' => 'pdf',
+            'doc' => 'doc', 'docx' => 'doc', 'odt' => 'doc', 'rtf' => 'doc',
+            'xls' => 'xls', 'xlsx' => 'xls', 'ods' => 'xls', 'csv' => 'xls',
+            'zip' => 'zip', 'gz' => 'zip', '7z' => 'zip', 'rar' => 'zip',
+        ];
+        return $map[$extension] ?? 'link';
+    }
+
+    /**
      * Parse the admin JSON, falling back to the design defaults.
      *
      * @param string|null $json Setting value.

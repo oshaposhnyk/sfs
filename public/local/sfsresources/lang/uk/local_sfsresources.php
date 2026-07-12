@@ -44,3 +44,5 @@ $string['tool_badges'] = 'Бейджі';
 $string['tool_badges_desc'] = 'Налаштуйте досягнення, що показуються у Future Food.';
 $string['tool_courses'] = 'Курси';
 $string['tool_courses_desc'] = 'Керуйте структурою курсів і категоріями.';
+$string['documentfiles'] = 'Файли бібліотеки';
+$string['documentfiles_desc'] = 'Завантажте сюди самі документи. Вони з’являться вгорі бібліотеки; завантаження доступне лише авторизованим користувачам.';

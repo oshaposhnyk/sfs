@@ -45,7 +45,13 @@ $alldocs = \local_sfsresources\documents::parse(
 );
 
 // Type filter pills (server-side — works without JS).
-$kinds = array_values(array_unique(array_column($alldocs, 'kind')));
+$filekinds = [];
+foreach (get_file_storage()->get_area_files(
+    $context->id, 'local_sfsresources', 'documents', 0, 'id', false
+) as $file) {
+    $filekinds[] = \local_sfsresources\documents::kind_from_filename($file->get_filename());
+}
+$kinds = array_values(array_unique(array_merge($filekinds, array_column($alldocs, 'kind'))));
 $filters = [[
     'label' => get_string('all'),
     'url' => (new moodle_url('/local/sfsresources/index.php'))->out(false),
@@ -60,6 +66,31 @@ foreach ($kinds as $kind) {
 }
 
 $documents = [];
+
+// Uploaded library files (Phase 6.4): newest first, served via pluginfile
+// with a login re-check.
+$storedfiles = get_file_storage()->get_area_files(
+    $context->id, 'local_sfsresources', 'documents', 0, 'timemodified DESC, id DESC', false
+);
+foreach ($storedfiles as $file) {
+    $kind = \local_sfsresources\documents::kind_from_filename($file->get_filename());
+    if ($kindfilter !== '' && $kind !== $kindfilter) {
+        continue;
+    }
+    $documents[] = [
+        'title' => format_string($file->get_filename(), true, ['escape' => false]),
+        'sub' => display_size($file->get_filesize()),
+        'audience' => '',
+        'kind' => $kind,
+        'kindlabel' => strtoupper($kind === 'link' ? 'file' : $kind),
+        'updated' => userdate((int)$file->get_timemodified(), get_string('strftimedate', 'langconfig')),
+        'url' => moodle_url::make_pluginfile_url(
+            $context->id, 'local_sfsresources', 'documents', 0,
+            $file->get_filepath(), $file->get_filename(), true
+        )->out(false),
+    ];
+}
+
 foreach ($alldocs as $doc) {
     if ($kindfilter !== '' && $doc['kind'] !== $kindfilter) {
         continue;
