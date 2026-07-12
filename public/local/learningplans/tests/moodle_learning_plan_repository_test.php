@@ -73,7 +73,7 @@ final class moodle_learning_plan_repository_test extends \advanced_testcase {
     }
 
     /**
-     * Stage rename round-trip and the not-in-plan guard.
+     * Stage entity lifecycle: find-or-create, rename move, GC, guard.
      */
     public function test_set_course_stage(): void {
         $this->resetAfterTest();
@@ -90,22 +90,109 @@ final class moodle_learning_plan_repository_test extends \advanced_testcase {
             time(),
             time()
         ));
+        $planid = (int)$plan->id();
 
         $course = $this->getDataGenerator()->create_course();
-        $repository->add_course((int)$plan->id(), (int)$course->id, 'Stage 1');
-        $this->assertSame('Stage 1', $repository->get_courses((int)$plan->id())[0]->stage_name());
+        $repository->add_course($planid, (int)$course->id, 'Stage 1');
+        $this->assertSame('Stage 1', $repository->get_courses($planid)[0]->stage_name());
+        $this->assertCount(1, $repository->get_stages($planid));
+        $stageid = $repository->get_courses($planid)[0]->stage_id();
+        $this->assertNotNull($stageid);
 
-        $repository->set_course_stage((int)$plan->id(), (int)$course->id, '  Stage 2 · Practice  ');
-        $this->assertSame('Stage 2 · Practice', $repository->get_courses((int)$plan->id())[0]->stage_name());
+        // Moving to a new name creates the stage and GCs the emptied one.
+        $repository->set_course_stage($planid, (int)$course->id, '  Stage 2 · Practice  ');
+        $this->assertSame('Stage 2 · Practice', $repository->get_courses($planid)[0]->stage_name());
+        $stages = $repository->get_stages($planid);
+        $this->assertCount(1, $stages);
+        $this->assertSame('Stage 2 · Practice', $stages[0]->name());
+        $this->assertNotEquals($stageid, $stages[0]->id());
 
-        // Clearing the stage.
-        $repository->set_course_stage((int)$plan->id(), (int)$course->id, '');
-        $this->assertSame('', $repository->get_courses((int)$plan->id())[0]->stage_name());
+        // Same name resolves to the same stage entity (find-or-create).
+        $course2 = $this->getDataGenerator()->create_course();
+        $repository->add_course($planid, (int)$course2->id, 'Stage 2 · Practice');
+        $this->assertCount(1, $repository->get_stages($planid));
+        $courses = $repository->get_courses($planid);
+        $this->assertSame($courses[0]->stage_id(), $courses[1]->stage_id());
+
+        // Clearing unassigns; the stage survives while course2 remains in it.
+        $repository->set_course_stage($planid, (int)$course->id, '');
+        $courses = $repository->get_courses($planid);
+        foreach ($courses as $courseitem) {
+            if ($courseitem->course_id() === (int)$course->id) {
+                $this->assertNull($courseitem->stage_id());
+                $this->assertSame('', $courseitem->stage_name());
+            }
+        }
+        $this->assertCount(1, $repository->get_stages($planid));
 
         // A course that is not part of the plan is rejected.
         $other = $this->getDataGenerator()->create_course();
         $this->expectException(\moodle_exception::class);
-        $repository->set_course_stage((int)$plan->id(), (int)$other->id, 'X');
+        $repository->set_course_stage($planid, (int)$other->id, 'X');
+    }
+
+    /**
+     * Restructure: order + stage assignment in one operation, with the
+     * contiguity invariant and stage sortorder mirroring block order.
+     */
+    public function test_restructure_courses(): void {
+        $this->resetAfterTest();
+        $repository = new moodle_learning_plan_repository();
+
+        $plan = $repository->create(new learning_plan(
+            null,
+            'Plan C',
+            '',
+            true,
+            true,
+            enrolment_mode::IMMEDIATE,
+            1,
+            time(),
+            time()
+        ));
+        $planid = (int)$plan->id();
+
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $c3 = $this->getDataGenerator()->create_course();
+        $repository->add_course($planid, (int)$c1->id, 'Alpha');
+        $repository->add_course($planid, (int)$c2->id, 'Alpha');
+        $repository->add_course($planid, (int)$c3->id, 'Beta');
+
+        $stages = $repository->get_stages($planid);
+        $alpha = (int)$stages[0]->id();
+        $beta = (int)$stages[1]->id();
+
+        // Drag c1 from Alpha into Beta (after c3), Beta block first.
+        $repository->restructure_courses(
+            $planid,
+            [(int)$c3->id, (int)$c1->id, (int)$c2->id],
+            [$beta, $beta, $alpha]
+        );
+
+        $courses = $repository->get_courses($planid);
+        $this->assertSame([(int)$c3->id, (int)$c1->id, (int)$c2->id],
+            array_map(static fn($c) => $c->course_id(), $courses));
+        $this->assertSame(['Beta', 'Beta', 'Alpha'],
+            array_map(static fn($c) => $c->stage_name(), $courses));
+
+        // Stage block order now: Beta first, Alpha second.
+        $stages = $repository->get_stages($planid);
+        $this->assertSame(['Beta', 'Alpha'], array_map(static fn($s) => $s->name(), $stages));
+
+        // Emptying Alpha garbage-collects it.
+        $repository->restructure_courses(
+            $planid,
+            [(int)$c3->id, (int)$c1->id, (int)$c2->id],
+            [$beta, $beta, $beta]
+        );
+        $stages = $repository->get_stages($planid);
+        $this->assertCount(1, $stages);
+        $this->assertSame('Beta', $stages[0]->name());
+
+        // A permutation mismatch is rejected.
+        $this->expectException(\moodle_exception::class);
+        $repository->restructure_courses($planid, [(int)$c1->id], [$beta]);
     }
 }
 

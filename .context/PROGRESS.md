@@ -80,6 +80,25 @@ uk string review (9.6) owner takes it.
 
 ## Recent work
 
+- **2026-07-12** — **Stages promoted to a first-class entity + cross-stage
+  drag-and-drop (ADR-011, owner decision)**: new `local_learningplans_stg`
+  table + `crs.stageid` FK; upgrade 2026071204 migrates one stage per
+  distinct name per plan and drops the old `stagename` column (verified on
+  the dev DB: 3 stages created, FKs set, column gone). Domain entity
+  `learning_plan_stage`; all invariants live in the aggregate repository's
+  `apply_structure()` — contiguous stage blocks, stage sortorder = block
+  order, GC of emptied stages; stage lifecycle is implicit (find-or-create
+  by name via the per-row input / add-course form). New
+  `restructure_courses()` use case = the drag contract: each stage renders
+  its own sortable list (plus an always-present dashed "No stage" drop
+  target), `view_reorder` serialises all lists into parallel
+  courseids/stageids sequences. Browser E2E via SortableList's move dialog
+  (same DROP handler as pointer drag): course moved Stage 2 → Stage 1,
+  input re-hydrated, emptied stage GC'd, then structure restored via the
+  service. Student Lab grouping and externals unchanged (stage_name() is
+  now a hydrated read-model projection). Suite 18/18 after phpunit re-init.
+  Plugin v0.3.0.
+
 - **2026-07-12** — **Owner feedback: stage groups + full-width management**
   (local_learningplans, follow-up to the stage editing round): the plan page
   course list now renders visual stage groups — consecutive courses sharing

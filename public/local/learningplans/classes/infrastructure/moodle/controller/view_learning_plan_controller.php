@@ -57,6 +57,7 @@ final class view_learning_plan_controller {
         if ($action === 'reorder') {
             require_sesskey();
             $orderedraw = trim((string)optional_param('orderedcourseids', '', PARAM_SEQUENCE));
+            $stageraw = trim((string)optional_param('stageids', '', PARAM_SEQUENCE));
             $orderedcourseids = [];
             if ($orderedraw !== '') {
                 foreach (explode(',', $orderedraw) as $value) {
@@ -66,9 +67,15 @@ final class view_learning_plan_controller {
                     }
                 }
             }
+            $stageids = $stageraw !== '' ? array_map('intval', explode(',', $stageraw)) : [];
 
             try {
-                $service->reorder_courses($planid, $orderedcourseids, (int)$USER->id);
+                if ($stageids !== [] && count($stageids) === count($orderedcourseids)) {
+                    // Drag-and-drop between stage blocks: order + stage move.
+                    $service->restructure_courses($planid, $orderedcourseids, $stageids, (int)$USER->id);
+                } else {
+                    $service->reorder_courses($planid, $orderedcourseids, (int)$USER->id);
+                }
                 \core\notification::success(get_string('course:reordered', 'local_learningplans'));
             } catch (\Throwable $exception) {
                 $messagekey = (string)$exception->getMessage();
@@ -150,46 +157,18 @@ final class view_learning_plan_controller {
         }, $courses);
         $courserecords = $courserepository->list_by_ids($courseids);
 
-        // Consecutive courses sharing a stage name form one visual group
-        // (same convention as the Student Lab grouping policy).
-        $stagestarts = [];
-        $groupsizes = [];
-        $groupindex = 0;
-        foreach ($courses as $index => $courseitem) {
-            if ($index === 0 || $courseitem->stage_name() !== $courses[$index - 1]->stage_name()) {
-                $groupindex++;
-                $stagestarts[$index] = $groupindex;
-            }
-            $groupsizes[$groupindex] = ($groupsizes[$groupindex] ?? 0) + 1;
-        }
-        $hasstages = false;
-        foreach ($courses as $courseitem) {
-            if ($courseitem->stage_name() !== '') {
-                $hasstages = true;
-                break;
-            }
-        }
+        $hasstages = $service->get_plan_stages($planid) !== [];
 
         $courserows = [];
         foreach ($courses as $index => $courseitem) {
             $cid = $courseitem->course_id();
             $coursename = isset($courserecords[$cid]) ? format_string($courserecords[$cid]->fullname) : ('#' . $cid);
-            $stagestart = null;
-            if ($hasstages && isset($stagestarts[$index])) {
-                $number = $stagestarts[$index];
-                $stagestart = [
-                    'heading' => $courseitem->stage_name() !== ''
-                        ? format_string($courseitem->stage_name())
-                        : get_string('plan:view:nostage', 'local_learningplans'),
-                    'countlabel' => get_string('plan:view:stagecount', 'local_learningplans', $groupsizes[$number]),
-                ];
-            }
             $courserows[] = [
                 'courseid' => $cid,
                 'name' => $coursename,
                 'order' => $index + 1,
+                'stageid' => $courseitem->stage_id() ?? 0,
                 'stagename' => $courseitem->stage_name(),
-                'stagestart' => $stagestart,
                 'draghandle' => $OUTPUT->render_from_template('core/drag_handle', [
                     'movetitle' => get_string('movecontent', 'moodle', $coursename),
                     'extraclasses' => 'learning-plan__drag-handle',
@@ -216,6 +195,45 @@ final class view_learning_plan_controller {
                 ]))->out(false),
             ];
         }
+
+        // Contiguous stage blocks (the repository invariant guarantees each
+        // stage appears exactly once in the sequence).
+        $stagegroups = [];
+        foreach ($courserows as $row) {
+            $last = count($stagegroups) - 1;
+            if ($last < 0 || $stagegroups[$last]['stageid'] !== $row['stageid']) {
+                $stagegroups[] = [
+                    'stageid' => $row['stageid'],
+                    'isstage' => $row['stageid'] > 0,
+                    'heading' => $row['stageid'] > 0
+                        ? $row['stagename']
+                        : get_string('plan:view:nostage', 'local_learningplans'),
+                    'courses' => [],
+                ];
+                $last++;
+            }
+            $stagegroups[$last]['courses'][] = $row;
+        }
+        $hasunstaged = false;
+        foreach ($stagegroups as $index => $group) {
+            $stagegroups[$index]['countlabel'] = get_string(
+                'plan:view:stagecount', 'local_learningplans', count($group['courses'])
+            );
+            $hasunstaged = $hasunstaged || !$group['isstage'];
+        }
+        // With stages present, an (empty) unstaged block stays available as
+        // a drop target for pulling courses out of stages.
+        if ($hasstages && !$hasunstaged && $courserows !== []) {
+            $stagegroups[] = [
+                'stageid' => 0,
+                'isstage' => false,
+                'heading' => get_string('plan:view:nostage', 'local_learningplans'),
+                'countlabel' => get_string('plan:view:stagecount', 'local_learningplans', 0),
+                'courses' => [],
+            ];
+        }
+        // A plan without stages keeps the plain flat list (no headings).
+        $showheadings = $hasstages;
 
         $memberships = $service->get_plan_memberships($planid, true);
         $userids = array_map(static function($membership) {
@@ -258,6 +276,7 @@ final class view_learning_plan_controller {
         $courselistid = 'learning-plan-course-list-' . $planid;
         $reorderformid = 'learning-plan-course-reorder-form-' . $planid;
         $reorderinputid = 'learning-plan-course-reorder-order-' . $planid;
+        $stageinputid = 'learning-plan-course-reorder-stages-' . $planid;
         if (count($courserows) > 1) {
             $PAGE->requires->js_call_amd(
                 'local_learningplans/view_reorder',
@@ -266,6 +285,7 @@ final class view_learning_plan_controller {
                     '#' . $courselistid,
                     '#' . $reorderformid,
                     '#' . $reorderinputid,
+                    '#' . $stageinputid,
                 ]
             );
         }
@@ -297,9 +317,11 @@ final class view_learning_plan_controller {
             'hascoursereorder' => count($courserows) > 1,
             'reorderformid' => $reorderformid,
             'reorderinputid' => $reorderinputid,
+            'stageinputid' => $stageinputid,
             'reorderurl' => (new \moodle_url('/local/learningplans/view.php', ['id' => $planid]))->out(false),
             'sesskey' => sesskey(),
-            'courses' => $courserows,
+            'stagegroups' => $stagegroups,
+            'showheadings' => $showheadings,
             'nocourses' => get_string('plan:view:nocourses', 'local_learningplans'),
             'labelmemberships' => get_string('plan:view:memberships', 'local_learningplans'),
             'hasmembers' => !empty($memberrows),

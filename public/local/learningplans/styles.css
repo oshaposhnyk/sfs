@@ -119,8 +119,20 @@
     border-bottom: 1px solid var(--border-color, #d8d8d8);
 }
 
-.learning-plan__course-item:first-child .learning-plan__stage-heading {
+.learning-plan__stage-group:first-child .learning-plan__stage-heading {
     margin-top: 0;
+}
+
+.learning-plan__stage-list {
+    margin: 0;
+    padding: 0;
+    min-height: 2.75rem;
+}
+
+/* Empty unstaged block stays visible as a drop target. */
+.learning-plan__stage-list:empty {
+    border: 1px dashed var(--border-color, #d8d8d8);
+    border-radius: 6px;
 }
 
 .learning-plan__stage-heading-name {

@@ -20,48 +20,55 @@
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <input type="hidden" name="action" value="reorder">
             <input type="hidden" id="{{reorderinputid}}" name="orderedcourseids" value="">
+            <input type="hidden" id="{{stageinputid}}" name="stageids" value="">
         </form>
     {{/hascoursereorder}}
     {{#hascourses}}
-        <ul id="{{courselistid}}" class="learning-plan__course-list">
-            {{#courses}}
-                <li class="learning-plan__course-item" data-courseid="{{courseid}}" data-name="{{name}}">
-                    {{#stagestart}}
+        <div id="{{courselistid}}" class="learning-plan__stage-groups">
+            {{#stagegroups}}
+                <section class="learning-plan__stage-group">
+                    {{#showheadings}}
                         <div class="learning-plan__stage-heading">
                             <span class="learning-plan__stage-heading-name">{{heading}}</span>
                             <span class="learning-plan__stage-heading-count">{{countlabel}}</span>
                         </div>
-                    {{/stagestart}}
-                    <div class="learning-plan__course-row {{#stagename}}learning-plan__course-row--staged{{/stagename}}">
-                        <div class="learning-plan__course-main">
-                            <span class="learning-plan__course-handle">{{{draghandle}}}</span>
-                            <div class="learning-plan__course-title">
-                                <strong>{{order}}.</strong> <span class="learning-plan__course-name">{{name}}</span>
-                            </div>
-                        </div>
-                        <form class="learning-plan__stage-form" method="post" action="{{stageformurl}}">
-                            <input type="hidden" name="sesskey" value="{{sesskey}}">
-                            <input type="hidden" name="action" value="setstage">
-                            <input type="hidden" name="courseid" value="{{courseid}}">
-                            <label class="visually-hidden" for="lp-stage-{{courseid}}">{{labelstage}}</label>
-                            <input id="lp-stage-{{courseid}}" class="form-control form-control-sm learning-plan__stage-input"
-                                   type="text" name="stagename" value="{{stagename}}" maxlength="255"
-                                   placeholder="{{stageplaceholder}}">
-                            <button class="btn btn-secondary btn-sm" type="submit">{{labelsavestage}}</button>
-                        </form>
-                        <div class="learning-plan__actions">
-                            <a class="btn btn-icon learning-plan__icon-action" href="{{moveupurl}}" title="{{labelmoveup}}" aria-label="{{labelmoveup}}">
-                                {{{moveupicon}}}
-                            </a>
-                            <a class="btn btn-icon learning-plan__icon-action" href="{{movedownurl}}" title="{{labelmovedown}}" aria-label="{{labelmovedown}}">
-                                {{{movedownicon}}}
-                            </a>
-                            <a class="btn btn-danger btn-sm" href="{{removeurl}}">{{labelremove}}</a>
-                        </div>
-                    </div>
-                </li>
-            {{/courses}}
-        </ul>
+                    {{/showheadings}}
+                    <ul class="learning-plan__course-list learning-plan__stage-list" data-stageid="{{stageid}}">
+                        {{#courses}}
+                            <li class="learning-plan__course-item" data-courseid="{{courseid}}" data-name="{{name}}">
+                                <div class="learning-plan__course-row {{#stagename}}learning-plan__course-row--staged{{/stagename}}">
+                                    <div class="learning-plan__course-main">
+                                        <span class="learning-plan__course-handle">{{{draghandle}}}</span>
+                                        <div class="learning-plan__course-title">
+                                            <strong>{{order}}.</strong> <span class="learning-plan__course-name">{{name}}</span>
+                                        </div>
+                                    </div>
+                                    <form class="learning-plan__stage-form" method="post" action="{{stageformurl}}">
+                                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                        <input type="hidden" name="action" value="setstage">
+                                        <input type="hidden" name="courseid" value="{{courseid}}">
+                                        <label class="visually-hidden" for="lp-stage-{{courseid}}">{{labelstage}}</label>
+                                        <input id="lp-stage-{{courseid}}" class="form-control form-control-sm learning-plan__stage-input"
+                                               type="text" name="stagename" value="{{stagename}}" maxlength="255"
+                                               placeholder="{{stageplaceholder}}">
+                                        <button class="btn btn-secondary btn-sm" type="submit">{{labelsavestage}}</button>
+                                    </form>
+                                    <div class="learning-plan__actions">
+                                        <a class="btn btn-icon learning-plan__icon-action" href="{{moveupurl}}" title="{{labelmoveup}}" aria-label="{{labelmoveup}}">
+                                            {{{moveupicon}}}
+                                        </a>
+                                        <a class="btn btn-icon learning-plan__icon-action" href="{{movedownurl}}" title="{{labelmovedown}}" aria-label="{{labelmovedown}}">
+                                            {{{movedownicon}}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm" href="{{removeurl}}">{{labelremove}}</a>
+                                    </div>
+                                </div>
+                            </li>
+                        {{/courses}}
+                    </ul>
+                </section>
+            {{/stagegroups}}
+        </div>
     {{/hascourses}}
     {{^hascourses}}
         <p>{{nocourses}}</p>

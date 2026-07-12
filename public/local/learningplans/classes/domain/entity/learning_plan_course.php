@@ -41,6 +41,9 @@ final class learning_plan_course {
     /** @var bool */
     private bool $required;
 
+    /** @var int|null */
+    private ?int $stageid;
+
     /** @var string */
     private string $stagename;
 
@@ -52,7 +55,9 @@ final class learning_plan_course {
      * @param int $courseid Course id.
      * @param int $sortorder Sort order.
      * @param bool $required Required flag.
-     * @param string $stagename Stage grouping name ('' = unnamed stage).
+     * @param int|null $stageid Stage the course belongs to (null = unstaged).
+     * @param string $stagename Display name of that stage, hydrated by the
+     *               repository from the stage entity ('' when unstaged).
      */
     public function __construct(
         int $id,
@@ -60,6 +65,7 @@ final class learning_plan_course {
         int $courseid,
         int $sortorder,
         bool $required = true,
+        ?int $stageid = null,
         string $stagename = ''
     ) {
         $this->id = $id;
@@ -67,6 +73,7 @@ final class learning_plan_course {
         $this->courseid = $courseid;
         $this->sortorder = $sortorder;
         $this->required = $required;
+        $this->stageid = $stageid;
         $this->stagename = trim($stagename);
     }
 
@@ -105,6 +112,21 @@ final class learning_plan_course {
         return $this->required;
     }
 
+    /**
+     * Stage the course belongs to, null when unstaged.
+     *
+     * @return int|null
+     */
+    public function stage_id(): ?int {
+        return $this->stageid;
+    }
+
+    /**
+     * Display name of the stage ('' when unstaged) — a read-model
+     * projection hydrated from the stage entity by the repository.
+     *
+     * @return string
+     */
     public function stage_name(): string {
         return $this->stagename;
     }

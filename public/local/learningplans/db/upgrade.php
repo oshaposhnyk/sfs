@@ -103,6 +103,68 @@ function xmldb_local_learningplans_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026071202, 'local', 'learningplans');
     }
 
+    if ($oldversion < 2026071204) {
+        // Stages become a first-class entity of the plan aggregate (owner
+        // decision, Phase 9): dedicated table + FK from courses, replacing
+        // the denormalised stagename column from 2026071202.
+        $table = new xmldb_table('local_learningplans_stg');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('planid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, '');
+        $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('planid_fk', XMLDB_KEY_FOREIGN, ['planid'], 'local_learningplans_plan', ['id']);
+        $table->add_index('plan_sort_ix', XMLDB_INDEX_NOTUNIQUE, ['planid', 'sortorder', 'id']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        $crstable = new xmldb_table('local_learningplans_crs');
+        $stageidfield = new xmldb_field('stageid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'required');
+        if (!$dbman->field_exists($crstable, $stageidfield)) {
+            $dbman->add_field($crstable, $stageidfield);
+            $dbman->add_key($crstable, new xmldb_key(
+                'stageid_fk', XMLDB_KEY_FOREIGN, ['stageid'], 'local_learningplans_stg', ['id']
+            ));
+        }
+
+        // Migrate: one stage per distinct non-empty name per plan, ordered
+        // by first appearance in the course sequence. Course order is
+        // already stage-contiguous by the 6.2 convention.
+        $stagenamefield = new xmldb_field('stagename');
+        if ($dbman->field_exists($crstable, $stagenamefield)) {
+            $now = time();
+            $planids = $DB->get_fieldset_sql('SELECT DISTINCT planid FROM {local_learningplans_crs}');
+            foreach ($planids as $planid) {
+                $courses = $DB->get_records('local_learningplans_crs', ['planid' => $planid], 'sortorder ASC, id ASC');
+                $stageids = [];
+                $sortorder = 0;
+                foreach ($courses as $course) {
+                    $name = trim((string)$course->stagename);
+                    if ($name === '') {
+                        continue;
+                    }
+                    if (!isset($stageids[$name])) {
+                        $sortorder++;
+                        $stageids[$name] = (int)$DB->insert_record('local_learningplans_stg', (object)[
+                            'planid' => $planid,
+                            'name' => $name,
+                            'sortorder' => $sortorder,
+                            'timecreated' => $now,
+                            'timemodified' => $now,
+                        ]);
+                    }
+                    $DB->set_field('local_learningplans_crs', 'stageid', $stageids[$name], ['id' => $course->id]);
+                }
+            }
+            $dbman->drop_field($crstable, $stagenamefield);
+        }
+
+        upgrade_plugin_savepoint(true, 2026071204, 'local', 'learningplans');
+    }
+
     return true;
 }
 

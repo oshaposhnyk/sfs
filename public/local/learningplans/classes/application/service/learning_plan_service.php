@@ -465,6 +465,56 @@ final class learning_plan_service {
     }
 
     /**
+     * Stages of a plan, ordered by their block position.
+     *
+     * @param int $planid Plan id.
+     * @return \local_learningplans\domain\entity\learning_plan_stage[]
+     */
+    public function get_plan_stages(int $planid): array {
+        return $this->planrepository->get_stages($planid);
+    }
+
+    /**
+     * Apply a full new structure: course order plus stage assignment
+     * (drag-and-drop between stage blocks).
+     *
+     * @param int $planid Plan id.
+     * @param array<int, int> $orderedcourseids Every plan course id, in order.
+     * @param array<int, int> $stageids Parallel stage ids (0 = unstaged).
+     * @param int $actorid Actor id.
+     * @return void
+     */
+    public function restructure_courses(int $planid, array $orderedcourseids, array $stageids, int $actorid): void {
+        $this->permissionchecker->require_manage();
+        $this->require_plan($planid);
+
+        $existingcourses = $this->planrepository->get_courses($planid);
+        if ($existingcourses === []) {
+            return;
+        }
+        $expected = array_map(static function($courseitem): int {
+            return (int)$courseitem->course_id();
+        }, $existingcourses);
+        sort($expected);
+        $actual = array_map('intval', array_values($orderedcourseids));
+        $sorted = $actual;
+        sort($sorted);
+        if ($sorted !== $expected) {
+            throw new domain_exception('error:invalidcourseorder');
+        }
+
+        $this->planrepository->restructure_courses($planid, $actual, array_map('intval', array_values($stageids)));
+        $this->progressrepository->invalidate_plan($planid);
+
+        $this->eventdispatcher->dispatch('courses_reordered', [
+            'objectid' => $planid,
+            'userid' => $actorid,
+        ]);
+
+        $this->recalculate_plan_members($planid, $actorid);
+    }
+
+    /**
      * Enrol users into plan.
      *
      * @param int $planid Plan id.

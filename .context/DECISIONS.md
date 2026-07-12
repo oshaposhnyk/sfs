@@ -229,3 +229,37 @@ user-authored content (course names, plan/stage names, settings-driven copy).
 duty of providing both variants (single-language values simply render as-is).
 Verified E2E on Student Lab: uk interface + uk plan/course names via
 `?lang=uk`.
+
+## ADR-011 — Stages are a first-class entity of the plan aggregate
+
+**Status.** Accepted (2026-07-12, owner decision; supersedes the "denormalised
+stagename column" part of ADR-008 and upgrade step 2026071202).
+
+**Context.** Stage names lived as a text column on plan courses. The owner
+requires stages as a proper domain model and drag-and-drop that moves courses
+between stages.
+
+**Decision.**
+- New entity `learning_plan_stage` (id, planid, name, sortorder) in table
+  `local_learningplans_stg`; `local_learningplans_crs.stageid` FK replaces
+  `stagename` (dropped by upgrade 2026071204 after migrating one stage per
+  distinct name per plan).
+- Stages belong to the **learning_plan aggregate**: no separate repository —
+  `learning_plan_repository` owns them. Invariants enforced centrally in the
+  adapter's `apply_structure()`: stage blocks stay contiguous in the global
+  course order (grouped by first appearance), stage `sortorder` mirrors block
+  order, and a stage that loses its last course is garbage-collected.
+- Stage lifecycle is **implicit**: `set_course_stage()`/`add_course()` use
+  find-or-create by name ('' = unstaged); there is no separate stage CRUD UI.
+- New `restructure_courses(planid, orderedcourseids[], stageids[])` applies a
+  full order + assignment in one transaction — this is the drag-and-drop
+  contract (each stage renders its own sortable list; the client serialises
+  all lists into the two parallel sequences).
+- `learning_plan_course::stage_name()` remains as a read-model projection
+  hydrated by the repository (LEFT JOIN), so the Student Lab grouping policy
+  and the external functions are unchanged.
+
+**Consequences.** Learner-facing behaviour is identical; managers get true
+cross-stage drag-and-drop and implicit stage management. Moving a course out
+of a plan's last-stage course deletes the stage — recreate it by typing the
+name again (find-or-create).

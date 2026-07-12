@@ -25,6 +25,24 @@
       </INDEXES>
     </TABLE>
 
+    <TABLE NAME="local_learningplans_stg" COMMENT="Stages grouping the courses of a learning plan">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="planid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="planid_fk" TYPE="foreign" FIELDS="planid" REFTABLE="local_learningplans_plan" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="plan_sort_ix" UNIQUE="false" FIELDS="planid, sortorder, id"/>
+      </INDEXES>
+    </TABLE>
+
     <TABLE NAME="local_learningplans_crs" COMMENT="Courses assigned to learning plans">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
@@ -32,7 +50,7 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="stagename" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false"/>
+        <FIELD NAME="stageid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
@@ -40,6 +58,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="planid_fk" TYPE="foreign" FIELDS="planid" REFTABLE="local_learningplans_plan" REFFIELDS="id"/>
         <KEY NAME="courseid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="stageid_fk" TYPE="foreign" FIELDS="stageid" REFTABLE="local_learningplans_stg" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="plan_course_uix" UNIQUE="true" FIELDS="planid, courseid"/>

@@ -130,13 +130,40 @@ interface learning_plan_repository_interface {
     public function get_plan_ids_by_course(int $courseid): array;
 
     /**
-     * Rename the stage a plan course belongs to ('' clears the stage).
+     * Move a plan course into the stage with the given name.
+     *
+     * Find-or-create semantics: an unknown name creates the stage, '' moves
+     * the course out of any stage. The course is placed at the end of its
+     * new block, the global order is re-normalised (stage blocks stay
+     * contiguous) and stages left without courses are removed.
      *
      * @param int $planid Plan id.
      * @param int $courseid Course id.
-     * @param string $stagename New stage name.
+     * @param string $stagename Target stage name ('' = unstaged).
      * @return void
      */
     public function set_course_stage(int $planid, int $courseid, string $stagename): void;
+
+    /**
+     * Stages of a plan, ordered by their block position.
+     *
+     * @param int $planid Plan id.
+     * @return \local_learningplans\domain\entity\learning_plan_stage[]
+     */
+    public function get_stages(int $planid): array;
+
+    /**
+     * Apply a full new structure: course order plus stage assignment.
+     *
+     * $stageids is parallel to $orderedcourseids (0/null = unstaged). The
+     * repository re-derives stage block order from first appearance, keeps
+     * blocks contiguous and removes emptied stages.
+     *
+     * @param int $planid Plan id.
+     * @param array<int, int> $orderedcourseids Every plan course id, in order.
+     * @param array<int, int> $stageids Stage id per course (0 = unstaged).
+     * @return void
+     */
+    public function restructure_courses(int $planid, array $orderedcourseids, array $stageids): void;
 }
 

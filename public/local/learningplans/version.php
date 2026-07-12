@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_learningplans';
-$plugin->version = 2026071203;
+$plugin->version = 2026071204;
 $plugin->requires = 2025100600;
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.2.0';
+$plugin->release = '0.3.0';
 

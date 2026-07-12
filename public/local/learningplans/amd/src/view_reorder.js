@@ -15,28 +15,40 @@
 
 define(['jquery', 'core/sortable_list'], function($, SortableList) {
     /**
-     * Initialize drag and drop reordering for learning plan courses.
+     * Drag-and-drop for learning plan courses across stage blocks.
      *
-     * @param {string} listSelector CSS selector for sortable list root.
-     * @param {string} formSelector CSS selector for reorder submit form.
-     * @param {string} inputSelector CSS selector for hidden ordered IDs input.
+     * Every stage renders its own list; SortableList allows dragging
+     * between them, and dropping into another block also moves the course
+     * into that stage. On drop all lists are serialised in DOM order into
+     * parallel courseid/stageid sequences and posted for the restructure
+     * use case.
+     *
+     * @param {string} wrapSelector CSS selector of the stage-groups wrapper.
+     * @param {string} formSelector CSS selector for the reorder submit form.
+     * @param {string} inputSelector CSS selector for the ordered IDs input.
+     * @param {string} stageInputSelector CSS selector for the stage IDs input.
      */
-    var init = function(listSelector, formSelector, inputSelector) {
-        var list = $(listSelector);
+    var init = function(wrapSelector, formSelector, inputSelector, stageInputSelector) {
+        var wrap = $(wrapSelector);
         var form = $(formSelector);
         var orderInput = $(inputSelector);
+        var stageInput = $(stageInputSelector);
+        var listSelector = wrapSelector + ' .learning-plan__stage-list';
 
-        if (!list.length || !form.length || !orderInput.length || list.children().length < 2) {
+        if (!wrap.length || !form.length || !orderInput.length
+                || wrap.find('.learning-plan__course-item').length < 2) {
             return;
         }
 
-        var sortable = new SortableList(listSelector);
+        var sortable = new SortableList(listSelector, {
+            targetListSelector: listSelector,
+        });
         sortable.getElementName = function(element) {
             var name = element.attr('data-name') || $.trim(element.find('.learning-plan__course-name').text());
             return $.Deferred().resolve(name);
         };
 
-        list.children().on(SortableList.EVENTS.DRAGSTART, function(_, info) {
+        wrap.find('.learning-plan__course-item').on(SortableList.EVENTS.DRAGSTART, function(_, info) {
             setTimeout(function() {
                 $('.sortable-list-is-dragged').width(info.element.width());
             }, 250);
@@ -46,11 +58,16 @@ define(['jquery', 'core/sortable_list'], function($, SortableList) {
             }
 
             var orderedIds = [];
-            info.targetList.children().each(function() {
-                var courseId = parseInt($(this).attr('data-courseid'), 10);
-                if (!isNaN(courseId) && courseId > 0) {
-                    orderedIds.push(courseId);
-                }
+            var stageIds = [];
+            wrap.find('.learning-plan__stage-list').each(function() {
+                var stageId = parseInt($(this).attr('data-stageid'), 10) || 0;
+                $(this).children().each(function() {
+                    var courseId = parseInt($(this).attr('data-courseid'), 10);
+                    if (!isNaN(courseId) && courseId > 0) {
+                        orderedIds.push(courseId);
+                        stageIds.push(stageId);
+                    }
+                });
             });
 
             if (!orderedIds.length) {
@@ -58,6 +75,7 @@ define(['jquery', 'core/sortable_list'], function($, SortableList) {
             }
 
             orderInput.val(orderedIds.join(','));
+            stageInput.val(stageIds.join(','));
             form.trigger('submit');
         });
     };
