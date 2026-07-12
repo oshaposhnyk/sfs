@@ -50,6 +50,14 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
 
 ## Ops notes
 
+- **PHPUnit environment is live** (2026-07-12): composer dev deps installed in
+  the php-fpm container (vendor/ and config.php are gitignored — on a fresh
+  clone rerun `composer install` and re-add `$CFG->phpunit_prefix = 'phpu_';
+  $CFG->phpunit_dataroot = '/var/www/moodledata/phpunit';` to config.php, then
+  `php public/admin/tool/phpunit/cli/init.php`). Note: 5.2 keeps the phpunit
+  init CLI under public/admin/tool/, unlike the root admin/cli scripts.
+  PHPCS binary is NOT included by moodle-testing — codechecker still pending.
+
 - **Cron is not running** on the dev site (last `task_log` entry 21:40; observed
   02:15 next day). Scheduled tasks — including learning-plan reconciliation and
   progress refresh — will not fire until cron is started/fixed.
@@ -337,3 +345,13 @@ _None currently._ (Both 2026-07-12 blockers resolved — see Recent work.)
   Verified: dark preferences hub + open user menu screenshot; light hub in
   shell; build JS syntax-checked. Remaining Phase 5: notifications/messages
   pages polish, Behat, performance pass, PHPCS/PHPUnit environment.
+
+- **2026-07-12** — **Phase 5 slice 3: PHPUnit environment + full test run.**
+  Dev dependencies installed, phpunit prefix/dataroot configured, environment
+  initialised. **All suites green**: 23/23 new tests (91 assertions — theme
+  tokens/mode_manager/navigation, learningplans student_lab_status_policy,
+  sfsgame xp_policy) and the full local_learningplans suite 11/11 (36
+  assertions). Directory args don't run under Moodle's PHPUnit 11 config —
+  use file paths or --testsuite <component>_testsuite. Remaining Phase 5:
+  notifications/messages polish, Behat, performance pass, PHPCS via
+  moodle codechecker, enrol_learningplan tests.
