@@ -40,6 +40,19 @@ visual reference: `styles.css` "APP SHELL" section; BEM map: `design/components.
 
 ## Tasks
 
+- [x] Sticky footer shell alignment (2026-07-14): Boost's fixed `.stickyfooter`
+      form actions start at viewport `left: 0`, which clips action buttons under
+      the SFS sidebar; aligned it to expanded/collapsed/mobile shell columns.
+
+- [x] Core user/message admin-layout shell coverage (2026-07-14): owner reported
+      unstyled profile edit, language, notification preferences and forum
+      preference pages plus narrow notification detail headers; implemented via
+      explicit user-facing allowlist and scoped global form/header polish.
+
+- [x] Messaging/settings visual polish (2026-07-14): restyled topbar
+      notification popover, `/message/index.php` message app and the custom
+      settings hub to match the SFS card language.
+
 - [x] Sidebar language submenu click hardening (2026-07-13): added a scoped
       SFS shell carousel bridge for the native `<details>` user menu so clicks
       on nested icons/labels work and submenu state resets on close.

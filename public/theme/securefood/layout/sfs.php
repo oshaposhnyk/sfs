@@ -299,9 +299,11 @@ if ($PAGE->pagelayout === 'frontpage' && $settingsprovider->enabled('showaboutpa
         ]]);
     }
 }
+$showmaincontent = $abouthtml === '';
 
 $templatecontext = [
     'abouthtml' => $abouthtml,
+    'showmaincontent' => $showmaincontent,
     'railhtml' => $railhtml,
     'sitename' => format_string(
         $settingsprovider->brand_name((string)$SITE->shortname),

@@ -796,6 +796,82 @@
         color: var(--sfs-ink2);
     }
 
+    // Boost moves form action rows into a fixed sticky footer. In the SFS
+    // shell the viewport starts behind our sidebar, so the footer must be
+    // aligned to the shell content column instead of `left: 0`.
+    &.hasstickyfooter {
+        .sfs-shell__content {
+            padding-bottom: 150px;
+        }
+
+        .stickyfooter {
+            left: var(--sfs-sidebar-w);
+            right: 0;
+            height: auto;
+            min-height: 84px;
+            background: color-mix(in srgb, var(--sfs-bg) 90%, transparent);
+            border-top: 1px solid var(--sfs-line);
+            backdrop-filter: saturate(140%) blur(8px);
+            box-shadow: var(--sfs-shadow-3);
+            color: var(--sfs-ink);
+            z-index: 45;
+        }
+
+        .stickyfooter .sticky-footer-content-wrapper {
+            margin: 0;
+            padding: 12px 36px;
+        }
+
+        .stickyfooter .sticky-footer-content {
+            max-width: none;
+            overflow: visible;
+        }
+
+        .stickyfooter [data-groupname="buttonar"] {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stickyfooter .btn {
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .stickyfooter .btn-primary {
+            border-color: var(--sfs-primary);
+            background: var(--sfs-primary);
+            color: var(--sfs-on-dark);
+
+            &:hover,
+            &:focus {
+                border-color: var(--sfs-primary700);
+                background: var(--sfs-primary700);
+                color: var(--sfs-on-dark);
+            }
+        }
+
+        .stickyfooter .btn-secondary,
+        .stickyfooter .btn-cancel {
+            border-color: var(--sfs-line);
+            background: var(--sfs-surface);
+            color: var(--sfs-primary);
+
+            &:hover,
+            &:focus {
+                border-color: var(--sfs-linestrong);
+                background: var(--sfs-surface2);
+                color: var(--sfs-primary);
+            }
+        }
+    }
+
+    &.sfs-sidebar-collapsed.hasstickyfooter .stickyfooter {
+        left: var(--sfs-sidebar-w-collapsed);
+    }
+
     // ---------------------------------------------------------------
     // Mobile drawer (≤820px).
     // ---------------------------------------------------------------
@@ -846,6 +922,24 @@
             z-index: 80;
             background: color-mix(in srgb, var(--sfs-on-light) 40%, transparent);
             backdrop-filter: blur(2px);
+        }
+
+        &.hasstickyfooter {
+            .sfs-shell__content {
+                padding-bottom: 140px;
+            }
+
+            .stickyfooter {
+                left: 0;
+            }
+
+            .stickyfooter .sticky-footer-content-wrapper {
+                padding: 10px 18px;
+            }
+        }
+
+        &.sfs-sidebar-collapsed.hasstickyfooter .stickyfooter {
+            left: 0;
         }
 
         // Drawer always shows the expanded form, even if collapsed is stored.

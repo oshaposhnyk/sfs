@@ -33,26 +33,36 @@
     <p class="sfs-hub__lede">{{lede}}</p>
     <div class="sfs-hub__grid">
         {{#cards}}
-            <section class="sfs-hub__card">
-                <h3 class="sfs-hub__title">
-                    <span class="sfs-icon" aria-hidden="true">{{icon}}</span>
-                    {{title}}
-                </h3>
-                {{#hasfacts}}
-                    <dl class="sfs-hub__facts">
-                        {{#facts}}
-                            <div class="sfs-hub__fact">
-                                <dt>{{label}}</dt>
-                                <dd>{{value}}</dd>
-                            </div>
-                        {{/facts}}
-                    </dl>
-                {{/hasfacts}}
-                <div class="sfs-hub__links">
-                    {{#links}}
-                        <a class="sfs-hub__link" href="{{url}}">{{label}}</a>
-                    {{/links}}
+            <section class="sfs-hub__card{{^hasfacts}} sfs-hub__card--compact{{/hasfacts}}">
+                <div class="sfs-hub__head">
+                    <span class="sfs-hub__icon">
+                        <span class="sfs-icon" aria-hidden="true">{{icon}}</span>
+                    </span>
+                    <h3 class="sfs-hub__title">{{title}}</h3>
                 </div>
+                <div class="sfs-hub__body">
+                    {{#hasfacts}}
+                        <dl class="sfs-hub__facts">
+                            {{#facts}}
+                                <div class="sfs-hub__fact">
+                                    <dt>{{label}}</dt>
+                                    <dd>{{value}}</dd>
+                                </div>
+                            {{/facts}}
+                        </dl>
+                    {{/hasfacts}}
+                    {{^hasfacts}}
+                        <div class="sfs-hub__empty" aria-hidden="true"></div>
+                    {{/hasfacts}}
+                </div>
+                <footer class="sfs-hub__links">
+                    {{#links}}
+                        <a class="sfs-hub__link" href="{{url}}">
+                            <span>{{label}}</span>
+                            <span class="sfs-icon" aria-hidden="true">chevron_right</span>
+                        </a>
+                    {{/links}}
+                </footer>
             </section>
         {{/cards}}
     </div>

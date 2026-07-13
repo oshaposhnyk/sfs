@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-13 (user preferences hub restored to SFS shell)
+Last updated: 2026-07-14 (frontpage/sticky-footer cleanup completed)
 
 ## Domain status
 
@@ -79,6 +79,49 @@ uk string review (9.6) owner takes it.
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-14** — **Frontpage/sticky-footer cleanup `[x]`**:
+  owner reported two remaining UI regressions: Moodle's profile edit sticky
+  form buttons are clipped under the SFS sidebar, and the SecureFood home/about
+  page still shows core Moodle "Available courses" below the designed About
+  content. Completed: Boost's `.stickyfooter` is now aligned to the expanded,
+  collapsed and mobile SFS shell columns and styled with SFS actions; SFS shell
+  adds bottom padding while sticky actions are visible. The frontpage now hides
+  core Moodle `main_content` when the settings-driven SFS About page is active,
+  while still rendering the placeholder in a hidden container so Moodle's layout
+  guard does not throw a coding error. Checks: PHP lint clean for
+  `layout/sfs.php`; `git diff --check` clean; no raw hex/actual `!important`
+  declarations in touched theme SCSS; Moodle SCSS compiler smoke succeeded
+  (1,224,480 bytes); Moodle caches purged. HTTP smoke to `localhost:8080`
+  could not run from the shell because the port refused the connection.
+
+- **2026-07-14** — **Core user/message form styling `[x]`**:
+  owner reported remaining SFS-mode gaps on notification detail headers and core
+  user/account forms: `/user/edit.php`, `/user/language.php`,
+  `/message/notificationpreferences.php` and `/user/forum.php`. Completed:
+  expanded the explicit admin-layout shell allowlist for these user-facing pages;
+  added scoped SFS card/input/button/filemanager/editor styling for core Moodle
+  forms; restyled notification preferences tables/toggles; and reset Boost's
+  notification detail header width/height rules so subjects such as "Badge
+  earned" render as full-width SFS headers. No Moodle core files were changed.
+  Checks: PHP lint clean for `mode_manager.php`; `git diff --check` clean; no
+  raw hex/`!important` in touched SCSS; Moodle SCSS compiler smoke succeeded
+  (1,222,452 bytes); Moodle caches purged. PHPCS is unavailable in the
+  workspace (`vendor/bin/phpcs` missing). Browser QA could not run because the
+  in-app browser target was unavailable in this Codex session.
+
+- **2026-07-14** — **Messaging/settings visual polish `[x]`**:
+  owner reported three remaining design mismatches: topbar notification popover,
+  `/message/index.php` full messages app, and `theme/securefood/mysettings.php`
+  settings hub. Completed theme-only polish: notification popover now has SFS
+  card sizing/header/actions/item rows; `/message/index.php` message app now
+  uses SFS panel/card/list/tab/input styling; the custom settings hub now uses
+  richer card structure with head/body/footer, icon tiles, accent strip and
+  action pills. No Moodle core templates were changed. Checks: PHP lint clean
+  for touched PHP; AMD syntax checks clean; `git diff --check` clean; no raw
+  hex/`!important` in touched SCSS; Moodle SCSS compiler smoke succeeded
+  (1,202,674 bytes); Moodle caches purged. Browser visual QA still needs manual
+  verification in the active logged-in browser.
 
 - **2026-07-13** — **User preferences hub SFS styling restored `[x]`**:
   fixed the owner-reported unstyled `/user/preferences.php` page. The page is a

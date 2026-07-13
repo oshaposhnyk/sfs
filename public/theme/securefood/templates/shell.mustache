@@ -28,6 +28,7 @@
     * sidepreblocks - HTML for the blocks region
     * contentbottomblocks - HTML for the content-bottom blocks region
     * hasblocks - true if there are blocks on this page
+    * showmaincontent - true when core Moodle page content should be rendered
 
     Example context (json):
     {
@@ -104,17 +105,22 @@
                                         {{{contenttopblocks}}}
                                     </div>
                                 {{/hascontenttopblocks}}
-                                {{#railhtml}}
-                                    <div class="sfs-courselayout">
-                                        <div class="sfs-courselayout__main">{{{ output.main_content }}}</div>
-                                        <aside class="sfs-courselayout__rail" aria-label="{{#str}}rail_aria, theme_securefood{{/str}}">
-                                            {{{railhtml}}}
-                                        </aside>
-                                    </div>
-                                {{/railhtml}}
-                                {{^railhtml}}
-                                    {{{ output.main_content }}}
-                                {{/railhtml}}
+                                {{#showmaincontent}}
+                                    {{#railhtml}}
+                                        <div class="sfs-courselayout">
+                                            <div class="sfs-courselayout__main">{{{ output.main_content }}}</div>
+                                            <aside class="sfs-courselayout__rail" aria-label="{{#str}}rail_aria, theme_securefood{{/str}}">
+                                                {{{railhtml}}}
+                                            </aside>
+                                        </div>
+                                    {{/railhtml}}
+                                    {{^railhtml}}
+                                        {{{ output.main_content }}}
+                                    {{/railhtml}}
+                                {{/showmaincontent}}
+                                {{^showmaincontent}}
+                                    <div class="sfs-shell__suppressed-main" hidden aria-hidden="true">{{{ output.main_content }}}</div>
+                                {{/showmaincontent}}
                                 {{#hascontentbottomblocks}}
                                     <div class="sfs-shell__blockslot sfs-shell__blockslot--content-bottom d-print-none">
                                         {{{contentbottomaddblockbutton}}}

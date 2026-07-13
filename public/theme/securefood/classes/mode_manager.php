@@ -54,12 +54,17 @@ final class mode_manager {
      *
      * Most admin-layout pages remain Boost because core forms and admin
      * furniture are not fully shell-safe. Keep this list explicit so fixes for
-     * user-facing hubs do not silently wrap profile/admin edit forms.
+     * user-facing preference/profile pages do not silently wrap site admin
+     * screens.
      *
      * @var string[]
      */
     private const ADMIN_SHELL_PATHS = [
+        '/message/notificationpreferences.php',
         '/message/output/popup/notifications.php',
+        '/user/edit.php',
+        '/user/forum.php',
+        '/user/language.php',
         '/user/preferences.php',
     ];
 

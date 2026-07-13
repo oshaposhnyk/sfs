@@ -33,6 +33,11 @@ Landing/dashboard page in SecureFood mode. Prototype: `insights.html`
 
 ## Tasks
 
+- [x] Hide core frontpage fallback content in SFS About mode (2026-07-14):
+      owner reported Moodle "Available courses" rendering below the designed
+      About/home content; suppressed core `main_content` only when the settings-
+      driven SFS About page is active.
+
 - [~] P1 fidelity slice 1 (2026-07-12): L4C mission band implemented,
       settings-driven and localised; 17/17 theme tests + desktop browser pass.
       Mobile grid overflow fix awaits cache purge and repeat screenshot.

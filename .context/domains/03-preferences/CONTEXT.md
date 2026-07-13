@@ -33,6 +33,10 @@ Server-side user preferences replacing the prototype's localStorage-only state
 
 ## Tasks
 
+- [x] Core account preference forms SFS styling (2026-07-14): styled Moodle core
+      profile edit, preferred language, notification preferences and forum
+      preferences pages in the SecureFood shell, keeping mutations handled by
+      core forms/endpoints.
 - [x] Preference definitions + validation + Privacy API declarations (2026-07-12).
 - [x] Server-side rendering of `data-theme`/body classes in layouts.
 - [~] AMD shell toggle: preference cycle + WS write live; local first-paint
@@ -43,6 +47,9 @@ Server-side user preferences replacing the prototype's localStorage-only state
 - [x] Core preferences hub SFS shell/style restored (2026-07-13): allowed
       `/user/preferences.php` back into the shell with an explicit admin-layout
       whitelist and retargeted the card styling to Moodle 5.2 markup.
+- [x] Custom settings hub visual polish (2026-07-14): updated
+      `theme/securefood/mysettings.php` card markup/styles to match the SFS
+      design card language.
 - [~] PHPUnit: definitions/defaults/privacy provider covered; Behat: toggle
       persists pending.
 
