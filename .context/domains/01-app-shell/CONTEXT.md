@@ -40,6 +40,26 @@ visual reference: `styles.css` "APP SHELL" section; BEM map: `design/components.
 
 ## Tasks
 
+- [x] Sidebar language submenu click hardening (2026-07-13): added a scoped
+      SFS shell carousel bridge for the native `<details>` user menu so clicks
+      on nested icons/labels work and submenu state resets on close.
+
+- [x] User preferences/settings page styling (2026-07-13): restored
+      `/user/preferences.php` to the SFS shell via an explicit admin-layout
+      whitelist while keeping profile/admin edit forms on Boost.
+
+- [x] Sidebar user-menu item styling (2026-07-13): replaced the raw core
+      dropdown-item rendering in the sidebar popover with SFS BEM rows and
+      per-item icons while preserving Moodle user-menu semantics/submenus.
+
+- [x] Sidebar user-menu dropdown positioning (2026-07-13): force stable
+      desktop expanded/collapsed and mobile drawer positioning for the Moodle
+      user context menu inside the SecureFood sidebar.
+
+- [x] SFS topbar/collapsed-menu polish (2026-07-13): hide the edit-mode switch
+      in SecureFood mode and make the collapsed sidebar user menu open as a
+      right-side context menu instead of overlaying the collapsed rail/content.
+
 - [x] Sidebar user menu correction (2026-07-13): move the standard Moodle user
       context menu from the SecureFood topbar into the sidebar user card and
       remove the duplicate topbar avatar/user icon.

@@ -77,11 +77,10 @@
                     </span>
                 {{/unauthenticateduser}}
                 {{^unauthenticateduser}}
-                    <div class="dropdown show">
-                        <button type="button" id="user-menu-toggle" data-bs-toggle="dropdown"
-                                aria-label="{{#str}}usermenu{{/str}}" aria-haspopup="true"
-                                aria-controls="user-action-menu"
-                                class="sfs-usercard sfs-usercard--menu dropdown-toggle">
+                    <details class="sfs-usercard-menu__details">
+                        <summary id="user-menu-toggle" aria-label="{{#str}}usermenu{{/str}}"
+                                 aria-controls="user-action-menu"
+                                 class="sfs-usercard sfs-usercard--menu">
                             <span class="sfs-usercard__avatar sfs-usercard__avatar--core" aria-hidden="true">
                                 {{#avatardata}}
                                     <span class="sfs-usercard__avataritem {{classes}}">{{{content}}}</span>
@@ -92,14 +91,14 @@
                                 {{#subtitle}}<span class="sfs-usercard__role">{{subtitle}}</span>{{/subtitle}}
                             </span>
                             <span class="sfs-icon sfs-usercard__chevron" aria-hidden="true">expand_more</span>
-                        </button>
-                        <div id="user-action-menu" class="dropdown-menu dropdown-menu-end">
+                        </summary>
+                        <div id="user-action-menu" class="sfs-usercard-menu__panel">
                             <div id="usermenu-carousel" class="carousel slide" data-touch="false"
                                  data-interval="false" data-keyboard="false">
                                 <div class="carousel-inner">
                                     <div id="carousel-item-main" class="carousel-item active" role="menu"
                                          tabindex="-1" aria-label="{{#str}}user{{/str}}">
-                                        {{> core/user_action_menu_items }}
+                                        {{> theme_securefood/user_action_menu_items }}
                                     </div>
                                     {{#submenus}}
                                         <div id="carousel-item-{{id}}" role="menu" class="carousel-item submenu"
@@ -107,18 +106,18 @@
                                             <div class="d-flex flex-column h-100">
                                                 <div class="header">
                                                     <button type="button"
-                                                            class="btn btn-icon carousel-navigation-link text-decoration-none text-body"
+                                                            class="btn btn-icon carousel-navigation-link"
                                                             data-carousel-target-id="carousel-item-main"
                                                             aria-label="{{#str}}usermenugoback{{/str}}">
-                                                        <span class="dir-rtl-hide">{{#pix}}i/arrow-left{{/pix}}</span>
-                                                        <span class="dir-ltr-hide">{{#pix}}i/arrow-right{{/pix}}</span>
+                                                        <span class="sfs-icon dir-rtl-hide" aria-hidden="true">chevron_left</span>
+                                                        <span class="sfs-icon dir-ltr-hide" aria-hidden="true">chevron_right</span>
                                                     </button>
                                                     <span class="ps-2" id="carousel-item-title-{{id}}">{{title}}</span>
                                                 </div>
                                                 <div class="dropdown-divider"></div>
                                                 <div class="items h-100 overflow-auto" role="menu"
                                                      aria-labelledby="carousel-item-title-{{id}}">
-                                                    {{> core/user_action_menu_submenu_items }}
+                                                    {{> theme_securefood/user_action_menu_submenu_items }}
                                                 </div>
                                             </div>
                                         </div>
@@ -126,14 +125,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </details>
                 {{/unauthenticateduser}}
             </div>
-            {{#js}}
-                require(['core/usermenu'], function(UserMenu) {
-                    UserMenu.init();
-                });
-            {{/js}}
         </div>
     {{/usermenu}}
     {{^usermenu}}

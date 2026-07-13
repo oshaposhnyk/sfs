@@ -138,6 +138,83 @@ if ($isloggedin) {
 $usermenu = $primarymenu['user'] ?? null;
 if (is_array($usermenu) && $usercard !== null) {
     $usermenu['subtitle'] = $usercard['subtitle'];
+
+    $usermenuvalue = static function($item, string $name) {
+        if (is_array($item) && array_key_exists($name, $item)) {
+            return $item[$name];
+        }
+        if (is_object($item) && property_exists($item, $name)) {
+            return $item->{$name};
+        }
+        return null;
+    };
+
+    $usermenustring = static function($value): string {
+        if ($value instanceof moodle_url) {
+            return $value->out(false);
+        }
+        if ($value === null) {
+            return '';
+        }
+        return (string)$value;
+    };
+
+    $usermenuicon = static function($item) use ($usermenuvalue, $usermenustring): string {
+        if ((bool)$usermenuvalue($item, 'submenulink')) {
+            return 'language';
+        }
+
+        $url = $usermenustring($usermenuvalue($item, 'url'));
+        $path = (string)(parse_url($url, PHP_URL_PATH) ?: $url);
+        $title = $usermenustring($usermenuvalue($item, 'title'));
+        $identifier = $usermenustring($usermenuvalue($item, 'titleidentifier'));
+        $needle = \core_text::strtolower($path . ' ' . $title . ' ' . $identifier);
+
+        return match (true) {
+            str_contains($needle, '/user/profile') || str_contains($needle, 'profile') => 'person',
+            str_contains($needle, '/grade/') || str_contains($needle, 'grade')
+                || str_contains($needle, 'оцін') => 'grade',
+            str_contains($needle, '/calendar/') || str_contains($needle, 'calendar')
+                || str_contains($needle, 'календар') => 'calendar_today',
+            str_contains($needle, '/user/files') || str_contains($needle, 'file')
+                || str_contains($needle, 'файл') => 'folder',
+            str_contains($needle, '/report/') || str_contains($needle, 'report')
+                || str_contains($needle, 'звіт') => 'assessment',
+            str_contains($needle, '/user/preferences') || str_contains($needle, 'preferences')
+                || str_contains($needle, 'уподоб') => 'tune',
+            str_contains($needle, 'language') || str_contains($needle, 'мова') => 'language',
+            str_contains($needle, '/course/switchrole') || str_contains($needle, 'switchrole') => 'people',
+            str_contains($needle, '/login/logout') || str_contains($needle, 'logout')
+                || str_contains($needle, 'вийти') => 'logout',
+            default => 'chevron_right',
+        };
+    };
+
+    $assignusermenuicon = static function(&$item, ?string $forcedicon = null) use ($usermenuicon): void {
+        $icon = $forcedicon ?? $usermenuicon($item);
+        if (is_array($item)) {
+            $item['sfsicon'] = $icon;
+            return;
+        }
+        if (is_object($item)) {
+            $item->sfsicon = $icon;
+        }
+    };
+
+    foreach (array_keys($usermenu['items'] ?? []) as $itemindex) {
+        $assignusermenuicon($usermenu['items'][$itemindex]);
+    }
+
+    foreach (array_keys($usermenu['submenus'] ?? []) as $submenuindex) {
+        if (!is_object($usermenu['submenus'][$submenuindex])
+                || !isset($usermenu['submenus'][$submenuindex]->items)
+                || !is_array($usermenu['submenus'][$submenuindex]->items)) {
+            continue;
+        }
+        foreach (array_keys($usermenu['submenus'][$submenuindex]->items) as $itemindex) {
+            $assignusermenuicon($usermenu['submenus'][$submenuindex]->items[$itemindex], 'language');
+        }
+    }
 }
 
 // Mode switch control (domain 02).

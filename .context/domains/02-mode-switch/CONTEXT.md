@@ -33,6 +33,10 @@ Decision record: ADR-002.
 
 ## Tasks
 
+- [x] Notifications-page shell exception (2026-07-13): allow the core popup
+      notifications page to render in the SecureFood shell while keeping
+      profile/settings admin-form pages on stock Boost.
+
 - [x] Admin/profile settings shell safety (2026-07-13): keep core
       `pagelayout=admin` pages on stock Boost so Moodle settings/profile forms
       are not wrapped by the custom SecureFood sidebar.

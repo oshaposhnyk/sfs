@@ -60,29 +60,130 @@
         }
     }
 
-    // Core /user/preferences.php hub: design cards.
-    &.path-user .preferences-group.card,
-    &.path-user .section.card {
-        background: var(--sfs-surface);
-        border: 1px solid var(--sfs-line);
-        border-radius: var(--sfs-radius-md);
-        box-shadow: var(--sfs-shadow-1);
-        margin-bottom: 18px;
-        overflow: hidden;
-    }
+    // Core /user/preferences.php hub: Moodle renders this as
+    // .container-fluid.p-sm-0 > .row > .col-md-4 > .card.
+    &#page-user-preferences,
+    &.path-user {
+        .preferences-group.card,
+        .section.card,
+        .container-fluid.p-sm-0 > .row > [class*="col-"] > .card {
+            height: 100%;
+            background: var(--sfs-surface);
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            box-shadow: var(--sfs-shadow-1);
+            overflow: hidden;
 
-    &.path-user .card-header {
-        background: linear-gradient(180deg, var(--sfs-surface) 0%, var(--sfs-surface2) 100%);
-        border-bottom: 1px solid var(--sfs-line);
+            @include sfs-motion {
+                transition:
+                    border-color var(--sfs-duration-fast),
+                    box-shadow var(--sfs-duration-fast),
+                    transform var(--sfs-duration-fast);
+            }
+
+            &:hover {
+                border-color: var(--sfs-linestrong);
+                box-shadow: var(--sfs-shadow-2);
+                transform: translateY(-1px);
+            }
+        }
+
+        .container-fluid.p-sm-0 > .row {
+            row-gap: 18px;
+        }
+
+        .container-fluid.p-sm-0 > .row > [class*="col-"] {
+            display: flex;
+        }
+
+        .card-body {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .card-header {
+            background: linear-gradient(180deg, var(--sfs-surface) 0%, var(--sfs-surface2) 100%);
+            border-bottom: 1px solid var(--sfs-line);
+        }
 
         .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--sfs-ink);
+            font-family: 'Manrope', sans-serif;
             font-size: 1.05rem;
+            font-weight: 800;
+            margin: 0 0 14px;
+
+            &::before {
+                content: "tune";
+                display: grid;
+                place-items: center;
+                width: 36px;
+                height: 36px;
+                flex: 0 0 36px;
+                border-radius: var(--sfs-radius-sm);
+                background: var(--sfs-primary50);
+                color: var(--sfs-primary);
+                font-family: "SFS Material Icons";
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                font-feature-settings: "liga";
+                -webkit-font-smoothing: antialiased;
+            }
+        }
+
+        .card-text {
+            display: grid;
+            gap: 8px;
             margin: 0;
         }
-    }
 
-    &.path-user .card-body a {
-        color: var(--sfs-primary);
+        .card-text li {
+            margin: 0;
+        }
+
+        .card-body a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 40px;
+            padding: 8px 10px;
+            border-radius: var(--sfs-radius-sm);
+            color: var(--sfs-ink2);
+            font-weight: 600;
+            text-decoration: none;
+
+            &::after {
+                content: "chevron_right";
+                flex: 0 0 auto;
+                color: var(--sfs-muted);
+                font-family: "SFS Material Icons";
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                font-feature-settings: "liga";
+                -webkit-font-smoothing: antialiased;
+            }
+
+            &:hover,
+            &:focus {
+                background: var(--sfs-surface2);
+                color: var(--sfs-primary);
+                text-decoration: none;
+            }
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
+        }
     }
 }
 

@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-13 (sidebar user menu/settings shell fix completed)
+Last updated: 2026-07-13 (user preferences hub restored to SFS shell)
 
 ## Domain status
 
@@ -79,6 +79,70 @@ uk string review (9.6) owner takes it.
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-13** — **User preferences hub SFS styling restored `[x]`**:
+  fixed the owner-reported unstyled `/user/preferences.php` page. The page is a
+  core user-facing hub that uses `pagelayout=admin`; the previous broad admin
+  fallback sent it to Boost. `mode_manager` now uses an explicit
+  `ADMIN_SHELL_PATHS` whitelist for shell-safe admin-layout pages
+  (`/user/preferences.php` and notifications only), so edit/profile/admin forms
+  such as `/user/edit.php` still stay Boost. The preferences hub CSS now targets
+  Moodle 5.2's actual `.container-fluid.p-sm-0 > .row > .col-md-4 > .card`
+  markup with SFS cards, heading icons and row links. Checks: PHP lint clean for
+  `mode_manager.php`/layout; JS syntax checks still clean; `git diff --check`
+  clean; Moodle SCSS compiler smoke succeeded (1,188,526 bytes); caches purged.
+
+- **2026-07-13** — **Sidebar language submenu click hardening `[x]`**:
+  fixed the intermittent language submenu/back click issue introduced by the
+  styled sidebar user menu. The SFS shell now owns a scoped
+  `initUserMenuCarouselBridge()` for the native `<details>` user menu: it uses
+  `closest('.carousel-navigation-link')` so clicks on nested icon/label spans
+  work, resets the carousel to the main pane when the details menu closes, and
+  preserves focus/size handling on carousel transitions. The old
+  `core/usermenu` init was removed from this sidebar markup because it expects
+  Bootstrap dropdown lifecycle events. Checks: `node --check` clean for
+  `amd/src/shell.js` and `amd/build/shell.min.js`; `git diff --check` clean;
+  Moodle caches purged.
+
+- **2026-07-13** — **Sidebar language submenu click issue diagnosis `[x]`**:
+  identified why the owner-reported language submenu/back clicks are
+  intermittent after the styled sidebar user-menu change. Moodle core
+  `core/usermenu` handles carousel navigation only when `event.target` itself
+  matches `.carousel-navigation-link`; the SFS styled rows put icons/labels
+  inside nested spans, so clicks on the visible icon/text do not trigger the
+  handler. A second stability issue is that the native `<details>` wrapper does
+  not emit Boost dropdown `shown.bs.dropdown` / `hide.bs.dropdown`, so core
+  sizing/focus/reset hooks are skipped. Fix pending: add a theme-side robust
+  click/reset bridge or equivalent scoped `pointer-events` + carousel reset.
+
+- **2026-07-13** — **Sidebar user-menu item styling `[x]`**:
+  replaced the raw Moodle/Bootstrap user-action list inside the SecureFood
+  sidebar popover with theme-owned BEM menu rows and deterministic Material
+  icons while preserving Moodle's user-menu links, language submenu and
+  carousel behaviour. The submenu back control now uses the SFS icon system.
+  Checks: PHP lint clean for touched layout PHP; `git diff --check` clean;
+  Moodle caches purged; Moodle SCSS compiler smoke succeeded (1,181,634 bytes).
+  In-app browser visual check was unavailable in this Codex session (`iab`
+  browser not exposed).
+
+- **2026-07-13** — **Sidebar user-menu dropdown positioning `[x]`**:
+  fixed the owner-reported sidebar screenshots by replacing the Bootstrap
+  dropdown/Popper wrapper inside the scrollable sidebar with a native
+  `<details>/<summary>` user-menu popover. The menu keeps Moodle core
+  user-action items/submenus, but no longer receives inline Popper transforms
+  or changes sidebar scroll height. Desktop expanded, desktop collapsed and
+  mobile drawer states now use deterministic fixed positioning. Checks: PHP
+  lint clean for touched PHP files; `git diff --check` clean.
+
+- **2026-07-13** — **SFS topbar/collapsed menu/notifications polish `[x]`**:
+  completed the owner-reported UI corrections. The SecureFood topbar no longer
+  renders Moodle's edit-mode switch. The sidebar user context menu now opens as
+  a right-side `dropend`, fixing the collapsed-sidebar overlay issue. The core
+  popup notifications page is whitelisted back into the SecureFood shell while
+  profile/settings admin-form pages remain Boost, and notification-area styling
+  now uses SFS cards/surfaces/unread states. Checks: PHP lint clean for touched
+  PHP/lang files; `git diff --check` clean; theme EN/UK language keys in sync.
+  PHPUnit/Behat/browser QA skipped by owner request.
 
 - **2026-07-13** — **Sidebar user menu + settings shell fix `[x]`**:
   moved the Moodle user context menu out of the SecureFood topbar and into the

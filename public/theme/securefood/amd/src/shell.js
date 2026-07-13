@@ -24,6 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+import Carousel from 'theme_boost/bootstrap/carousel';
 import {setUserPreference} from 'core_user/repository';
 
 const CLASSES = {
@@ -32,6 +33,15 @@ const CLASSES = {
 };
 
 const isMobile = () => window.matchMedia('(max-width: 820px)').matches;
+
+const USER_MENU_SELECTORS = {
+    menu: '#sfs-sidebar .sfs-usercard-menu',
+    details: '.sfs-usercard-menu__details',
+    carousel: '#usermenu-carousel',
+    carouselItem: '.carousel-item',
+    activeCarouselItem: '.carousel-item.active',
+    carouselNavigationLink: '.carousel-navigation-link',
+};
 
 /**
  * Keep the drawer's accessibility state aligned with its visual state.
@@ -190,10 +200,151 @@ const toggleScheme = (button) => {
 };
 
 /**
+ * Resize inactive user-menu carousel panes to the currently visible pane.
+ *
+ * Moodle core normally does this on Bootstrap dropdown lifecycle events. The
+ * SFS sidebar uses native <details> for stable fixed positioning, so it needs
+ * a small scoped bridge instead of relying on dropdown events that never fire.
+ *
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ */
+const syncUserMenuCarouselSize = (userMenu) => {
+    const activeItem = userMenu.querySelector(
+        `${USER_MENU_SELECTORS.carousel} ${USER_MENU_SELECTORS.activeCarouselItem}`
+    );
+    if (!activeItem || activeItem.offsetWidth <= 0 || activeItem.offsetHeight <= 0) {
+        return;
+    }
+
+    userMenu.querySelectorAll(
+        `${USER_MENU_SELECTORS.carousel} ${USER_MENU_SELECTORS.carouselItem}`
+    ).forEach((item) => {
+        if (item === activeItem) {
+            return;
+        }
+        item.style.width = `${activeItem.offsetWidth}px`;
+        item.style.height = `${activeItem.offsetHeight}px`;
+    });
+};
+
+/**
+ * Move the sidebar user-menu carousel to the target pane.
+ *
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ * @param {string|undefined} targetId The carousel item id.
+ */
+const moveUserMenuCarousel = (userMenu, targetId) => {
+    if (!targetId) {
+        return;
+    }
+
+    const carousel = userMenu.querySelector(USER_MENU_SELECTORS.carousel);
+    const targetItem = document.getElementById(targetId);
+    if (!carousel || !targetItem || !userMenu.contains(targetItem) || !targetItem.parentNode) {
+        return;
+    }
+
+    const index = Array.from(targetItem.parentNode.children).indexOf(targetItem);
+    if (index < 0) {
+        return;
+    }
+
+    syncUserMenuCarouselSize(userMenu);
+    Carousel.getOrCreateInstance(carousel).to(index);
+};
+
+/**
+ * Reset the sidebar user-menu carousel to the main pane.
+ *
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ */
+const resetUserMenuCarousel = (userMenu) => {
+    const carousel = userMenu.querySelector(USER_MENU_SELECTORS.carousel);
+    if (!carousel) {
+        return;
+    }
+    Carousel.getOrCreateInstance(carousel).to(0);
+};
+
+/**
+ * Handle a click/keyboard activation on any nested part of a carousel link.
+ *
+ * Moodle core/user-menu checks event.target directly, which misses clicks on
+ * nested icon/label spans inside the styled SFS rows. This bridge uses closest()
+ * and stops the event before the generic core listener can apply the old rule.
+ *
+ * @param {Event} e Click or keydown event.
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ */
+const handleUserMenuCarouselNavigation = (e, userMenu) => {
+    if (!(e.target instanceof Element)) {
+        return;
+    }
+
+    const trigger = e.target.closest(USER_MENU_SELECTORS.carouselNavigationLink);
+    if (!trigger || !userMenu.contains(trigger)) {
+        return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof e.stopImmediatePropagation === 'function') {
+        e.stopImmediatePropagation();
+    }
+
+    moveUserMenuCarousel(userMenu, trigger.dataset.carouselTargetId);
+};
+
+/**
+ * Initialise the SFS sidebar bridge for Moodle user-menu submenus.
+ */
+const initUserMenuCarouselBridge = () => {
+    document.querySelectorAll(USER_MENU_SELECTORS.menu).forEach((userMenu) => {
+        if (userMenu.dataset.sfsCarouselBridge === 'true') {
+            return;
+        }
+
+        const details = userMenu.querySelector(USER_MENU_SELECTORS.details);
+        const carousel = userMenu.querySelector(USER_MENU_SELECTORS.carousel);
+        if (!details || !carousel) {
+            return;
+        }
+
+        userMenu.dataset.sfsCarouselBridge = 'true';
+
+        userMenu.addEventListener('click', (e) => {
+            handleUserMenuCarouselNavigation(e, userMenu);
+        }, true);
+
+        userMenu.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') {
+                return;
+            }
+            handleUserMenuCarouselNavigation(e, userMenu);
+        }, true);
+
+        details.addEventListener('toggle', () => {
+            if (details.open) {
+                syncUserMenuCarouselSize(userMenu);
+                userMenu.querySelector(USER_MENU_SELECTORS.activeCarouselItem)?.focus();
+                return;
+            }
+            resetUserMenuCarousel(userMenu);
+        });
+
+        carousel.addEventListener('slid.bs.carousel', () => {
+            syncUserMenuCarouselSize(userMenu);
+            userMenu.querySelector(USER_MENU_SELECTORS.activeCarouselItem)?.focus();
+        });
+    });
+};
+
+/**
  * Initialise the shell interactions.
  */
 export const init = () => {
     syncSidebarAccessibility(document.body.classList.contains(CLASSES.drawerOpen));
+    initUserMenuCarouselBridge();
 
     document.addEventListener('click', (e) => {
         const target = e.target.closest('[data-sfs-action]');

@@ -50,6 +50,20 @@ final class mode_manager {
     ];
 
     /**
+     * Admin-layout pages that are user-facing enough to keep inside SFS.
+     *
+     * Most admin-layout pages remain Boost because core forms and admin
+     * furniture are not fully shell-safe. Keep this list explicit so fixes for
+     * user-facing hubs do not silently wrap profile/admin edit forms.
+     *
+     * @var string[]
+     */
+    private const ADMIN_SHELL_PATHS = [
+        '/message/output/popup/notifications.php',
+        '/user/preferences.php',
+    ];
+
+    /**
      * Pure mode resolution policy.
      *
      * Forced site-wide mode wins; then the user preference; then the site
@@ -110,7 +124,15 @@ final class mode_manager {
             return false;
         }
         if ($page->pagelayout === 'admin') {
-            return false;
+            try {
+                $path = $page->url->get_path();
+            } catch (\Throwable $exception) {
+                return false;
+            }
+
+            if (!in_array($path, self::ADMIN_SHELL_PATHS, true)) {
+                return false;
+            }
         }
         if ($page->user_is_editing()) {
             return false;

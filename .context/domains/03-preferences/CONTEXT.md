@@ -40,6 +40,9 @@ Server-side user preferences replacing the prototype's localStorage-only state
 - [x] SCSS: dark-scheme custom-property overrides live purely in `_tokens.scss`.
 - [x] Settings UI: Appearance section (light/dark/system radio) on the (restyled)
       preferences page — no-JS path.
+- [x] Core preferences hub SFS shell/style restored (2026-07-13): allowed
+      `/user/preferences.php` back into the shell with an explicit admin-layout
+      whitelist and retargeted the card styling to Moodle 5.2 markup.
 - [~] PHPUnit: definitions/defaults/privacy provider covered; Behat: toggle
       persists pending.
 
