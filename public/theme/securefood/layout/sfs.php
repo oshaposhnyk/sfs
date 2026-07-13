@@ -135,6 +135,11 @@ if ($isloggedin) {
     ];
 }
 
+$usermenu = $primarymenu['user'] ?? null;
+if (is_array($usermenu) && $usercard !== null) {
+    $usermenu['subtitle'] = $usercard['subtitle'];
+}
+
 // Mode switch control (domain 02).
 $modeswitch = null;
 if (\theme_securefood\mode_manager::can_user_switch()) {
@@ -252,7 +257,7 @@ $templatecontext = [
     'contentbottomblocks' => $contentbottomblocks['html'],
     'contentbottomaddblockbutton' => $contentbottomblocks['addblockbutton'],
     'hascontentbottomblocks' => $contentbottomblocks['hascontent'],
-    'usermenu' => $primarymenu['user'] ?? null,
+    'usermenu' => $usermenu,
     'langmenu' => $primarymenu['lang'] ?? null,
     'secondarymoremenu' => $secondarynavigation ?: false,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,

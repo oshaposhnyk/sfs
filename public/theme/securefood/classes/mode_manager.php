@@ -109,17 +109,8 @@ final class mode_manager {
         if (in_array($page->pagelayout, self::EXCLUDED_LAYOUTS, true)) {
             return false;
         }
-        // The 'admin' layout covers both Site administration and user-facing
-        // preference pages; only real /admin/ pages must stay stock Boost.
         if ($page->pagelayout === 'admin') {
-            try {
-                $path = $page->url->get_path();
-            } catch (\Throwable $exception) {
-                return false;
-            }
-            if (strpos($path, '/admin/') !== false) {
-                return false;
-            }
+            return false;
         }
         if ($page->user_is_editing()) {
             return false;

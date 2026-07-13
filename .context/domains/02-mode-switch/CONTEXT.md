@@ -33,6 +33,10 @@ Decision record: ADR-002.
 
 ## Tasks
 
+- [x] Admin/profile settings shell safety (2026-07-13): keep core
+      `pagelayout=admin` pages on stock Boost so Moodle settings/profile forms
+      are not wrapped by the custom SecureFood sidebar.
+
 - [ ] `mode_manager` + unit tests (forced modes, defaults, admin pages exclusion).
 - [ ] Admin settings (`forcemode`, `defaultmode`, login-page mode).
 - [ ] Layout selection wiring + `sfs-mode` body class.

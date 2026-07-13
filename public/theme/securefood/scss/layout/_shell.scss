@@ -241,12 +241,14 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        width: 100%;
         padding: 10px;
         border: 1px solid var(--sfs-line);
         border-radius: var(--sfs-radius-sm);
         background: var(--sfs-surface2);
         color: inherit;
         text-decoration: none;
+        text-align: left;
 
         &:hover {
             border-color: var(--sfs-linestrong);
@@ -256,6 +258,40 @@
         &:focus-visible {
             @include sfs-focus-ring;
         }
+    }
+
+    .sfs-sidebar__usermenu {
+        width: 100%;
+    }
+
+    .sfs-usercard-menu {
+        width: 100%;
+
+        .dropdown,
+        .login {
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            min-width: 260px;
+            max-width: min(300px, calc(100vw - 24px));
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            box-shadow: var(--sfs-shadow-3);
+        }
+    }
+
+    .sfs-usercard--menu {
+        appearance: none;
+        cursor: pointer;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    .sfs-usercard--login {
+        color: var(--sfs-ink);
     }
 
     .sfs-usercard__avatar {
@@ -272,9 +308,34 @@
         flex-shrink: 0;
     }
 
+    .sfs-usercard__avatar--core {
+        background: transparent;
+        color: inherit;
+        overflow: hidden;
+
+        .sfs-usercard__avataritem,
+        .avatar,
+        .userpicture,
+        .userinitials {
+            width: 36px;
+            height: 36px;
+            margin: 0;
+            border-radius: 50%;
+        }
+
+        .userinitials {
+            display: grid;
+            place-items: center;
+            background: var(--sfs-primary);
+            color: var(--sfs-on-dark);
+            font-size: 0.82rem;
+        }
+    }
+
     .sfs-usercard__meta {
         min-width: 0;
         display: block;
+        flex: 1;
     }
 
     .sfs-usercard__name {
@@ -294,6 +355,13 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .sfs-usercard__chevron {
+        color: var(--sfs-muted);
+        font-size: 20px;
+        margin-left: auto;
+        flex-shrink: 0;
     }
 
     // ---------------------------------------------------------------
@@ -482,6 +550,10 @@
             .sfs-usercard__meta {
                 display: none;
             }
+
+            .sfs-usercard__chevron {
+                display: none;
+            }
         }
     }
 
@@ -517,8 +589,8 @@
     }
 
     // ---------------------------------------------------------------
-    // Core topbar widgets (notifications/messages popovers, user menu)
-    // restyled as design icon buttons; tokens keep them scheme-aware.
+    // Core topbar widgets (notifications/messages popovers) restyled as design
+    // icon buttons; tokens keep them scheme-aware.
     // ---------------------------------------------------------------
     .sfs-topbar__plugins {
         display: flex;
@@ -562,55 +634,8 @@
         }
     }
 
-    .sfs-topbar .usermenu-container {
-        color: var(--sfs-ink2);
-
-        .usertext,
-        .login,
-        .meta,
-        a.dropdown-toggle {
-            color: var(--sfs-ink2);
-        }
-
-        .userinitials {
-            background: var(--sfs-primary50);
-            color: var(--sfs-primary);
-        }
-    }
-
     .sfs-topbar .editmode-switch-form label {
         color: var(--sfs-ink2);
-    }
-
-    // Guest / logged-out state: the verbose core text ("You are currently
-    // using guest access (Log in)") overflows the topbar — keep only a
-    // compact Log in pill.
-    .sfs-topbar .usermenu .logininfo,
-    .sfs-topbar .usermenu .login {
-        font-size: 0;
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-
-        a {
-            font-size: 0.86rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            padding: 7px 16px;
-            border-radius: 999px;
-            background: var(--sfs-primary);
-            color: var(--sfs-bg);
-
-            &:hover {
-                background: var(--sfs-primary700);
-                text-decoration: none;
-            }
-
-            &:focus-visible {
-                @include sfs-focus-ring;
-            }
-        }
     }
 
     // ---------------------------------------------------------------
@@ -703,6 +728,10 @@
                 .sfs-usercard__meta {
                     display: block;
                 }
+
+                .sfs-usercard__chevron {
+                    display: inline-flex;
+                }
             }
         }
 
@@ -725,11 +754,6 @@
 
         .sfs-topbar__actions {
             gap: 6px;
-        }
-
-        // Long user-menu text (e.g. "You are logged in as …") has no room.
-        .sfs-topbar .usermenu-container .usertext {
-            display: none;
         }
 
         .sfs-search {

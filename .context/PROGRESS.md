@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-13 (About feed fake defaults removed)
+Last updated: 2026-07-13 (sidebar user menu/settings shell fix completed)
 
 ## Domain status
 
@@ -79,6 +79,16 @@ uk string review (9.6) owner takes it.
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-13** — **Sidebar user menu + settings shell fix `[x]`**:
+  moved the Moodle user context menu out of the SecureFood topbar and into the
+  sidebar user card, preserving core user-menu items/submenus and Moodle JS.
+  The SecureFood topbar no longer renders the avatar/user icon. Core
+  `pagelayout=admin` pages now stay on stock Boost, so profile/settings forms
+  such as "Additional names" are no longer wrapped by the collapsed SecureFood
+  sidebar. Checks: PHP lint clean for touched PHP/lang files; `git diff
+  --check` clean; theme EN/UK language keys in sync. PHPUnit/Behat/browser QA
+  skipped by owner request.
 
 - **2026-07-13** — **Latest from the network fake defaults removed `[x]`**:
   removed the prototype/mock card fallback from the About-page network feed.

@@ -40,6 +40,10 @@ visual reference: `styles.css` "APP SHELL" section; BEM map: `design/components.
 
 ## Tasks
 
+- [x] Sidebar user menu correction (2026-07-13): move the standard Moodle user
+      context menu from the SecureFood topbar into the sidebar user card and
+      remove the duplicate topbar avatar/user icon.
+
 - [x] P0 hardening (2026-07-12): fixed blank guest Login styling in dark/system
       mode; hidden mobile drawer is now inert and its ARIA state stays synced.
 
