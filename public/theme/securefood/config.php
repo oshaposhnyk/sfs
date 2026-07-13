@@ -43,6 +43,8 @@ $THEME->scss = function($theme) {
 $THEME->prescsscallback = 'theme_securefood_get_pre_scss';
 $THEME->extrascsscallback = 'theme_securefood_get_extra_scss';
 
+$sfsregions = ['content-top', 'side-pre', 'content-bottom'];
+
 // Boost layout files are resolved through the parent theme until the
 // SecureFood shell layouts land (domains 01/02).
 $THEME->layouts = [
@@ -52,51 +54,51 @@ $THEME->layouts = [
     ],
     'standard' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
     ],
     'course' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
         'options' => ['langmenu' => true],
     ],
     'coursecategory' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
     ],
     'incourse' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
     ],
     'frontpage' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
         'options' => ['nonavbar' => true],
     ],
     'admin' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
     ],
     'mycourses' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
         'options' => ['nonavbar' => true],
     ],
     'mydashboard' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
         'options' => ['nonavbar' => true, 'langmenu' => true],
     ],
     'mypublic' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
     ],
     'login' => [
@@ -148,7 +150,7 @@ $THEME->layouts = [
     ],
     'report' => [
         'file' => 'sfs.php',
-        'regions' => ['side-pre'],
+        'regions' => $sfsregions,
         'defaultregion' => 'side-pre',
     ],
     'secure' => [

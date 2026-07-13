@@ -30,10 +30,14 @@ $string['pluginname'] = 'SecureFood School';
 $string['choosereadme'] = 'SecureFood School — дочірня тема Boost, що реалізує дизайн-систему SecureFood із перемикачем між стандартним інтерфейсом Moodle і кастомним режимом SecureFood.';
 $string['configtitle'] = 'Налаштування SecureFood School';
 $string['region-side-pre'] = 'Праворуч';
+$string['region-content-top'] = 'Верх вмісту';
+$string['region-content-bottom'] = 'Низ вмісту';
 
 // Settings tabs.
 $string['generaltab'] = 'Загальні';
+$string['brandtab'] = 'Бренд';
 $string['navigationtab'] = 'Навігація';
+$string['blockstab'] = 'Блоки';
 $string['colourstab'] = 'Кольори';
 $string['advancedtab'] = 'Додатково';
 
@@ -49,15 +53,46 @@ $string['switchmode'] = 'Перемкнути режим інтерфейсу';
 $string['switchtostandard'] = 'Перемкнутися на стандартний інтерфейс Moodle';
 $string['switchtosecurefood'] = 'Перемкнутися на інтерфейс SecureFood';
 
+// Brand tab.
+$string['brandname'] = 'Назва сайту в інтерфейсі';
+$string['brandname_desc'] = 'Назва, що відображається в оболонці SecureFood. Порожнє поле — коротка назва сайту Moodle.';
+$string['brandlogoheading'] = 'Логотипи';
+$string['brandlogoheading_desc'] = 'Завантажте власні логотипи оболонки SecureFood. Порожнє поле використовує вбудований дизайн-ресурс. Завантажені логотипи приймають лише PNG/JPG; вбудовані SVG за замовчуванням залишаються доступними.';
+$string['logofulllight'] = 'Повний логотип — світла схема';
+$string['logofulllight_desc'] = 'Повний логотип для бічної панелі у світлій колірній схемі. Рекомендовано: прозорий PNG.';
+$string['logofulldark'] = 'Повний логотип — темна схема';
+$string['logofulldark_desc'] = 'Повний логотип для бічної панелі у темній колірній схемі. Рекомендовано: прозорий PNG.';
+$string['logoiconlight'] = 'Іконка логотипа — світла схема';
+$string['logoiconlight_desc'] = 'Компактний логотип для згорнутої бічної панелі у світлій колірній схемі.';
+$string['logoicondark'] = 'Іконка логотипа — темна схема';
+$string['logoicondark_desc'] = 'Компактний логотип для згорнутої бічної панелі у темній колірній схемі.';
+$string['favicon'] = 'Favicon';
+$string['favicon_desc'] = 'Необов’язкова іконка браузера для теми SecureFood. Приймає ICO або PNG. Порожнє поле використовує стандартний Moodle/core favicon.';
+
 // Navigation tab.
 $string['navigation'] = 'Бічна навігація (JSON)';
-$string['navigation_desc'] = 'Власне бічне меню у форматі JSON-масиву секцій. Порожнє поле — типове меню. Формат: <pre>[{"label": "Навчання", "items": [{"title": "Студентська лабораторія", "url": "/local/learningplans/my.php", "icon": "school", "visibility": "loggedin"}]}]</pre> "icon" — назва піктограми Material Icons; "visibility" — "all" або "loggedin". Некоректний JSON повертає типове меню.';
+$string['navigation_desc'] = 'Власне бічне меню у форматі JSON-масиву секцій. Порожнє поле — типове меню. Формат: <pre>[{"label": "Навчання", "items": [{"title": "Студентська лабораторія", "url": "/local/learningplans/my.php", "icon": "school", "visibility": "loggedin"}, {"title": "Адмін", "url": "/admin/search.php", "icon": "admin_panel_settings", "visibility": "capability", "capability": "moodle/site:config"}]}]</pre> "icon" — назва піктограми Material Icons; "visibility" — "all", "loggedin" або "capability". Некоректний JSON у runtime повертає типове меню, але не може бути збережений у формі налаштувань.';
+$string['navigationjson_invalidjson'] = 'JSON навігації некоректний: {$a}';
+$string['navigationjson_rootinvalid'] = 'JSON навігації має бути масивом секцій.';
+$string['navigationjson_sectioninvalid'] = 'Секція навігації {$a} має бути об’єктом з масивом items.';
+$string['navigationjson_iteminvalid'] = 'Елемент навігації {$a->item} у секції {$a->section} має містити title і url.';
+$string['navigationjson_visibilityinvalid'] = 'Елемент навігації {$a->item} у секції {$a->section} має непідтримуване значення visibility. Використовуйте all, loggedin або capability.';
+$string['navigationjson_capabilityinvalid'] = 'Елемент навігації {$a->item} у секції {$a->section} використовує visibility=capability, але не має валідного Moodle capability.';
+$string['navigationjson_noitems'] = 'JSON навігації має містити принаймні один придатний елемент.';
+
+// Blocks tab.
+$string['showblockcontenttop'] = 'Показувати регіон блоків над вмістом';
+$string['showblockcontenttop_desc'] = 'Дозволити блокам у регіоні content-top відображатися над основним вмістом сторінки в режимі SecureFood.';
+$string['showblockside'] = 'Показувати правий регіон блоків';
+$string['showblockside_desc'] = 'Дозволити блокам у регіоні side-pre відображатися як права колонка в режимі SecureFood.';
+$string['showblockcontentbottom'] = 'Показувати регіон блоків під вмістом';
+$string['showblockcontentbottom_desc'] = 'Дозволити блокам у регіоні content-bottom відображатися під основним вмістом сторінки в режимі SecureFood.';
 
 // Shell.
 $string['sidebarnav'] = 'Основна навігація';
 $string['skiptocontent'] = 'Перейти до основного вмісту';
 $string['togglesidebar'] = 'Згорнути/розгорнути бічну панель';
-$string['togglescheme'] = 'Перемкнути світлу/темну схему';
+$string['togglescheme'] = 'Перемкнути колірну схему';
 $string['searchplaceholder'] = 'Пошук курсів, документів…';
 
 // Default navigation items.
@@ -101,6 +136,9 @@ $string['token_warn'] = 'Попередження';
 $string['token_danger'] = 'Небезпека';
 
 // Advanced tab.
+$string['customfooter'] = 'Власний футер';
+$string['footerhtml'] = 'HTML футера';
+$string['footerhtml_desc'] = 'Необов’язковий вміст футера, що відображається в оболонці SecureFood над стандартним футером Moodle. Вміст проходить через текстові фільтри Moodle.';
 $string['rawscsspre'] = 'Початковий SCSS-код';
 $string['rawscsspre_desc'] = 'SCSS-код, що додається перед усім іншим. Використовуйте його для визначення змінних, доступних решті компіляції.';
 $string['rawscss'] = 'SCSS-код';
@@ -113,6 +151,16 @@ $string['privacy:metadata:preference:uimode'] = 'Чи використовує �
 
 // Pages & content tab.
 $string['pagestab'] = 'Сторінки та вміст';
+$string['showaboutpage'] = 'Показувати вміст сторінки About';
+$string['showaboutpage_desc'] = 'Відображати вміст SecureFood About/front-page перед стандартним вмістом головної сторінки Moodle.';
+$string['showaboutstats'] = 'Показувати статистику hero на About';
+$string['showaboutstats_desc'] = 'Відображати ряд статистики під hero-блоком сторінки About.';
+$string['showaboutlayers'] = 'Показувати shield і layers на About';
+$string['showaboutlayers_desc'] = 'Відображати картку shield і секцію reinforcing layers на сторінці About.';
+$string['showabouthubs'] = 'Показувати мапу хабів на About';
+$string['showabouthubs_desc'] = 'Відображати секцію мапи/списку Living Labs і партнерів на сторінці About.';
+$string['showaboutfeed'] = 'Показувати стрічку оновлень на About';
+$string['showaboutfeed_desc'] = 'Відображати картки стрічки оновлень на сторінці About.';
 $string['aboutkicker'] = 'Сторінка About — надзаголовок';
 $string['abouttitle'] = 'Сторінка About — заголовок';
 $string['aboutlede'] = 'Сторінка About — вступний текст';
@@ -128,6 +176,7 @@ $string['abouthubs'] = 'Сторінка About — Living Labs та партне
 $string['abouthubs_desc'] = 'JSON-список, напр. [{"name": "Kyiv Lab", "country": "Ukraine", "type": "lab"}]. "type" — "lab" або "partner". Порожнє поле — типові значення дизайну.';
 $string['abouthub_lab'] = 'Living Lab';
 $string['abouthub_partner'] = 'Партнер';
+$string['abouthubmarkerlabel'] = '{$a->name}, {$a->country}, {$a->status}. Перейти до деталей хабу.';
 $string['nav_futurefood'] = 'Future Food';
 $string['nav_resources'] = 'Ресурси та стандарти';
 $string['appearancetitle'] = 'Вигляд SecureFood';

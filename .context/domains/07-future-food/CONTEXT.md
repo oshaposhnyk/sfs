@@ -1,6 +1,6 @@
 # Domain 07 — future-food / gamification (Phase 4)
 
-Status: `[ ]` not started.
+Status: `[~]` v1 implemented (2026-07-13) — badges, missions and decision links are real-data backed; browser QA and the real decision badge activity/content remain pending.
 
 ## Purpose
 
@@ -22,12 +22,8 @@ A real XP/levelling engine (events → points ledger) is a **future `local_` plu
 
 ## Architecture
 
-- Theme page (`/theme/securefood/pages/futurefood.php`-style entry is NOT allowed —
-  use a proper page: recommend a small `local_` page or reuse frontpage-style
-  layout on a theme-owned route via standard page + capability `theme` pages are
-  not standard: **decision needed** — likely thin `local_sfsgame` plugin housing
-  page + policy; record ADR when decided).
-- XP/level policy = pure domain class regardless of home.
+- Page host is `public/local/sfsgame` (ADR-012). The theme only skins it.
+- XP/level policy is pure domain code in `local_sfsgame\domain\xp_policy`.
 - Badges data via core badges API only.
 
 ## Tasks
@@ -35,12 +31,25 @@ A real XP/levelling engine (events → points ledger) is a **future `local_` plu
 - [x] P0 hardening (2026-07-12): localised hero fallbacks and stopped rendering
       prototype missions as live content; an honest empty state now appears.
 
-- [ ] ADR: where the page + XP policy live (recommend thin `local_sfsgame`).
-- [ ] Badge issuers/criteria set up for the pilot cohort (admin task, document).
-- [ ] Renderables + templates + SCSS (`_ffhero.scss`, `_xp.scss`,
-      `_achievement.scss`, `_mission.scss`, `_decision.scss`).
-- [ ] Level policy + PHPUnit.
-- [ ] Empty states (no badges yet, no missions configured).
+- [x] P1 decision slice (2026-07-13): real activity links + empty state,
+      settings/localisation/tests. Browser QA skipped by owner request.
+
+- [x] Locked badge criteria preview (2026-07-13): safe preview text now
+      renders for locked achievements from the Moodle badges model; multilang
+      course names are filtered before HTML is stripped.
+
+- [x] ADR: where the page + XP policy live (thin `local_sfsgame`, ADR-012).
+- [x] Badge issuers/criteria set up for the current pilot path (2026-07-13):
+      `Pathfinder` is an active site badge with courseset completion for
+      `SFS101`, issued to `sfstestuser`; operator guide lives in
+      `BADGE_SETUP.md`. Decision badge remains deferred because no real
+      quiz/choice activity exists yet.
+- [x] Renderables + templates + SCSS (2026-07-13): Future Food markup/SCSS
+      normalised from legacy `ffg-*` to `sfs-*` BEM; XP inline width replaced
+      by a native `<progress>` element. Browser QA skipped by owner request.
+- [x] Level policy + PHPUnit: `local_sfsgame\domain\xp_policy` derives XP,
+      level and level progress from earned badges + completed courses.
+- [x] Empty states (no badges yet, no missions configured).
 
 ## Acceptance criteria
 

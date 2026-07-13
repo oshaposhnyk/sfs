@@ -71,13 +71,13 @@
 }
 
 .learning-plan__status--enabled {
-    color: #1f6f43;
-    background-color: #e9f7ef;
+    color: var(--sfs-success700);
+    background-color: color-mix(in srgb, var(--sfs-success) 12%, var(--sfs-surface));
 }
 
 .learning-plan__status--disabled {
-    color: #755719;
-    background-color: #fff5d6;
+    color: var(--sfs-accent-ink);
+    background-color: color-mix(in srgb, var(--sfs-accent) 14%, var(--sfs-surface));
 }
 
 .learning-plan__pagination {
@@ -100,14 +100,14 @@
     gap: .5rem;
     align-items: center;
     padding: .5rem .75rem;
-    border: 1px solid var(--border-color, #d8d8d8);
+    border: 1px solid var(--bs-border-color, var(--sfs-line));
     border-radius: 6px;
 }
 
 /* Courses inside a named stage get a subtle accent edge so the group
    reads as one block between headings. */
 .learning-plan__course-row--staged {
-    border-left: 3px solid var(--primary, #0f6cbf);
+    border-left: 3px solid var(--bs-primary, var(--sfs-primary));
 }
 
 .learning-plan__stage-heading {
@@ -116,7 +116,7 @@
     gap: .5rem;
     margin: 1rem 0 .5rem;
     padding-bottom: .25rem;
-    border-bottom: 1px solid var(--border-color, #d8d8d8);
+    border-bottom: 1px solid var(--bs-border-color, var(--sfs-line));
 }
 
 .learning-plan__stage-group:first-child .learning-plan__stage-heading {
@@ -131,7 +131,7 @@
 
 /* Empty unstaged block stays visible as a drop target. */
 .learning-plan__stage-list:empty {
-    border: 1px dashed var(--border-color, #d8d8d8);
+    border: 1px dashed var(--bs-border-color, var(--sfs-line));
     border-radius: 6px;
 }
 
@@ -140,12 +140,12 @@
     font-size: .92rem;
     text-transform: uppercase;
     letter-spacing: .04em;
-    color: var(--gray-700, #495057);
+    color: var(--bs-gray-700, var(--sfs-ink2));
 }
 
 .learning-plan__stage-heading-count {
     font-size: .8rem;
-    color: var(--gray-600, #6c757d);
+    color: var(--bs-secondary-color, var(--sfs-muted));
 }
 
 .learning-plan__stage-form {
@@ -270,7 +270,7 @@
     gap: 1.25rem;
     flex-wrap: wrap;
     padding: 1rem 1.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid color-mix(in srgb, var(--sfs-on-light) 13%, transparent);
     border-radius: 0.5rem;
     margin-bottom: 1.5rem;
 }
@@ -317,16 +317,26 @@
 .lp-planbar__bar {
     flex: 1;
     height: 6px;
+    appearance: none;
+    border: 0;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.1);
+    background: color-mix(in srgb, var(--sfs-on-light) 10%, transparent);
     overflow: hidden;
 }
 
-.lp-planbar__fill {
-    display: block;
-    height: 100%;
+.lp-planbar__bar::-webkit-progress-bar {
+    background: color-mix(in srgb, var(--sfs-on-light) 10%, transparent);
     border-radius: 999px;
+}
+
+.lp-planbar__bar::-webkit-progress-value {
     background: currentColor;
+    border-radius: 999px;
+}
+
+.lp-planbar__bar::-moz-progress-bar {
+    background: currentColor;
+    border-radius: 999px;
 }
 
 .lp-planmenu {
@@ -347,10 +357,10 @@
     margin: 0;
     padding: 0.5rem;
     list-style: none;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: var(--sfs-surface);
+    border: 1px solid color-mix(in srgb, var(--sfs-on-light) 15%, transparent);
     border-radius: 0.5rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--sfs-on-light) 12%, transparent);
 }
 
 .lp-planmenu__item {
@@ -392,25 +402,25 @@
 .lp-coursetile {
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid color-mix(in srgb, var(--sfs-on-light) 13%, transparent);
     border-radius: 0.5rem;
     overflow: hidden;
-    background: #fff;
+    background: var(--sfs-surface);
 }
 
 .lp-coursetile__cover {
     height: 90px;
     position: relative;
     padding: 0.75rem;
-    color: #fff;
-    background: #5b6770;
+    color: var(--sfs-on-dark);
+    background: var(--sfs-muted);
 }
 
-.lp-coursetile__cover--teal { background: linear-gradient(135deg, #0f4c5e, #2a8c8a); }
-.lp-coursetile__cover--aqua { background: linear-gradient(135deg, #2a8c8a, #4fc3c0); }
-.lp-coursetile__cover--amber { background: linear-gradient(135deg, #c68a3b, #e0a458); }
-.lp-coursetile__cover--green { background: linear-gradient(135deg, #3f8c5a, #65b57f); }
-.lp-coursetile__cover--deep { background: linear-gradient(135deg, #143e4d, #0f4c5e); }
+.lp-coursetile__cover--teal { background: linear-gradient(135deg, var(--sfs-primary), var(--sfs-teal)); }
+.lp-coursetile__cover--aqua { background: linear-gradient(135deg, var(--sfs-teal), var(--sfs-teal300)); }
+.lp-coursetile__cover--amber { background: linear-gradient(135deg, var(--sfs-accent), var(--sfs-accent300)); }
+.lp-coursetile__cover--green { background: linear-gradient(135deg, var(--sfs-success), var(--sfs-success300)); }
+.lp-coursetile__cover--deep { background: linear-gradient(135deg, var(--sfs-primary800), var(--sfs-primary)); }
 
 .lp-coursetile__tag {
     font-size: 0.7rem;
@@ -428,7 +438,7 @@
     font-weight: 600;
     padding: 0.2rem 0.55rem;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.35);
+    background: color-mix(in srgb, var(--sfs-on-light) 35%, transparent);
 }
 
 .lp-coursetile__body {
@@ -451,16 +461,28 @@
 }
 
 .lp-coursetile__progress {
+    display: block;
+    width: 100%;
     height: 4px;
+    appearance: none;
+    border: 0;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.1);
+    background: color-mix(in srgb, var(--sfs-on-light) 10%, transparent);
     overflow: hidden;
     margin-bottom: 0.5rem;
 }
 
-.lp-coursetile__fill {
-    display: block;
-    height: 100%;
+.lp-coursetile__progress::-webkit-progress-bar {
+    background: color-mix(in srgb, var(--sfs-on-light) 10%, transparent);
+    border-radius: 999px;
+}
+
+.lp-coursetile__progress::-webkit-progress-value {
+    background: currentColor;
+    border-radius: 999px;
+}
+
+.lp-coursetile__progress::-moz-progress-bar {
     background: currentColor;
     border-radius: 999px;
 }
@@ -499,8 +521,8 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.55);
-    color: #fff;
+    background: color-mix(in srgb, var(--sfs-on-light) 55%, transparent);
+    color: var(--sfs-on-dark);
     display: grid;
     place-items: center;
     font-weight: 700;

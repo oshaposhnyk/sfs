@@ -263,3 +263,28 @@ between stages.
 cross-stage drag-and-drop and implicit stage management. Moving a course out
 of a plan's last-stage course deletes the stage — recreate it by typing the
 name again (find-or-create).
+
+## ADR-012 — Future Food lives in `local_sfsgame`; the theme only skins it
+
+**Status.** Accepted (2026-07-13).
+
+**Context.** The Future Food prototype needs a page host, a derived XP/level
+policy, badge-backed achievements, curated missions, and a real decision-point
+launcher. The theme already contains the visual skin, but a theme-owned page
+would blur presentation with page orchestration and make future data work hard
+to isolate.
+
+**Decision.**
+- The canonical Future Food page lives in `local_sfsgame` as a thin local
+  plugin page (`index.php`) with a Mustache template and settings-driven data.
+- XP/level logic remains a pure domain policy class inside the same plugin.
+- `theme_securefood` only provides the `sfs-mode` skin, SCSS, and shared BEM
+  blocks for the page. It must not own the page controller or the policy.
+- Real data sources stay authoritative: core badges, completed courses, and
+  admin-configured mission/decision links. No custom gamification tables are
+  introduced for v1.
+
+**Consequences.** Presentation remains upgrade-safe and testable: the plugin
+orchestrates data, the theme skins the output, and future gamification engine
+work can move into a separate `local_` plugin without breaking the page
+contract.

@@ -143,15 +143,49 @@ const toggleSidebar = (button) => {
 };
 
 /**
- * Toggle the colour scheme between light and dark (persisted).
+ * Apply the colour-scheme preference to the current document.
+ *
+ * Explicit light/dark preferences are stamped on <html>; system removes the
+ * attribute so the CSS prefers-color-scheme fallback owns the effective theme.
+ *
+ * @param {HTMLElement} button The scheme toggle button.
+ * @param {string} preference One of light, dark, system.
  */
-const toggleScheme = () => {
+const applySchemePreference = (button, preference) => {
     const root = document.documentElement;
-    const explicit = root.dataset.theme;
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const current = explicit || (systemDark ? 'dark' : 'light');
-    const next = current === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
+    if (preference === 'system') {
+        root.removeAttribute('data-theme');
+    } else {
+        root.dataset.theme = preference;
+    }
+    button.dataset.sfsSchemePreference = preference;
+};
+
+/**
+ * Return the next persisted colour-scheme preference.
+ *
+ * @param {string} preference Current preference.
+ * @return {string} Next preference.
+ */
+const nextSchemePreference = (preference) => {
+    if (preference === 'light') {
+        return 'dark';
+    }
+    if (preference === 'dark') {
+        return 'system';
+    }
+    return 'light';
+};
+
+/**
+ * Toggle the colour scheme through light, dark and system (persisted).
+ *
+ * @param {HTMLElement} button The scheme toggle button.
+ */
+const toggleScheme = (button) => {
+    const current = button.dataset.sfsSchemePreference || 'system';
+    const next = nextSchemePreference(current);
+    applySchemePreference(button, next);
     persist('theme_securefood_colourscheme', next);
 };
 
@@ -172,7 +206,7 @@ export const init = () => {
             toggleSidebar(target);
         } else if (action === 'scheme') {
             e.preventDefault();
-            toggleScheme();
+            toggleScheme(target);
         } else if (action === 'backdrop') {
             closeDrawer();
         }

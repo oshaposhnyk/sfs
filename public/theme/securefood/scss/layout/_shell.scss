@@ -55,13 +55,61 @@
         width: 100%;
     }
 
-    .sfs-shell__blocks {
-        margin-top: 32px;
+    .sfs-shell__blockslot {
+        margin: 28px 0;
 
+        .block,
         .card {
             background: var(--sfs-surface);
             border: 1px solid var(--sfs-line);
             border-radius: var(--sfs-radius-md);
+        }
+
+        .block {
+            margin-bottom: 18px;
+            box-shadow: var(--sfs-shadow-1);
+        }
+    }
+
+    .sfs-shell__blockslot--content-top {
+        margin-top: 0;
+    }
+
+    .sfs-shell__blocks {
+        margin-top: 32px;
+
+        .sfs-shell__blockregion {
+            margin: 0;
+        }
+
+        .block,
+        .card {
+            background: var(--sfs-surface);
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+        }
+    }
+
+    .sfs-shell__footer {
+        margin: 0 36px 32px;
+        padding: 18px 22px;
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        background: var(--sfs-surface);
+        color: var(--sfs-ink2);
+        font-size: 0.9rem;
+
+        > :last-child {
+            margin-bottom: 0;
+        }
+
+        a {
+            color: var(--sfs-primary);
+            font-weight: 600;
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
         }
     }
 
@@ -215,7 +263,7 @@
         height: 36px;
         border-radius: 50%;
         background: var(--sfs-primary);
-        color: #fff;
+        color: var(--sfs-on-dark);
         display: grid;
         place-items: center;
         font-weight: 700;
@@ -255,7 +303,7 @@
         position: sticky;
         top: 0;
         z-index: 40;
-        background: rgba(250, 247, 242, 0.85);
+        background: color-mix(in srgb, var(--sfs-bg) 85%, transparent);
         backdrop-filter: saturate(140%) blur(8px);
         border-bottom: 1px solid var(--sfs-line);
         padding: 10px 36px;
@@ -450,7 +498,7 @@
     }
 
     // The design places content straight on the page background — kill the
-    // white Boost surfaces (.main-inner / #region-main ship background #fff)
+    // white Boost surfaces (.main-inner / #region-main ship a white background)
     // that read as a framed white panel, especially in the dark scheme.
     #topofscroll,
     .main-inner,
@@ -613,7 +661,7 @@
             position: fixed;
             inset: 0;
             z-index: 80;
-            background: rgba(0, 0, 0, 0.4);
+            background: color-mix(in srgb, var(--sfs-on-light) 40%, transparent);
             backdrop-filter: blur(2px);
         }
 
@@ -691,6 +739,10 @@
         .sfs-shell__content {
             padding: 22px 16px 56px;
         }
+
+        .sfs-shell__footer {
+            margin: 0 16px 24px;
+        }
     }
 }
 
@@ -710,7 +762,7 @@
         }
 
         .sfs-topbar {
-            background: rgba(11, 30, 36, 0.85);
+            background: color-mix(in srgb, var(--sfs-bg) 85%, transparent);
         }
 
         .sfs-iconbtn__icon--dark {

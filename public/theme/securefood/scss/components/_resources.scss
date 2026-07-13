@@ -87,12 +87,12 @@
     }
 
     .sfsres-doc__icon--pdf {
-        background: rgba(184, 70, 63, 0.12);
+        background: color-mix(in srgb, var(--sfs-danger) 12%, transparent);
         color: var(--sfs-danger);
     }
 
     .sfsres-doc__icon--xls {
-        background: rgba(63, 140, 90, 0.12);
+        background: color-mix(in srgb, var(--sfs-success) 12%, transparent);
         color: var(--sfs-success);
     }
 
@@ -136,7 +136,7 @@
 
         &:hover {
             background: var(--sfs-primary);
-            color: #fff;
+            color: var(--sfs-on-dark);
             border-color: var(--sfs-primary);
             text-decoration: none;
         }
@@ -196,7 +196,7 @@
 
     .sfsres__filter--active {
         background: var(--sfs-primary);
-        color: #fff;
+        color: var(--sfs-on-dark);
         border-color: var(--sfs-primary);
 
         &:hover {
@@ -287,26 +287,49 @@
 
     .sfsres-stat__bar {
         display: block;
+        width: 100%;
         height: 6px;
+        appearance: none;
+        border: 0;
         border-radius: 999px;
         background: var(--sfs-surface2);
         overflow: hidden;
         margin-top: 10px;
+
+        &::-webkit-progress-bar {
+            background: var(--sfs-surface2);
+            border-radius: 999px;
+        }
+
+        &::-webkit-progress-value {
+            background: var(--sfs-teal);
+            border-radius: 999px;
+        }
+
+        &::-moz-progress-bar {
+            background: var(--sfs-teal);
+            border-radius: 999px;
+        }
     }
 
-    .sfsres-stat__fill {
-        display: block;
-        height: 100%;
-        border-radius: inherit;
-        background: var(--sfs-teal);
+    .sfsres-stat--amber .sfsres-stat__bar {
+        &::-webkit-progress-value {
+            background: var(--sfs-accent);
+        }
+
+        &::-moz-progress-bar {
+            background: var(--sfs-accent);
+        }
     }
 
-    .sfsres-stat--amber .sfsres-stat__fill {
-        background: var(--sfs-accent);
-    }
+    .sfsres-stat--deep .sfsres-stat__bar {
+        &::-webkit-progress-value {
+            background: var(--sfs-primary);
+        }
 
-    .sfsres-stat--deep .sfsres-stat__fill {
-        background: var(--sfs-primary);
+        &::-moz-progress-bar {
+            background: var(--sfs-primary);
+        }
     }
 
     .sfsres-stat__sub {

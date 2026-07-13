@@ -29,11 +29,11 @@
 
         // Core page header becomes the course banner.
         #page-header {
-            background: linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 100%);
+            background: linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-primary800) 100%);
             border-radius: var(--sfs-radius-lg);
             padding: 26px 30px;
             margin-bottom: 24px;
-            color: #fff;
+            color: var(--sfs-on-dark);
             position: relative;
             overflow: hidden;
 
@@ -44,12 +44,12 @@
                 top: -80px;
                 width: 260px;
                 height: 260px;
-                background: radial-gradient(circle, rgba(224, 164, 88, 0.25), transparent 65%);
+                background: radial-gradient(circle, color-mix(in srgb, var(--sfs-accent300) 25%, transparent), transparent 65%);
                 pointer-events: none;
             }
 
             .page-header-headings h1 {
-                color: #fff;
+                color: var(--sfs-on-dark);
                 font-size: 1.9rem;
                 font-weight: 700;
                 letter-spacing: -0.02em;
@@ -59,7 +59,7 @@
             a,
             .breadcrumb,
             .breadcrumb-item {
-                color: rgba(255, 255, 255, 0.85);
+                color: color-mix(in srgb, var(--sfs-on-dark) 85%, transparent);
             }
         }
     }
@@ -157,7 +157,7 @@
             // while branded icons keep their own colours.
             &:not(.isbranded) .activityicon:not(.nofilter),
             &:not(.isbranded) .icon:not(.nofilter) {
-                // Tint the monochrome mod icon towards --sfs-primary (#0f4c5e).
+                // Tint the monochrome mod icon towards --sfs-primary.
                 filter: brightness(0) saturate(100%) invert(24%) sepia(19%)
                     saturate(1832%) hue-rotate(155deg) brightness(94%) contrast(92%);
             }
@@ -330,7 +330,7 @@
 
         &:hover {
             background: var(--sfs-primary);
-            color: #fff;
+            color: var(--sfs-on-dark);
             text-decoration: none;
         }
     }
@@ -344,17 +344,27 @@
     .sfs-plancontext__progress {
         flex: 1 1 140px;
         max-width: 220px;
+        appearance: none;
+        border: 0;
         height: 6px;
         border-radius: 999px;
         background: var(--sfs-bg2);
         overflow: hidden;
-    }
 
-    .sfs-plancontext__fill {
-        display: block;
-        height: 100%;
-        border-radius: 999px;
-        background: var(--sfs-accent);
+        &::-webkit-progress-bar {
+            background: var(--sfs-bg2);
+            border-radius: 999px;
+        }
+
+        &::-webkit-progress-value {
+            background: var(--sfs-accent);
+            border-radius: 999px;
+        }
+
+        &::-moz-progress-bar {
+            background: var(--sfs-accent);
+            border-radius: 999px;
+        }
     }
 
     .sfs-plancontext__pct {
@@ -395,7 +405,7 @@
         padding: 14px;
         border-radius: var(--sfs-radius-sm);
         background: var(--sfs-accent50);
-        border: 1px solid rgba(198, 138, 59, 0.2);
+        border: 1px solid color-mix(in srgb, var(--sfs-accent) 20%, transparent);
     }
 
     .sfs-railcard__duetitle {
@@ -418,7 +428,7 @@
         gap: 6px;
         background: var(--sfs-primary);
         border-color: var(--sfs-primary);
-        color: #fff;
+        color: var(--sfs-on-dark);
         font-weight: 600;
         border-radius: 999px;
 
@@ -426,7 +436,7 @@
         &:focus {
             background: var(--sfs-primary700);
             border-color: var(--sfs-primary700);
-            color: #fff;
+            color: var(--sfs-on-dark);
         }
     }
 
@@ -475,7 +485,7 @@
         height: 36px;
         border-radius: 50%;
         background: linear-gradient(135deg, var(--sfs-primary), var(--sfs-teal));
-        color: #fff;
+        color: var(--sfs-on-dark);
         font-family: 'Manrope', sans-serif;
         font-weight: 700;
         font-size: 0.82rem;

@@ -38,10 +38,18 @@ require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/cohort/lib.php');
 
 $isloggedin = isloggedin() && !isguestuser();
+$settingsprovider = \theme_securefood\settings_provider::from_theme_settings($PAGE->theme->settings ?? null);
 
 // Sidebar state from the user preference (domain 03).
 $sidebarcollapsed = $isloggedin
     && get_user_preferences('theme_securefood_sidebar', 'expanded') === 'collapsed';
+
+$schemepreference = $isloggedin
+    ? get_user_preferences('theme_securefood_colourscheme', 'system')
+    : 'system';
+if (!in_array($schemepreference, ['light', 'dark', 'system'], true)) {
+    $schemepreference = 'system';
+}
 
 $extraclasses = ['sfs-mode'];
 if ($sidebarcollapsed) {
@@ -49,10 +57,28 @@ if ($sidebarcollapsed) {
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 
-// Blocks region (kept per ADR-007; rendered below the main content).
-$addblockbutton = $OUTPUT->addblockbutton();
-$blockshtml = $OUTPUT->blocks('side-pre');
-$hasblocks = (strpos($blockshtml, 'data-block=') !== false || !empty($addblockbutton));
+// Block regions (ADR-007): optional content-top / side / content-bottom slots.
+$blockregion = static function(string $region, array $classes, string $tag) use ($PAGE, $OUTPUT): array {
+    $addblockbutton = $OUTPUT->addblockbutton($region);
+    $hascontent = $PAGE->blocks->region_has_content($region, $OUTPUT);
+
+    return [
+        'html' => $hascontent ? $OUTPUT->blocks($region, $classes, $tag) : '',
+        'addblockbutton' => $addblockbutton,
+        'hascontent' => $hascontent || $addblockbutton !== '',
+    ];
+};
+$emptyblockregion = ['html' => '', 'addblockbutton' => '', 'hascontent' => false];
+
+$contenttopblocks = $settingsprovider->enabled('showblockcontenttop')
+    ? $blockregion('content-top', ['sfs-shell__blockregion', 'sfs-shell__blockregion--content-top'], 'section')
+    : $emptyblockregion;
+$sidepreblocks = $settingsprovider->enabled('showblockside')
+    ? $blockregion('side-pre', ['sfs-shell__blockregion', 'sfs-shell__blockregion--side'], 'aside')
+    : $emptyblockregion;
+$contentbottomblocks = $settingsprovider->enabled('showblockcontentbottom')
+    ? $blockregion('content-bottom', ['sfs-shell__blockregion', 'sfs-shell__blockregion--content-bottom'], 'section')
+    : $emptyblockregion;
 
 // Secondary navigation (course/user tabs) — same wiring as Boost drawers.
 $secondarynavigation = false;
@@ -93,7 +119,7 @@ if ($crumbs !== []) {
 }
 
 // Sidebar navigation model (settings-driven, ADR-007).
-$navsections = \theme_securefood\navigation::for_page($PAGE->url, $isloggedin);
+$navsections = \theme_securefood\navigation::for_page($PAGE->url, $isloggedin, $PAGE->context);
 
 // User card.
 $usercard = null;
@@ -122,12 +148,19 @@ if (\theme_securefood\mode_manager::can_user_switch()) {
 }
 
 // Optional help destination for the topbar "?" button (Navigation tab).
-$helpurl = trim((string)($PAGE->theme->settings->helpurl ?? ''));
+$helpurl = $settingsprovider->help_url();
 
 // Global search entry point.
 $searchurl = null;
 if (class_exists('\core_search\manager') && \core_search\manager::is_global_search_enabled()) {
     $searchurl = (new moodle_url('/search/index.php'))->out(false);
+}
+
+// Optional admin-configured footer HTML (Advanced tab).
+$footerhtml = '';
+$footerrawhtml = $settingsprovider->html('footerhtml');
+if ($footerrawhtml !== '') {
+    $footerhtml = format_text($footerrawhtml, FORMAT_HTML, ['context' => context_system::instance()]);
 }
 
 // Course pages: right rail (audit C1) + section fractions (audit C2).
@@ -142,11 +175,20 @@ if ($PAGE->pagelayout === 'course' && $isloggedin
     }
 }
 
+$themefileurl = static function(string $setting, string $filearea, string $fallbackpix) use ($PAGE, $OUTPUT, $settingsprovider): string {
+    return $settingsprovider->theme_file_url(
+        $PAGE->theme,
+        $setting,
+        $filearea,
+        $OUTPUT->image_url($fallbackpix, 'theme')->out(false)
+    );
+};
+
 // Front page carries the settings-driven About content above site content.
 $abouthtml = '';
-if ($PAGE->pagelayout === 'frontpage') {
-    $aboutcontext = \theme_securefood\about::context($PAGE->theme->settings ?? null);
-    $aboutcontext['logourl'] = $OUTPUT->image_url('logo-icon-dark', 'theme')->out(false);
+if ($PAGE->pagelayout === 'frontpage' && $settingsprovider->enabled('showaboutpage')) {
+    $aboutcontext = \theme_securefood\about::context($settingsprovider->settings());
+    $aboutcontext['logourl'] = $themefileurl('logoicondark', 'logoicondark', 'logo-icon-dark');
     $abouthtml = $OUTPUT->render_from_template('theme_securefood/about', $aboutcontext);
 
     // Interactive hubs map (self-hosted Leaflet + bundled GeoJSON; the
@@ -155,9 +197,11 @@ if ($PAGE->pagelayout === 'frontpage') {
     foreach ($aboutcontext['hubs'] ?? [] as $hub) {
         if (isset($hub['lat'], $hub['lon'])) {
             $maphubs[] = [
+                'hubid' => $hub['hubid'],
                 'name' => $hub['name'],
                 'country' => $hub['country'],
                 'islab' => $hub['islab'],
+                'markerlabel' => $hub['markerlabel'],
                 'lat' => $hub['lat'],
                 'lon' => $hub['lon'],
             ];
@@ -177,25 +221,37 @@ if ($PAGE->pagelayout === 'frontpage') {
 $templatecontext = [
     'abouthtml' => $abouthtml,
     'railhtml' => $railhtml,
-    'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), 'escape' => false]),
+    'sitename' => format_string(
+        $settingsprovider->brand_name((string)$SITE->shortname),
+        true,
+        ['context' => context_course::instance(SITEID), 'escape' => false]
+    ),
     'output' => $OUTPUT,
     'bodyattributes' => $bodyattributes,
     'sidebarcollapsed' => $sidebarcollapsed,
+    'schemepreference' => $schemepreference,
     'navsections' => $navsections,
     'usercard' => $usercard,
     'crumbs' => $crumbs,
     'hascrumbs' => $crumbs !== [],
     'searchurl' => $searchurl,
-    'helpurl' => $helpurl !== '' ? $helpurl : null,
+    'helpurl' => $helpurl,
+    'footerhtml' => $footerhtml,
     'modeswitch' => $modeswitch,
-    'logofulllight' => $OUTPUT->image_url('logo-full-light', 'theme')->out(false),
-    'logofulldark' => $OUTPUT->image_url('logo-full-dark', 'theme')->out(false),
-    'logoiconlight' => $OUTPUT->image_url('logo-icon-light', 'theme')->out(false),
-    'logoicondark' => $OUTPUT->image_url('logo-icon-dark', 'theme')->out(false),
+    'logofulllight' => $themefileurl('logofulllight', 'logofulllight', 'logo-full-light'),
+    'logofulldark' => $themefileurl('logofulldark', 'logofulldark', 'logo-full-dark'),
+    'logoiconlight' => $themefileurl('logoiconlight', 'logoiconlight', 'logo-icon-light'),
+    'logoicondark' => $themefileurl('logoicondark', 'logoicondark', 'logo-icon-dark'),
     'homeurl' => (new moodle_url('/'))->out(false),
-    'sidepreblocks' => $blockshtml,
-    'hasblocks' => $hasblocks,
-    'addblockbutton' => $addblockbutton,
+    'contenttopblocks' => $contenttopblocks['html'],
+    'contenttopaddblockbutton' => $contenttopblocks['addblockbutton'],
+    'hascontenttopblocks' => $contenttopblocks['hascontent'],
+    'sidepreblocks' => $sidepreblocks['html'],
+    'hasblocks' => $sidepreblocks['hascontent'],
+    'addblockbutton' => $sidepreblocks['addblockbutton'],
+    'contentbottomblocks' => $contentbottomblocks['html'],
+    'contentbottomaddblockbutton' => $contentbottomblocks['addblockbutton'],
+    'hascontentbottomblocks' => $contentbottomblocks['hascontent'],
     'usermenu' => $primarymenu['user'] ?? null,
     'langmenu' => $primarymenu['lang'] ?? null,
     'secondarymoremenu' => $secondarynavigation ?: false,

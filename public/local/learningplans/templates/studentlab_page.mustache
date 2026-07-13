@@ -110,11 +110,8 @@
                 </div>
             </div>
             <div class="lp-planbar__progress">
-                <div class="lp-planbar__bar" role="progressbar" aria-valuenow="{{percentage}}"
-                     aria-valuemin="0" aria-valuemax="100"
-                     aria-label="{{#str}}studentlab:planprogress, local_learningplans{{/str}}">
-                    <span class="lp-planbar__fill" style="width: {{percentage}}%"></span>
-                </div>
+                <progress class="lp-planbar__bar" value="{{percentage}}" max="100"
+                          aria-label="{{#str}}studentlab:planprogress, local_learningplans{{/str}}">{{percentage}}%</progress>
                 <div class="lp-planbar__pct">{{#stagelabel}}<span class="lp-planbar__stage">{{stagelabel}}</span>{{/stagelabel}}<strong>{{percentage}}%</strong></div>
             </div>
         </section>
@@ -150,10 +147,8 @@
                                     {{#str}}studentlab:modulecount, local_learningplans, {{modulecount}}{{/str}}
                                 </div>
                             {{/modulecount}}
-                            <div class="lp-coursetile__progress" role="progressbar" aria-valuenow="{{percentage}}"
-                                 aria-valuemin="0" aria-valuemax="100" aria-label="{{fullname}}">
-                                <span class="lp-coursetile__fill" style="width: {{percentage}}%"></span>
-                            </div>
+                            <progress class="lp-coursetile__progress" value="{{percentage}}" max="100"
+                                      aria-label="{{fullname}}">{{percentage}}%</progress>
                             <div class="lp-coursetile__foot">
                                 <span class="lp-coursetile__state">{{statetext}}</span>
                                 {{#actionlabel}}

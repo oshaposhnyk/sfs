@@ -27,11 +27,26 @@ declare(strict_types=1);
 namespace theme_securefood\output;
 
 use theme_securefood\mode_manager;
+use theme_securefood\settings_provider;
 
 /**
  * Extends Boost's renderer to stamp the colour-scheme attribute (ADR-004).
  */
 class core_renderer extends \theme_boost\output\core_renderer {
+    /**
+     * Returns the configured SecureFood favicon, falling back to Moodle/core.
+     *
+     * @return \moodle_url|string The favicon URL.
+     */
+    public function favicon() {
+        $favicon = settings_provider::from_theme_settings($this->page->theme->settings ?? null)
+            ->theme_file_url($this->page->theme, 'favicon', 'favicon', '');
+        if ($favicon !== '') {
+            return $favicon;
+        }
+
+        return parent::favicon();
+    }
 
     /**
      * Add data-theme to <html> when the SecureFood shell is active.

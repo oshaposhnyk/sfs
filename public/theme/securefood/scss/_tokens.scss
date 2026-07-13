@@ -11,6 +11,8 @@
     --sfs-bg2:          #F3EEE5;
     --sfs-surface:      #FFFFFF;
     --sfs-surface2:     #F7F3EC;
+    --sfs-on-dark:      #FFFFFF;
+    --sfs-on-light:     #000000;
 
     // Text.
     --sfs-ink:          #0F2A33;
@@ -24,19 +26,26 @@
 
     // Brand.
     --sfs-primary:      #0F4C5E;
+    --sfs-primary600:   #1A6373;
     --sfs-primary700:   #0B3A48;
+    --sfs-primary800:   #143E4D;
     --sfs-primary50:    #E6F0F2;
     --sfs-accent:       #C68A3B;
+    --sfs-accent300:    #E0A458;
+    --sfs-accent100:    #F2D08E;
     --sfs-accent50:     #F8EFDF;
     // Derived text-safe accents (WCAG AA): accent as TEXT on light surfaces
     // needs a darker amber; on dark panels a lighter one. Not admin-facing.
     --sfs-accent-ink:   #8A5E20;
     --sfs-accent-ondark: #E8B06A;
     --sfs-teal:         #2A8C8A;
+    --sfs-teal300:      #4FC3C0;
     --sfs-teal50:       #E1F1F0;
 
     // Semantic.
     --sfs-success:      #3F8C5A;
+    --sfs-success700:   #2F6F46;
+    --sfs-success300:   #4D9F6B;
     --sfs-warn:         #C97A2B;
     --sfs-danger:       #B8463F;
 

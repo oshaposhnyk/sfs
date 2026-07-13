@@ -1,9 +1,9 @@
 # Domain 03 — preferences (Phase 1)
 
-Status: `[~]` server side done (2026-07-12): definitions in
-`theme_securefood_user_preferences()` (lib.php) + privacy provider live.
-Remaining: rendering (`data-theme`, body classes), AMD `scheme.js`, settings UI —
-all land with the shell/layouts in Phase 2.
+Status: `[~]` mostly done (2026-07-13): definitions/privacy, server rendering,
+shell AMD, no-JS settings UI, and PHPUnit coverage for preference
+definitions/defaults/privacy exports are live. Browser/Behat coverage is still
+pending.
 
 ## Purpose
 
@@ -22,9 +22,9 @@ Server-side user preferences replacing the prototype's localStorage-only state
 ## Mechanics
 
 - Server renders `data-theme` + body classes from preferences → no flash of wrong
-  theme; `system` renders a tiny inline-free bootstrapping: server sends
-  `data-theme="system"` and CSS `@media (prefers-color-scheme)` fallback layer,
-  AMD refines and mirrors to localStorage purely as a first-paint cache.
+  theme; explicit `light`/`dark` stamp `<html data-theme="…">`, while `system`
+  omits `data-theme` so the CSS `@media (prefers-color-scheme)` fallback layer
+  owns the effective scheme.
 - Writes via `core_user_set_user_preferences` from `core/ajax` (preferences must be
   whitelisted via the theme's `user_preferences` callback/definition so WS writes
   are permitted and typed).
@@ -34,12 +34,14 @@ Server-side user preferences replacing the prototype's localStorage-only state
 ## Tasks
 
 - [x] Preference definitions + validation + Privacy API declarations (2026-07-12).
-- [ ] Server-side rendering of `data-theme`/body classes in layouts.
-- [ ] AMD `scheme.js`: toggle, system media-query listener, WS write, local cache.
-- [ ] SCSS: dark-scheme custom-property overrides live purely in `_tokens.scss`.
-- [ ] Settings UI: Appearance section (light/dark/system radio) on the (restyled)
+- [x] Server-side rendering of `data-theme`/body classes in layouts.
+- [~] AMD shell toggle: preference cycle + WS write live; local first-paint
+      cache and Behat/browser persistence checks pending.
+- [x] SCSS: dark-scheme custom-property overrides live purely in `_tokens.scss`.
+- [x] Settings UI: Appearance section (light/dark/system radio) on the (restyled)
       preferences page — no-JS path.
-- [ ] PHPUnit: definitions, defaults, privacy provider; Behat: toggle persists.
+- [~] PHPUnit: definitions/defaults/privacy provider covered; Behat: toggle
+      persists pending.
 
 ## Acceptance criteria
 

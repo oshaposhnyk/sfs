@@ -3,8 +3,11 @@
 Status: `[~]` Phase 1 slice done (2026-07-12): tabs page live with **Colours**
 (40 token overrides, colour pickers + rgba text fields for translucent dark
 tints; emission via `theme_securefood\tokens::overrides_css()`, E2E-verified)
-and **Advanced** (raw pre/post SCSS). Remaining: Brand, Navigation,
-Pages & content, Blocks tabs + `settings_provider` for typed reads.
+and **Advanced** (raw pre/post SCSS). 2026-07-13 slices complete: base typed
+`settings_provider` + Brand display-name setting; About/Pages content provider
+port; Advanced custom footer HTML; Navigation JSON save-time validation and
+capability visibility; About page/section toggles; Brand logo file serving.
+Remaining: broader Student Lab/Future Food/Resources content controls.
 Decision record: ADR-007.
 
 ## Purpose
@@ -73,17 +76,31 @@ hard-coded.
 
 ## Tasks
 
-- [x] Tabs settings page skeleton (2026-07-12). `settings_provider` for typed
-      reads still pending (currently only `tokens` class exists, unit-tested).
+- [x] Tabs settings page skeleton + base `settings_provider`
+      (2026-07-12/13). Provider now owns Brand display name, Help URL,
+      navigation JSON, forced/default mode reads; broader typed reads still
+      need to be expanded across all page content settings.
 - [x] Colour settings → extra-SCSS emission + `theme_reset_all_caches`
       invalidation; override verified end-to-end in compiled CSS, both schemes
       (2026-07-12).
-- [ ] Brand/logo settings + pluginfile serving.
-- [ ] Navigation settings model + validation + integration with domain 01 nav.
-- [ ] Pages/content settings (per-page groups) + `format_text` rendering path.
-- [ ] Block regions in `layout/sfs*.php` + block card styling.
-- [x] Advanced tab — raw SCSS pre/post (2026-07-12); custom footer HTML pending.
-- [ ] Langs en/uk for every setting name + help text.
+- [x] Brand/logo settings + pluginfile serving (2026-07-13). Brand display
+      name, full/icon logos for light/dark schemes, favicon, shell/fav icon URL
+      resolution and system-context `pluginfile` serving are live.
+- [~] Navigation settings model + validation + integration with domain 01 nav.
+      Runtime integration reads through `settings_provider`; save-time JSON
+      validation and capability-based visibility added (2026-07-13). Structured
+      repeatable admin UI still deferred.
+- [~] Pages/content settings (per-page groups) + `format_text` rendering path.
+      About page settings now read through `settings_provider` (2026-07-13);
+      About page/section toggles live. Broader controls for Student Lab/Future
+      Food/Resources still pending.
+- [x] Block regions in `layout/sfs*.php` + block card styling (2026-07-13).
+      SecureFood shell layouts expose `content-top`, `side-pre` and
+      `content-bottom`; Blocks tab can hide/show each rendered slot.
+- [x] Advanced tab — raw SCSS pre/post (2026-07-12); custom footer HTML
+      setting/rendering (2026-07-13).
+- [~] Langs en/uk for every setting name + help text. Current live settings
+      covered; future Student Lab/Future Food/Resources controls still pending.
 - [ ] Behat: change a colour + a hero title + hide a nav item → assert rendered.
 
 ## Acceptance criteria

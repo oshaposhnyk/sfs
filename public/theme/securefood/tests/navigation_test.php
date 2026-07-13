@@ -50,6 +50,8 @@ final class navigation_test extends \basic_testcase {
                     ['title' => 'Lab', 'url' => '/local/learningplans/my.php',
                         'icon' => 'sch@o-o=l', 'visibility' => 'loggedin'],
                     ['title' => 'About', 'url' => '/'],
+                    ['title' => 'Admin', 'url' => '/admin/search.php',
+                        'visibility' => 'capability', 'capability' => 'moodle/site:config'],
                 ],
             ],
         ]);
@@ -61,6 +63,8 @@ final class navigation_test extends \basic_testcase {
         $this->assertSame('school', $sections[0]['items'][0]['icon']);
         $this->assertSame('loggedin', $sections[0]['items'][0]['visibility']);
         $this->assertSame('all', $sections[0]['items'][1]['visibility']);
+        $this->assertSame('capability', $sections[0]['items'][2]['visibility']);
+        $this->assertSame('moodle/site:config', $sections[0]['items'][2]['capability']);
         $this->assertSame('circle', navigation::parse(
             '[{"items": [{"title": "X", "url": "/"}]}]'
         )[0]['items'][0]['icon'] ?? 'circle');

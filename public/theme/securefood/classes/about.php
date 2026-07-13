@@ -36,31 +36,34 @@ final class about {
     /**
      * Template context for theme_securefood/about.
      *
-     * @param \stdClass|null $settings theme_config->settings.
+     * @param \stdClass|null $settings Theme settings object.
      * @return array
      */
     public static function context(?\stdClass $settings): array {
-        $get = static function(string $name, string $default) use ($settings): string {
-            $value = trim((string)($settings->{$name} ?? ''));
-            return $value !== '' ? $value : $default;
+        $provider = settings_provider::from_theme_settings($settings);
+        $get = static function(string $name, string $default) use ($provider): string {
+            return $provider->text($name, $default);
         };
 
-        $stats = self::pairs(
-            (string)($settings->aboutstats ?? ''),
-            [
-                ['value' => get_string('aboutdefault_stat_horizon_value', 'theme_securefood'),
-                    'label' => get_string('aboutdefault_stat_horizon_label', 'theme_securefood')],
-                ['value' => get_string('aboutdefault_stat_partners_value', 'theme_securefood'),
-                    'label' => get_string('aboutdefault_stat_partners_label', 'theme_securefood')],
-                ['value' => get_string('aboutdefault_stat_labs_value', 'theme_securefood'),
-                    'label' => get_string('aboutdefault_stat_labs_label', 'theme_securefood')],
-                ['value' => get_string('aboutdefault_stat_method_value', 'theme_securefood'),
-                    'label' => get_string('aboutdefault_stat_method_label', 'theme_securefood')],
-            ]
-        );
+        $stats = [];
+        if ($provider->enabled('showaboutstats')) {
+            $stats = self::pairs(
+                $provider->raw('aboutstats'),
+                [
+                    ['value' => get_string('aboutdefault_stat_horizon_value', 'theme_securefood'),
+                        'label' => get_string('aboutdefault_stat_horizon_label', 'theme_securefood')],
+                    ['value' => get_string('aboutdefault_stat_partners_value', 'theme_securefood'),
+                        'label' => get_string('aboutdefault_stat_partners_label', 'theme_securefood')],
+                    ['value' => get_string('aboutdefault_stat_labs_value', 'theme_securefood'),
+                        'label' => get_string('aboutdefault_stat_labs_label', 'theme_securefood')],
+                    ['value' => get_string('aboutdefault_stat_method_value', 'theme_securefood'),
+                        'label' => get_string('aboutdefault_stat_method_label', 'theme_securefood')],
+                ]
+            );
+        }
 
         // The design's About page has no KPI row — render only when configured.
-        $kpis = self::pairs((string)($settings->aboutkpis ?? ''), []);
+        $kpis = self::pairs($provider->raw('aboutkpis'), []);
 
         $feeddefaults = [
             self::feed_default(1),
@@ -68,7 +71,7 @@ final class about {
             self::feed_default(3),
             self::feed_default(4),
         ];
-        $feeditems = json_decode((string)($settings->aboutfeed ?? ''), true);
+        $feeditems = json_decode($provider->raw('aboutfeed'), true);
         if (!is_array($feeditems) || $feeditems === []) {
             $feeditems = $feeddefaults;
         }
@@ -85,6 +88,9 @@ final class about {
                 'time' => format_string((string)($item['time'] ?? '')),
                 'variant' => $variants[$i % count($variants)],
             ];
+        }
+        if (!$provider->enabled('showaboutfeed')) {
+            $feed = [];
         }
 
 
@@ -110,20 +116,29 @@ final class about {
         foreach ($partners as [$name, $country, $lat, $lon]) {
             $hubdefaults[] = ['name' => $name, 'country' => $country, 'type' => 'partner', 'lat' => $lat, 'lon' => $lon];
         }
-        $hubitems = json_decode((string)($settings->abouthubs ?? ''), true);
+        $hubitems = json_decode($provider->raw('abouthubs'), true);
         if (!is_array($hubitems) || $hubitems === []) {
             $hubitems = $hubdefaults;
         }
         $hubs = [];
-        foreach ($hubitems as $item) {
+        foreach (array_values($hubitems) as $i => $item) {
             if (!is_array($item) || empty($item['name'])) {
                 continue;
             }
             $islab = ($item['type'] ?? 'partner') === 'lab';
+            $status = get_string($islab ? 'abouthub_lab' : 'abouthub_partner', 'theme_securefood');
+            $name = format_string((string)$item['name']);
+            $country = format_string((string)($item['country'] ?? ''));
             $hub = [
-                'name' => format_string((string)$item['name']),
-                'country' => format_string((string)($item['country'] ?? '')),
+                'hubid' => 'sfs-hub-' . ($i + 1),
+                'name' => $name,
+                'country' => $country,
                 'islab' => $islab,
+                'markerlabel' => get_string('abouthubmarkerlabel', 'theme_securefood', (object)[
+                    'name' => $name,
+                    'country' => $country,
+                    'status' => $status,
+                ]),
                 'onmap' => false,
             ];
             // Dot-map position: equirectangular Europe window (lon -12..42, lat 34..62).
@@ -137,9 +152,14 @@ final class about {
                     $hub['onmap'] = true;
                     $hub['x'] = round($x, 1);
                     $hub['y'] = round($y, 1);
+                    $hub['markerxclass'] = (int)round($x);
+                    $hub['markeryclass'] = (int)round($y);
                 }
             }
             $hubs[] = $hub;
+        }
+        if (!$provider->enabled('showabouthubs')) {
+            $hubs = [];
         }
 
         $layerdefaults = [
@@ -147,7 +167,7 @@ final class about {
             self::layer_default(2),
             self::layer_default(3),
         ];
-        $layeritems = json_decode((string)($settings->aboutlayers ?? ''), true);
+        $layeritems = json_decode($provider->raw('aboutlayers'), true);
         if (!is_array($layeritems) || $layeritems === []) {
             $layeritems = $layerdefaults;
         }
@@ -162,6 +182,7 @@ final class about {
                 'text' => format_string((string)($item['text'] ?? '')),
             ];
         }
+        $showlayers = $provider->enabled('showaboutlayers') && $layers !== [];
 
         $approachdefaults = [
             self::approach_step_default(1),
@@ -169,7 +190,7 @@ final class about {
             self::approach_step_default(3),
             self::approach_step_default(4),
         ];
-        $approachitems = json_decode((string)($settings->aboutapproachsteps ?? ''), true);
+        $approachitems = json_decode($provider->raw('aboutapproachsteps'), true);
         if (!is_array($approachitems) || $approachitems === []) {
             $approachitems = $approachdefaults;
         }
@@ -184,7 +205,7 @@ final class about {
                 'text' => format_string((string)($item['text'] ?? '')),
             ];
         }
-        $showapproach = (int)($settings->showaboutapproach ?? 1) === 1 && $approachsteps !== [];
+        $showapproach = $provider->enabled('showaboutapproach') && $approachsteps !== [];
 
         return [
             'titleaccent' => format_string($get('abouttitleaccent',
@@ -197,6 +218,7 @@ final class about {
                 get_string('aboutdefault_shieldbody', 'theme_securefood')), FORMAT_HTML),
             'layerstitle' => format_string($get('aboutlayerstitle',
                 get_string('aboutdefault_layerstitle', 'theme_securefood')), true, ['escape' => false]),
+            'showlayers' => $showlayers,
             'layers' => $layers,
             'showapproach' => $showapproach,
             'approachkicker' => format_string($get('aboutapproachkicker',
@@ -208,6 +230,7 @@ final class about {
             'approachsteps' => $approachsteps,
             'hubstitle' => format_string($get('abouthubstitle',
                 get_string('aboutdefault_hubstitle', 'theme_securefood')), true, ['escape' => false]),
+            'maplabel' => get_string('aboutmaplabel', 'theme_securefood'),
             'hubs' => $hubs,
             'feedtitle' => format_string($get('aboutfeedtitle',
                 get_string('aboutdefault_feedtitle', 'theme_securefood')), true, ['escape' => false]),

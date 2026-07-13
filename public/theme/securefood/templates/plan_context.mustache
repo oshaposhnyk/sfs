@@ -32,10 +32,7 @@
         {{planname}}
     </a>
     <span class="sfs-plancontext__pos">{{positionlabel}}</span>
-    <span class="sfs-plancontext__progress" role="progressbar" aria-valuenow="{{percentage}}"
-          aria-valuemin="0" aria-valuemax="100"
-          aria-label="{{#str}}plancontext_progress, theme_securefood{{/str}}">
-        <span class="sfs-plancontext__fill" style="width: {{percentage}}%"></span>
-    </span>
+    <progress class="sfs-plancontext__progress" value="{{percentage}}" max="100"
+              aria-label="{{#str}}plancontext_progress, theme_securefood{{/str}}">{{percentage}}%</progress>
     <span class="sfs-plancontext__pct">{{percentage}}%</span>
 </div>

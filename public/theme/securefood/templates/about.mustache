@@ -51,25 +51,27 @@
     {{/stats.0}}
 </section>
 
-<div class="sfs-shield">
-    <section class="sfs-shield__card">
-        <span class="sfs-shield__chip">{{shieldchip}}</span>
-        <h3 class="sfs-shield__title">{{shieldtitle}}</h3>
-        <div class="sfs-shield__body">{{{shieldbody}}}</div>
-    </section>
-    <section class="sfs-layers">
-        <h3 class="sfs-layers__title">{{layerstitle}}</h3>
-        {{#layers}}
-            <div class="sfs-layers__item">
-                <span class="sfs-layers__num" aria-hidden="true">{{number}}</span>
-                <div>
-                    <div class="sfs-layers__name">{{title}}</div>
-                    <div class="sfs-layers__text">{{text}}</div>
+{{#showlayers}}
+    <div class="sfs-shield">
+        <section class="sfs-shield__card">
+            <span class="sfs-shield__chip">{{shieldchip}}</span>
+            <h3 class="sfs-shield__title">{{shieldtitle}}</h3>
+            <div class="sfs-shield__body">{{{shieldbody}}}</div>
+        </section>
+        <section class="sfs-layers">
+            <h3 class="sfs-layers__title">{{layerstitle}}</h3>
+            {{#layers}}
+                <div class="sfs-layers__item">
+                    <span class="sfs-layers__num" aria-hidden="true">{{number}}</span>
+                    <div>
+                        <div class="sfs-layers__name">{{title}}</div>
+                        <div class="sfs-layers__text">{{text}}</div>
+                    </div>
                 </div>
-            </div>
-        {{/layers}}
-    </section>
-</div>
+            {{/layers}}
+        </section>
+    </div>
+{{/showlayers}}
 
 {{#showapproach}}
     <section class="sfs-approach">
@@ -108,18 +110,21 @@
     <section class="sfs-hubs">
         <h3 class="sfs-hubs__title">{{hubstitle}}</h3>
         <div class="sfs-hubs__grid">
-            <div class="sfs-hubs__map" aria-hidden="true">
+            <div class="sfs-hubs__map" role="group" aria-label="{{maplabel}}">
                 {{#hubs}}
                     {{#onmap}}
-                        <span class="sfs-hubs__marker {{#islab}}sfs-hubs__marker--lab{{/islab}}"
-                              style="left: {{x}}%; top: {{y}}%;" title="{{name}}"></span>
+                        <a class="sfs-hubs__marker sfs-hubs__marker--x-{{markerxclass}} sfs-hubs__marker--y-{{markeryclass}} {{#islab}}sfs-hubs__marker--lab{{/islab}}"
+                           href="#{{hubid}}" aria-label="{{markerlabel}}">
+                            <span class="visually-hidden">{{markerlabel}}</span>
+                        </a>
                     {{/onmap}}
                 {{/hubs}}
             </div>
             <div class="sfs-hubs__card">
             <ul class="sfs-hubs__list">
                 {{#hubs}}
-                    <li class="sfs-hubs__row {{#islab}}sfs-hubs__row--lab{{/islab}}">
+                    <li id="{{hubid}}" class="sfs-hubs__row {{#islab}}sfs-hubs__row--lab{{/islab}}"
+                        data-sfs-hub-id="{{hubid}}">
                         <span class="sfs-hubs__dot" aria-hidden="true"></span>
                         <span class="sfs-hubs__name">{{name}}</span>
                         {{#country}}<span class="sfs-hubs__country">{{country}}</span>{{/country}}

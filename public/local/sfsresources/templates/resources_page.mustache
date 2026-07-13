@@ -42,7 +42,8 @@
                 <div class="sfsres-stat sfsres-stat--{{variant}}">
                     <span class="sfsres-stat__label">{{label}}</span>
                     <span class="sfsres-stat__value">{{value}}{{#suffix}}<span class="sfsres-stat__suffix">{{suffix}}</span>{{/suffix}}</span>
-                    <span class="sfsres-stat__bar" role="presentation"><span class="sfsres-stat__fill" style="width: {{percent}}%;"></span></span>
+                    <progress class="sfsres-stat__bar" value="{{percent}}" max="100"
+                              aria-label="{{label}}">{{percent}}%</progress>
                     {{#sub}}<span class="sfsres-stat__sub">{{sub}}</span>{{/sub}}
                 </div>
             {{/stats}}

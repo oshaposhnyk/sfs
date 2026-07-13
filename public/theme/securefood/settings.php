@@ -17,8 +17,7 @@
 /**
  * SecureFood School theme settings (ADR-007 — no-code customisation).
  *
- * Phase 1 tabs: Colours, Advanced. Navigation / Pages & content / Blocks
- * tabs arrive with domains 01, 02 and 11 (Phase 2).
+ * Tabs: General, Brand, Navigation, Pages & content, Blocks, Colours, Advanced.
  *
  * @package    theme_securefood
  * @copyright  2026 SecureFood School
@@ -66,11 +65,63 @@ if ($ADMIN->fulltree) {
     $settings->add($page);
 
     // -------------------------------------------------------------------
+    // Tab: Brand — shell display name and logo assets (ADR-007).
+    // -------------------------------------------------------------------
+    $page = new admin_settingpage('theme_securefood_brand', get_string('brandtab', 'theme_securefood'));
+
+    $page->add(new admin_setting_configtext(
+        'theme_securefood/brandname',
+        get_string('brandname', 'theme_securefood'),
+        get_string('brandname_desc', 'theme_securefood'),
+        '',
+        PARAM_TEXT
+    ));
+
+    $page->add(new admin_setting_heading(
+        'theme_securefood/brandlogoheading',
+        get_string('brandlogoheading', 'theme_securefood'),
+        get_string('brandlogoheading_desc', 'theme_securefood')
+    ));
+
+    $logoacceptedtypes = ['.png', '.jpg', '.jpeg'];
+    $logosettings = [
+        'logofulllight',
+        'logofulldark',
+        'logoiconlight',
+        'logoicondark',
+    ];
+    foreach ($logosettings as $name) {
+        $setting = new admin_setting_configstoredfile(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string($name . '_desc', 'theme_securefood'),
+            $name,
+            0,
+            ['maxfiles' => 1, 'accepted_types' => $logoacceptedtypes]
+        );
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+    }
+
+    $setting = new admin_setting_configstoredfile(
+        'theme_securefood/favicon',
+        get_string('favicon', 'theme_securefood'),
+        get_string('favicon_desc', 'theme_securefood'),
+        'favicon',
+        0,
+        ['maxfiles' => 1, 'accepted_types' => ['.ico', '.png']]
+    );
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
+    // -------------------------------------------------------------------
     // Tab: Navigation — settings-driven sidebar menu (ADR-007).
     // -------------------------------------------------------------------
     $page = new admin_settingpage('theme_securefood_navigation', get_string('navigationtab', 'theme_securefood'));
 
-    $page->add(new admin_setting_configtextarea(
+    $page->add(new \theme_securefood\admin_setting_navigation(
         'theme_securefood/navigation',
         get_string('navigation', 'theme_securefood'),
         get_string('navigation_desc', 'theme_securefood'),
@@ -93,6 +144,15 @@ if ($ADMIN->fulltree) {
     // Empty values fall back to the design copy.
     // -------------------------------------------------------------------
     $page = new admin_settingpage('theme_securefood_pages', get_string('pagestab', 'theme_securefood'));
+
+    foreach (['showaboutpage', 'showaboutstats', 'showaboutlayers', 'showabouthubs', 'showaboutfeed'] as $name) {
+        $page->add(new admin_setting_configcheckbox(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string($name . '_desc', 'theme_securefood'),
+            1
+        ));
+    }
 
     foreach (['aboutkicker', 'abouttitle'] as $name) {
         $page->add(new admin_setting_configtext(
@@ -203,6 +263,22 @@ if ($ADMIN->fulltree) {
     $settings->add($page);
 
     // -------------------------------------------------------------------
+    // Tab: Blocks — shell block-region visibility (ADR-007).
+    // -------------------------------------------------------------------
+    $page = new admin_settingpage('theme_securefood_blocks', get_string('blockstab', 'theme_securefood'));
+
+    foreach (['showblockcontenttop', 'showblockside', 'showblockcontentbottom'] as $name) {
+        $page->add(new admin_setting_configcheckbox(
+            "theme_securefood/{$name}",
+            get_string($name, 'theme_securefood'),
+            get_string($name . '_desc', 'theme_securefood'),
+            1
+        ));
+    }
+
+    $settings->add($page);
+
+    // -------------------------------------------------------------------
     // Tab: Colours — one override per design token, light and dark.
     // Empty value = use the SecureFood default from scss/_tokens.scss.
     // -------------------------------------------------------------------
@@ -257,6 +333,14 @@ if ($ADMIN->fulltree) {
     // Tab: Advanced — raw SCSS escape hatches (Boost pattern).
     // -------------------------------------------------------------------
     $page = new admin_settingpage('theme_securefood_advanced', get_string('advancedtab', 'theme_securefood'));
+
+    $page->add(new admin_setting_confightmleditor(
+        'theme_securefood/footerhtml',
+        get_string('footerhtml', 'theme_securefood'),
+        get_string('footerhtml_desc', 'theme_securefood'),
+        '',
+        PARAM_RAW
+    ));
 
     $setting = new admin_setting_scsscode(
         'theme_securefood/scsspre',

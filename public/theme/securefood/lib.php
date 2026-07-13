@@ -73,6 +73,49 @@ function theme_securefood_get_extra_scss($theme): string {
 }
 
 /**
+ * Serve files uploaded through the SecureFood theme settings.
+ *
+ * @param stdClass $course Course object.
+ * @param stdClass|null $cm Course module object.
+ * @param context $context File context.
+ * @param string $filearea File area.
+ * @param array $args Pluginfile path args.
+ * @param bool $forcedownload Whether download is forced.
+ * @param array $options Send-file options.
+ * @return bool
+ */
+function theme_securefood_pluginfile(
+    $course,
+    $cm,
+    $context,
+    $filearea,
+    $args,
+    $forcedownload,
+    array $options = []
+) {
+    $allowedfileareas = [
+        'logofulllight',
+        'logofulldark',
+        'logoiconlight',
+        'logoicondark',
+        'favicon',
+    ];
+
+    if ($context->contextlevel === CONTEXT_SYSTEM && in_array($filearea, $allowedfileareas, true)) {
+        $theme = theme_config::load('securefood');
+        // Theme assets are safe to cache publicly; the theme revision changes
+        // when settings files change.
+        if (!array_key_exists('cacheability', $options)) {
+            $options['cacheability'] = 'public';
+        }
+
+        return $theme->setting_file_serve($filearea, $args, $forcedownload, $options);
+    }
+
+    send_file_not_found();
+}
+
+/**
  * User preferences owned by the theme (persisted server-side, ADR-004).
  *
  * @return array[]

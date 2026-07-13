@@ -49,6 +49,38 @@ $badgeimage = static function(int $badgeid) use ($context): string {
         $context->id, 'badges', 'badgeimage', $badgeid, '/', 'f1', false
     )->out(false);
 };
+$criteriapreview = static function(\core_badges\badge $badge): string {
+    $criteria = $badge->criteria;
+    unset($criteria[BADGE_CRITERIA_TYPE_OVERALL]);
+    if ($criteria === []) {
+        return '';
+    }
+
+    $aggregation = $badge->get_aggregation_methods();
+    $context = $badge->get_context();
+    $items = [];
+    foreach ($criteria as $type => $criterion) {
+        if (empty($criterion->params)) {
+            continue;
+        }
+
+        $description = count($criterion->params) === 1
+            ? get_string('criteria_descr_single_' . $type, 'badges')
+            : get_string('criteria_descr_' . $type, 'badges',
+                core_text::strtoupper($aggregation[$badge->get_aggregation_method($type)]));
+        $html = format_text($description . ' ' . $criterion->get_details(true), FORMAT_HTML, [
+            'context' => $context,
+            'filter' => true,
+        ]);
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('/\s+/', ' ', $text);
+        if (is_string($text) && trim($text) !== '') {
+            $items[] = trim($text);
+        }
+    }
+
+    return implode(' ', $items);
+};
 foreach ($earned as $badge) {
     $earnedids[(int)$badge->id] = true;
     $achievements[] = [
@@ -60,10 +92,12 @@ foreach ($earned as $badge) {
 }
 foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
     if (!isset($earnedids[(int)$badge->id]) && (int)$badge->status === BADGE_STATUS_ACTIVE) {
+        $lockedbadge = new \core_badges\badge((int)$badge->id);
         $achievements[] = [
             'name' => format_string($badge->name),
             'earned' => false,
             'imageurl' => $badgeimage((int)$badge->id),
+            'criteria' => $criteriapreview($lockedbadge),
         ];
     }
 }
@@ -101,6 +135,7 @@ $get = static function(string $name, string $default): string {
     return $value !== '' ? $value : $default;
 };
 $level = \local_sfsgame\domain\xp_policy::level($xp);
+$decisionchoices = \local_sfsgame\decision::parse((string)get_config('local_sfsgame', 'decisionchoices'));
 $firstmissionurl = null;
 foreach ($missions as $mission) {
     if (!empty($mission['url'])) {
@@ -134,5 +169,16 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
     'hasachievements' => $achievements !== [],
     'missions' => $missions,
     'hasmissions' => $missions !== [],
+    'showdecision' => (int)(get_config('local_sfsgame', 'showdecision') ?? 1) === 1,
+    'decisionkicker' => format_string($get('decisionkicker',
+        get_string('default_decisionkicker', 'local_sfsgame')), true, ['escape' => false]),
+    'decisiontitle' => format_string($get('decisiontitle',
+        get_string('default_decisiontitle', 'local_sfsgame')), true, ['escape' => false]),
+    'decisionbody' => format_string($get('decisionbody',
+        get_string('default_decisionbody', 'local_sfsgame')), true, ['escape' => false]),
+    'decisionchoices' => $decisionchoices,
+    'hasdecisionchoices' => $decisionchoices !== [],
+    'decisionempty' => get_string('decisionempty', 'local_sfsgame'),
+    'decisionhint' => get_string('decisionhint', 'local_sfsgame'),
 ]);
 echo $OUTPUT->footer();

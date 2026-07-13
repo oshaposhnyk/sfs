@@ -34,11 +34,14 @@ namespace theme_securefood;
  *   {"label": "Learning", "items": [
  *     {"title": "Student Lab", "url": "/local/learningplans/my.php",
  *      "icon": "school", "visibility": "loggedin"}
+ *     {"title": "Admin", "url": "/admin/search.php",
+ *      "icon": "admin_panel_settings", "visibility": "capability",
+ *      "capability": "moodle/site:config"}
  *   ]}
  * ]
  *
- * visibility: "all" (default) or "loggedin". Titles and labels pass through
- * format_string() at render time so multilang filters apply.
+ * visibility: "all" (default), "loggedin" or "capability". Titles and labels
+ * pass through format_string() at render time so multilang filters apply.
  */
 final class navigation {
     /**
@@ -69,13 +72,24 @@ final class navigation {
                 if (!is_array($item) || empty($item['title']) || empty($item['url'])) {
                     continue;
                 }
-                $visibility = $item['visibility'] ?? 'all';
-                $items[] = [
+                $visibility = (string)($item['visibility'] ?? 'all');
+                if (!in_array($visibility, ['loggedin', 'capability'], true)) {
+                    $visibility = 'all';
+                }
+                $normalised = [
                     'title' => (string)$item['title'],
                     'url' => (string)$item['url'],
                     'icon' => preg_replace('/[^a-z0-9_]/', '', (string)($item['icon'] ?? 'circle')),
-                    'visibility' => $visibility === 'loggedin' ? 'loggedin' : 'all',
+                    'visibility' => $visibility,
                 ];
+                if ($visibility === 'capability') {
+                    $capability = trim((string)($item['capability'] ?? ''));
+                    if ($capability === '') {
+                        continue;
+                    }
+                    $normalised['capability'] = $capability;
+                }
+                $items[] = $normalised;
             }
             if ($items !== []) {
                 $sections[] = [
@@ -132,13 +146,15 @@ final class navigation {
      *
      * @param \moodle_url $currenturl The current page URL.
      * @param bool $loggedin Whether a real (non-guest) user is logged in.
+     * @param \context|null $context Context for capability-gated items.
      * @return array[]
      */
-    public static function for_page(\moodle_url $currenturl, bool $loggedin): array {
+    public static function for_page(\moodle_url $currenturl, bool $loggedin, ?\context $context = null): array {
         global $CFG;
 
-        $sections = self::parse((string)get_config('theme_securefood', 'navigation')) ?? self::defaults();
+        $sections = self::parse(settings_provider::from_config()->navigation_json()) ?? self::defaults();
         $currentpath = $currenturl->out_omit_querystring();
+        $context = $context ?? \context_system::instance();
 
         // Find the active item: longest matching URL prefix wins.
         $bestlen = 0;
@@ -147,7 +163,12 @@ final class navigation {
         foreach ($sections as $si => $section) {
             $items = [];
             foreach ($section['items'] as $item) {
-                if (($item['visibility'] ?? 'all') === 'loggedin' && !$loggedin) {
+                $visibility = $item['visibility'] ?? 'all';
+                if ($visibility === 'loggedin' && !$loggedin) {
+                    continue;
+                }
+                if ($visibility === 'capability' && (!$loggedin || empty($item['capability'])
+                        || !has_capability($item['capability'], $context))) {
                     continue;
                 }
                 $title = isset($item['titlestr'])

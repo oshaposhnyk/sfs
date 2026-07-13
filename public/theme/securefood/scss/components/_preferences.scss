@@ -64,8 +64,8 @@
     &.path-user .preferences-group.card,
     &.path-user .section.card {
         background: var(--sfs-surface);
-        border: 1px solid var(--sfs-line) !important;
-        border-radius: var(--sfs-radius-md) !important;
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
         box-shadow: var(--sfs-shadow-1);
         margin-bottom: 18px;
         overflow: hidden;
@@ -173,7 +173,7 @@
 
         &:hover {
             background: var(--sfs-primary);
-            color: #fff;
+            color: var(--sfs-on-dark);
             border-color: var(--sfs-primary);
             text-decoration: none;
         }

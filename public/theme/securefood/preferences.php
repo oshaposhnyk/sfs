@@ -40,6 +40,7 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('appearancetitle', 'theme_securefood'));
 $PAGE->set_heading(get_string('appearancetitle', 'theme_securefood'));
 
+$settingsprovider = \theme_securefood\settings_provider::from_config();
 $canswitchmode = \theme_securefood\mode_manager::can_user_switch();
 
 // Save (PRG, sesskey-guarded).
@@ -59,8 +60,7 @@ if (optional_param('save', 0, PARAM_BOOL)) {
 }
 
 $scheme = get_user_preferences('theme_securefood_colourscheme', 'system');
-$mode = get_user_preferences('theme_securefood_uimode',
-    (string)get_config('theme_securefood', 'defaultmode') ?: 'securefood');
+$mode = get_user_preferences('theme_securefood_uimode', $settingsprovider->default_mode());
 
 $schemeoptions = [];
 foreach (['light', 'dark', 'system'] as $option) {

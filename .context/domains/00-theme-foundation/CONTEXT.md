@@ -71,6 +71,18 @@ None (parallel with domain 10). Blocks 01, 02, 03 and all page domains.
 
 - [ ] Material Icons: full font vs subset of the ~40 glyphs actually used
       (list them from prototypes before deciding).
-- [ ] Reconcile the 108 raw colour/rgba literals outside `_tokens.scss`, four
-      active `!important` declarations and six inline Mustache style attributes
-      with the binding frontend rules before calling the foundation complete.
+- [ ] Reconcile the raw colour/rgba literals outside `_tokens.scss` before
+      calling the foundation complete. 2026-07-13: inline `style` attributes
+      were removed from custom production templates by replacing width spans
+      with native `<progress>` and generated map-marker position classes; the
+      four active custom `!important` declarations were removed. Remaining
+      `!important` occurrences are confined to third-party Leaflet vendor CSS
+      plus a comment in `_shell.scss`. Future Food and Student Lab colour
+      tokenisation plus small component colour slices are complete; remaining
+      raw colour/rgba hits outside `_tokens.scss`/vendor: 67 after completing
+      the Course colour tokenisation slice. Shell colour tokenisation is
+      complete; remaining raw colour/rgba hits outside `_tokens.scss`/vendor:
+      62. About colour tokenisation is complete; remaining raw colour/rgba
+      hits outside `_tokens.scss`/vendor: 30. Learningplans CSS colour
+      tokenisation is complete; remaining raw colour/rgba hits outside
+      `_tokens.scss`/vendor: 0.

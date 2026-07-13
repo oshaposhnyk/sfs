@@ -4,6 +4,10 @@
 
 @mixin sfs-dark-core {
     .sfs-mode {
+        --bs-border-color: var(--sfs-line);
+        --bs-border-color-translucent: var(--sfs-line);
+        --bs-secondary-color: var(--sfs-muted);
+
         color: var(--sfs-ink2);
 
         .card,
@@ -65,7 +69,7 @@
         }
 
         .alert-success {
-            background-color: rgba(63, 140, 90, 0.18);
+            background-color: color-mix(in srgb, var(--sfs-success) 18%, transparent);
             color: var(--sfs-ink);
             border-color: transparent;
         }
@@ -76,15 +80,13 @@
             border-color: transparent;
         }
 
-        hr,
-        .border-bottom,
-        .border-top {
-            border-color: var(--sfs-line) !important;
+        hr {
+            border-color: var(--sfs-line);
         }
 
         .text-muted,
         .dimmed_text {
-            color: var(--sfs-muted) !important;
+            color: var(--sfs-muted);
         }
 
         .sfs-shell__page a:not(.btn):not(.sfs-nav__item):not(.nav-link) {

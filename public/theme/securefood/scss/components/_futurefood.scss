@@ -5,9 +5,9 @@
         display: none;
     }
 
-    .ffg-hero {
-        background: linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 100%);
-        color: #fff;
+    .sfs-ffhero {
+        background: linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-primary800) 100%);
+        color: var(--sfs-on-dark);
         border-radius: var(--sfs-radius-md);
         padding: 28px;
         margin-bottom: 24px;
@@ -16,7 +16,7 @@
         gap: 28px;
     }
 
-    .ffg-hero__kicker {
+    .sfs-ffhero__kicker {
         color: var(--sfs-accent-ondark);
         font-size: 0.74rem;
         font-weight: 700;
@@ -24,19 +24,19 @@
         letter-spacing: 0.1em;
     }
 
-    .ffg-hero__title {
-        color: #fff;
+    .sfs-ffhero__title {
+        color: var(--sfs-on-dark);
         margin: 8px 0 12px;
         font-size: 2rem;
     }
 
-    .ffg-hero__lede {
-        color: rgba(255, 255, 255, 0.78);
+    .sfs-ffhero__lede {
+        color: color-mix(in srgb, var(--sfs-on-dark) 78%, transparent);
     }
 
-    .ffg-hero__xp {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+    .sfs-xp {
+        background: color-mix(in srgb, var(--sfs-on-dark) 6%, transparent);
+        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 8%, transparent);
         border-radius: var(--sfs-radius-sm);
         padding: 18px;
         display: grid;
@@ -44,53 +44,65 @@
         align-content: center;
     }
 
-    .ffg-hero__levelnum {
+    .sfs-xp__level {
         font-family: 'Manrope', sans-serif;
         font-size: 2.2rem;
         font-weight: 800;
         line-height: 1;
     }
 
-    .ffg-hero__leveltag {
+    .sfs-xp__leveltag {
         font-size: 0.72rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: rgba(255, 255, 255, 0.65);
+        color: color-mix(in srgb, var(--sfs-on-dark) 65%, transparent);
         font-weight: 600;
         margin-left: 10px;
     }
 
-    .ffg-hero__bar {
+    .sfs-xp__bar {
+        display: block;
+        width: 100%;
         height: 8px;
-        background: rgba(255, 255, 255, 0.12);
+        appearance: none;
+        background: color-mix(in srgb, var(--sfs-on-dark) 12%, transparent);
+        border: 0;
         border-radius: 999px;
         overflow: hidden;
+
+        &::-webkit-progress-bar {
+            background: color-mix(in srgb, var(--sfs-on-dark) 12%, transparent);
+            border-radius: 999px;
+        }
+
+        &::-webkit-progress-value {
+            background: linear-gradient(90deg, var(--sfs-accent), var(--sfs-accent100));
+            border-radius: 999px;
+        }
+
+        &::-moz-progress-bar {
+            background: linear-gradient(90deg, var(--sfs-accent), var(--sfs-accent100));
+            border-radius: 999px;
+        }
     }
 
-    .ffg-hero__fill {
-        display: block;
-        height: 100%;
-        background: linear-gradient(90deg, var(--sfs-accent), #f2d08e);
-        border-radius: 999px;
-    }
-
-    .ffg-hero__next {
+    .sfs-xp__next {
         font-size: 0.78rem;
-        color: rgba(255, 255, 255, 0.7);
+        color: color-mix(in srgb, var(--sfs-on-dark) 70%, transparent);
     }
 
-    .ffg-achievements__title {
+    .sfs-achievement-list__title {
         font-size: 1.4rem;
         margin: 0 0 14px;
     }
 
-    .ffg-achievements {
+    .sfs-achievement-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
         gap: 12px;
     }
 
-    .ffg-ach {
+    .sfs-achievement {
         background: var(--sfs-surface);
         border: 1px solid var(--sfs-line);
         border-radius: var(--sfs-radius-sm);
@@ -102,7 +114,7 @@
         gap: 8px;
     }
 
-    .ffg-ach__badge {
+    .sfs-achievement__badge {
         width: 56px;
         height: 56px;
         border-radius: 50%;
@@ -110,27 +122,42 @@
         border: 2px solid var(--sfs-accent);
     }
 
-    .ffg-ach--locked .ffg-ach__badge {
+    .sfs-achievement--locked .sfs-achievement__badge {
         background: var(--sfs-surface2);
         border: 2px dashed var(--sfs-linestrong);
     }
 
-    .ffg-ach__name {
+    .sfs-achievement__name {
         font-size: 0.8rem;
         font-weight: 700;
     }
 
-    .ffg-ach__state {
+    .sfs-achievement__state {
         font-size: 0.72rem;
         color: var(--sfs-muted);
     }
 
-    .ffg-ach--locked {
+    .sfs-achievement__criteria-label {
+        color: var(--sfs-accent-ink);
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 2px;
+    }
+
+    .sfs-achievement__criteria {
+        color: var(--sfs-muted);
+        font-size: 0.72rem;
+        line-height: 1.45;
+    }
+
+    .sfs-achievement--locked {
         opacity: 0.7;
     }
 
     @include sfs-media-mobile {
-        .ffg-hero {
+        .sfs-ffhero {
             grid-template-columns: 1fr;
             padding: 20px 16px;
         }
@@ -139,18 +166,18 @@
 
 // Missions grid (ffs.html "mission-grid").
 .sfs-mode {
-    .ffg-missions__title {
+    .sfs-mission-list__title {
         font-size: 1.4rem;
         margin: 28px 0 16px;
     }
 
-    .ffg-missions {
+    .sfs-mission-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 18px;
     }
 
-    .ffg-mission {
+    .sfs-mission {
         background: var(--sfs-surface);
         border: 1px solid var(--sfs-line);
         border-radius: var(--sfs-radius-md);
@@ -166,7 +193,7 @@
         }
     }
 
-    .ffg-mission__thumb {
+    .sfs-mission__thumb {
         height: 150px;
         position: relative;
         display: flex;
@@ -175,28 +202,28 @@
         padding: 14px;
     }
 
-    .ffg-mission__thumb--aqua {
-        background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2), transparent 60%),
-            linear-gradient(135deg, #2a8c8a 0%, #4fc3c0 100%);
+    .sfs-mission__thumb--aqua {
+        background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--sfs-on-dark) 20%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-teal) 0%, var(--sfs-teal300) 100%);
     }
 
-    .ffg-mission__thumb--amber {
-        background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.18), transparent 60%),
-            linear-gradient(135deg, #c68a3b 0%, #e0a458 100%);
+    .sfs-mission__thumb--amber {
+        background: radial-gradient(circle at 30% 70%, color-mix(in srgb, var(--sfs-on-dark) 18%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-accent) 0%, var(--sfs-accent300) 100%);
     }
 
-    .ffg-mission__thumb--teal {
-        background: radial-gradient(circle at 60% 30%, rgba(255, 255, 255, 0.2), transparent 60%),
-            linear-gradient(135deg, #0f4c5e 0%, #2a8c8a 100%);
+    .sfs-mission__thumb--teal {
+        background: radial-gradient(circle at 60% 30%, color-mix(in srgb, var(--sfs-on-dark) 20%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-teal) 100%);
     }
 
-    .ffg-mission__thumb--green {
-        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
-            linear-gradient(135deg, #2f6f46 0%, #4d9f6b 100%);
+    .sfs-mission__thumb--green {
+        background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--sfs-on-dark) 18%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-success700) 0%, var(--sfs-success300) 100%);
     }
 
-    .ffg-mission__badge {
-        background: rgba(255, 255, 255, 0.92);
+    .sfs-mission__badge {
+        background: color-mix(in srgb, var(--sfs-on-dark) 92%, transparent);
         color: var(--sfs-primary);
         padding: 4px 10px;
         border-radius: 999px;
@@ -204,27 +231,27 @@
         font-weight: 700;
     }
 
-    .ffg-mission__duration {
-        background: rgba(0, 0, 0, 0.45);
-        color: #fff;
+    .sfs-mission__duration {
+        background: color-mix(in srgb, var(--sfs-on-light) 45%, transparent);
+        color: var(--sfs-on-dark);
         padding: 4px 10px;
         border-radius: 999px;
         font-size: 0.74rem;
         font-weight: 600;
     }
 
-    .ffg-mission__body {
+    .sfs-mission__body {
         padding: 18px 20px 20px;
     }
 
-    .ffg-mission__tags {
+    .sfs-mission__tags {
         display: flex;
         gap: 6px;
         flex-wrap: wrap;
         margin-bottom: 8px;
     }
 
-    .ffg-mission__tag {
+    .sfs-mission__tag {
         padding: 3px 9px;
         border-radius: 999px;
         font-size: 0.7rem;
@@ -234,19 +261,19 @@
         border: 1px solid var(--sfs-line);
     }
 
-    .ffg-mission__name {
+    .sfs-mission__name {
         font-size: 1.05rem;
         margin: 0 0 6px;
     }
 
-    .ffg-mission__text {
+    .sfs-mission__text {
         font-size: 0.86rem;
         color: var(--sfs-muted);
         margin: 0 0 14px;
         line-height: 1.5;
     }
 
-    .ffg-mission__foot {
+    .sfs-mission__foot {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -254,14 +281,14 @@
         padding-top: 14px;
     }
 
-    .ffg-mission__xp {
+    .sfs-mission__xp {
         font-family: 'Manrope', sans-serif;
         font-weight: 700;
         color: var(--sfs-accent-ink);
         font-size: 0.92rem;
     }
 
-    .ffg-mission__action {
+    .sfs-mission__action {
         border-radius: 999px;
         background: var(--sfs-primary);
         border-color: var(--sfs-primary);
@@ -275,11 +302,181 @@
     }
 }
 
+// Future Food decision block (real activity links only; no quiz engine here).
+.sfs-mode {
+    .sfs-decision {
+        margin-top: 32px;
+        padding: 24px;
+        border-radius: var(--sfs-radius-md);
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        box-shadow: var(--sfs-shadow-1);
+    }
+
+    .sfs-decision__head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .sfs-decision__kicker {
+        color: var(--sfs-accent-ink);
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .sfs-decision__title {
+        margin: 6px 0 0;
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    .sfs-decision__pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--sfs-accent50);
+        color: var(--sfs-accent-ink);
+        font-size: 0.78rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .sfs-icon--decision::before {
+        content: 'quiz';
+        font-family: 'SFS Material Icons';
+        font-feature-settings: 'liga';
+        font-size: 18px;
+        vertical-align: middle;
+    }
+
+    .sfs-decision__body {
+        margin: 0 0 18px;
+        color: var(--sfs-muted);
+        max-width: 70ch;
+    }
+
+    .sfs-decision__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+    }
+
+    .sfs-decision__choice {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 16px;
+        border-radius: var(--sfs-radius-sm);
+        border: 1px solid var(--sfs-line);
+        background: var(--sfs-surface2);
+        color: var(--sfs-ink);
+
+        @include sfs-motion {
+            transition: transform var(--sfs-duration-fast), box-shadow var(--sfs-duration-fast), border-color var(--sfs-duration-fast);
+        }
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--sfs-shadow-2);
+            border-color: var(--sfs-accent50);
+            text-decoration: none;
+            color: var(--sfs-ink);
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .sfs-decision__icon {
+        flex: 0 0 auto;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--sfs-surface);
+        color: var(--sfs-accent-ink);
+        font-family: 'SFS Material Icons';
+        font-feature-settings: 'liga';
+        font-size: 22px;
+        box-shadow: inset 0 0 0 1px var(--sfs-line);
+    }
+
+    .sfs-decision__text {
+        min-width: 0;
+        flex: 1 1 auto;
+        display: grid;
+        gap: 4px;
+    }
+
+    .sfs-decision__label {
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .sfs-decision__note {
+        color: var(--sfs-muted);
+        font-size: 0.84rem;
+        line-height: 1.45;
+    }
+
+    .sfs-decision__go {
+        flex: 0 0 auto;
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        border-radius: 50%;
+        border: 2px solid var(--sfs-accent);
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            border-top: 2px solid var(--sfs-accent);
+            border-right: 2px solid var(--sfs-accent);
+            transform: translate(-60%, -50%) rotate(45deg);
+        }
+    }
+
+    .sfs-decision__hint {
+        margin: 12px 0 0;
+        color: var(--sfs-muted);
+        font-size: 0.84rem;
+    }
+
+    @include sfs-media-mobile {
+        .sfs-decision {
+            padding: 18px 16px;
+        }
+
+        .sfs-decision__head {
+            flex-direction: column;
+        }
+
+        .sfs-decision__pill {
+            align-self: flex-start;
+        }
+    }
+}
+
 // Badge artwork inside the achievement circle (Phase 7.1).
-.sfs-mode .ffg-ach__badge {
+.sfs-mode .sfs-achievement__badge {
     overflow: hidden;
 
-    .ffg-ach__img {
+    .sfs-achievement__img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -287,18 +484,18 @@
     }
 }
 
-.sfs-mode .ffg-ach--locked .ffg-ach__img {
+.sfs-mode .sfs-achievement--locked .sfs-achievement__img {
     filter: grayscale(1);
     opacity: 0.55;
 }
 
 // Audit fixes F1–F3: page head, mission hero, XP panel captions, play circles.
 .sfs-mode {
-    .ffg-head {
+    .sfs-ffhead {
         margin-bottom: 22px;
     }
 
-    .ffg-head__kicker {
+    .sfs-ffhead__kicker {
         color: var(--sfs-accent-ink);
         font-size: 0.74rem;
         font-weight: 700;
@@ -316,55 +513,55 @@
         }
     }
 
-    .ffg-head__title {
+    .sfs-ffhead__title {
         font-size: 2.2rem;
         font-weight: 700;
         letter-spacing: -0.02em;
         margin: 6px 0 8px;
     }
 
-    .ffg-head__lede {
+    .sfs-ffhead__lede {
         color: var(--sfs-muted);
         max-width: 64ch;
         margin: 0;
     }
 
-    .ffg-icon--play::before,
-    .ffg-icon--badge::before {
+    .sfs-icon--play::before,
+    .sfs-icon--badge::before {
         font-family: 'SFS Material Icons';
         font-feature-settings: 'liga';
         vertical-align: middle;
     }
 
-    .ffg-icon--play::before {
+    .sfs-icon--play::before {
         content: 'play_arrow';
         font-size: 18px;
         margin-right: 6px;
     }
 
-    .ffg-icon--badge::before {
+    .sfs-icon--badge::before {
         content: 'workspace_premium';
         font-size: 15px;
         margin-right: 5px;
     }
 
-    .ffg-hero__actions {
+    .sfs-ffhero__actions {
         margin-top: 18px;
     }
 
-    .ffg-hero__cta {
+    .sfs-ffhero__cta {
         display: inline-flex;
         align-items: center;
         padding: 10px 20px;
         border-radius: 999px;
         background: var(--sfs-accent);
-        color: #fff;
+        color: var(--sfs-on-dark);
         font-weight: 700;
         font-size: 0.9rem;
 
         &:hover {
             filter: brightness(0.95);
-            color: #fff;
+            color: var(--sfs-on-dark);
             text-decoration: none;
         }
 
@@ -373,73 +570,73 @@
         }
     }
 
-    .ffg-hero__xphead {
+    .sfs-xp__head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 16px;
     }
 
-    .ffg-hero__xptotal {
+    .sfs-xp__total {
         text-align: right;
     }
 
-    .ffg-hero__xplabel {
+    .sfs-xp__label {
         font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: rgba(255, 255, 255, 0.65);
+        color: color-mix(in srgb, var(--sfs-on-dark) 65%, transparent);
         font-weight: 600;
         margin-bottom: 4px;
     }
 
-    .ffg-hero__xpnum {
+    .sfs-xp__value {
         font-family: 'Manrope', sans-serif;
         font-size: 1.6rem;
         font-weight: 800;
         line-height: 1;
     }
 
-    .ffg-hero__levelnum {
+    .sfs-xp__level {
         font-size: 1.8rem;
     }
 
-    .ffg-hero__chips {
+    .sfs-xp__chips {
         display: flex;
         gap: 8px;
     }
 
-    .ffg-hero__chip {
+    .sfs-xp__chip {
         display: inline-flex;
         align-items: center;
         padding: 5px 12px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: color-mix(in srgb, var(--sfs-on-dark) 10%, transparent);
+        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 16%, transparent);
         font-size: 0.78rem;
         font-weight: 600;
     }
 
-    .ffg-ach__xp {
+    .sfs-achievement__xp {
         color: var(--sfs-accent-ink);
         font-family: 'Manrope', sans-serif;
         font-weight: 700;
     }
 
     // Mission thumbs: play circle + duration bottom-left (prototype).
-    .ffg-mission__thumb {
+    .sfs-mission__thumb {
         align-items: flex-start;
     }
 
-    .ffg-mission__play {
+    .sfs-mission__play {
         width: 46px;
         height: 46px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.95);
+        background: color-mix(in srgb, var(--sfs-on-dark) 95%, transparent);
         color: var(--sfs-primary);
         display: grid;
         place-items: center;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 20px color-mix(in srgb, var(--sfs-on-light) 20%, transparent);
 
         @include sfs-motion {
             transition: transform var(--sfs-duration-fast);
@@ -453,18 +650,18 @@
         }
     }
 
-    .ffg-mission:hover .ffg-mission__play {
+    .sfs-mission:hover .sfs-mission__play {
         transform: scale(1.08);
     }
 
-    .ffg-mission__duration {
+    .sfs-mission__duration {
         position: absolute;
         left: 14px;
         bottom: 14px;
         backdrop-filter: blur(4px);
     }
 
-    .ffg-mission__thumb {
+    .sfs-mission__thumb {
         position: relative;
     }
 }

@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-12 (P1 fidelity slice 1 in progress)
+Last updated: 2026-07-13 (Brand logo file serving slice complete; tests skipped by owner request)
 
 ## Domain status
 
@@ -12,14 +12,14 @@ Last updated: 2026-07-12 (P1 fidelity slice 1 in progress)
 | 10| enrol-learningplan          | 0     | `[x]` completed + E2E-verified | v0.1.0. Real enrol round-trip verified 2026-07-12 during Phase 3 seeding (sequential release → 1 course; immediate → all). PHPUnit still pending. |
 | 00| theme-foundation            | 1     | `[~]` mostly done | Scaffold installed + verified; Boost-var mapping deferred to domain 02 |
 | 03| preferences                 | 1     | `[~]` mostly done | Definitions/privacy/rendering (data-theme + system fallback)/AMD toggles live; no-JS preferences-page UI pending |
-| 11| customisation-settings      | 1–2   | `[~]` in progress | General + Navigation + Colours + Advanced tabs live; Brand/Pages/Blocks pending |
+| 11| customisation-settings      | 1–2   | `[~]` in progress | General + Brand/logo + Navigation + About Pages controls + Blocks + Colours + Advanced tabs live; broader Student Lab/Future Food/Resources content controls pending |
 | 01| app-shell                   | 2     | `[~]` core done | Sidebar/topbar/drawer/collapse live E2E; Behat + focus-trap + deep a11y pass pending |
 | 02| mode-switch                 | 2     | `[~]` core done | Both directions E2E-verified incl. forced modes; navbar "SFS" toggle in standard mode; Behat pending |
 | 05| student-lab                 | 3     | `[~]` core done | v1 single-stage grid (ADR-008); E2E-verified with real data both schemes; stage grouping + effort/level await schema decision |
 | 09| learningplans-integration   | 3     | `[~]` core done | Overview/set-active use cases + preference port live; external functions deferred (needs db/services.php approval) |
 | 06| course-experience           | 3–8   | `[x]` done | Restyle + plan-context strip + right rail (next-up/info/teachers) + per-section fractions (Phase 8 C1–C2) |
 | 04| dashboard-insights          | 4     | `[~]` v1 done | Hero/stats/hubs+dot-map/feed all settings-driven; per-role routing = via nav (decided) |
-| 07| future-food                 | 4     | `[~]` v1 done | XP/level from badges+completions, achievements, missions grid; real badges to be configured by admin |
+| 07| future-food                 | 4     | `[~]` v1 implemented | XP/level from badges+completions, achievements w/ locked criteria preview, missions grid, decision links; BEM normalised; browser QA/content decision badge still pending |
 | 08| resources-standards         | 4–8   | `[x]` done | Filearea library + audience filters + KPI stat cards + tool icons/counts (Phase 8 R1–R5); R6 validation card → Phase 9 |
 
 ## What already exists (baseline, verified 2026-07-12)
@@ -39,10 +39,10 @@ Last updated: 2026-07-12 (P1 fidelity slice 1 in progress)
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | Phase 8 “1:1 complete” status is overstated | Current prototypes and live output still differ materially (About L4C band absent, extra feed/core content, Future Food decision missing, Resources validation/side stats missing, incomplete course/activity composition) | Reopen the visual backlog page-by-page and verify light/dark/mobile against the current prototype files |
-| ADR-007 no-code catalogue is incomplete | Brand assets, Blocks controls, page/section toggles, footer, Student Lab/course content controls and a typed settings provider are absent; raw colours bypass token overrides | Complete domain 11 before pilot sign-off |
-| Frontend hard rules are violated | 108 raw colour/rgba literals outside `_tokens.scss`, 4 active `!important` declarations and 6 inline `style` attributes in production Mustache | Tokenise all recipes and replace runtime widths/positions with approved classes or a documented safe pattern |
-| Accessibility/interaction gaps remain | P0 fixed the mobile drawer state and blank Login; About map remains `aria-hidden` and the scheme toggle cannot cycle back to system | Focused WCAG keyboard/SR pass plus browser E2E at required viewports |
-| Theme QA coverage is incomplete | 15 unit tests cover only tokens/navigation/mode; no theme Behat tests, renderer/context/privacy tests or PHPCS binary | Add missing tests and install moodle/codechecker in CI |
+| ADR-007 no-code catalogue is incomplete | Brand assets, Blocks controls, page/section toggles, footer, Student Lab/course content controls and full typed provider coverage are incomplete | Complete domain 11 before pilot sign-off |
+| Frontend hard rules are partially violated | Raw colour/rgba literals outside `_tokens.scss` remain; custom active `!important` declarations and inline `style` attributes were removed 2026-07-13. Third-party Leaflet vendor CSS still contains upstream `!important`. | Tokenise remaining colour recipes and document/contain vendor CSS exceptions |
+| Accessibility/interaction gaps remain | P0 fixed the mobile drawer state and blank Login; topbar scheme toggle now cycles back to system; About map static/live markers have labelled keyboard semantics. A full WCAG keyboard/SR pass and browser E2E are still pending. | Focused WCAG keyboard/SR pass plus browser E2E at required viewports |
+| Theme QA coverage is incomplete | 22 unit tests now cover tokens/navigation/mode/About/preferences/privacy, but theme Behat, renderer behaviour checks and PHPCS binary are still missing | Add missing tests and install moodle/codechecker in CI |
 | Context/ADR drift | Domain files still report implemented work as not started and code references missing ADR-009 | Reconcile domain contexts and append the missing accepted ADRs; never rewrite existing ADRs |
 | Ukrainian core language pack is not installed on the dev site | en/uk component keys are in sync, but live Ukrainian rendering cannot be exercised | Install the official `uk` language pack, then run the required human language review |
 
@@ -79,6 +79,237 @@ uk string review (9.6) owner takes it.
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-13** — **Brand logo file serving slice `[x]`**:
+  completed the owner-approved `lib.php` slice for Brand uploads and theme
+  `pluginfile` serving. Brand tab now has full/icon logo uploads for light and
+  dark schemes plus favicon; shell/sidebar/About logo URLs resolve through
+  `settings_provider` with bundled asset fallbacks; the theme renderer uses
+  the uploaded favicon when present; `theme_securefood_pluginfile()` serves
+  only allowed fileareas from system context with public cacheability. Uploaded
+  logos intentionally accept PNG/JPG only; trusted bundled defaults remain SVG.
+  Checks: PHP lint clean for changed PHP/lang files; Moodle bootstrap smoke
+  check loaded `theme_config::load('securefood')`; `git diff --check` clean;
+  Moodle caches purged. PHPUnit/Behat/browser/manual QA skipped by owner
+  request.
+
+- **2026-07-13** — **About page/section toggles slice `[x]`**:
+  added Pages/content controls for the About front-page content: hide/show the
+  whole About block plus stats, shield/layers, hubs/map, feed and the existing
+  approach section. Runtime rendering now respects the toggles through
+  `settings_provider`. Checks: PHP lint clean for changed PHP/lang files;
+  `git diff --check` clean. PHPUnit/Behat/browser/manual QA skipped by owner
+  request.
+
+- **2026-07-13** — **Navigation capability visibility slice `[x]`**:
+  added capability-gated sidebar nav items using Moodle Access API. JSON now
+  supports `"visibility": "capability"` plus a Moodle capability string;
+  save-time validation requires a valid capability-shaped value, and runtime
+  checks `has_capability()` against the current page context. Updated the
+  existing parser test fixture but did not run PHPUnit. Checks: PHP lint clean
+  for changed PHP/lang/test files; `git diff --check` clean. PHPUnit/Behat/
+  browser/manual QA skipped by owner request.
+
+- **2026-07-13** — **Navigation JSON validation slice `[x]`**:
+  replaced the Navigation tab textarea with a custom admin setting that
+  rejects malformed JSON, non-array roots, sections without `items`, items
+  missing `title`/`url`, and unsupported visibility values. Empty value remains
+  allowed for prototype defaults, and runtime fallback remains a safety net.
+  Checks: PHP lint clean for changed PHP/lang files; `git diff --check` clean.
+  PHPUnit/Behat/browser/manual QA skipped by owner request.
+
+- **2026-07-13** — **Blocks regions/settings slice `[x]`**:
+  exposed `content-top`, `side-pre`, and `content-bottom` block regions in
+  SecureFood shell layouts, added a Blocks settings tab with visibility
+  toggles, rendered region-specific add-block buttons/blocks in the shell, and
+  added token-only block slot/card styling. No `db/`, `lib.php`,
+  capabilities, auth, cron or Docker config changes. Checks: PHP lint clean
+  for changed PHP/lang files; Moodle theme SCSS compiler succeeded;
+  `git diff --check` clean; Moodle caches purged after theme config changes.
+  PHPUnit/Behat/browser/manual QA skipped by owner request.
+
+- **2026-07-13** — **Custom footer setting `[x]`**:
+  added Advanced-tab footer HTML control, provider `html()` read, shell
+  rendering through `format_text(..., FORMAT_HTML)` in system context, and
+  token-only BEM footer styling. Checks: PHP lint clean for changed PHP/lang
+  files; Moodle theme SCSS compiler succeeded; `git diff --check` clean.
+  PHPUnit/Behat/browser/manual QA skipped by owner request.
+
+- **2026-07-13** — **About page settings_provider port `[x]`**:
+  moved the About/Pages content reader from direct dynamic settings access to
+  `theme_securefood\settings_provider` for text, JSON and checkbox reads.
+  Rendered defaults and existing setting names are unchanged. Checks:
+  `php -l public/theme/securefood/classes/about.php`; `git diff --check`
+  clean. PHPUnit/Behat/browser/manual QA skipped by owner request.
+
+- **2026-07-13** — **Settings provider + Brand display-name slice `[x]`**:
+  added `theme_securefood\settings_provider`, a Brand tab with site display
+  name, and runtime wiring for shell site name, topbar Help URL, navigation
+  JSON, and mode default/forced settings. Logo upload/pluginfile serving is
+  intentionally deferred because it requires a `lib.php` callback change and
+  explicit owner approval. Checks: PHP lint clean for changed PHP files;
+  `git diff --check` clean. PHPUnit/Behat/browser/manual QA skipped by owner
+  request.
+
+- **2026-07-13** — **Preference/privacy PHPUnit coverage `[x]`**:
+  added `preferences_privacy_test.php` covering
+  `theme_securefood_user_preferences()` definitions/defaults, Privacy API
+  metadata for all three theme-owned preferences, export of existing
+  preference values, and skipping users without stored preference values.
+  Checks: PHP lint for the new test; `theme_securefood_testsuite` 22/22,
+  109 assertions; `git diff --check` clean. Browser QA intentionally skipped
+  per owner instruction.
+
+- **2026-07-13** — **About map/list synchronisation `[x]`**:
+  completed the remaining Domain 04 map interaction slice. Static/no-JS marker
+  links now highlight the matching hub-list row through `:target`; live
+  Leaflet markers highlight and scroll the matching row on hover/focus/click,
+  expose `aria-describedby` to the row, and hub-list row hover opens/closes the
+  matching popup. Checks: `node --check` for `amd/src/aboutmap.js` and
+  `amd/build/aboutmap.min.js`; `php -l` for the changed layout; Moodle theme
+  SCSS compiler succeeded; `theme_securefood_testsuite` 18/18, 82 assertions;
+  `git diff --check` clean. Browser QA intentionally skipped per owner
+  instruction. Tooling note: local `grunt` dependency is absent, so
+  `amd/build/aboutmap.min.js` was synchronised by a small manual patch.
+
+- **2026-07-13** — **About map accessibility hardening `[x]`**:
+  replaced the static fallback's decorative `aria-hidden` map marker spans
+  with labelled, keyboard-focusable marker links tied to stable hub-list row
+  IDs, and switched live Leaflet points from SVG `CircleMarker`s to keyboard
+  `Marker`/`DivIcon` markers with `role="button"` and `aria-label`. Added
+  context data (`hubid`, `markerlabel`, `maplabel`) and tests for those
+  exports. Checks: `node --check` for `amd/src/aboutmap.js` and
+  `amd/build/aboutmap.min.js`; PHP lint for changed PHP/lang/test files;
+  Moodle theme SCSS compiler succeeded; `theme_securefood_testsuite` 18/18,
+  82 assertions; `git diff --check` clean. Browser QA intentionally skipped
+  per owner instruction. Tooling note: local `grunt` dependency is absent, so
+  `amd/build/aboutmap.min.js` was synchronised by a small manual patch.
+
+- **2026-07-13** — **Scheme toggle system cycle `[x]`**:
+  fixed the topbar colour-scheme toggle so it cycles the persisted preference
+  through `light → dark → system`. The shell layout now passes the validated
+  saved preference into `shell_topbar.mustache`; AMD applies explicit
+  `light`/`dark` via `<html data-theme>` and returns `system` by removing the
+  attribute so the `prefers-color-scheme` CSS fallback owns the effective
+  scheme. Updated en/uk toggle labels to describe a three-state cycle. Checks:
+  `node --check` for `amd/src/shell.js` and `amd/build/shell.min.js`;
+  `php -l` for the changed layout; `theme_securefood_testsuite` 18/18,
+  78 assertions; `git diff --check` clean. Browser QA intentionally skipped
+  per owner instruction. Tooling note: local `grunt` dependency is absent, so
+  `amd/build/shell.min.js` was synchronised by a small manual patch.
+
+- **2026-07-13** — **Learningplans CSS colour tokenisation `[x]`**:
+  replaced the final raw hex/rgba values in
+  `public/local/learningplans/styles.css` with SecureFood/Bootstrap CSS
+  variables and token-derived `color-mix()` expressions across legacy
+  management UI states and Student Lab cards/progress/gradients. Check:
+  `styles.css` has no `#[…]` or `rgba()` hits; raw colour/rgba hits outside
+  `_tokens.scss`/vendor are now 0; `local_learningplans_testsuite` 18/18,
+  72 assertions; `theme_securefood_testsuite` 18/18, 78 assertions;
+  `git diff --check` clean. Browser QA intentionally skipped per owner
+  instruction.
+
+- **2026-07-13** — **About colour tokenisation `[x]`**:
+  replaced all raw hex/rgba values in `components/_about.scss` with existing
+  tokens and token-derived `color-mix()` expressions across the About hero,
+  feed, hubs/map and layers sections. Check: `_about.scss` has no `#[…]` or
+  `rgba()` hits; Moodle theme SCSS compiler succeeded;
+  `theme_securefood_testsuite` 18/18, 78 assertions; `git diff --check`
+  clean. Browser QA intentionally skipped per owner instruction. Remaining
+  raw colour/rgba hits outside `_tokens.scss`/vendor: 30.
+
+- **2026-07-13** — **Shell colour tokenisation `[x]`**:
+  replaced all raw hex/rgba values in `layout/_shell.scss` with existing
+  tokens and token-derived `color-mix()` expressions for user avatars, sticky
+  topbar backgrounds and mobile drawer backdrop. Also removed a raw colour
+  from a Boost-surface explanatory comment. Check: `_shell.scss` has no
+  `#[…]` or `rgba()` hits; Moodle theme SCSS compiler succeeded;
+  `theme_securefood_testsuite` 18/18, 78 assertions; `git diff --check`
+  clean. Browser QA intentionally skipped per owner instruction. Remaining
+  raw colour/rgba hits outside `_tokens.scss`/vendor: 62.
+
+- **2026-07-13** — **Course colour tokenisation `[x]`**:
+  replaced all raw hex/rgba values in `components/_course.scss` with existing
+  tokens and token-derived `color-mix()` expressions for the course banner,
+  plan-context hover state and right rail. Also removed the raw colour from an
+  explanatory icon-filter comment. Check: `_course.scss` has no `#[…]` or
+  `rgba()` hits; Moodle theme SCSS compiler succeeded;
+  `theme_securefood_testsuite` 18/18, 78 assertions; `git diff --check`
+  clean. Browser QA intentionally skipped per owner instruction. Remaining
+  raw colour/rgba hits outside `_tokens.scss`/vendor: 67.
+
+- **2026-07-13** — **Small component colour tokenisation `[x]`**:
+  replaced the remaining raw white/success/danger literals in
+  `components/_resources.scss`, `components/_preferences.scss` and
+  `components/_darkcore.scss` with existing tokens and token-derived
+  `color-mix()` expressions. Check: those three files now have no `#[…]` or
+  `rgba()` hits; Moodle theme SCSS compiler succeeded;
+  `theme_securefood_testsuite` 18/18, 78 assertions;
+  `local_sfsresources_testsuite` 2/2, 10 assertions; `git diff --check`
+  clean. Browser QA intentionally skipped per owner instruction. Remaining
+  raw colour/rgba hits outside `_tokens.scss`/vendor: 78.
+
+- **2026-07-13** — **Student Lab colour tokenisation `[x]`**:
+  replaced all raw hex/rgba values in `components/_studentlab.scss` with
+  design tokens and token-derived `color-mix()` expressions, reusing the
+  contrast/palette primitives from the Future Food slice and adding
+  `--sfs-primary600` for the Student Lab planbar gradient. Check:
+  `_studentlab.scss` and `_futurefood.scss` have no `#[…]` or `rgba()` hits;
+  Moodle theme SCSS compiler succeeded; `theme_securefood_testsuite` 18/18,
+  78 assertions; `local_learningplans_testsuite` 18/18, 72 assertions;
+  `git diff --check` clean. Browser QA intentionally skipped per owner
+  instruction. Remaining raw colour/rgba hits outside `_tokens.scss`/vendor:
+  84.
+
+- **2026-07-13** — **Future Food colour tokenisation `[x]`**:
+  replaced all raw hex/rgba values in `components/_futurefood.scss` with
+  design tokens and token-derived `color-mix()` expressions. Added reusable
+  palette/contrast primitives to `_tokens.scss`
+  (`--sfs-on-dark`, `--sfs-on-light`, primary/accent/teal/success variant
+  stops). Check: `_futurefood.scss` has no `#[…]` or `rgba()` hits; Moodle
+  theme SCSS compiler succeeded; `theme_securefood_testsuite` 18/18,
+  78 assertions; `local_sfsgame_testsuite` 7/7, 27 assertions;
+  `git diff --check` clean. Browser QA intentionally skipped per owner
+  instruction. Remaining raw colour/rgba hits outside `_tokens.scss`/vendor:
+  102.
+
+- **2026-07-13** — **Custom `!important` cleanup `[x]`**:
+  removed the four active custom `!important` declarations from
+  `components/_preferences.scss` and `components/_darkcore.scss`. Preferences
+  cards now rely on post-Boost order + scoped specificity. Dark core now sets
+  scoped Bootstrap variables (`--bs-border-color`,
+  `--bs-border-color-translucent`, `--bs-secondary-color`) so border/text
+  utilities inherit SecureFood dark tokens without forced declarations. Check:
+  no active `!important` remains in custom components/layout/local/enrol
+  styles (only a shell comment and third-party Leaflet vendor CSS remain);
+  Moodle theme SCSS compiler succeeded; `theme_securefood_testsuite` 18/18,
+  78 assertions; `git diff --check` clean. Browser QA intentionally skipped
+  per owner instruction. PHPCS binary remains unavailable.
+
+- **2026-07-13** — **Inline style cleanup `[x]`**:
+  removed inline `style` attributes from custom production templates. Custom
+  progress bars in Resources, Student Lab and course plan-context now use
+  native `<progress>` elements styled by SCSS/CSS instead of width spans.
+  The About no-JS fallback map now uses generated `sfs-hubs__marker--x-*` /
+  `--y-*` position classes (0–100%) while the interactive Leaflet map still
+  receives raw lat/lon. Checks: PHP lint for touched PHP files; Moodle theme
+  SCSS compiler succeeded; `theme_securefood_testsuite` 18/18, 78 assertions;
+  `local_learningplans_testsuite` 18/18, 72 assertions;
+  `local_sfsresources_testsuite` 2/2, 10 assertions; `git diff --check`
+  clean. Browser QA intentionally skipped per owner instruction. PHPCS binary
+  remains unavailable.
+
+- **2026-07-13** — **Future Food BEM/template hardening `[x]`**:
+  normalised the Future Food page markup and SCSS from legacy `ffg-*` names
+  to `sfs-*` BEM blocks (`sfs-ff*`, `sfs-xp`, `sfs-achievement*`,
+  `sfs-mission*`, `sfs-decision*`). Replaced the XP progress inline
+  `style="width: …"` span with a native `<progress>` element styled in SCSS,
+  and removed the remaining non-SFS icon class from decision choices. Checks:
+  PHP lint clean for touched PHP files; `local_sfsgame_testsuite` 7/7,
+  27 assertions; `theme_securefood_testsuite` 17/17, 73 assertions;
+  `git diff --check` clean. PHPCS binary is unavailable locally and inside
+  the php-fpm container.
+  Browser QA intentionally skipped per owner instruction.
 
 - **2026-07-12** — **Stages promoted to a first-class entity + cross-stage
   drag-and-drop (ADR-011, owner decision)**: new `local_learningplans_stg`
@@ -160,6 +391,39 @@ uk string review (9.6) owner takes it.
   is implemented; final cache purge + repeat mobile screenshot remain pending
   because local-command approvals hit the current usage limit. Do not mark the
   slice complete until that browser re-check runs.
+
+- **2026-07-13** — **P1 fidelity slice 2 `[x]`**: the missing Future Food
+  decision point now renders as a real-activity chooser instead of a fake quiz
+  engine. Added `local_sfsgame` settings for the section toggle, kicker/title/
+  body, and JSON-configured choice links; the page now shows an honest empty
+  state when no real activity is configured. Added `local_sfsgame\decision`
+  parser + PHPUnit coverage; local suite 7/7, 27 assertions. Browser QA was
+  intentionally skipped per owner instruction.
+
+- **2026-07-13** — **ADR-012 accepted**: Future Food page stays in
+  `local_sfsgame`; the theme only skins it. This fixes the remaining
+  architecture decision for domain 07 and keeps the XP policy/presentation
+  boundary explicit.
+
+- **2026-07-13** — **P1 fidelity slice 3 `[~]`**: locked Future Food badges
+  now display a safe criteria preview derived from the Moodle badges model
+  (`markdown_badge_criteria()`), with a new localized label and styling in the
+  achievements grid. Theme suite 17/17 and local_sfsgame 7/7 still pass.
+
+- **2026-07-13** — **Future Food pilot badge setup guide drafted**:
+  recorded the operator checklist for site badges, the Pathfinder
+  courseset-completion pattern, and the guardrails for keeping criteria
+  previews public and concise. This documents the admin task without claiming
+  any new live-site mutation.
+
+- **2026-07-13** — **Future Food pilot badge setup verified**: live site has
+  two active locked site badges with consistent `SecureFood School` issuer
+  metadata. `Pathfinder` uses courseset completion for `SFS101` and is issued
+  to `sfstestuser`; `First Steps` remains a manual seed badge. No quiz/choice
+  activity exists yet, so the decision badge pattern is intentionally deferred.
+  The locked-card criteria formatter was tightened to filter multilang content
+  before stripping HTML; live check now renders `Pathfinder` as
+  `The following course has to be completed: "IoT Sensor Baseline"`.
 
 - **2026-07-12** — **Phase 9.1 multilang delivered (ADR-010, owner decision)**
   (site config/data only — no repo code changes): official **uk core language
@@ -474,7 +738,7 @@ uk string review (9.6) owner takes it.
   ffg-mission theme skin (4 gradient variants, badge/duration pills, tag chips,
   +XP foot, Start button only with a URL), plugin settings page, xp_policy
   PHPUnit (standalone 6/6). Verified full-page screenshot. Domain 07 remaining:
-  badge artwork in achievements, decision module link, wiring real badges.
+  badge artwork in achievements, wiring real badges.
 
 - **2026-07-12** — **Domain 08 v1 (option в)**: local_sfsresources — curated
   document library (admin JSON, governance.html defaults; type badges,

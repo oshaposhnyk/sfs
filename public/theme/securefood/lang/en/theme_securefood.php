@@ -30,10 +30,14 @@ $string['pluginname'] = 'SecureFood School';
 $string['choosereadme'] = 'SecureFood School — a Boost child theme implementing the SecureFood design system, with a switch between the standard Moodle experience and the SecureFood custom mode.';
 $string['configtitle'] = 'SecureFood School settings';
 $string['region-side-pre'] = 'Right';
+$string['region-content-top'] = 'Content top';
+$string['region-content-bottom'] = 'Content bottom';
 
 // Settings tabs.
 $string['generaltab'] = 'General';
+$string['brandtab'] = 'Brand';
 $string['navigationtab'] = 'Navigation';
+$string['blockstab'] = 'Blocks';
 $string['colourstab'] = 'Colours';
 $string['advancedtab'] = 'Advanced';
 
@@ -49,15 +53,46 @@ $string['switchmode'] = 'Switch experience mode';
 $string['switchtostandard'] = 'Switch to the standard Moodle interface';
 $string['switchtosecurefood'] = 'Switch to the SecureFood interface';
 
+// Brand tab.
+$string['brandname'] = 'Site display name';
+$string['brandname_desc'] = 'Name shown in the SecureFood shell. Leave empty to use the Moodle site short name.';
+$string['brandlogoheading'] = 'Logo assets';
+$string['brandlogoheading_desc'] = 'Upload custom SecureFood shell logos. Leave any field empty to use the bundled design asset. Uploaded logos accept PNG/JPG only; bundled SVG defaults remain available.';
+$string['logofulllight'] = 'Full logo — light scheme';
+$string['logofulllight_desc'] = 'Full-width sidebar logo used in the light colour scheme. Recommended: transparent PNG.';
+$string['logofulldark'] = 'Full logo — dark scheme';
+$string['logofulldark_desc'] = 'Full-width sidebar logo used in the dark colour scheme. Recommended: transparent PNG.';
+$string['logoiconlight'] = 'Icon logo — light scheme';
+$string['logoiconlight_desc'] = 'Compact sidebar logo used when the shell is collapsed in the light colour scheme.';
+$string['logoicondark'] = 'Icon logo — dark scheme';
+$string['logoicondark_desc'] = 'Compact sidebar logo used when the shell is collapsed in the dark colour scheme.';
+$string['favicon'] = 'Favicon';
+$string['favicon_desc'] = 'Optional browser favicon for the SecureFood theme. Accepts ICO or PNG. Leave empty to use the Moodle/core favicon fallback.';
+
 // Navigation tab.
 $string['navigation'] = 'Sidebar navigation (JSON)';
-$string['navigation_desc'] = 'Custom sidebar menu as a JSON array of sections. Leave empty for the default menu. Format: <pre>[{"label": "Learning", "items": [{"title": "Student Lab", "url": "/local/learningplans/my.php", "icon": "school", "visibility": "loggedin"}]}]</pre> "icon" is a Material Icons name; "visibility" is "all" or "loggedin". Invalid JSON falls back to the default menu.';
+$string['navigation_desc'] = 'Custom sidebar menu as a JSON array of sections. Leave empty for the default menu. Format: <pre>[{"label": "Learning", "items": [{"title": "Student Lab", "url": "/local/learningplans/my.php", "icon": "school", "visibility": "loggedin"}, {"title": "Admin", "url": "/admin/search.php", "icon": "admin_panel_settings", "visibility": "capability", "capability": "moodle/site:config"}]}]</pre> "icon" is a Material Icons name; "visibility" is "all", "loggedin" or "capability". Invalid JSON falls back to the default menu at runtime but cannot be saved in the settings form.';
+$string['navigationjson_invalidjson'] = 'Navigation JSON is invalid: {$a}';
+$string['navigationjson_rootinvalid'] = 'Navigation JSON must be an array of sections.';
+$string['navigationjson_sectioninvalid'] = 'Navigation section {$a} must be an object with an items array.';
+$string['navigationjson_iteminvalid'] = 'Navigation item {$a->item} in section {$a->section} must include title and url.';
+$string['navigationjson_visibilityinvalid'] = 'Navigation item {$a->item} in section {$a->section} has an unsupported visibility value. Use all, loggedin or capability.';
+$string['navigationjson_capabilityinvalid'] = 'Navigation item {$a->item} in section {$a->section} uses capability visibility but does not provide a valid Moodle capability.';
+$string['navigationjson_noitems'] = 'Navigation JSON must contain at least one usable item.';
+
+// Blocks tab.
+$string['showblockcontenttop'] = 'Show content-top block region';
+$string['showblockcontenttop_desc'] = 'Allow blocks placed in the content-top region to render above the main page content in SecureFood mode.';
+$string['showblockside'] = 'Show right block region';
+$string['showblockside_desc'] = 'Allow blocks placed in the side-pre region to render as the right rail in SecureFood mode.';
+$string['showblockcontentbottom'] = 'Show content-bottom block region';
+$string['showblockcontentbottom_desc'] = 'Allow blocks placed in the content-bottom region to render below the main page content in SecureFood mode.';
 
 // Shell.
 $string['sidebarnav'] = 'Main navigation';
 $string['skiptocontent'] = 'Skip to main content';
 $string['togglesidebar'] = 'Toggle sidebar';
-$string['togglescheme'] = 'Toggle light/dark mode';
+$string['togglescheme'] = 'Cycle colour scheme';
 $string['searchplaceholder'] = 'Search courses, documents…';
 
 // Default navigation items.
@@ -101,6 +136,9 @@ $string['token_warn'] = 'Warning';
 $string['token_danger'] = 'Danger';
 
 // Advanced tab.
+$string['customfooter'] = 'Custom footer';
+$string['footerhtml'] = 'Footer HTML';
+$string['footerhtml_desc'] = 'Optional footer content shown in the SecureFood shell above the standard Moodle footer. The content is processed through Moodle text filters.';
 $string['rawscsspre'] = 'Raw initial SCSS';
 $string['rawscsspre_desc'] = 'SCSS code injected before everything else. Use it to define variables the rest of the compilation can consume.';
 $string['rawscss'] = 'Raw SCSS';
@@ -113,6 +151,16 @@ $string['privacy:metadata:preference:uimode'] = 'Whether the user uses the stand
 
 // Pages & content tab.
 $string['pagestab'] = 'Pages & content';
+$string['showaboutpage'] = 'Show About page content';
+$string['showaboutpage_desc'] = 'Display the SecureFood About/front-page content before the standard Moodle front-page content.';
+$string['showaboutstats'] = 'Show About hero statistics';
+$string['showaboutstats_desc'] = 'Display the statistics row under the About hero.';
+$string['showaboutlayers'] = 'Show About shield and layers';
+$string['showaboutlayers_desc'] = 'Display the shield card and reinforcing layers section on the About page.';
+$string['showabouthubs'] = 'Show About hubs map';
+$string['showabouthubs_desc'] = 'Display the Living Labs and partners map/list section on the About page.';
+$string['showaboutfeed'] = 'Show About updates feed';
+$string['showaboutfeed_desc'] = 'Display the updates feed cards on the About page.';
 $string['aboutkicker'] = 'About page — kicker';
 $string['abouttitle'] = 'About page — title';
 $string['aboutlede'] = 'About page — intro text';
@@ -128,6 +176,7 @@ $string['abouthubs'] = 'About page — Living Labs & partners (JSON)';
 $string['abouthubs_desc'] = 'JSON list, e.g. [{"name": "Kyiv Lab", "country": "Ukraine", "type": "lab"}]. "type" is "lab" or "partner". Leave empty for the design defaults.';
 $string['abouthub_lab'] = 'Living Lab';
 $string['abouthub_partner'] = 'Partner';
+$string['abouthubmarkerlabel'] = '{$a->name}, {$a->country}, {$a->status}. Jump to hub details.';
 $string['nav_futurefood'] = 'Future Food';
 $string['nav_resources'] = 'Resources & Standards';
 $string['appearancetitle'] = 'SecureFood appearance';

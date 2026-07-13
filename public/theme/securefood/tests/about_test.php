@@ -71,4 +71,30 @@ final class about_test extends \advanced_testcase {
         $context = about::context($settings);
         $this->assertFalse($context['showapproach']);
     }
+
+    public function test_hub_map_positions_are_exported_as_safe_classes(): void {
+        $this->resetAfterTest();
+
+        $settings = (object)[
+            'abouthubs' => json_encode([[
+                'name' => 'NULES',
+                'country' => 'Kyiv, Ukraine',
+                'type' => 'lab',
+                'lat' => 50.3850,
+                'lon' => 30.4900,
+            ]]),
+        ];
+
+        $context = about::context($settings);
+
+        $this->assertTrue($context['hubs'][0]['onmap']);
+        $this->assertSame('sfs-hub-1', $context['hubs'][0]['hubid']);
+        $this->assertSame(79, $context['hubs'][0]['markerxclass']);
+        $this->assertSame(41, $context['hubs'][0]['markeryclass']);
+        $this->assertSame(50.3850, $context['hubs'][0]['lat']);
+        $this->assertSame(30.4900, $context['hubs'][0]['lon']);
+        $this->assertStringContainsString('NULES', $context['hubs'][0]['markerlabel']);
+        $this->assertStringContainsString('Living Lab', $context['hubs'][0]['markerlabel']);
+        $this->assertSame(get_string('aboutmaplabel', 'theme_securefood'), $context['maplabel']);
+    }
 }

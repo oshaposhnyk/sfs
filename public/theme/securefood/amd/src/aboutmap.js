@@ -36,11 +36,43 @@ const token = (name, fallback) => {
     return value !== '' ? value : fallback;
 };
 
+const ACTIVE_ROW_CLASS = 'sfs-hubs__row--active';
+
+/**
+ * Clear every highlighted hub-list row.
+ */
+const clearHubHighlight = () => {
+    document.querySelectorAll('.' + ACTIVE_ROW_CLASS).forEach((row) => {
+        row.classList.remove(ACTIVE_ROW_CLASS);
+    });
+};
+
+/**
+ * Highlight a hub-list row that corresponds to a map marker.
+ *
+ * @param {String} hubid Stable DOM id exported by the About context.
+ * @param {Boolean} scroll Whether the list should scroll the row into view.
+ */
+const highlightHub = (hubid, scroll = false) => {
+    if (!hubid) {
+        return;
+    }
+    const row = document.getElementById(hubid);
+    if (!row) {
+        return;
+    }
+    clearHubHighlight();
+    row.classList.add(ACTIVE_ROW_CLASS);
+    if (scroll) {
+        row.scrollIntoView({block: 'nearest'});
+    }
+};
+
 /**
  * Mount the map into the About hubs panel.
  *
  * @param {Object} config
- * @param {Array} config.hubs [{name, country, islab, lat, lon}]
+ * @param {Array} config.hubs [{hubid, name, country, islab, markerlabel, lat, lon}]
  * @param {String} config.geourl URL of the bundled Europe GeoJSON.
  * @param {String} config.maplabel Accessible label for the map region.
  * @param {String} config.lablabel Popup label for Living Labs.
@@ -92,27 +124,61 @@ export const init = async(config) => {
     }).addTo(map);
 
     const points = [];
+    const safe = (text) => {
+        const el = document.createElement('span');
+        el.textContent = text || '';
+        return el.innerHTML;
+    };
+
     (config.hubs || []).forEach((hub) => {
         if (typeof hub.lat !== 'number' || typeof hub.lon !== 'number') {
             return;
         }
-        const colour = hub.islab ? token('--sfs-accent', '#C68A3B') : token('--sfs-teal', '#2A8C8A');
-        const marker = L.circleMarker([hub.lat, hub.lon], {
-            radius: hub.islab ? 7 : 5,
-            color: '#fff',
-            weight: 1.5,
-            fillColor: colour,
-            fillOpacity: 0.95,
-        }).addTo(map);
         const status = hub.islab ? config.lablabel : config.partnerlabel;
-        const safe = (text) => {
-            const el = document.createElement('span');
-            el.textContent = text || '';
-            return el.innerHTML;
-        };
+        const label = hub.markerlabel || [hub.name, hub.country, status].filter(Boolean).join(', ');
+        const size = hub.islab ? 14 : 10;
+        const marker = L.marker([hub.lat, hub.lon], {
+            icon: L.divIcon({
+                className: 'sfs-hubs__live-marker' + (hub.islab ? ' sfs-hubs__live-marker--lab' : ''),
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size / 2],
+                popupAnchor: [0, -(size / 2)],
+            }),
+            keyboard: true,
+            title: label,
+            alt: label,
+        });
+        marker.on('add', () => {
+            const element = marker.getElement();
+            if (!element) {
+                return;
+            }
+            element.setAttribute('role', 'button');
+            element.setAttribute('aria-label', label);
+            if (hub.hubid) {
+                element.setAttribute('aria-describedby', hub.hubid);
+            }
+            element.addEventListener('mouseenter', () => highlightHub(hub.hubid));
+            element.addEventListener('mouseleave', clearHubHighlight);
+            element.addEventListener('focus', () => highlightHub(hub.hubid, true));
+            element.addEventListener('blur', clearHubHighlight);
+        });
+        marker.on('click', () => highlightHub(hub.hubid, true));
         marker.bindPopup(
             '<strong>' + safe(hub.name) + '</strong><br>' + safe(hub.country) + '<br><em>' + safe(status) + '</em>'
         );
+        marker.addTo(map);
+        const row = hub.hubid ? document.getElementById(hub.hubid) : null;
+        if (row) {
+            row.addEventListener('mouseenter', () => {
+                highlightHub(hub.hubid);
+                marker.openPopup();
+            });
+            row.addEventListener('mouseleave', () => {
+                clearHubHighlight();
+                marker.closePopup();
+            });
+        }
         points.push([hub.lat, hub.lon]);
     });
 

@@ -3,11 +3,11 @@
 .sfs-mode {
     .sfs-hero {
         background:
-            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 60%, var(--sfs-primary700) 100%);
+            linear-gradient(color-mix(in srgb, var(--sfs-on-dark) 3%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in srgb, var(--sfs-on-dark) 3%, transparent) 1px, transparent 1px),
+            linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-primary800) 60%, var(--sfs-primary700) 100%);
         background-size: 42px 42px, 42px 42px, 100% 100%;
-        color: #fff;
+        color: var(--sfs-on-dark);
         border-radius: var(--sfs-radius-md);
         padding: 44px 48px 28px;
         margin-bottom: 22px;
@@ -21,7 +21,7 @@
             top: -80px;
             width: 320px;
             height: 320px;
-            background: radial-gradient(circle, rgba(224, 164, 88, 0.28), transparent 70%);
+            background: radial-gradient(circle, color-mix(in srgb, var(--sfs-accent300) 28%, transparent), transparent 70%);
             pointer-events: none;
         }
     }
@@ -47,8 +47,8 @@
         width: 200px;
         height: 200px;
         border-radius: var(--sfs-radius-lg);
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: color-mix(in srgb, var(--sfs-on-dark) 7%, transparent);
+        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 14%, transparent);
         display: grid;
         place-items: center;
         backdrop-filter: blur(4px);
@@ -71,7 +71,7 @@
     }
 
     .sfs-hero__title {
-        color: #fff;
+        color: var(--sfs-on-dark);
         margin: 8px 0 12px;
         font-size: 1.85rem;
         line-height: 1.15;
@@ -79,7 +79,7 @@
     }
 
     .sfs-hero__lede {
-        color: rgba(255, 255, 255, 0.78);
+        color: color-mix(in srgb, var(--sfs-on-dark) 78%, transparent);
         max-width: 52ch;
     }
 
@@ -88,7 +88,7 @@
         display: flex;
         gap: 0;
         margin-top: 34px;
-        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        border-top: 1px solid color-mix(in srgb, var(--sfs-on-dark) 14%, transparent);
         padding-top: 22px;
         position: relative;
         z-index: 1;
@@ -97,7 +97,7 @@
 
     .sfs-hero__stat {
         padding: 0 28px;
-        border-left: 1px solid rgba(255, 255, 255, 0.14);
+        border-left: 1px solid color-mix(in srgb, var(--sfs-on-dark) 14%, transparent);
 
         &:first-child {
             padding-left: 0;
@@ -114,7 +114,7 @@
 
     .sfs-hero__label {
         font-size: 0.72rem;
-        color: rgba(255, 255, 255, 0.6);
+        color: color-mix(in srgb, var(--sfs-on-dark) 60%, transparent);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         font-weight: 600;
@@ -378,23 +378,23 @@
     }
 
     .sfs-feedcard__thumb--twin {
-        background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.18), transparent 60%),
-            linear-gradient(135deg, #0f4c5e 0%, #2a8c8a 100%);
+        background: radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--sfs-on-dark) 18%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-teal) 100%);
     }
 
     .sfs-feedcard__thumb--culture {
-        background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
-            linear-gradient(135deg, #c68a3b 0%, #e0a458 100%);
+        background: radial-gradient(circle at 70% 30%, color-mix(in srgb, var(--sfs-on-dark) 18%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-accent) 0%, var(--sfs-accent300) 100%);
     }
 
     .sfs-feedcard__thumb--water {
-        background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.16), transparent 60%),
-            linear-gradient(135deg, #2a8c8a 0%, #4fc3c0 100%);
+        background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--sfs-on-dark) 16%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-teal) 0%, var(--sfs-teal300) 100%);
     }
 
     .sfs-feedcard__thumb--supply {
-        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
-            linear-gradient(135deg, #143e4d 0%, #0f4c5e 100%);
+        background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--sfs-on-dark) 18%, transparent), transparent 60%),
+            linear-gradient(135deg, var(--sfs-primary800) 0%, var(--sfs-primary) 100%);
     }
 
     .sfs-feedcard__chip {
@@ -403,7 +403,7 @@
         border-radius: 999px;
         font-size: 0.74rem;
         font-weight: 600;
-        background: rgba(255, 255, 255, 0.92);
+        background: color-mix(in srgb, var(--sfs-on-dark) 92%, transparent);
         color: var(--sfs-primary);
     }
 
@@ -453,9 +453,9 @@
         border: 1px solid var(--sfs-line);
         overflow: hidden;
         background:
-            radial-gradient(circle at 75% 20%, rgba(224, 164, 88, 0.14), transparent 55%),
-            radial-gradient(circle at 20% 80%, rgba(79, 195, 192, 0.16), transparent 55%),
-            linear-gradient(135deg, var(--sfs-primary) 0%, #143e4d 100%);
+            radial-gradient(circle at 75% 20%, color-mix(in srgb, var(--sfs-accent300) 14%, transparent), transparent 55%),
+            radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--sfs-teal300) 16%, transparent), transparent 55%),
+            linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-primary800) 100%);
     }
 
     .sfs-hubs__marker {
@@ -465,12 +465,29 @@
         margin: -5px 0 0 -5px;
         border-radius: 50%;
         background: var(--sfs-teal);
-        box-shadow: 0 0 0 4px rgba(79, 195, 192, 0.25);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--sfs-teal300) 25%, transparent);
+        color: inherit;
+        text-decoration: none;
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+            outline-offset: 6px;
+        }
+    }
+
+    @for $position from 0 through 100 {
+        .sfs-hubs__marker--x-#{$position} {
+            left: $position * 1%;
+        }
+
+        .sfs-hubs__marker--y-#{$position} {
+            top: $position * 1%;
+        }
     }
 
     .sfs-hubs__marker--lab {
         background: var(--sfs-accent);
-        box-shadow: 0 0 0 5px rgba(224, 164, 88, 0.3);
+        box-shadow: 0 0 0 5px color-mix(in srgb, var(--sfs-accent300) 30%, transparent);
         z-index: 1;
     }
 
@@ -497,9 +514,17 @@
         gap: 12px;
         padding: 10px 12px;
         border-radius: var(--sfs-radius-sm);
+        scroll-margin-block: 16px;
 
-        &:hover {
+        &:hover,
+        &:target,
+        &.sfs-hubs__row--active {
             background: var(--sfs-surface2);
+        }
+
+        &:target,
+        &.sfs-hubs__row--active {
+            box-shadow: inset 0 0 0 1px var(--sfs-linestrong);
         }
     }
 
@@ -589,8 +614,8 @@
     }
 
     .sfs-layers {
-        background: linear-gradient(160deg, var(--sfs-primary) 0%, #143e4d 100%);
-        color: #fff;
+        background: linear-gradient(160deg, var(--sfs-primary) 0%, var(--sfs-primary800) 100%);
+        color: var(--sfs-on-dark);
         border-radius: var(--sfs-radius-md);
         padding: 26px;
         display: grid;
@@ -599,7 +624,7 @@
     }
 
     .sfs-layers__title {
-        color: #fff;
+        color: var(--sfs-on-dark);
         font-size: 1.25rem;
         margin: 0;
     }
@@ -614,8 +639,8 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: color-mix(in srgb, var(--sfs-on-dark) 12%, transparent);
+        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 20%, transparent);
         color: var(--sfs-accent-ondark);
         display: grid;
         place-items: center;
@@ -631,7 +656,7 @@
     }
 
     .sfs-layers__text {
-        color: rgba(255, 255, 255, 0.75);
+        color: color-mix(in srgb, var(--sfs-on-dark) 75%, transparent);
         font-size: 0.88rem;
         line-height: 1.5;
     }
@@ -682,6 +707,23 @@
             background: transparent;
             color: var(--sfs-muted);
             font-size: 0.62rem;
+        }
+
+        .sfs-hubs__live-marker {
+            border-radius: 50%;
+            background: var(--sfs-teal);
+            border: 2px solid var(--sfs-on-dark);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--sfs-teal300) 25%, transparent);
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+                outline-offset: 6px;
+            }
+        }
+
+        .sfs-hubs__live-marker--lab {
+            background: var(--sfs-accent);
+            box-shadow: 0 0 0 5px color-mix(in srgb, var(--sfs-accent300) 30%, transparent);
         }
     }
 

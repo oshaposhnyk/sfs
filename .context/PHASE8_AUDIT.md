@@ -47,6 +47,9 @@ items belong to Phase 9 (pilot readiness).
   bottom-left (ours top-right); status badge styles match.
 - ☑ F3 Real +100 XP captions on earned badges (from xp_policy; was: the real
   per-badge XP from xp_policy).
+- ☑ F4 Decision point now routes to real Moodle activity links via
+  `local_sfsgame` settings, with a visible empty state when no choice links are
+  configured. No in-theme quiz engine is present.
 
 ## Resources & Standards (governance.html ↔ /local/sfsresources/index.php)
 

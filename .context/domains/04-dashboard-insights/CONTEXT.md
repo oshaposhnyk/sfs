@@ -1,6 +1,9 @@
 # Domain 04 — dashboard-insights / "About the Project" (Phase 4)
 
-Status: `[ ]` not started.
+Status: `[~]` v1 implemented; map/list synchronisation complete
+(2026-07-13). Living Labs static fallback markers are labelled links tied to
+the hub list with `:target` highlighting; live Leaflet markers expose
+keyboard/ARIA semantics and synchronise hover/focus/click with the hub list.
 
 ## Purpose
 
@@ -38,8 +41,10 @@ Landing/dashboard page in SecureFood mode. Prototype: `insights.html`
 - [ ] Owner decision: home-page routing per role (learner vs visitor vs manager).
 - [ ] Renderables + templates + SCSS per block (see `design/components.md`).
 - [ ] Theme settings for hero/KPIs/hubs/feed fallbacks (en/uk help strings).
-- [ ] Static SVG map with accessible hub markers (buttons, not areas), synced
-      hover/focus with hub list.
+- [x] Map with accessible hub markers: static fallback markers are labelled
+      links tied to hub-list rows with `:target` highlighting; live Leaflet
+      markers expose keyboard/ARIA semantics and synchronise hover/focus/click
+      with the hub list.
 - [ ] Feed adapter: announcements → cards (author, category chip, relative time).
 - [ ] Behat smoke: page renders for guest and learner without capability leaks.
 

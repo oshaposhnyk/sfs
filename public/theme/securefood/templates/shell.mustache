@@ -24,7 +24,9 @@
     * bodyattributes - attributes for the body tag as a string of html attributes
     * navsections - sidebar navigation sections
     * crumbs - breadcrumb items
+    * contenttopblocks - HTML for the content-top blocks region
     * sidepreblocks - HTML for the blocks region
+    * contentbottomblocks - HTML for the content-bottom blocks region
     * hasblocks - true if there are blocks on this page
 
     Example context (json):
@@ -96,6 +98,12 @@
                             {{/overflow}}
                             <main id="sfs-main" class="sfs-shell__maincontent">
                                 {{#abouthtml}}{{{abouthtml}}}{{/abouthtml}}
+                                {{#hascontenttopblocks}}
+                                    <div class="sfs-shell__blockslot sfs-shell__blockslot--content-top d-print-none">
+                                        {{{contenttopaddblockbutton}}}
+                                        {{{contenttopblocks}}}
+                                    </div>
+                                {{/hascontenttopblocks}}
                                 {{#railhtml}}
                                     <div class="sfs-courselayout">
                                         <div class="sfs-courselayout__main">{{{ output.main_content }}}</div>
@@ -107,6 +115,12 @@
                                 {{^railhtml}}
                                     {{{ output.main_content }}}
                                 {{/railhtml}}
+                                {{#hascontentbottomblocks}}
+                                    <div class="sfs-shell__blockslot sfs-shell__blockslot--content-bottom d-print-none">
+                                        {{{contentbottomaddblockbutton}}}
+                                        {{{contentbottomblocks}}}
+                                    </div>
+                                {{/hascontentbottomblocks}}
                             </main>
                             {{{ output.activity_navigation }}}
                             {{{ output.course_content_footer }}}
@@ -120,6 +134,11 @@
                     {{/hasblocks}}
                 </div>
             </div>
+            {{#footerhtml}}
+                <footer class="sfs-shell__footer" aria-label="{{#str}}customfooter, theme_securefood{{/str}}">
+                    {{{footerhtml}}}
+                </footer>
+            {{/footerhtml}}
             {{> theme_boost/footer }}
         </div>
         {{{ output.standard_after_main_region_html }}}

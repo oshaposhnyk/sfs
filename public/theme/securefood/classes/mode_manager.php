@@ -80,9 +80,11 @@ final class mode_manager {
         if (isloggedin() && !isguestuser()) {
             $preference = get_user_preferences('theme_securefood_uimode', null);
         }
+        $settings = settings_provider::from_config();
+
         return self::resolve(
-            (string)get_config('theme_securefood', 'forcemode'),
-            (string)get_config('theme_securefood', 'defaultmode'),
+            $settings->force_mode(),
+            $settings->default_mode(),
             $preference
         );
     }
@@ -91,8 +93,7 @@ final class mode_manager {
      * Whether the current user may switch modes themselves.
      */
     public static function can_user_switch(): bool {
-        $force = (string)get_config('theme_securefood', 'forcemode');
-        return !in_array($force, [self::MODE_STANDARD, self::MODE_SECUREFOOD], true)
+        return settings_provider::from_config()->force_mode() === null
             && isloggedin() && !isguestuser();
     }
 

@@ -39,6 +39,35 @@ if ($hassiteconfig) {
             PARAM_TEXT
         ));
     }
+    $settings->add(new admin_setting_configcheckbox(
+        'local_sfsgame/showdecision',
+        get_string('showdecision', 'local_sfsgame'),
+        get_string('showdecision_desc', 'local_sfsgame'),
+        1
+    ));
+    foreach (['decisionkicker', 'decisiontitle'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsgame/{$name}",
+            get_string($name, 'local_sfsgame'),
+            get_string('decisionfallback_desc', 'local_sfsgame'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+    $settings->add(new admin_setting_configtextarea(
+        'local_sfsgame/decisionbody',
+        get_string('decisionbody', 'local_sfsgame'),
+        get_string('decisionbody_desc', 'local_sfsgame'),
+        '',
+        PARAM_RAW
+    ));
+    $settings->add(new admin_setting_configtextarea(
+        'local_sfsgame/decisionchoices',
+        get_string('decisionchoices', 'local_sfsgame'),
+        get_string('decisionchoices_desc', 'local_sfsgame'),
+        '',
+        PARAM_RAW
+    ));
     $settings->add(new admin_setting_configtextarea(
         'local_sfsgame/missions',
         get_string('missions', 'local_sfsgame'),
