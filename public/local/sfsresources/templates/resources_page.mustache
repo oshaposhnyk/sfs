@@ -30,11 +30,13 @@
     }
 }}
 <div class="sfsres">
-    <div class="sfsres__head">
-        <div class="sfsres__kicker">{{kicker}}</div>
-        <h2 class="sfsres__title">{{title}}</h2>
-        <p class="sfsres__lede">{{lede}}</p>
-    </div>
+    {{#showheader}}
+        <div class="sfsres__head">
+            <div class="sfsres__kicker">{{kicker}}</div>
+            <h2 class="sfsres__title">{{title}}</h2>
+            <p class="sfsres__lede">{{lede}}</p>
+        </div>
+    {{/showheader}}
 
     {{#hasstats}}
         <div class="sfsres__stats">
@@ -66,36 +68,40 @@
         </div>
     {{/hastools}}
 
-    <section class="sfsres__card">
-        <div class="sfsres__libraryhead">
-            <h3 class="sfsres__library">{{library}}</h3>
-            <div class="sfsres__filters">
-                {{#filters}}
-                    <a class="sfsres__filter {{#active}}sfsres__filter--active{{/active}}" href="{{url}}"
-                       {{#active}}aria-current="true"{{/active}}>{{label}}</a>
-                {{/filters}}
+    {{#showlibrary}}
+        <section class="sfsres__card">
+            <div class="sfsres__libraryhead">
+                <h3 class="sfsres__library">{{library}}</h3>
+                {{#showfilters}}
+                    <div class="sfsres__filters">
+                        {{#filters}}
+                            <a class="sfsres__filter {{#active}}sfsres__filter--active{{/active}}" href="{{url}}"
+                               {{#active}}aria-current="true"{{/active}}>{{label}}</a>
+                        {{/filters}}
+                    </div>
+                {{/showfilters}}
             </div>
-        </div>
-        {{^hasdocuments}}
-            <div class="alert alert-info">{{#str}}nodocuments, local_sfsresources{{/str}}</div>
-        {{/hasdocuments}}
-        <div class="sfsres__list">
-            {{#documents}}
-                <div class="sfsres-doc">
-                    <span class="sfsres-doc__icon sfsres-doc__icon--{{kind}}">{{kindlabel}}</span>
-                    <span class="sfsres-doc__meta">
-                        <span class="sfsres-doc__title">{{title}}</span>
-                        {{#sub}}<span class="sfsres-doc__sub">{{sub}}</span>{{/sub}}
-                    </span>
-                    {{#audience}}<span class="sfsres-doc__audience">{{audience}}</span>{{/audience}}
-                    {{#updated}}<span class="sfsres-doc__updated">{{updated}}</span>{{/updated}}
-                    {{#url}}
-                        <a class="sfsres-doc__open" href="{{url}}" aria-label="{{#str}}open, local_sfsresources{{/str}}: {{title}}">
-                            <span class="sfsres-doc__opentext">{{#str}}open, local_sfsresources{{/str}}</span>
-                        </a>
-                    {{/url}}
-                </div>
-            {{/documents}}
-        </div>
-    </section>
+            {{^hasdocuments}}
+                <div class="alert alert-info">{{nodocuments}}</div>
+            {{/hasdocuments}}
+            <div class="sfsres__list">
+                {{#documents}}
+                    <div class="sfsres-doc">
+                        <span class="sfsres-doc__icon sfsres-doc__icon--{{kind}}">{{kindlabel}}</span>
+                        <span class="sfsres-doc__meta">
+                            <span class="sfsres-doc__title">{{title}}</span>
+                            {{#sub}}<span class="sfsres-doc__sub">{{sub}}</span>{{/sub}}
+                        </span>
+                        {{#audience}}<span class="sfsres-doc__audience">{{audience}}</span>{{/audience}}
+                        {{#updated}}<span class="sfsres-doc__updated">{{updated}}</span>{{/updated}}
+                        {{#url}}
+                            <a class="sfsres-doc__open" href="{{url}}" aria-label="{{#str}}open, local_sfsresources{{/str}}: {{title}}">
+                                <span class="sfsres-doc__opentext">{{#str}}open, local_sfsresources{{/str}}</span>
+                            </a>
+                        {{/url}}
+                    </div>
+                {{/documents}}
+            </div>
+        </section>
+    {{/showlibrary}}
 </div>

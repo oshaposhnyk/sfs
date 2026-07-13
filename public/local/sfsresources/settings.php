@@ -30,6 +30,47 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_sfsresources', get_string('pluginname', 'local_sfsresources'));
     $ADMIN->add('localplugins', $settings);
 
+    $settings->add(new admin_setting_heading(
+        'local_sfsresources/pageheading',
+        get_string('settings:pageheading', 'local_sfsresources'),
+        get_string('settings:pageheading_desc', 'local_sfsresources')
+    ));
+
+    foreach ([
+        'showresourcesheader',
+        'showresourcesstats',
+        'showresourcestools',
+        'showresourcesfilters',
+        'showresourceslibrary',
+    ] as $name) {
+        $settings->add(new admin_setting_configcheckbox(
+            "local_sfsresources/{$name}",
+            get_string("settings:{$name}", 'local_sfsresources'),
+            get_string("settings:{$name}_desc", 'local_sfsresources'),
+            1
+        ));
+    }
+
+    foreach (['resourceskicker', 'resourcestitle', 'resourceslibrarytitle'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsresources/{$name}",
+            get_string("settings:{$name}", 'local_sfsresources'),
+            get_string('settings:fallback_desc', 'local_sfsresources'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
+    foreach (['resourceslede', 'resourcesempty'] as $name) {
+        $settings->add(new admin_setting_configtextarea(
+            "local_sfsresources/{$name}",
+            get_string("settings:{$name}", 'local_sfsresources'),
+            get_string('settings:fallback_desc', 'local_sfsresources'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
     $settings->add(new admin_setting_configstoredfile(
         'local_sfsresources/documentfiles',
         get_string('documentfiles', 'local_sfsresources'),

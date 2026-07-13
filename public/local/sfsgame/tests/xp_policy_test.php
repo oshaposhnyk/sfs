@@ -39,7 +39,8 @@ final class xp_policy_test extends \basic_testcase {
         $this->assertSame(0, xp_policy::xp(0, 0));
         $this->assertSame(100, xp_policy::xp(1, 0));
         $this->assertSame(250, xp_policy::xp(2, 1));
-        $this->assertSame(0, xp_policy::xp(-3, -1));
+        $this->assertSame(275, xp_policy::xp(2, 1, 25));
+        $this->assertSame(0, xp_policy::xp(-3, -1, -25));
     }
 
     public function test_levels(): void {

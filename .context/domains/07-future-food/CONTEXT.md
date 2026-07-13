@@ -1,6 +1,6 @@
 # Domain 07 — future-food / gamification (Phase 4)
 
-Status: `[~]` v1 implemented (2026-07-13) — badges, missions and decision links are real-data backed; browser QA and the real decision badge activity/content remain pending.
+Status: `[~]` P0 mission XP implemented (2026-07-13) — badges, missions and decision links are real-data backed; mission-card XP now comes from real Moodle activity completion. Browser QA and the real decision badge activity/content remain pending.
 
 ## Purpose
 
@@ -27,6 +27,13 @@ A real XP/levelling engine (events → points ledger) is a **future `local_` plu
 - Badges data via core badges API only.
 
 ## Tasks
+
+- [x] P0 completion-backed mission XP (2026-07-13): configured mission/video
+      cards may contribute XP only when their URL points to a real Moodle
+      activity whose completion is enabled and completed by the current user.
+      External video links remain resources only; no custom watch-tracking
+      backend in this slice. Cards show completion/reward state and completed
+      mission XP is included in the pure XP policy.
 
 - [x] P0 hardening (2026-07-12): localised hero fallbacks and stopped rendering
       prototype missions as live content; an honest empty state now appears.

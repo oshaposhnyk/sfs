@@ -65,15 +65,12 @@ final class about {
         // The design's About page has no KPI row — render only when configured.
         $kpis = self::pairs($provider->raw('aboutkpis'), []);
 
-        $feeddefaults = [
-            self::feed_default(1),
-            self::feed_default(2),
-            self::feed_default(3),
-            self::feed_default(4),
-        ];
-        $feeditems = json_decode($provider->raw('aboutfeed'), true);
+        $feeditems = network_feed::stored_items($provider);
+        if ($feeditems === []) {
+            $feeditems = json_decode($provider->raw('aboutfeed'), true);
+        }
         if (!is_array($feeditems) || $feeditems === []) {
-            $feeditems = $feeddefaults;
+            $feeditems = [];
         }
         $variants = ['twin', 'culture', 'water', 'supply'];
         $feed = [];
@@ -81,12 +78,28 @@ final class about {
             if (!is_array($item) || empty($item['title'])) {
                 continue;
             }
+            $variant = (string)($item['variant'] ?? '');
+            if (!in_array($variant, $variants, true)) {
+                $variant = $variants[$i % count($variants)];
+            }
+            $url = '';
+            if (!empty($item['url']) && is_string($item['url'])
+                    && ((str_starts_with($item['url'], '/') && !str_starts_with($item['url'], '//'))
+                        || preg_match('~^https?://~i', $item['url']) === 1)) {
+                try {
+                    $url = (new \moodle_url($item['url']))->out(false);
+                } catch (\Throwable $exception) {
+                    $url = '';
+                }
+            }
             $feed[] = [
                 'chip' => format_string((string)($item['chip'] ?? '')),
                 'title' => format_string((string)$item['title']),
                 'text' => format_string((string)($item['text'] ?? '')),
                 'time' => format_string((string)($item['time'] ?? '')),
-                'variant' => $variants[$i % count($variants)],
+                'url' => $url,
+                'hasurl' => $url !== '',
+                'variant' => $variant,
             ];
         }
         if (!$provider->enabled('showaboutfeed')) {
@@ -244,21 +257,6 @@ final class about {
                 FORMAT_HTML),
             'stats' => $stats,
             'kpis' => $kpis,
-        ];
-    }
-
-    /**
-     * One localised design-default feed item.
-     *
-     * @param int $number Item number, 1..4.
-     * @return array
-     */
-    private static function feed_default(int $number): array {
-        return [
-            'chip' => get_string("aboutdefault_feed{$number}_chip", 'theme_securefood'),
-            'title' => get_string("aboutdefault_feed{$number}_title", 'theme_securefood'),
-            'text' => get_string("aboutdefault_feed{$number}_text", 'theme_securefood'),
-            'time' => get_string("aboutdefault_feed{$number}_time", 'theme_securefood'),
         ];
     }
 

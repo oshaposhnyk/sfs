@@ -30,6 +30,57 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_sfsgame', get_string('pluginname', 'local_sfsgame'));
     $ADMIN->add('localplugins', $settings);
 
+    $settings->add(new admin_setting_heading(
+        'local_sfsgame/pageheading',
+        get_string('settings:pageheading', 'local_sfsgame'),
+        get_string('settings:pageheading_desc', 'local_sfsgame')
+    ));
+
+    foreach (['showpagehead', 'showhero', 'showachievements', 'showmissions'] as $name) {
+        $settings->add(new admin_setting_configcheckbox(
+            "local_sfsgame/{$name}",
+            get_string($name, 'local_sfsgame'),
+            get_string("{$name}_desc", 'local_sfsgame'),
+            1
+        ));
+    }
+
+    foreach (['pagekicker', 'pagetitle', 'achievementstitle', 'missionstitle'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsgame/{$name}",
+            get_string("setting:{$name}", 'local_sfsgame'),
+            get_string('pagefallback_desc', 'local_sfsgame'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
+    foreach (['pagelede', 'noachievements', 'nomissions'] as $name) {
+        $settings->add(new admin_setting_configtextarea(
+            "local_sfsgame/{$name}",
+            get_string("setting:{$name}", 'local_sfsgame'),
+            get_string('pagefallback_desc', 'local_sfsgame'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
+    foreach (['startdailylabel', 'startmissionlabel', 'currentranklabel', 'totalxplabel'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsgame/{$name}",
+            get_string("setting:{$name}", 'local_sfsgame'),
+            get_string('labelfallback_desc', 'local_sfsgame'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
+    $settings->add(new admin_setting_heading(
+        'local_sfsgame/heroheading',
+        get_string('settings:heroheading', 'local_sfsgame'),
+        get_string('settings:heroheading_desc', 'local_sfsgame')
+    ));
+
     foreach (['herokicker', 'herotitle', 'herotext'] as $name) {
         $settings->add(new admin_setting_configtext(
             "local_sfsgame/{$name}",
@@ -39,6 +90,13 @@ if ($hassiteconfig) {
             PARAM_TEXT
         ));
     }
+
+    $settings->add(new admin_setting_heading(
+        'local_sfsgame/decisionheading',
+        get_string('settings:decisionheading', 'local_sfsgame'),
+        get_string('settings:decisionheading_desc', 'local_sfsgame')
+    ));
+
     $settings->add(new admin_setting_configcheckbox(
         'local_sfsgame/showdecision',
         get_string('showdecision', 'local_sfsgame'),
@@ -61,18 +119,34 @@ if ($hassiteconfig) {
         '',
         PARAM_RAW
     ));
-    $settings->add(new admin_setting_configtextarea(
+    $settings->add(new \local_sfsgame\admin_setting\repeat_blocks(
         'local_sfsgame/decisionchoices',
         get_string('decisionchoices', 'local_sfsgame'),
         get_string('decisionchoices_desc', 'local_sfsgame'),
         '',
-        PARAM_RAW
+        \local_sfsgame\admin_setting\repeat_blocks::TYPE_DECISIONS
     ));
-    $settings->add(new admin_setting_configtextarea(
+    foreach (['decisionempty', 'decisionhint', 'decisionpill'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsgame/{$name}",
+            get_string("setting:{$name}", 'local_sfsgame'),
+            get_string('decisionfallback_desc', 'local_sfsgame'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
+    $settings->add(new admin_setting_heading(
+        'local_sfsgame/missionsheading',
+        get_string('settings:missionsheading', 'local_sfsgame'),
+        get_string('settings:missionsheading_desc', 'local_sfsgame')
+    ));
+
+    $settings->add(new \local_sfsgame\admin_setting\repeat_blocks(
         'local_sfsgame/missions',
         get_string('missions', 'local_sfsgame'),
         get_string('missions_desc', 'local_sfsgame'),
         '',
-        PARAM_RAW
+        \local_sfsgame\admin_setting\repeat_blocks::TYPE_MISSIONS
     ));
 }

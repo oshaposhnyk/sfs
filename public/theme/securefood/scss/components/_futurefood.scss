@@ -193,6 +193,10 @@
         }
     }
 
+    .sfs-mission--completed {
+        border-color: color-mix(in srgb, var(--sfs-success) 35%, var(--sfs-line));
+    }
+
     .sfs-mission__thumb {
         height: 150px;
         position: relative;
@@ -277,8 +281,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 14px;
         border-top: 1px solid var(--sfs-line);
         padding-top: 14px;
+    }
+
+    .sfs-mission__metafoot {
+        display: grid;
+        gap: 4px;
     }
 
     .sfs-mission__xp {
@@ -286,6 +296,50 @@
         font-weight: 700;
         color: var(--sfs-accent-ink);
         font-size: 0.92rem;
+    }
+
+    .sfs-mission__reward {
+        color: var(--sfs-muted);
+        font-size: 0.74rem;
+        line-height: 1.35;
+    }
+
+    .sfs-mission__completion {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--sfs-muted);
+        font-size: 0.72rem;
+        font-weight: 600;
+        line-height: 1.35;
+
+        &::before {
+            content: 'info';
+            font-family: 'SFS Material Icons';
+            font-feature-settings: 'liga';
+            font-size: 14px;
+        }
+    }
+
+    .sfs-mission__completion--completed {
+        color: var(--sfs-success);
+
+        &::before {
+            content: 'check_circle';
+        }
+    }
+
+    .sfs-mission__completion--incomplete {
+        color: var(--sfs-accent-ink);
+
+        &::before {
+            content: 'radio_button_unchecked';
+        }
+    }
+
+    .sfs-mission__completion--notcompletable,
+    .sfs-mission__completion--untracked {
+        color: var(--sfs-muted);
     }
 
     .sfs-mission__action {

@@ -61,11 +61,12 @@ final class my_learning_plans_controller {
         $overview = learning_plan_service_factory::student_lab_overview()->execute($userid);
 
         $context = \context_system::instance();
+        $pagetitle = self::config_text('studentlabtitle', get_string('studentlab:title', 'local_learningplans'));
         $PAGE->set_context($context);
         $PAGE->set_url($url);
         $PAGE->set_pagelayout('standard');
-        $PAGE->set_title(get_string('studentlab:title', 'local_learningplans'));
-        $PAGE->set_heading(get_string('studentlab:title', 'local_learningplans'));
+        $PAGE->set_title(format_string($pagetitle));
+        $PAGE->set_heading(format_string($pagetitle));
 
         echo $OUTPUT->header();
         echo $OUTPUT->render_from_template(
@@ -84,11 +85,20 @@ final class my_learning_plans_controller {
      */
     private function template_context(array $overview, \moodle_url $pageurl): array {
         if (!$overview['hasplans']) {
+            $showheader = self::config_enabled('showstudentlabheader');
+
             return [
                 'hasplans' => false,
-                'title' => get_string('studentlab:title', 'local_learningplans'),
-                'lede' => get_string('studentlab:lede', 'local_learningplans'),
-                'empty' => get_string('my:empty', 'local_learningplans'),
+                'showheadblock' => $showheader,
+                'showheader' => $showheader,
+                'kicker' => format_string(self::config_text('studentlabkicker',
+                    get_string('studentlab:kicker', 'local_learningplans')), true, ['escape' => false]),
+                'title' => format_string(self::config_text('studentlabtitle',
+                    get_string('studentlab:title', 'local_learningplans')), true, ['escape' => false]),
+                'lede' => format_string(self::config_text('studentlablede',
+                    get_string('studentlab:lede', 'local_learningplans')), true, ['escape' => false]),
+                'empty' => format_string(self::config_text('studentlabempty',
+                    get_string('my:empty', 'local_learningplans')), true, ['escape' => false]),
             ];
         }
 
@@ -200,11 +210,22 @@ final class my_learning_plans_controller {
         }
 
         $progress = $overview['progress'];
+        $showheader = self::config_enabled('showstudentlabheader');
+        $showcontinue = self::config_enabled('showstudentlabcontinue');
         return [
             'stagelabel' => $stagelabel,
             'hasplans' => true,
-            'title' => get_string('studentlab:title', 'local_learningplans'),
-            'lede' => get_string('studentlab:lede', 'local_learningplans'),
+            'showheadblock' => $showheader || ($showcontinue && $continueurl !== null),
+            'showheader' => $showheader,
+            'showcontinue' => $showcontinue,
+            'showplanbar' => self::config_enabled('showstudentlabplanbar'),
+            'showstages' => self::config_enabled('showstudentlabstages'),
+            'kicker' => format_string(self::config_text('studentlabkicker',
+                get_string('studentlab:kicker', 'local_learningplans')), true, ['escape' => false]),
+            'title' => format_string(self::config_text('studentlabtitle',
+                get_string('studentlab:title', 'local_learningplans')), true, ['escape' => false]),
+            'lede' => format_string(self::config_text('studentlablede',
+                get_string('studentlab:lede', 'local_learningplans')), true, ['escape' => false]),
             'activeplanname' => format_string($overview['activeplan']['name']),
             'plans' => $plans,
             'hasmultipleplans' => count($plans) > 1,
@@ -214,7 +235,37 @@ final class my_learning_plans_controller {
             'continueurl' => $continueurl,
             'stages' => $stages,
             'hascourses' => $courses !== [],
-            'nocourses' => get_string('studentlab:nocourses', 'local_learningplans'),
+            'nocourses' => format_string(self::config_text('studentlabnocourses',
+                get_string('studentlab:nocourses', 'local_learningplans')), true, ['escape' => false]),
         ];
+    }
+
+    /**
+     * Read a local_learningplans text setting with a default.
+     *
+     * @param string $name Setting name.
+     * @param string $default Default value.
+     * @return string
+     */
+    private static function config_text(string $name, string $default): string {
+        $value = trim((string)get_config('local_learningplans', $name));
+
+        return $value !== '' ? $value : $default;
+    }
+
+    /**
+     * Read a local_learningplans checkbox setting.
+     *
+     * @param string $name Setting name.
+     * @param bool $default Default value.
+     * @return bool
+     */
+    private static function config_enabled(string $name, bool $default = true): bool {
+        $value = get_config('local_learningplans', $name);
+        if ($value === false || $value === null || $value === '') {
+            return $default;
+        }
+
+        return (int)$value === 1;
     }
 }

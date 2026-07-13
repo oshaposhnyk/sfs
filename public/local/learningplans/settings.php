@@ -56,6 +56,40 @@ if ($hassiteconfig) {
         1
     ));
 
+    $settings->add(new admin_setting_heading(
+        'local_learningplans/studentlabheading',
+        get_string('settings:studentlabheading', 'local_learningplans'),
+        get_string('settings:studentlabheading_desc', 'local_learningplans')
+    ));
+
+    foreach (['showstudentlabheader', 'showstudentlabcontinue', 'showstudentlabplanbar', 'showstudentlabstages'] as $name) {
+        $settings->add(new admin_setting_configcheckbox(
+            "local_learningplans/{$name}",
+            get_string("settings:{$name}", 'local_learningplans'),
+            get_string("settings:{$name}_desc", 'local_learningplans'),
+            1
+        ));
+    }
+
+    foreach (['studentlabkicker', 'studentlabtitle'] as $name) {
+        $settings->add(new admin_setting_configtext(
+            "local_learningplans/{$name}",
+            get_string("settings:{$name}", 'local_learningplans'),
+            get_string('settings:studentlabfallback_desc', 'local_learningplans'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
+    foreach (['studentlablede', 'studentlabempty', 'studentlabnocourses'] as $name) {
+        $settings->add(new admin_setting_configtextarea(
+            "local_learningplans/{$name}",
+            get_string("settings:{$name}", 'local_learningplans'),
+            get_string('settings:studentlabfallback_desc', 'local_learningplans'),
+            '',
+            PARAM_TEXT
+        ));
+    }
+
     $ADMIN->add('localplugins', $settings);
 }
-

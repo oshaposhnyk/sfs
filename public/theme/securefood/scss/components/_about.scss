@@ -416,6 +416,20 @@
         margin: 0 0 6px;
     }
 
+    .sfs-feedcard__link {
+        color: var(--sfs-ink);
+
+        &:hover,
+        &:focus {
+            color: var(--sfs-primary);
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
     .sfs-feedcard__text {
         font-size: 0.86rem;
         color: var(--sfs-muted);

@@ -45,124 +45,139 @@
     }
 }}
 <div class="lp-studentlab">
-    <div class="lp-studentlab__head">
-        <div class="lp-studentlab__titles">
-            <div class="lp-studentlab__kicker">{{#str}}studentlab:kicker, local_learningplans{{/str}}</div>
-            <h2 class="lp-studentlab__title">{{title}}</h2>
-            <p class="lp-studentlab__lede">{{lede}}</p>
+    {{#showheadblock}}
+        <div class="lp-studentlab__head">
+            {{#showheader}}
+                <div class="lp-studentlab__titles">
+                    <div class="lp-studentlab__kicker">{{kicker}}</div>
+                    <h2 class="lp-studentlab__title">{{title}}</h2>
+                    <p class="lp-studentlab__lede">{{lede}}</p>
+                </div>
+            {{/showheader}}
+            {{#showcontinue}}
+                {{#continueurl}}
+                    <div class="lp-studentlab__actions">
+                        <a class="btn btn-primary lp-studentlab__continue" href="{{continueurl}}">
+                            <span class="lp-icon lp-icon--play" aria-hidden="true"></span>
+                            {{#str}}studentlab:continue, local_learningplans{{/str}}
+                        </a>
+                    </div>
+                {{/continueurl}}
+            {{/showcontinue}}
         </div>
-        {{#continueurl}}
-            <div class="lp-studentlab__actions">
-                <a class="btn btn-primary lp-studentlab__continue" href="{{continueurl}}">
-                    <span class="lp-icon lp-icon--play" aria-hidden="true"></span>
-                    {{#str}}studentlab:continue, local_learningplans{{/str}}
-                </a>
-            </div>
-        {{/continueurl}}
-    </div>
+    {{/showheadblock}}
 
     {{^hasplans}}
         <div class="lp-studentlab__empty alert alert-info">{{empty}}</div>
     {{/hasplans}}
 
     {{#hasplans}}
-        <section class="lp-planbar" aria-label="{{#str}}studentlab:activeplan, local_learningplans{{/str}}">
-            <div class="lp-planbar__left">
-                <span class="lp-planbar__pin" aria-hidden="true"></span>
-                <div class="lp-planbar__info">
-                    <div class="lp-planbar__label">{{#str}}studentlab:activeplan, local_learningplans{{/str}}</div>
-                    {{#hasmultipleplans}}
-                        <details class="lp-planmenu">
-                            <summary class="lp-planmenu__trigger">
-                                <span class="lp-planbar__name">{{activeplanname}}</span>
-                            </summary>
-                            <ul class="lp-planmenu__list">
-                                {{#plans}}
-                                    <li class="lp-planmenu__item {{#active}}lp-planmenu__item--active{{/active}}">
-                                        {{#active}}
-                                            <span class="lp-planmenu__name">{{name}}</span>
-                                            <span class="lp-planmenu__meta">{{meta}}</span>
-                                        {{/active}}
-                                        {{^active}}
-                                            <a class="lp-planmenu__link" href="{{switchurl}}" data-planid="{{planid}}">
+        {{#showplanbar}}
+            <section class="lp-planbar" aria-label="{{#str}}studentlab:activeplan, local_learningplans{{/str}}">
+                <div class="lp-planbar__left">
+                    <span class="lp-planbar__pin" aria-hidden="true"></span>
+                    <div class="lp-planbar__info">
+                        <div class="lp-planbar__label">{{#str}}studentlab:activeplan, local_learningplans{{/str}}</div>
+                        {{#hasmultipleplans}}
+                            <details class="lp-planmenu">
+                                <summary class="lp-planmenu__trigger">
+                                    <span class="lp-planbar__name">{{activeplanname}}</span>
+                                </summary>
+                                <ul class="lp-planmenu__list">
+                                    {{#plans}}
+                                        <li class="lp-planmenu__item {{#active}}lp-planmenu__item--active{{/active}}">
+                                            {{#active}}
                                                 <span class="lp-planmenu__name">{{name}}</span>
                                                 <span class="lp-planmenu__meta">{{meta}}</span>
-                                            </a>
-                                        {{/active}}
-                                    </li>
-                                {{/plans}}
-                            </ul>
-                        </details>
-                    {{/hasmultipleplans}}
-                    {{^hasmultipleplans}}
-                        <div class="lp-planbar__name">{{activeplanname}}</div>
-                    {{/hasmultipleplans}}
+                                            {{/active}}
+                                            {{^active}}
+                                                <a class="lp-planmenu__link" href="{{switchurl}}" data-planid="{{planid}}">
+                                                    <span class="lp-planmenu__name">{{name}}</span>
+                                                    <span class="lp-planmenu__meta">{{meta}}</span>
+                                                </a>
+                                            {{/active}}
+                                        </li>
+                                    {{/plans}}
+                                </ul>
+                            </details>
+                        {{/hasmultipleplans}}
+                        {{^hasmultipleplans}}
+                            <div class="lp-planbar__name">{{activeplanname}}</div>
+                        {{/hasmultipleplans}}
+                    </div>
                 </div>
-            </div>
-            <div class="lp-planbar__stats">
-                <div class="lp-planbar__stat">
-                    <div class="lp-planbar__num">{{completedcount}}/{{totalcount}}</div>
-                    <div class="lp-planbar__lbl">{{#str}}studentlab:courses, local_learningplans{{/str}}</div>
+                <div class="lp-planbar__stats">
+                    <div class="lp-planbar__stat">
+                        <div class="lp-planbar__num">{{completedcount}}/{{totalcount}}</div>
+                        <div class="lp-planbar__lbl">{{#str}}studentlab:courses, local_learningplans{{/str}}</div>
+                    </div>
+                    <div class="lp-planbar__stat">
+                        <div class="lp-planbar__num">{{percentage}}%</div>
+                        <div class="lp-planbar__lbl">{{#str}}studentlab:complete, local_learningplans{{/str}}</div>
+                    </div>
                 </div>
-                <div class="lp-planbar__stat">
-                    <div class="lp-planbar__num">{{percentage}}%</div>
-                    <div class="lp-planbar__lbl">{{#str}}studentlab:complete, local_learningplans{{/str}}</div>
+                <div class="lp-planbar__progress">
+                    <progress class="lp-planbar__bar" value="{{percentage}}" max="100"
+                              aria-label="{{#str}}studentlab:planprogress, local_learningplans{{/str}}">{{percentage}}%</progress>
+                    <div class="lp-planbar__pct">{{#stagelabel}}<span class="lp-planbar__stage">{{stagelabel}}</span>{{/stagelabel}}<strong>{{percentage}}%</strong></div>
                 </div>
-            </div>
-            <div class="lp-planbar__progress">
-                <progress class="lp-planbar__bar" value="{{percentage}}" max="100"
-                          aria-label="{{#str}}studentlab:planprogress, local_learningplans{{/str}}">{{percentage}}%</progress>
-                <div class="lp-planbar__pct">{{#stagelabel}}<span class="lp-planbar__stage">{{stagelabel}}</span>{{/stagelabel}}<strong>{{percentage}}%</strong></div>
-            </div>
-        </section>
+            </section>
+        {{/showplanbar}}
 
         {{^hascourses}}
             <div class="alert alert-info">{{nocourses}}</div>
         {{/hascourses}}
-        {{#stages}}
-        <section class="lp-stage lp-stage--{{status}}">
-            <div class="lp-stage__head">
-                <div class="lp-stage__titles">
-                    <span class="lp-stage__badge" aria-hidden="true">{{^done}}{{^locked}}{{number}}{{/locked}}{{/done}}</span>
-                    <h3 class="lp-stage__title">{{name}}</h3>
+        {{#showstages}}
+            {{#stages}}
+            <section class="lp-stage lp-stage--{{status}}">
+                <div class="lp-stage__head">
+                    <div class="lp-stage__titles">
+                        <span class="lp-stage__badge" aria-hidden="true">{{^done}}{{^locked}}{{number}}{{/locked}}{{/done}}</span>
+                        <h3 class="lp-stage__title">{{name}}</h3>
+                    </div>
+                    <div class="lp-stage__meta">{{meta}} · <span class="lp-stage__status">{{statuslabel}}</span></div>
                 </div>
-                <div class="lp-stage__meta">{{meta}} · <span class="lp-stage__status">{{statuslabel}}</span></div>
-            </div>
-            <div class="lp-stage__grid">
-                {{#courses}}
-                    <article class="lp-coursetile lp-coursetile--{{status}}">
-                        <div class="lp-coursetile__cover lp-coursetile__cover--{{cover}}">
-                            <span class="lp-coursetile__tag">{{positionlabel}}</span>
-                            <span class="lp-coursetile__status">{{statuslabel}}</span>
-                        </div>
-                        <div class="lp-coursetile__body">
-                            <h4 class="lp-coursetile__name">
-                                {{#courseurl}}<a class="lp-coursetile__link" href="{{courseurl}}">{{fullname}}</a>{{/courseurl}}
-                                {{^courseurl}}{{fullname}}{{/courseurl}}
-                            </h4>
-                            {{#summary}}<p class="lp-coursetile__desc">{{summary}}</p>{{/summary}}
-                            {{#modulecount}}
-                                <div class="lp-coursetile__meta">
-                                    <span class="lp-icon lp-icon--modules" aria-hidden="true"></span>
-                                    {{#str}}studentlab:modulecount, local_learningplans, {{modulecount}}{{/str}}
-                                </div>
-                            {{/modulecount}}
-                            <progress class="lp-coursetile__progress" value="{{percentage}}" max="100"
-                                      aria-label="{{fullname}}">{{percentage}}%</progress>
-                            <div class="lp-coursetile__foot">
-                                <span class="lp-coursetile__state">{{statetext}}</span>
-                                {{#actionlabel}}
-                                    {{#courseurl}}
-                                        <a class="lp-coursetile__action" href="{{courseurl}}">{{actionlabel}}</a>
-                                    {{/courseurl}}
-                                {{/actionlabel}}
+                <div class="lp-stage__grid">
+                    {{#courses}}
+                        <article class="lp-coursetile lp-coursetile--{{status}}">
+                            <div class="lp-coursetile__cover lp-coursetile__cover--{{cover}}">
+                                <span class="lp-coursetile__tag">{{positionlabel}}</span>
+                                <span class="lp-coursetile__status">{{statuslabel}}</span>
                             </div>
-                        </div>
-                    </article>
-                {{/courses}}
-            </div>
-        </section>
-        {{/stages}}
+                            <div class="lp-coursetile__body">
+                                <h4 class="lp-coursetile__name">
+                                    {{#courseurl}}<a class="lp-coursetile__link" href="{{courseurl}}">{{fullname}}</a>{{/courseurl}}
+                                    {{^courseurl}}{{fullname}}{{/courseurl}}
+                                </h4>
+                                {{#summary}}<p class="lp-coursetile__desc">{{summary}}</p>{{/summary}}
+                                {{#modulecount}}
+                                    <div class="lp-coursetile__meta">
+                                        <span class="lp-icon lp-icon--modules" aria-hidden="true"></span>
+                                        {{#str}}studentlab:modulecount, local_learningplans, {{modulecount}}{{/str}}
+                                    </div>
+                                {{/modulecount}}
+                                <progress class="lp-coursetile__progress" value="{{percentage}}" max="100"
+                                          aria-label="{{fullname}}">{{percentage}}%</progress>
+                                <div class="lp-coursetile__foot">
+                                    <span class="lp-coursetile__state">{{statetext}}</span>
+                                    {{#actionlabel}}
+                                        {{#courseurl}}
+                                            <a class="lp-coursetile__action" href="{{courseurl}}">{{actionlabel}}</a>
+                                        {{/courseurl}}
+                                    {{/actionlabel}}
+                                </div>
+                            </div>
+                        </article>
+                    {{/courses}}
+                </div>
+            </section>
+            {{/stages}}
+            {{^stages}}
+                {{#hascourses}}
+                    <div class="alert alert-info">{{nocourses}}</div>
+                {{/hascourses}}
+            {{/stages}}
+        {{/showstages}}
     {{/hasplans}}
 </div>
 

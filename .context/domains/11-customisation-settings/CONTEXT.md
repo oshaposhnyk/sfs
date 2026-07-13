@@ -7,7 +7,16 @@ and **Advanced** (raw pre/post SCSS). 2026-07-13 slices complete: base typed
 `settings_provider` + Brand display-name setting; About/Pages content provider
 port; Advanced custom footer HTML; Navigation JSON save-time validation and
 capability visibility; About page/section toggles; Brand logo file serving.
-Remaining: broader Student Lab/Future Food/Resources content controls.
+Final content-controls slice complete: Student Lab, Future Food and Resources
+now have owning-plugin settings/runtime controls; Future Food mission cards and
+decision choices are edited as repeatable blocks directly inside
+`local_sfsgame` settings and stored internally as JSON. Remaining: structured
+Navigation row UI and Behat.
+Latest add-on slice complete: Future Food mission cards now align with the
+prototype video grid by exposing external video/activity URL, duration, XP and
+reward fields in the settings-native blocks. About "Latest from the network"
+now has Moodle WS controls: enable/disable inbound updates, max live cards and
+whether live payloads take priority over manual fallback JSON.
 Decision record: ADR-007.
 
 ## Purpose
@@ -47,7 +56,7 @@ hard-coded.
 - Per custom page (About, Student Lab, Future Food, Resources): enable/disable
   page, per-section toggles, and content settings —
   hero kicker/title/lede (HTML editor, multilang via filters), KPI definitions,
-  hub list JSON, feed fallbacks, footer text.
+  hub list JSON, feed fallbacks, feed WS controls, footer text.
 - Empty-state copy overrides.
 - All rendered through `format_text()` with filters so `{mlang}` works.
 
@@ -90,17 +99,22 @@ hard-coded.
       Runtime integration reads through `settings_provider`; save-time JSON
       validation and capability-based visibility added (2026-07-13). Structured
       repeatable admin UI still deferred.
-- [~] Pages/content settings (per-page groups) + `format_text` rendering path.
-      About page settings now read through `settings_provider` (2026-07-13);
-      About page/section toggles live. Broader controls for Student Lab/Future
-      Food/Resources still pending.
+- [x] Pages/content settings (per-page groups) + safe rendering path.
+      About page settings read through `settings_provider` (2026-07-13);
+      About page/section toggles live, including Moodle WS controls for the
+      "Latest from the network" live feed. Student Lab now has header/CTA/
+      planbar/stages visibility plus copy overrides in `local_learningplans`.
+      Future Food now has section/copy/label controls plus settings-native
+      repeatable block controls for mission cards and decision choices in
+      `local_sfsgame`. Resources now has section/copy controls in
+      `local_sfsresources`.
 - [x] Block regions in `layout/sfs*.php` + block card styling (2026-07-13).
       SecureFood shell layouts expose `content-top`, `side-pre` and
       `content-bottom`; Blocks tab can hide/show each rendered slot.
 - [x] Advanced tab — raw SCSS pre/post (2026-07-12); custom footer HTML
       setting/rendering (2026-07-13).
-- [~] Langs en/uk for every setting name + help text. Current live settings
-      covered; future Student Lab/Future Food/Resources controls still pending.
+- [x] Langs en/uk for every setting name + help text. Current live settings
+      covered for theme, Student Lab, Future Food and Resources.
 - [ ] Behat: change a colour + a hero title + hide a nav item → assert rendered.
 
 ## Acceptance criteria
@@ -116,8 +130,14 @@ hard-coded.
 
 ## Open questions
 
-- [ ] Navigation setting UX: repeatable admin settings vs JSON textarea v1
-      (recommend JSON with validation v1, structured UI later).
+- [x] Navigation setting UX: JSON textarea v1 with save-time validation is the
+      accepted production fallback; structured repeatable admin UI remains a
+      later enhancement.
 - [ ] Should colour overrides also remap Boost/Bootstrap brand variables in
       standard mode, or is customisation custom-mode-only? (Recommend
       custom-mode-only; standard mode stays stock Boost — matches ADR-002.)
+- [x] Future Food structured repeatables: mission cards and decision choices are
+      edited as add/remove blocks in the `local_sfsgame` settings page and
+      stored internally as JSON config, with no DB/schema/capability changes.
+      Mission cards include external video/activity URL, duration, XP and reward
+      copy fields matching the prototype video-card pattern.

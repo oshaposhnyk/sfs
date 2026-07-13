@@ -184,6 +184,38 @@ if ($ADMIN->fulltree) {
         '',
         PARAM_RAW
     ));
+    $page->add(new admin_setting_heading(
+        'theme_securefood/aboutfeedwsheading',
+        get_string('aboutfeedwsheading', 'theme_securefood'),
+        get_string('aboutfeedwsheading_desc', 'theme_securefood')
+    ));
+    $page->add(new admin_setting_description(
+        'theme_securefood/aboutfeedwsendpoint',
+        get_string('aboutfeedwsendpoint', 'theme_securefood'),
+        get_string('aboutfeedwsendpoint_desc', 'theme_securefood', (object)[
+            'endpoint' => (new moodle_url('/webservice/rest/server.php'))->out(false),
+            'function' => 'theme_securefood_update_network_feed',
+        ])
+    ));
+    $page->add(new admin_setting_configcheckbox(
+        'theme_securefood/aboutfeedwsenabled',
+        get_string('aboutfeedwsenabled', 'theme_securefood'),
+        get_string('aboutfeedwsenabled_desc', 'theme_securefood'),
+        0
+    ));
+    $page->add(new admin_setting_configtext(
+        'theme_securefood/aboutfeedwsmaxitems',
+        get_string('aboutfeedwsmaxitems', 'theme_securefood'),
+        get_string('aboutfeedwsmaxitems_desc', 'theme_securefood'),
+        4,
+        PARAM_INT
+    ));
+    $page->add(new admin_setting_configcheckbox(
+        'theme_securefood/aboutfeeduselive',
+        get_string('aboutfeeduselive', 'theme_securefood'),
+        get_string('aboutfeeduselive_desc', 'theme_securefood'),
+        1
+    ));
     $page->add(new admin_setting_configtext(
         'theme_securefood/abouthubstitle',
         get_string('abouthubstitle', 'theme_securefood'),

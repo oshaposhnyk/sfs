@@ -28,105 +28,120 @@
     }
 }}
 <div class="sfs-ff">
-    <div class="sfs-ffhead">
-        <div class="sfs-ffhead__kicker">{{kicker}}</div>
-        <h2 class="sfs-ffhead__title">{{title}}</h2>
-        <p class="sfs-ffhead__lede">{{lede}}</p>
-    </div>
-
-    <section class="sfs-ffhero">
-        <div class="sfs-ffhero__body">
-            <div class="sfs-ffhero__kicker">{{herokicker}}</div>
-            <h3 class="sfs-ffhero__title">{{herotitle}}</h3>
-            <p class="sfs-ffhero__lede">{{herotext}}</p>
-            {{#starturl}}
-                <div class="sfs-ffhero__actions">
-                    <a class="sfs-ffhero__cta" href="{{starturl}}">
-                        <span class="sfs-icon sfs-icon--play" aria-hidden="true"></span>
-                        {{#str}}startdailymission, local_sfsgame{{/str}}
-                    </a>
-                </div>
-            {{/starturl}}
+    {{#showpagehead}}
+        <div class="sfs-ffhead">
+            <div class="sfs-ffhead__kicker">{{kicker}}</div>
+            <h2 class="sfs-ffhead__title">{{title}}</h2>
+            <p class="sfs-ffhead__lede">{{lede}}</p>
         </div>
-        <div class="sfs-xp">
-            <div class="sfs-xp__head">
-                <div>
-                    <div class="sfs-xp__label">{{#str}}currentrank, local_sfsgame{{/str}}</div>
-                    <div class="sfs-xp__level">{{#str}}level, local_sfsgame{{/str}} {{level}}</div>
-                </div>
-                <div class="sfs-xp__total">
-                    <div class="sfs-xp__label">{{#str}}totalxp, local_sfsgame{{/str}}</div>
-                    <div class="sfs-xp__value">{{xp}}</div>
-                </div>
-            </div>
-            <progress class="sfs-xp__bar" value="{{levelprogress}}" max="100"
-                      aria-label="{{#str}}level, local_sfsgame{{/str}}">{{levelprogress}}%</progress>
-            <div class="sfs-xp__next">{{xptonext}}</div>
-            <div class="sfs-xp__chips">
-                <span class="sfs-xp__chip">
-                    <span class="sfs-icon sfs-icon--badge" aria-hidden="true"></span>{{badgecount}}
-                </span>
-            </div>
-        </div>
-    </section>
+    {{/showpagehead}}
 
-    <h3 class="sfs-achievement-list__title">{{#str}}achievements, local_sfsgame{{/str}}</h3>
-    {{^hasachievements}}
-        <div class="alert alert-info">{{#str}}noachievements, local_sfsgame{{/str}}</div>
-    {{/hasachievements}}
-    <div class="sfs-achievement-list">
-        {{#achievements}}
-            <div class="sfs-achievement {{^earned}}sfs-achievement--locked{{/earned}}">
-                <span class="sfs-achievement__badge" aria-hidden="true">
-                    {{#imageurl}}<img class="sfs-achievement__img" src="{{imageurl}}" alt="">{{/imageurl}}
-                </span>
-                <span class="sfs-achievement__name">{{name}}</span>
-                <span class="sfs-achievement__state">
-                    {{#earned}}{{#xplabel}}<span class="sfs-achievement__xp">{{xplabel}}</span>{{/xplabel}}{{/earned}}
-                    {{^earned}}{{#str}}locked, local_sfsgame{{/str}}{{/earned}}
-                </span>
-                {{^earned}}
-                    {{#criteria}}
-                        <span class="sfs-achievement__criteria-label">{{#str}}criteria_preview, local_sfsgame{{/str}}</span>
-                        <span class="sfs-achievement__criteria">{{criteria}}</span>
-                    {{/criteria}}
-                {{/earned}}
-            </div>
-        {{/achievements}}
-    </div>
-
-    {{^hasmissions}}
-        <div class="alert alert-info">{{#str}}nomissions, local_sfsgame{{/str}}</div>
-    {{/hasmissions}}
-    {{#hasmissions}}
-        <h3 class="sfs-mission-list__title">{{#str}}missionstitle, local_sfsgame{{/str}}</h3>
-        <div class="sfs-mission-list">
-            {{#missions}}
-                <article class="sfs-mission">
-                    <div class="sfs-mission__thumb sfs-mission__thumb--{{variant}}">
-                        {{#badge}}<span class="sfs-mission__badge">{{badge}}</span>{{/badge}}
-                        {{#url}}<span class="sfs-mission__play" aria-hidden="true"></span>{{/url}}
-                        {{#duration}}<span class="sfs-mission__duration">{{duration}}</span>{{/duration}}
+    {{#showhero}}
+        <section class="sfs-ffhero">
+            <div class="sfs-ffhero__body">
+                <div class="sfs-ffhero__kicker">{{herokicker}}</div>
+                <h3 class="sfs-ffhero__title">{{herotitle}}</h3>
+                <p class="sfs-ffhero__lede">{{herotext}}</p>
+                {{#starturl}}
+                    <div class="sfs-ffhero__actions">
+                        <a class="sfs-ffhero__cta" href="{{starturl}}">
+                            <span class="sfs-icon sfs-icon--play" aria-hidden="true"></span>
+                            {{startdailylabel}}
+                        </a>
                     </div>
-                    <div class="sfs-mission__body">
-                        <div class="sfs-mission__tags">
-                            {{#tags}}<span class="sfs-mission__tag">{{name}}</span>{{/tags}}
-                        </div>
-                        <h4 class="sfs-mission__name">{{title}}</h4>
-                        <p class="sfs-mission__text">{{text}}</p>
-                        <div class="sfs-mission__foot">
-                            <span class="sfs-mission__xp">+{{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>
-                            {{#url}}
-                                <a class="sfs-mission__action btn btn-primary" href="{{url}}">
-                                    {{#str}}startmission, local_sfsgame{{/str}}
-                                </a>
-                            {{/url}}
-                        </div>
+                {{/starturl}}
+            </div>
+            <div class="sfs-xp">
+                <div class="sfs-xp__head">
+                    <div>
+                        <div class="sfs-xp__label">{{currentranklabel}}</div>
+                        <div class="sfs-xp__level">{{#str}}level, local_sfsgame{{/str}} {{level}}</div>
                     </div>
-                </article>
-            {{/missions}}
+                    <div class="sfs-xp__total">
+                        <div class="sfs-xp__label">{{totalxplabel}}</div>
+                        <div class="sfs-xp__value">{{xp}}</div>
+                    </div>
+                </div>
+                <progress class="sfs-xp__bar" value="{{levelprogress}}" max="100"
+                          aria-label="{{#str}}level, local_sfsgame{{/str}}">{{levelprogress}}%</progress>
+                <div class="sfs-xp__next">{{xptonext}}</div>
+                <div class="sfs-xp__chips">
+                    <span class="sfs-xp__chip">
+                        <span class="sfs-icon sfs-icon--badge" aria-hidden="true"></span>{{badgecount}}
+                    </span>
+                </div>
+            </div>
+        </section>
+    {{/showhero}}
+
+    {{#showachievements}}
+        <h3 class="sfs-achievement-list__title">{{achievementstitle}}</h3>
+        {{^hasachievements}}
+            <div class="alert alert-info">{{noachievements}}</div>
+        {{/hasachievements}}
+        <div class="sfs-achievement-list">
+            {{#achievements}}
+                <div class="sfs-achievement {{^earned}}sfs-achievement--locked{{/earned}}">
+                    <span class="sfs-achievement__badge" aria-hidden="true">
+                        {{#imageurl}}<img class="sfs-achievement__img" src="{{imageurl}}" alt="">{{/imageurl}}
+                    </span>
+                    <span class="sfs-achievement__name">{{name}}</span>
+                    <span class="sfs-achievement__state">
+                        {{#earned}}{{#xplabel}}<span class="sfs-achievement__xp">{{xplabel}}</span>{{/xplabel}}{{/earned}}
+                        {{^earned}}{{#str}}locked, local_sfsgame{{/str}}{{/earned}}
+                    </span>
+                    {{^earned}}
+                        {{#criteria}}
+                            <span class="sfs-achievement__criteria-label">{{#str}}criteria_preview, local_sfsgame{{/str}}</span>
+                            <span class="sfs-achievement__criteria">{{criteria}}</span>
+                        {{/criteria}}
+                    {{/earned}}
+                </div>
+            {{/achievements}}
         </div>
-    {{/hasmissions}}
+    {{/showachievements}}
+
+    {{#showmissions}}
+        {{^hasmissions}}
+            <div class="alert alert-info">{{nomissions}}</div>
+        {{/hasmissions}}
+        {{#hasmissions}}
+            <h3 class="sfs-mission-list__title">{{missionstitle}}</h3>
+            <div class="sfs-mission-list">
+                {{#missions}}
+                    <article class="sfs-mission {{#completed}}sfs-mission--completed{{/completed}}">
+                        <div class="sfs-mission__thumb sfs-mission__thumb--{{variant}}">
+                            {{#badge}}<span class="sfs-mission__badge">{{badge}}</span>{{/badge}}
+                            {{#url}}<span class="sfs-mission__play" aria-hidden="true"></span>{{/url}}
+                            {{#duration}}<span class="sfs-mission__duration">{{duration}}</span>{{/duration}}
+                        </div>
+                        <div class="sfs-mission__body">
+                            <div class="sfs-mission__tags">
+                                {{#tags}}<span class="sfs-mission__tag">{{name}}</span>{{/tags}}
+                            </div>
+                            <h4 class="sfs-mission__name">{{title}}</h4>
+                            <p class="sfs-mission__text">{{text}}</p>
+                            <div class="sfs-mission__foot">
+                                {{#hasrewardmeta}}
+                                    <span class="sfs-mission__metafoot">
+                                        {{#hasxp}}<span class="sfs-mission__xp">+{{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>{{/hasxp}}
+                                        {{#reward}}<small class="sfs-mission__reward">{{reward}}</small>{{/reward}}
+                                        {{#completionlabel}}<small class="sfs-mission__completion sfs-mission__completion--{{completionstate}}">{{completionlabel}}</small>{{/completionlabel}}
+                                    </span>
+                                {{/hasrewardmeta}}
+                                {{#url}}
+                                    <a class="sfs-mission__action btn btn-primary" href="{{url}}"
+                                       {{#external}}target="_blank" rel="noopener noreferrer"{{/external}}>
+                                        {{startmissionlabel}}
+                                    </a>
+                                {{/url}}
+                            </div>
+                        </div>
+                    </article>
+                {{/missions}}
+            </div>
+        {{/hasmissions}}
+    {{/showmissions}}
 
     {{#showdecision}}
         <section class="sfs-decision" aria-labelledby="sfs-decision-title">
@@ -137,7 +152,7 @@
                 </div>
                 <div class="sfs-decision__pill">
                     <span class="sfs-icon sfs-icon--decision" aria-hidden="true"></span>
-                    {{#str}}decisionpill, local_sfsgame{{/str}}
+                    {{decisionpill}}
                 </div>
             </div>
             <p class="sfs-decision__body">{{decisionbody}}</p>

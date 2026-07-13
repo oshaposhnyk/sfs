@@ -150,7 +150,10 @@
                         {{#chip}}<span class="sfs-feedcard__chip">{{chip}}</span>{{/chip}}
                     </div>
                     <div class="sfs-feedcard__body">
-                        <h4 class="sfs-feedcard__name">{{title}}</h4>
+                        <h4 class="sfs-feedcard__name">
+                            {{#hasurl}}<a class="sfs-feedcard__link" href="{{url}}">{{title}}</a>{{/hasurl}}
+                            {{^hasurl}}{{title}}{{/hasurl}}
+                        </h4>
                         {{#text}}<p class="sfs-feedcard__text">{{text}}</p>{{/text}}
                         {{#time}}<div class="sfs-feedcard__time">{{time}}</div>{{/time}}
                     </div>

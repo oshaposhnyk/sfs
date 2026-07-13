@@ -68,6 +68,7 @@ final class missions {
                 'duration' => (string)($item['duration'] ?? ''),
                 'xp' => (int)($item['xp'] ?? 0),
                 'url' => (string)($item['url'] ?? ''),
+                'reward' => (string)($item['reward'] ?? ''),
                 'tags' => $tags,
             ];
         }

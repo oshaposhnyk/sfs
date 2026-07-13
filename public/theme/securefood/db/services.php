@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * SecureFood School theme version.
+ * External service declarations for theme_securefood.
  *
  * @package    theme_securefood
  * @copyright  2026 SecureFood School
@@ -26,11 +26,12 @@ declare(strict_types=1);
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026071300;
-$plugin->requires  = 2026041000;
-$plugin->component = 'theme_securefood';
-$plugin->release   = '0.1.0';
-$plugin->maturity  = MATURITY_ALPHA;
-$plugin->dependencies = [
-    'theme_boost' => 2026042000,
+$functions = [
+    'theme_securefood_update_network_feed' => [
+        'classname' => \theme_securefood\external\update_network_feed::class,
+        'description' => 'Replace the About page "Latest from the network" feed with externally supplied cards.',
+        'type' => 'write',
+        'ajax' => false,
+        'capabilities' => 'moodle/site:config',
+    ],
 ];

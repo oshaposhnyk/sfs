@@ -32,11 +32,26 @@ if (isguestuser()) {
 }
 
 $context = context_system::instance();
+$get = static function(string $name, string $default): string {
+    $value = trim((string)get_config('local_sfsresources', $name));
+
+    return $value !== '' ? $value : $default;
+};
+$enabled = static function(string $name, bool $default = true): bool {
+    $value = get_config('local_sfsresources', $name);
+    if ($value === false || $value === null || $value === '') {
+        return $default;
+    }
+
+    return (int)$value === 1;
+};
+$pagetitle = $get('resourcestitle', get_string('resources', 'local_sfsresources'));
+
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/sfsresources/index.php'));
 $PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('resources', 'local_sfsresources'));
-$PAGE->set_heading(get_string('resources', 'local_sfsresources'));
+$PAGE->set_title(format_string($pagetitle));
+$PAGE->set_heading(format_string($pagetitle));
 
 $kindfilter = optional_param('kind', '', PARAM_ALPHA);
 $audfilter = strtolower(optional_param('aud', '', PARAM_ALPHANUMEXT));
@@ -115,7 +130,7 @@ foreach ($alldocs as $doc) {
 
 // KPI stat cards are administrator-curated. Prototype metrics are mock data
 // and must never appear as live production facts when this setting is empty.
-$statitems = json_decode((string)get_config('local_sfsresources', 'stats'), true);
+$statitems = $enabled('showresourcesstats') ? json_decode((string)get_config('local_sfsresources', 'stats'), true) : [];
 if (!is_array($statitems) || $statitems === []) {
     $statitems = [];
 }
@@ -137,7 +152,7 @@ foreach ($statitems as $item) {
 
 // Management tools — only for staff who can manage learning plans.
 $tools = [];
-if (has_capability('local/learningplans:manage', $context)) {
+if ($enabled('showresourcestools') && has_capability('local/learningplans:manage', $context)) {
     $tools = [
         ['key' => 'plans', 'title' => get_string('tool_plans', 'local_sfsresources'),
             'desc' => get_string('tool_plans_desc', 'local_sfsresources'),
@@ -164,10 +179,19 @@ if (has_capability('local/learningplans:manage', $context)) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_sfsresources/resources_page', [
-    'kicker' => get_string('kicker', 'local_sfsresources'),
-    'title' => get_string('resources', 'local_sfsresources'),
-    'lede' => get_string('lede', 'local_sfsresources'),
-    'library' => get_string('library', 'local_sfsresources'),
+    'showheader' => $enabled('showresourcesheader'),
+    'showfilters' => $enabled('showresourcesfilters'),
+    'showlibrary' => $enabled('showresourceslibrary'),
+    'kicker' => format_string($get('resourceskicker',
+        get_string('kicker', 'local_sfsresources')), true, ['escape' => false]),
+    'title' => format_string($get('resourcestitle',
+        get_string('resources', 'local_sfsresources')), true, ['escape' => false]),
+    'lede' => format_string($get('resourceslede',
+        get_string('lede', 'local_sfsresources')), true, ['escape' => false]),
+    'library' => format_string($get('resourceslibrarytitle',
+        get_string('library', 'local_sfsresources')), true, ['escape' => false]),
+    'nodocuments' => format_string($get('resourcesempty',
+        get_string('nodocuments', 'local_sfsresources')), true, ['escape' => false]),
     'documents' => $documents,
     'hasdocuments' => $documents !== [],
     'filters' => $filters,

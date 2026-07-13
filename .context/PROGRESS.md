@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-13 (Brand logo file serving slice complete; tests skipped by owner request)
+Last updated: 2026-07-13 (About feed fake defaults removed)
 
 ## Domain status
 
@@ -12,15 +12,15 @@ Last updated: 2026-07-13 (Brand logo file serving slice complete; tests skipped 
 | 10| enrol-learningplan          | 0     | `[x]` completed + E2E-verified | v0.1.0. Real enrol round-trip verified 2026-07-12 during Phase 3 seeding (sequential release → 1 course; immediate → all). PHPUnit still pending. |
 | 00| theme-foundation            | 1     | `[~]` mostly done | Scaffold installed + verified; Boost-var mapping deferred to domain 02 |
 | 03| preferences                 | 1     | `[~]` mostly done | Definitions/privacy/rendering (data-theme + system fallback)/AMD toggles live; no-JS preferences-page UI pending |
-| 11| customisation-settings      | 1–2   | `[~]` in progress | General + Brand/logo + Navigation + About Pages controls + Blocks + Colours + Advanced tabs live; broader Student Lab/Future Food/Resources content controls pending |
+| 11| customisation-settings      | 1–2   | `[~]` mostly done | General + Brand/logo + Navigation + About Pages controls + Blocks + Colours + Advanced tabs + Student Lab/Future Food/Resources controls live; structured nav admin UI + Behat pending |
 | 01| app-shell                   | 2     | `[~]` core done | Sidebar/topbar/drawer/collapse live E2E; Behat + focus-trap + deep a11y pass pending |
 | 02| mode-switch                 | 2     | `[~]` core done | Both directions E2E-verified incl. forced modes; navbar "SFS" toggle in standard mode; Behat pending |
 | 05| student-lab                 | 3     | `[~]` core done | v1 single-stage grid (ADR-008); E2E-verified with real data both schemes; stage grouping + effort/level await schema decision |
 | 09| learningplans-integration   | 3     | `[~]` core done | Overview/set-active use cases + preference port live; external functions deferred (needs db/services.php approval) |
 | 06| course-experience           | 3–8   | `[x]` done | Restyle + plan-context strip + right rail (next-up/info/teachers) + per-section fractions (Phase 8 C1–C2) |
-| 04| dashboard-insights          | 4     | `[~]` v1 done | Hero/stats/hubs+dot-map/feed all settings-driven; per-role routing = via nav (decided) |
-| 07| future-food                 | 4     | `[~]` v1 implemented | XP/level from badges+completions, achievements w/ locked criteria preview, missions grid, decision links; BEM normalised; browser QA/content decision badge still pending |
-| 08| resources-standards         | 4–8   | `[x]` done | Filearea library + audience filters + KPI stat cards + tool icons/counts (Phase 8 R1–R5); R6 validation card → Phase 9 |
+| 04| dashboard-insights          | 4     | `[~]` v1 done + WS feed live | Hero/stats/hubs+dot-map/feed all settings-driven; "Latest from the network" can now be replaced through Moodle WS; per-role routing = via nav (decided) |
+| 07| future-food                 | 4     | `[~]` P0 mission XP implemented | XP/level from badges+course completions live; mission-card XP now comes from real Moodle activity completion (no custom watch tracking); browser QA/content decision badge still pending |
+| 08| resources-standards         | 4–8   | `[x]` done | Filearea library + audience filters + KPI stat cards + tool icons/counts + section/copy controls (Phase 8 R1–R5); R6 validation card → Phase 9 |
 
 ## What already exists (baseline, verified 2026-07-12)
 
@@ -39,7 +39,7 @@ Last updated: 2026-07-13 (Brand logo file serving slice complete; tests skipped 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | Phase 8 “1:1 complete” status is overstated | Current prototypes and live output still differ materially (About L4C band absent, extra feed/core content, Future Food decision missing, Resources validation/side stats missing, incomplete course/activity composition) | Reopen the visual backlog page-by-page and verify light/dark/mobile against the current prototype files |
-| ADR-007 no-code catalogue is incomplete | Brand assets, Blocks controls, page/section toggles, footer, Student Lab/course content controls and full typed provider coverage are incomplete | Complete domain 11 before pilot sign-off |
+| ADR-007 no-code catalogue is incomplete | Structured navigation row UI and Behat coverage are still incomplete; Future Food mission/decision repeatables are now edited as settings-native blocks and stored internally as JSON | Keep validated JSON as a fallback for navigation v1; add structured nav row builder when approved |
 | Frontend hard rules are partially violated | Raw colour/rgba literals outside `_tokens.scss` remain; custom active `!important` declarations and inline `style` attributes were removed 2026-07-13. Third-party Leaflet vendor CSS still contains upstream `!important`. | Tokenise remaining colour recipes and document/contain vendor CSS exceptions |
 | Accessibility/interaction gaps remain | P0 fixed the mobile drawer state and blank Login; topbar scheme toggle now cycles back to system; About map static/live markers have labelled keyboard semantics. A full WCAG keyboard/SR pass and browser E2E are still pending. | Focused WCAG keyboard/SR pass plus browser E2E at required viewports |
 | Theme QA coverage is incomplete | 22 unit tests now cover tokens/navigation/mode/About/preferences/privacy, but theme Behat, renderer behaviour checks and PHPCS binary are still missing | Add missing tests and install moodle/codechecker in CI |
@@ -79,6 +79,72 @@ uk string review (9.6) owner takes it.
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-13** — **Latest from the network fake defaults removed `[x]`**:
+  removed the prototype/mock card fallback from the About-page network feed.
+  Current behaviour: Moodle WS live payload → manual `aboutfeed` JSON setting
+  → empty feed, which means the template does not render the section. This
+  prevents fake "Kyiv Living Lab twin", "School kitchens" and similar prototype
+  cards from appearing as real network data.
+
+- **2026-07-13** — **Latest from the network Moodle WS `[x]`**:
+  implemented the owner-requested functional feed update path as a standard
+  Moodle External Services function instead of a standalone webhook script.
+  External services call `theme_securefood_update_network_feed` through
+  `/webservice/rest/server.php` with a Moodle webservice token. The function
+  validates system context + `moodle/site:config`, respects a theme enable
+  setting, normalises `chip/title/text/time/variant/url`, stores the latest
+  small payload via Config API, and the About page falls back to manual JSON
+  only; if both sources are empty the feed is hidden. The old standalone
+  endpoint approach was removed. Theme version bumped so Moodle registers the
+  new `db/services.php` declaration on upgrade. Checks: PHP lint clean for
+  touched PHP/lang files; `git diff --check` clean; theme EN/UK language keys
+  in sync. PHPCS binary is missing; PHPUnit/Behat/browser/manual QA skipped
+  by owner request.
+
+- **2026-07-13** — **P0 Future Food completion-backed mission XP `[x]`**:
+  completed the owner-approved P0 slice. Mission/video cards may award XP only
+  when their URL points to a real Moodle activity with completion enabled and
+  completed by the current user. External `http/https` resources remain links
+  only and do not imply automatic watch tracking. Mission cards now show
+  completion/reward state, completed cards are visually marked, and the
+  domain XP policy includes completed mission XP. Checks: PHP lint clean for
+  touched `local_sfsgame` PHP/lang files; `git diff --check` clean;
+  `local_sfsgame` EN/UK language keys in sync. PHPCS binary is missing;
+  PHPUnit/Behat/browser/manual QA skipped by owner request.
+
+- **2026-07-13** — **Future Food video mission cards `[x]`**:
+  completed owner-requested alignment with the Future Food prototype video grid
+  (`video-grid mission-grid` in `SecureFood School/uploads/ffs.html`). Mission
+  blocks in `local_sfsgame` settings now support external video/activity URL,
+  duration, XP and reward text; the page renders them as play-card resources
+  with prototype-style reward copy. External `http/https` links open in a new
+  tab with `rel="noopener noreferrer"`; internal Moodle URLs stay in the same
+  tab. External videos remain links/resources in this slice; real per-user award
+  on watch requires a Moodle activity/completion or new tracking model. Checks:
+  PHP lint clean for touched `local_sfsgame` PHP files; AMD source/build syntax
+  clean; `git diff --check` clean; `local_sfsgame` EN/UK language keys in sync.
+  SCSS compile/cache purge not run because Moodle bootstrap is blocked by the
+  inaccessible local `$CFG->dataroot`.
+
+- **2026-07-13** — **Domain 11 final content controls + Future Food block settings `[x]`**:
+  completed the remaining no-code content work for Student Lab, Future Food and
+  Resources & Standards. Student Lab now has settings-driven header/CTA/planbar/
+  stages visibility plus kicker/title/lede/empty/no-courses copy. Resources now
+  has settings-driven header/KPI/tools/filters/library visibility plus page,
+  library and empty-state copy. Future Food now has settings-driven page/hero/
+  achievements/missions/decision visibility, major copy/labels, safer mission
+  URL handling. The standalone `/local/sfsgame/editor.php` approach was removed
+  by owner request and replaced with settings-native repeatable block controls:
+  mission cards and decision choices are edited as add/remove field blocks on
+  the `local_sfsgame` settings page and stored internally as JSON config. No
+  raw JSON textarea is shown for those two settings. No new DB tables/
+  capabilities/auth/cron. Checks: PHP lint clean for touched `local_sfsgame`
+  PHP files; `git diff --check` clean; `local_sfsgame` EN/UK language keys stay
+  in sync; AMD source/build syntax checks pass. PHPCS binary is not present in
+  the workspace. Moodle bootstrap smoke remains blocked by inaccessible
+  `$CFG->dataroot` in the local sandbox. PHPUnit/Behat/browser/manual QA skipped
+  by owner request.
 
 - **2026-07-13** — **Brand logo file serving slice `[x]`**:
   completed the owner-approved `lib.php` slice for Brand uploads and theme

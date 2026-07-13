@@ -64,7 +64,8 @@ final class decision {
                 continue;
             }
 
-            if (!str_starts_with($url, '/') && !preg_match('~^https?://~i', $url)) {
+            if (str_starts_with($url, '//')
+                    || (!str_starts_with($url, '/') && !preg_match('~^https?://~i', $url))) {
                 continue;
             }
 

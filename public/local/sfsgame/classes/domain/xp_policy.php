@@ -27,10 +27,12 @@ declare(strict_types=1);
 namespace local_sfsgame\domain;
 
 /**
- * Derives XP and level from earned badges and completed courses.
+ * Derives XP and level from earned badges, completed courses and completed
+ * mission activities.
  *
- * v1: 100 XP per badge, 50 XP per completed plan course; a level every
- * 500 XP. Pure and unit-testable.
+ * v1: 100 XP per badge, 50 XP per completed plan course, plus administrator-
+ * configured mission XP only after the linked Moodle activity is completed.
+ * A level is reached every 500 XP. Pure and unit-testable.
  */
 final class xp_policy {
     /** @var int */
@@ -45,10 +47,13 @@ final class xp_policy {
      *
      * @param int $badges Earned badge count.
      * @param int $completedcourses Completed course count.
+     * @param int $missionxp XP from completed mission activities.
      * @return int
      */
-    public static function xp(int $badges, int $completedcourses): int {
-        return max(0, $badges) * self::XP_PER_BADGE + max(0, $completedcourses) * self::XP_PER_COURSE;
+    public static function xp(int $badges, int $completedcourses, int $missionxp = 0): int {
+        return max(0, $badges) * self::XP_PER_BADGE
+            + max(0, $completedcourses) * self::XP_PER_COURSE
+            + max(0, $missionxp);
     }
 
     /**

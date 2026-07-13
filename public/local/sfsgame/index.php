@@ -34,11 +34,26 @@ if (isguestuser()) {
 
 $userid = (int)$USER->id;
 $context = context_system::instance();
+$get = static function(string $name, string $default): string {
+    $value = trim((string)get_config('local_sfsgame', $name));
+
+    return $value !== '' ? $value : $default;
+};
+$enabled = static function(string $name, bool $default = true): bool {
+    $value = get_config('local_sfsgame', $name);
+    if ($value === false || $value === null || $value === '') {
+        return $default;
+    }
+
+    return (int)$value === 1;
+};
+$pagetitle = $get('pagetitle', get_string('futurefood', 'local_sfsgame'));
+
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/sfsgame/index.php'));
 $PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('futurefood', 'local_sfsgame'));
-$PAGE->set_heading(get_string('futurefood', 'local_sfsgame'));
+$PAGE->set_title(format_string($pagetitle));
+$PAGE->set_heading(format_string($pagetitle));
 
 // Earned + available site badges.
 $earned = badges_get_user_badges($userid);
@@ -113,42 +128,96 @@ if (class_exists('\local_learningplans\infrastructure\moodle\factory\learning_pl
     }
 }
 
-$xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed);
+$missionlink = static function(string $url): ?array {
+    $url = trim($url);
+    if ($url === '' || str_starts_with($url, '//')
+            || (!str_starts_with($url, '/') && !preg_match('~^https?://~i', $url))) {
+        return null;
+    }
 
+    try {
+        $moodleurl = new moodle_url($url);
+        return [
+            'url' => $moodleurl->out(false),
+            'external' => preg_match('~^https?://~i', $url) === 1 && !$moodleurl->is_local_url(),
+        ];
+    } catch (Throwable $exception) {
+        return null;
+    }
+};
 $missionvariants = ['aqua', 'amber', 'teal', 'green'];
 $missions = [];
+$missionxp = 0;
 foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'missions')) as $i => $mission) {
+    $reward = trim((string)$mission['reward']);
+    $completion = \local_sfsgame\mission_completion::state_for_url((string)$mission['url'], $userid);
+    $missioncompleted = !empty($completion['completed']);
+    if ($missioncompleted && $mission['xp'] > 0) {
+        $missionxp += $mission['xp'];
+    }
+    $completionlabel = '';
+    if ($mission['xp'] > 0) {
+        $completionlabel = get_string('missioncompletion:' . $completion['state'], 'local_sfsgame');
+    }
+    if ($reward === '' && $mission['xp'] > 0) {
+        if ($missioncompleted) {
+            $reward = get_string('missionrewardawarded', 'local_sfsgame', $mission['xp']);
+        } else if ($completion['state'] === \local_sfsgame\mission_completion::STATE_INCOMPLETE) {
+            $reward = get_string('missionrewardavailable', 'local_sfsgame', $mission['xp']);
+        } else {
+            $reward = get_string('missionrewardnottracked', 'local_sfsgame', $mission['xp']);
+        }
+    }
+    $link = $missionlink($mission['url']);
     $missions[] = [
+        'completed' => $missioncompleted,
         'badge' => format_string($mission['badge']),
         'title' => format_string($mission['title']),
         'text' => format_string($mission['text']),
         'duration' => format_string($mission['duration']),
         'xp' => $mission['xp'],
-        'url' => $mission['url'] !== '' ? (new moodle_url($mission['url']))->out(false) : null,
+        'hasxp' => $mission['xp'] > 0,
+        'url' => $link['url'] ?? null,
+        'external' => $link['external'] ?? false,
+        'reward' => format_string($reward),
+        'hasrewardmeta' => $mission['xp'] > 0 || $reward !== '',
+        'completionstate' => $completion['state'],
+        'completionlabel' => $completionlabel,
         'tags' => array_map(static fn($t) => ['name' => format_string($t['name'])], $mission['tags']),
         'variant' => $missionvariants[$i % count($missionvariants)],
     ];
 }
 
-$get = static function(string $name, string $default): string {
-    $value = trim((string)get_config('local_sfsgame', $name));
-    return $value !== '' ? $value : $default;
-};
-$level = \local_sfsgame\domain\xp_policy::level($xp);
-$decisionchoices = \local_sfsgame\decision::parse((string)get_config('local_sfsgame', 'decisionchoices'));
 $firstmissionurl = null;
-foreach ($missions as $mission) {
-    if (!empty($mission['url'])) {
-        $firstmissionurl = $mission['url'];
-        break;
+$showmissions = $enabled('showmissions');
+if (!$showmissions) {
+    $missions = [];
+    $missionxp = 0;
+} else {
+    foreach ($missions as $mission) {
+        if (!empty($mission['url'])) {
+            $firstmissionurl = $mission['url'];
+            break;
+        }
     }
 }
 
+$xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed, $missionxp);
+$level = \local_sfsgame\domain\xp_policy::level($xp);
+$decisionchoices = \local_sfsgame\decision::parse((string)get_config('local_sfsgame', 'decisionchoices'));
+
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
-    'kicker' => get_string('kicker', 'local_sfsgame'),
-    'title' => get_string('futurefood', 'local_sfsgame'),
-    'lede' => get_string('lede', 'local_sfsgame'),
+    'showpagehead' => $enabled('showpagehead'),
+    'showhero' => $enabled('showhero'),
+    'showachievements' => $enabled('showachievements'),
+    'showmissions' => $showmissions,
+    'kicker' => format_string($get('pagekicker',
+        get_string('kicker', 'local_sfsgame')), true, ['escape' => false]),
+    'title' => format_string($get('pagetitle',
+        get_string('futurefood', 'local_sfsgame')), true, ['escape' => false]),
+    'lede' => format_string($get('pagelede',
+        get_string('lede', 'local_sfsgame')), true, ['escape' => false]),
     'herokicker' => format_string($get('herokicker',
         get_string('default_herokicker', 'local_sfsgame')), true, ['escape' => false]),
     'herotitle' => format_string($get('herotitle',
@@ -156,6 +225,14 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
     'herotext' => format_string($get('herotext',
         get_string('default_herotext', 'local_sfsgame')), true, ['escape' => false]),
     'starturl' => $firstmissionurl,
+    'startdailylabel' => format_string($get('startdailylabel',
+        get_string('startdailymission', 'local_sfsgame')), true, ['escape' => false]),
+    'startmissionlabel' => format_string($get('startmissionlabel',
+        get_string('startmission', 'local_sfsgame')), true, ['escape' => false]),
+    'currentranklabel' => format_string($get('currentranklabel',
+        get_string('currentrank', 'local_sfsgame')), true, ['escape' => false]),
+    'totalxplabel' => format_string($get('totalxplabel',
+        get_string('totalxp', 'local_sfsgame')), true, ['escape' => false]),
     'level' => $level,
     'xp' => $xp,
     'levelprogress' => \local_sfsgame\domain\xp_policy::level_progress($xp),
@@ -165,11 +242,19 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
         'target' => \local_sfsgame\domain\xp_policy::XP_PER_LEVEL,
     ]),
     'badgecount' => get_string('badgecount', 'local_sfsgame', count($earnedids)),
+    'achievementstitle' => format_string($get('achievementstitle',
+        get_string('achievements', 'local_sfsgame')), true, ['escape' => false]),
+    'noachievements' => format_string($get('noachievements',
+        get_string('noachievements', 'local_sfsgame')), true, ['escape' => false]),
     'achievements' => $achievements,
     'hasachievements' => $achievements !== [],
+    'missionstitle' => format_string($get('missionstitle',
+        get_string('missionstitle', 'local_sfsgame')), true, ['escape' => false]),
+    'nomissions' => format_string($get('nomissions',
+        get_string('nomissions', 'local_sfsgame')), true, ['escape' => false]),
     'missions' => $missions,
     'hasmissions' => $missions !== [],
-    'showdecision' => (int)(get_config('local_sfsgame', 'showdecision') ?? 1) === 1,
+    'showdecision' => $enabled('showdecision'),
     'decisionkicker' => format_string($get('decisionkicker',
         get_string('default_decisionkicker', 'local_sfsgame')), true, ['escape' => false]),
     'decisiontitle' => format_string($get('decisiontitle',
@@ -178,7 +263,11 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
         get_string('default_decisionbody', 'local_sfsgame')), true, ['escape' => false]),
     'decisionchoices' => $decisionchoices,
     'hasdecisionchoices' => $decisionchoices !== [],
-    'decisionempty' => get_string('decisionempty', 'local_sfsgame'),
-    'decisionhint' => get_string('decisionhint', 'local_sfsgame'),
+    'decisionempty' => format_string($get('decisionempty',
+        get_string('decisionempty', 'local_sfsgame')), true, ['escape' => false]),
+    'decisionhint' => format_string($get('decisionhint',
+        get_string('decisionhint', 'local_sfsgame')), true, ['escape' => false]),
+    'decisionpill' => format_string($get('decisionpill',
+        get_string('decisionpill', 'local_sfsgame')), true, ['escape' => false]),
 ]);
 echo $OUTPUT->footer();
