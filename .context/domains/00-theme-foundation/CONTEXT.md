@@ -33,6 +33,13 @@ public/theme/securefood/
 
 ## Tasks
 
+- [~] Login page SecureFood styling (2026-07-14): replaced Boost's generic
+      split-screen login marketing treatment with SecureFood-branded panel and
+      token-driven login form styling, without changing core auth flow. Verified
+      with PHP lint and Moodle SCSS smoke compile; template HTTP smoke confirmed
+      the SecureFood panel copy. Final cache purge/browser visual check remains
+      pending after the final Boost-background specificity override.
+
 - [x] Independent theme/design conformance audit (2026-07-12): verified the
       current prototypes against the implemented theme and page integrations;
       material gaps remain in fidelity, token compliance, no-code settings,

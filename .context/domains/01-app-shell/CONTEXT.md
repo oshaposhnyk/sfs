@@ -40,6 +40,10 @@ visual reference: `styles.css` "APP SHELL" section; BEM map: `design/components.
 
 ## Tasks
 
+- [x] Topbar language selector contrast (2026-07-14): Boost language menu
+      trigger is unreadable in SFS dark scheme; restyled the core language menu
+      only inside `.sfs-topbar__actions`.
+
 - [x] Sticky footer shell alignment (2026-07-14): Boost's fixed `.stickyfooter`
       form actions start at viewport `left: 0`, which clips action buttons under
       the SFS sidebar; aligned it to expanded/collapsed/mobile shell columns.

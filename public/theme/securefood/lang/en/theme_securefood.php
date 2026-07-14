@@ -95,6 +95,15 @@ $string['togglesidebar'] = 'Toggle sidebar';
 $string['togglescheme'] = 'Cycle colour scheme';
 $string['searchplaceholder'] = 'Search courses, documents…';
 
+// Login page.
+$string['loginpanel_kicker'] = 'SecureFood School';
+$string['loginpanel_title'] = 'A shield for tomorrow’s food systems';
+$string['loginpanel_lede'] = 'Access learning paths, Future Food missions and practical resources built for safe, resilient food systems.';
+$string['loginpanel_chipslabel'] = 'SecureFood learning highlights';
+$string['loginpanel_chip_skills'] = 'Applied skills';
+$string['loginpanel_chip_labs'] = 'Living Labs';
+$string['loginpanel_chip_network'] = 'EU network';
+
 // Default navigation items.
 $string['nav_learning'] = 'Learning';
 $string['nav_account'] = 'Account';

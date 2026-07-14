@@ -544,6 +544,89 @@
         align-items: center;
     }
 
+    .sfs-topbar__actions .langmenu {
+        display: flex;
+        align-items: center;
+
+        .dropdown {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn.dropdown-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 0 14px;
+            border: 1px solid var(--sfs-line);
+            border-radius: 999px;
+            background: var(--sfs-surface);
+            color: var(--sfs-ink2);
+            box-shadow: var(--sfs-shadow-1);
+            font-weight: 700;
+            line-height: 1;
+            text-decoration: none;
+
+            @include sfs-motion {
+                transition:
+                    background var(--sfs-duration-fast),
+                    border-color var(--sfs-duration-fast),
+                    color var(--sfs-duration-fast);
+            }
+
+            &:hover,
+            &:focus {
+                border-color: var(--sfs-linestrong);
+                background: var(--sfs-surface2);
+                color: var(--sfs-primary);
+                text-decoration: none;
+            }
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
+
+            .icon,
+            .langbutton,
+            .caret {
+                color: currentColor;
+            }
+
+            .icon {
+                margin: 0;
+                opacity: 0.9;
+            }
+        }
+
+        .dropdown-menu {
+            margin-top: 10px;
+            padding: 8px;
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            background: var(--sfs-surface);
+            box-shadow: var(--sfs-shadow-3);
+        }
+
+        .dropdown-item {
+            min-height: 38px;
+            border-radius: var(--sfs-radius-sm);
+            color: var(--sfs-ink2);
+            font-weight: 700;
+
+            &:hover,
+            &:focus {
+                background: var(--sfs-surface2);
+                color: var(--sfs-primary);
+            }
+
+            &[aria-current="true"] {
+                background: var(--sfs-primary50);
+                color: var(--sfs-primary);
+            }
+        }
+    }
+
     .sfs-iconbtn {
         width: 36px;
         height: 36px;

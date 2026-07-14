@@ -1,0 +1,435 @@
+// Login page is not rendered inside the SecureFood app shell, so this slice is
+// scoped to Moodle's login pagelayout instead of .sfs-mode.
+
+body.pagelayout-login {
+    background: var(--sfs-bg);
+    color: var(--sfs-ink2);
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+
+    #page-wrapper,
+    #page,
+    #page-content {
+        min-height: 100vh;
+        background: var(--sfs-bg);
+    }
+
+    #page {
+        margin: 0;
+    }
+
+    #region-main,
+    #region-main-box {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .login-wrapper {
+        min-height: 100vh;
+    }
+
+    .login-layout-left {
+        overflow: hidden;
+        padding: clamp(32px, 5vw, 72px);
+        color: var(--sfs-on-dark);
+        background-color: var(--sfs-primary800);
+        background-image:
+            radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--sfs-accent300) 28%, transparent), transparent 32%),
+            radial-gradient(circle at 86% 76%, color-mix(in srgb, var(--sfs-teal300) 24%, transparent), transparent 34%),
+            linear-gradient(135deg, var(--sfs-primary800), var(--sfs-primary700) 46%, var(--sfs-teal));
+        background-position: center;
+        background-size: cover;
+    }
+
+    .login-layout-left::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            linear-gradient(color-mix(in srgb, var(--sfs-on-dark) 7%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in srgb, var(--sfs-on-dark) 7%, transparent) 1px, transparent 1px);
+        background-size: 56px 56px;
+        opacity: 0.42;
+    }
+
+    .login-layout-left::after {
+        content: none;
+    }
+
+    .login-layout-left-content {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 560px);
+        max-width: 560px;
+        margin: 0;
+        padding: clamp(26px, 4vw, 44px);
+        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 16%, transparent);
+        border-radius: var(--sfs-radius-lg);
+        background: color-mix(in srgb, var(--sfs-primary800) 76%, transparent);
+        box-shadow: var(--sfs-shadow-3);
+        color: var(--sfs-on-dark);
+        text-align: left;
+        backdrop-filter: saturate(140%) blur(10px);
+    }
+
+    .sfs-loginpanel__kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--sfs-accent-ondark);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    .sfs-loginpanel__kicker::before {
+        content: "";
+        display: inline-block;
+        width: 34px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentcolor;
+    }
+
+    .sfs-loginpanel__title {
+        margin: 1rem 0 0;
+        color: var(--sfs-on-dark);
+        font-family: "Manrope", "Inter", system-ui, sans-serif;
+        font-size: clamp(2.4rem, 4.6vw, 4.9rem);
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 0.98;
+    }
+
+    .sfs-loginpanel__lede,
+    .sfs-loginpanel__instructions {
+        max-width: 34rem;
+        margin: 1.25rem 0 0;
+        color: color-mix(in srgb, var(--sfs-on-dark) 78%, transparent);
+        font-size: clamp(1rem, 1.35vw, 1.18rem);
+        font-weight: 600;
+        line-height: 1.65;
+    }
+
+    .sfs-loginpanel__instructions :where(h1, h2, h3, h4, h5, h6) {
+        color: var(--sfs-on-dark);
+        font-family: "Manrope", "Inter", system-ui, sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+    }
+
+    .sfs-loginpanel__instructions a {
+        color: var(--sfs-accent-ondark);
+        font-weight: 800;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.18em;
+    }
+
+    .sfs-loginpanel__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin-top: 1.75rem;
+    }
+
+    .sfs-loginpanel__chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.3rem;
+        padding: 0.45rem 0.85rem;
+        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 18%, transparent);
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--sfs-on-dark) 10%, transparent);
+        color: var(--sfs-on-dark);
+        font-size: 0.86rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .login-layout-right {
+        display: flex;
+        align-items: center;
+        padding: clamp(28px, 5vw, 76px);
+        background:
+            radial-gradient(circle at 84% 16%, color-mix(in srgb, var(--sfs-accent50) 70%, transparent), transparent 26%),
+            linear-gradient(180deg, var(--sfs-bg), var(--sfs-bg2));
+    }
+
+    .login-layout-right-content {
+        width: min(100%, 580px);
+        margin: 0 auto;
+    }
+
+    .login-container {
+        width: 100%;
+        padding: clamp(26px, 4vw, 44px);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-lg);
+        background: var(--sfs-surface);
+        box-shadow: var(--sfs-shadow-3);
+    }
+
+    .login-container,
+    .loginform {
+        color: var(--sfs-ink2);
+    }
+
+    #loginlogo {
+        justify-content: flex-start;
+        margin: 0 0 1.75rem;
+    }
+
+    #loginlogo img {
+        width: auto;
+        max-width: min(100%, 360px);
+        max-height: 104px;
+        object-fit: contain;
+    }
+
+    .login-heading,
+    .loginform h1,
+    h1.h2 {
+        margin: 0 0 0.55rem;
+        color: var(--sfs-ink);
+        font-family: "Manrope", "Inter", system-ui, sans-serif;
+        font-size: clamp(2rem, 3vw, 2.75rem);
+        font-weight: 800;
+        letter-spacing: -0.045em;
+        line-height: 1.05;
+    }
+
+    .loginform .text-muted,
+    .login-form-forgotpassword,
+    .login-signup,
+    .login-languagemenu {
+        color: var(--sfs-muted);
+        font-weight: 600;
+    }
+
+    .login-form {
+        margin-top: 1.35rem;
+    }
+
+    .login-form .form-label,
+    .login-form label {
+        color: var(--sfs-ink2);
+        font-weight: 800;
+    }
+
+    .login-form .form-control {
+        min-height: 52px;
+        border: 1px solid var(--sfs-linestrong);
+        border-radius: var(--sfs-radius-sm);
+        background: var(--sfs-surface2);
+        color: var(--sfs-ink);
+        font-weight: 600;
+        box-shadow: none;
+    }
+
+    .login-form .form-control::placeholder {
+        color: var(--sfs-muted);
+        opacity: 1;
+    }
+
+    .login-form .form-control:focus,
+    .login-form .btn:focus,
+    .login-languagemenu .btn:focus {
+        border-color: var(--sfs-primary);
+        box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--sfs-primary) 18%, transparent);
+        outline: 0;
+    }
+
+    .toggle-sensitive-wrapper .form-control {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+
+    .toggle-sensitive-wrapper .toggle-sensitive-btn {
+        min-width: 52px;
+        border-color: var(--sfs-linestrong);
+        border-start-end-radius: var(--sfs-radius-sm);
+        border-end-end-radius: var(--sfs-radius-sm);
+        background: var(--sfs-surface2);
+        color: var(--sfs-muted);
+    }
+
+    .login-form a,
+    .login-signup a,
+    .login-languagemenu .dropdown-toggle {
+        color: var(--sfs-primary);
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .login-form a:hover,
+    .login-signup a:hover,
+    .login-languagemenu .dropdown-toggle:hover {
+        color: var(--sfs-primary700);
+        text-decoration: underline;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.18em;
+    }
+
+    #loginbtn,
+    .login-form .btn-primary {
+        min-height: 52px;
+        border: 1px solid var(--sfs-primary);
+        border-radius: 999px;
+        background: var(--sfs-primary);
+        color: var(--sfs-on-dark);
+        font-weight: 800;
+        box-shadow: var(--sfs-shadow-2);
+    }
+
+    #loginbtn:hover,
+    .login-form .btn-primary:hover {
+        border-color: var(--sfs-primary700);
+        background: var(--sfs-primary700);
+        color: var(--sfs-on-dark);
+    }
+
+    .login-identityprovider-btn,
+    .loginform .btn-secondary,
+    .loginform .btn-outline-secondary {
+        min-height: 50px;
+        border: 1px solid var(--sfs-line);
+        border-radius: 999px;
+        background: var(--sfs-surface);
+        color: var(--sfs-ink2);
+        font-weight: 800;
+        box-shadow: none;
+    }
+
+    .login-identityprovider-btn:hover,
+    .loginform .btn-secondary:hover,
+    .loginform .btn-outline-secondary:hover {
+        border-color: var(--sfs-linestrong);
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+    }
+
+    .login-divider,
+    .login-separator {
+        color: var(--sfs-muted);
+    }
+
+    .login-divider::before,
+    .login-divider::after,
+    .login-separator::before,
+    .login-separator::after {
+        border-color: var(--sfs-line);
+    }
+
+    .login-languagemenu {
+        margin-top: 1.4rem;
+        text-align: center;
+    }
+
+    .login-languagemenu .dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        min-height: 44px;
+        padding: 0.45rem 1rem;
+        border: 1px solid var(--sfs-line);
+        border-radius: 999px;
+        background: var(--sfs-surface2);
+        color: var(--sfs-primary);
+    }
+
+    .login-languagemenu .dropdown-menu {
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        background: var(--sfs-surface);
+        box-shadow: var(--sfs-shadow-3);
+    }
+
+    .login-languagemenu .dropdown-item {
+        color: var(--sfs-ink2);
+        font-weight: 700;
+    }
+
+    .login-languagemenu .dropdown-item:hover,
+    .login-languagemenu .dropdown-item:focus {
+        background: var(--sfs-primary50);
+        color: var(--sfs-primary);
+    }
+
+    .login-cookiesnotice {
+        margin-top: 1rem;
+        color: var(--sfs-muted);
+        font-weight: 600;
+    }
+
+    .login-cookiesnotice .btn-link {
+        color: var(--sfs-primary);
+        font-weight: 800;
+    }
+
+    .alert {
+        border-radius: var(--sfs-radius-md);
+    }
+}
+
+// Boost appends login background CSS after the compiled preset. Keep this more
+// specific than `body.pagelayout-login #page .login-layout-left` so the
+// SecureFood panel is not replaced by the stock photo/AI label.
+body#page-login-index.pagelayout-login #page .login-layout-left {
+    background-color: var(--sfs-primary800);
+    background-image:
+        radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--sfs-accent300) 28%, transparent), transparent 32%),
+        radial-gradient(circle at 86% 76%, color-mix(in srgb, var(--sfs-teal300) 24%, transparent), transparent 34%),
+        linear-gradient(135deg, var(--sfs-primary800), var(--sfs-primary700) 46%, var(--sfs-teal));
+    background-position: center;
+    background-size: cover;
+}
+
+body#page-login-index.pagelayout-login #page .login-layout-left::after {
+    content: none;
+}
+
+@media (max-width: 991.98px) {
+    body.pagelayout-login {
+        .login-layout-right {
+            min-height: 100vh;
+            padding: 1.4rem;
+        }
+
+        .login-container {
+            box-shadow: var(--sfs-shadow-2);
+        }
+
+        #loginlogo {
+            justify-content: center;
+        }
+
+        .login-heading,
+        .loginform h1,
+        h1.h2,
+        .loginform .text-muted {
+            text-align: center;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    body.pagelayout-login {
+        .login-layout-right {
+            padding: 1rem;
+        }
+
+        .login-container {
+            padding: 1.25rem;
+            border-radius: var(--sfs-radius-md);
+        }
+
+        #loginlogo img {
+            max-height: 82px;
+        }
+    }
+}

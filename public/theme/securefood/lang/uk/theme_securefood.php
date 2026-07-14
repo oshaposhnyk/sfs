@@ -95,6 +95,15 @@ $string['togglesidebar'] = 'Згорнути/розгорнути бічну п�
 $string['togglescheme'] = 'Перемкнути колірну схему';
 $string['searchplaceholder'] = 'Пошук курсів, документів…';
 
+// Login page.
+$string['loginpanel_kicker'] = 'SecureFood School';
+$string['loginpanel_title'] = 'Щит для продовольчих систем майбутнього';
+$string['loginpanel_lede'] = 'Отримуйте доступ до навчальних маршрутів, місій Future Food і практичних ресурсів для безпечних та стійких продовольчих систем.';
+$string['loginpanel_chipslabel'] = 'Акценти навчання SecureFood';
+$string['loginpanel_chip_skills'] = 'Прикладні навички';
+$string['loginpanel_chip_labs'] = 'Living Labs';
+$string['loginpanel_chip_network'] = 'Мережа ЄС';
+
 // Default navigation items.
 $string['nav_learning'] = 'Навчання';
 $string['nav_account'] = 'Обліковий запис';

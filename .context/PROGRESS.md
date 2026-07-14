@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-14 (frontpage/sticky-footer cleanup completed)
+Last updated: 2026-07-14 (login page styling implemented; final cache purge pending)
 
 ## Domain status
 
@@ -79,6 +79,31 @@ uk string review (9.6) owner takes it.
   confirms fresh successful runs.
 
 ## Recent work
+
+- **2026-07-14** — **Login page styling `[~]`**:
+  owner reported the login page still uses the Moodle/Boost visual treatment
+  ("Welcome to Moodle" marketing panel and generic form styling). Completed:
+  added a SecureFood-scoped login visual layer, replaced Boost's left login
+  panel copy through a theme template override, and restyled the login form,
+  language menu and guest/identity actions with design tokens. Moodle auth/login
+  endpoints were not changed. Added a high-specificity override for Boost's
+  appended stock login background/AI label CSS without `!important`. Checks:
+  PHP lint clean for touched language files; `git diff --check` clean; no raw
+  hex/actual `!important` declarations in the new login SCSS/template/lang
+  slice; Moodle SCSS compiler smoke succeeded after the final selector change
+  (1,196,879 bytes). Moodle caches were purged before the final specificity
+  selector; the final cache purge/browser visual check is still pending because
+  Docker access was unavailable at the end of the turn. Earlier local HTTP smoke
+  confirmed `sfs-loginpanel` renders and the Boost "Welcome to Moodle" panel
+  copy is gone.
+
+- **2026-07-14** — **Topbar language contrast `[x]`**:
+  owner reported the Boost language selector is unreadable in the SecureFood
+  topbar on the dark scheme. Added scoped SFS topbar styling for the core
+  language menu trigger, icon/text, dropdown, hover/focus and active language
+  rows without overriding the core template. Checks: `git diff --check` clean;
+  no raw hex/actual `!important` declarations in touched SCSS; Moodle SCSS
+  compiler smoke succeeded (1,226,558 bytes); Moodle caches purged.
 
 - **2026-07-14** — **Frontpage/sticky-footer cleanup `[x]`**:
   owner reported two remaining UI regressions: Moodle's profile edit sticky
