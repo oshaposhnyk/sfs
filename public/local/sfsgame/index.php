@@ -197,6 +197,14 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         $chipstate = 'label';
     }
 
+    // Only advertise "+N XP" when the mission can actually award it — i.e. it
+    // links to a completion-tracked activity (P4). A course/external link
+    // never awards, so the promise is hidden; the reward note still explains.
+    $trackable = in_array($completion['state'], [
+        \local_sfsgame\mission_completion::STATE_INCOMPLETE,
+        \local_sfsgame\mission_completion::STATE_COMPLETED,
+    ], true);
+
     $missions[] = [
         'completed' => $missioncompleted,
         'chip' => $chip,
@@ -207,6 +215,7 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         'duration' => format_string($mission['duration']),
         'xp' => $mission['xp'],
         'hasxp' => $mission['xp'] > 0,
+        'showxp' => $mission['xp'] > 0 && $trackable,
         'url' => $link['url'] ?? null,
         'external' => $link['external'] ?? false,
         'reward' => format_string($reward),

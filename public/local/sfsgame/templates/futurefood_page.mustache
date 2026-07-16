@@ -124,7 +124,7 @@
                             <div class="sfs-mission__foot">
                                 {{#hasrewardmeta}}
                                     <span class="sfs-mission__metafoot">
-                                        {{#hasxp}}<span class="sfs-mission__xp">+{{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>{{/hasxp}}
+                                        {{#showxp}}<span class="sfs-mission__xp">+{{xp}} {{#str}}xp, local_sfsgame{{/str}}</span>{{/showxp}}
                                         {{#reward}}<small class="sfs-mission__reward">{{reward}}</small>{{/reward}}
                                         {{#completionlabel}}<small class="sfs-mission__completion sfs-mission__completion--{{completionstate}}">{{completionlabel}}</small>{{/completionlabel}}
                                     </span>

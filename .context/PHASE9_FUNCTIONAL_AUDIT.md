@@ -9,7 +9,7 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
 
 ## Tasks
 
-- ☐ 🔴 **P4 — Mission XP never awards for a course URL.**
+- ◐ 🔴 **P4 — Mission XP never awards for a course URL.** (A+C done 2026-07-16)
   `mission_completion::state_for_url` maps only `/mod/.../view.php?id=cmid`
   to a completion; a `/course/view.php?id=X` link is `untracked`, so the
   advertised mission XP is never granted. Fix: settings-time validation /
@@ -63,7 +63,9 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
 ## Batch plan
 
 1. Low-risk code — ☑ DONE 2026-07-16: **P8** (distinct completed courses; verified 700→650 XP), **P12** (lat/lon in hint), **P5** (chip from real state, admin label fallback).
-2. Discuss config-shape changes before: **P4**, **P9** (change how admins
-   set missions / badge criteria).
+2. ◐ **P4** — variant A (settings hint spells out activity-vs-course) + C
+   (hide "+XP" when the mission is not completion-tracked) DONE; the model
+   itself (activity URL required for XP) is unchanged. **P9** still needs the
+   owner's badge→course/activity mapping.
 3. ☑ 2026-07-16 **P1** — whole-stage rename (by stageid, collision-rejected, updates all courses at once) shipped; stage reordering left to drag-and-drop.
 4. Backlog: P7, P11, P10, P6, P13.
