@@ -409,7 +409,10 @@
         }
 
         .popover-region > .popover-region-toggle,
-        .popover-region > .nav-link {
+        .popover-region > .nav-link,
+        .local-learningplans__nav-link,
+        .local-sfsgame__nav-link,
+        .local-sfsresources__nav-link {
             display: grid;
             place-items: center;
             width: 44px;
@@ -436,8 +439,17 @@
                 margin: 0;
                 color: currentColor;
             }
+
+            // Plugin nav icons ship as pix <img>; size them to match the core
+            // toggle glyphs (notifications/messages).
+            img.icon {
+                width: 20px;
+                height: 20px;
+            }
         }
 
+        // Dark text on the accent so the number reads in both schemes
+        // (was accent-on-accent, near-invisible).
         .count-container {
             position: absolute;
             top: -6px;
@@ -447,9 +459,10 @@
             min-width: 18px;
             height: 18px;
             padding: 0 5px;
+            border: 1px solid var(--sfs-surface);
             border-radius: 999px;
             background: var(--sfs-accent);
-            color: var(--sfs-accent-ondark);
+            color: var(--sfs-on-light);
             font-size: 0.7rem;
             font-weight: 800;
             line-height: 1;

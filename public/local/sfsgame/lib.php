@@ -46,3 +46,31 @@ function local_sfsgame_extend_navigation(global_navigation $navigation): void {
         new pix_icon('icon', '', 'local_sfsgame')
     );
 }
+
+/**
+ * Add a Future Food icon to the top navbar, next to the learning-plans one.
+ *
+ * @param renderer_base $renderer Page renderer.
+ * @return string
+ */
+function local_sfsgame_render_navbar_output(renderer_base $renderer): string {
+    if (!isloggedin() || isguestuser()) {
+        return '';
+    }
+
+    $label = get_string('pluginname', 'local_sfsgame');
+    $icon = $renderer->render(new pix_icon('icon', $label, 'local_sfsgame'));
+    $url = new moodle_url('/local/sfsgame/index.php');
+
+    $link = html_writer::link($url, $icon, [
+        'class' => 'nav-link icon-no-margin local-sfsgame__nav-link',
+        'title' => $label,
+        'aria-label' => $label,
+    ]);
+
+    return html_writer::tag(
+        'div',
+        $link,
+        ['class' => 'local-sfsgame__nav-item d-flex align-items-center']
+    );
+}
