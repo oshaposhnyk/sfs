@@ -62,15 +62,32 @@ function local_sfsgame_render_navbar_output(renderer_base $renderer): string {
     $icon = $renderer->render(new pix_icon('icon', $label, 'local_sfsgame'));
     $url = new moodle_url('/local/sfsgame/index.php');
 
-    $link = html_writer::link($url, $icon, [
+    $out = html_writer::link($url, $icon, [
         'class' => 'nav-link icon-no-margin local-sfsgame__nav-link',
         'title' => $label,
         'aria-label' => $label,
     ]);
 
+    // Shortcut to where the achievements (site badges) are configured — only
+    // for users who can manage badges (managers/admins), not learners.
+    if (has_capability('moodle/badges:createbadge', context_system::instance())) {
+        $managelabel = get_string('nav:manageachievements', 'local_sfsgame');
+        $manageicon = $renderer->render(new pix_icon('i/badge', $managelabel));
+        $out .= html_writer::link(
+            // type=1 is BADGE_TYPE_SITE (badgeslib is not loaded on every page).
+            new moodle_url('/badges/index.php', ['type' => 1]),
+            $manageicon,
+            [
+                'class' => 'nav-link icon-no-margin local-sfsgame__nav-link',
+                'title' => $managelabel,
+                'aria-label' => $managelabel,
+            ]
+        );
+    }
+
     return html_writer::tag(
         'div',
-        $link,
+        $out,
         ['class' => 'local-sfsgame__nav-item d-flex align-items-center']
     );
 }

@@ -27,6 +27,7 @@ declare(strict_types=1);
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Future Food';
+$string['nav:manageachievements'] = 'Керувати досягненнями';
 $string['futurefood'] = 'Future Food';
 $string['kicker'] = 'Адаптивні місії';
 $string['lede'] = 'Короткі сценарні місії, що перетворюють теорію на практичні дії з харчової безпеки. Заробляйте XP, відкривайте бейджі та впливайте на меню майбутнього.';

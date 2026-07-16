@@ -27,6 +27,7 @@ declare(strict_types=1);
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Future Food';
+$string['nav:manageachievements'] = 'Manage achievements';
 $string['futurefood'] = 'Future Food';
 $string['kicker'] = 'Adaptive missions';
 $string['lede'] = 'Short scenario-based missions that turn theory into practical food-safety actions. Earn XP, unlock badges, and influence the menu of tomorrow.';
