@@ -259,7 +259,26 @@ if (!$showmissions) {
 
 $xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed, $missionxp, $xpperbadge, $xppercourse);
 $level = \local_sfsgame\domain\xp_policy::level($xp, $xpperlevel);
-$decisionchoices = \local_sfsgame\decision::parse((string)get_config('local_sfsgame', 'decisionchoices'));
+// Decision choices become a real assessed decision (P7): each choice reflects
+// the completion state of its linked activity, so a completed quiz/choice
+// shows the path as decided; unreachable targets are shown disabled.
+$decisionchoices = [];
+$decisiondecided = false;
+foreach (\local_sfsgame\decision::parse((string)get_config('local_sfsgame', 'decisionchoices')) as $choice) {
+    $state = \local_sfsgame\mission_completion::state_for_url($choice['url'], $userid);
+    $done = !empty($state['completed']);
+    $decisiondecided = $decisiondecided || $done;
+    $accessible = \local_sfsgame\mission_completion::is_accessible($choice['url'], $userid);
+    $decisionchoices[] = [
+        'label' => $choice['label'],
+        'url' => $choice['url'],
+        'icon' => $choice['icon'],
+        'note' => $choice['note'],
+        'completed' => $done,
+        'accessible' => $accessible,
+        'statelabel' => $done ? get_string('decisionchoice:done', 'local_sfsgame') : '',
+    ];
+}
 
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
@@ -318,6 +337,7 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
         get_string('default_decisionbody', 'local_sfsgame')), true, ['escape' => false]),
     'decisionchoices' => $decisionchoices,
     'hasdecisionchoices' => $decisionchoices !== [],
+    'decisiondecided' => $decisiondecided,
     'decisionempty' => format_string($get('decisionempty',
         get_string('decisionempty', 'local_sfsgame')), true, ['escape' => false]),
     'decisionhint' => format_string($get('decisionhint',

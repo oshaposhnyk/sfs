@@ -42,11 +42,12 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
   A marker only renders with numeric `lat`/`lon`, but `abouthubs_desc` shows
   only name/country/type. Fix: add lat/lon to the example (en+uk).
 
-- ☑ 🟡 **P7 — Decision module is a router, not an assessed decision.**
-  Resolved as by-design: the on-page copy already states each choice opens a
-  real Moodle activity and feedback stays there. A genuine assessed decision
-  would mean wiring choices to a choice/quiz activity — a content decision,
-  out of scope. No code change.
+- ☑ 🟡 **P7 — Decision is now an assessed choice.** (owner decision: yes)
+  Each decision choice reflects the completion state of its linked activity —
+  a completed quiz/choice/activity shows the path as "Decided" (green); an
+  unreachable target is shown disabled with a no-access note. Admin points a
+  choice at a real quiz/choice URL and the learner's completion drives the
+  state. Code done; the specific quiz link is content the owner adds later.
 
 - ☑ 🟡 **P11 — Resources KPI numbers are static admin JSON.**
   Resolved as managed: the shipped default is empty, so no mock metric is

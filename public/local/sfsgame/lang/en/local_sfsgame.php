@@ -115,6 +115,7 @@ $string['decisionchoices_desc'] = 'Add, edit or remove real Moodle activity link
 $string['decisionempty'] = 'No real decision activity is configured yet.';
 $string['decisionhint'] = 'Each link opens a real Moodle activity. Feedback stays inside that activity.';
 $string['decisionpill'] = 'Live activity';
+$string['decisionchoice:done'] = 'Decided';
 $string['default_decisionkicker'] = 'Scenario path';
 $string['default_decisiontitle'] = 'Decision point';
 $string['default_decisionbody'] = 'Link each scenario choice to a real Moodle quiz or choice activity. The theme only renders the route; assessment and feedback stay inside Moodle.';

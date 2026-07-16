@@ -115,6 +115,7 @@ $string['decisionchoices_desc'] = 'Додавайте, редагуйте або
 $string['decisionempty'] = 'Реальну активність для рішення ще не налаштовано.';
 $string['decisionhint'] = 'Кожне посилання відкриває реальну Moodle-активність. Зворотний зв’язок лишається всередині неї.';
 $string['decisionpill'] = 'Жива активність';
+$string['decisionchoice:done'] = 'Обрано';
 $string['default_decisionkicker'] = 'Маршрут сценарію';
 $string['default_decisiontitle'] = 'Точка рішення';
 $string['default_decisionbody'] = 'Прив’яжіть кожен варіант сценарію до реальної Moodle-активності типу quiz або choice. Тема лише відображає маршрут; оцінювання та зворотний зв’язок залишаються в Moodle.';

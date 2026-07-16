@@ -162,16 +162,30 @@
             {{#hasdecisionchoices}}
                 <div class="sfs-decision__grid" role="list">
                     {{#decisionchoices}}
-                        <a class="sfs-decision__choice" href="{{url}}" role="listitem">
-                            {{#icon}}
-                                <span class="sfs-decision__icon" aria-hidden="true">{{icon}}</span>
-                            {{/icon}}
-                            <span class="sfs-decision__text">
-                                <span class="sfs-decision__label">{{label}}</span>
-                                {{#note}}<span class="sfs-decision__note">{{note}}</span>{{/note}}
+                        {{#accessible}}
+                            <a class="sfs-decision__choice {{#completed}}sfs-decision__choice--done{{/completed}}" href="{{url}}" role="listitem">
+                                {{#icon}}
+                                    <span class="sfs-decision__icon" aria-hidden="true">{{icon}}</span>
+                                {{/icon}}
+                                <span class="sfs-decision__text">
+                                    <span class="sfs-decision__label">{{label}}</span>
+                                    {{#note}}<span class="sfs-decision__note">{{note}}</span>{{/note}}
+                                    {{#statelabel}}<span class="sfs-decision__state">{{statelabel}}</span>{{/statelabel}}
+                                </span>
+                                <span class="sfs-decision__go" aria-hidden="true"></span>
+                            </a>
+                        {{/accessible}}
+                        {{^accessible}}
+                            <span class="sfs-decision__choice sfs-decision__choice--locked" role="listitem" aria-disabled="true">
+                                {{#icon}}
+                                    <span class="sfs-decision__icon" aria-hidden="true">{{icon}}</span>
+                                {{/icon}}
+                                <span class="sfs-decision__text">
+                                    <span class="sfs-decision__label">{{label}}</span>
+                                    <span class="sfs-decision__note">{{#str}}missionnoaccess, local_sfsgame{{/str}}</span>
+                                </span>
                             </span>
-                            <span class="sfs-decision__go" aria-hidden="true"></span>
-                        </a>
+                        {{/accessible}}
                     {{/decisionchoices}}
                 </div>
                 <p class="sfs-decision__hint">{{decisionhint}}</p>

@@ -471,6 +471,32 @@
         }
     }
 
+    // A completed choice reads as the decision made (P7).
+    .sfs-decision__choice--done {
+        border-color: var(--sfs-success);
+        background: color-mix(in srgb, var(--sfs-success) 10%, var(--sfs-surface2));
+    }
+
+    // A choice the learner can't reach yet: shown, not clickable.
+    .sfs-decision__choice--locked {
+        opacity: 0.6;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--sfs-line);
+        }
+    }
+
+    .sfs-decision__state {
+        display: inline-block;
+        margin-top: 4px;
+        color: var(--sfs-success);
+        font-size: 0.74rem;
+        font-weight: 700;
+    }
+
     .sfs-decision__icon {
         flex: 0 0 auto;
         width: 42px;
