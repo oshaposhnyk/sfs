@@ -27,6 +27,27 @@ declare(strict_types=1);
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Add the Resources & Standards page to the global navigation with its icon.
+ *
+ * @param global_navigation $navigation Global navigation.
+ * @return void
+ */
+function local_sfsresources_extend_navigation(global_navigation $navigation): void {
+    if (!isloggedin() || isguestuser()) {
+        return;
+    }
+
+    $navigation->add(
+        get_string('pluginname', 'local_sfsresources'),
+        new moodle_url('/local/sfsresources/index.php'),
+        navigation_node::TYPE_CUSTOM,
+        null,
+        'local_sfsresources',
+        new pix_icon('icon', '', 'local_sfsresources')
+    );
+}
+
+/**
  * Serve library documents (Phase 6.4, owner-approved filearea storage).
  *
  * Every download re-checks login here — audience tags on the page are

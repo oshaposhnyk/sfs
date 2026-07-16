@@ -47,7 +47,8 @@ function local_learningplans_extend_navigation(global_navigation $navigation): v
         new moodle_url('/local/learningplans/my.php'),
         navigation_node::TYPE_CUSTOM,
         null,
-        'local_learningplans'
+        'local_learningplans',
+        new pix_icon('icon', '', 'local_learningplans')
     );
 
     if ($canviewprogress) {
