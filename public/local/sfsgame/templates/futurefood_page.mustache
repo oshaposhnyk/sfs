@@ -111,7 +111,7 @@
                 {{#missions}}
                     <article class="sfs-mission {{#completed}}sfs-mission--completed{{/completed}}">
                         <div class="sfs-mission__thumb sfs-mission__thumb--{{variant}}">
-                            {{#badge}}<span class="sfs-mission__badge">{{badge}}</span>{{/badge}}
+                            {{#chip}}<span class="sfs-mission__badge sfs-mission__badge--{{chipstate}}">{{chip}}</span>{{/chip}}
                             {{#url}}<span class="sfs-mission__play" aria-hidden="true"></span>{{/url}}
                             {{#duration}}<span class="sfs-mission__duration">{{duration}}</span>{{/duration}}
                         </div>

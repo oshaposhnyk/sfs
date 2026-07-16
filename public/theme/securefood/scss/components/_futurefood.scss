@@ -235,6 +235,18 @@
         font-weight: 700;
     }
 
+    // Real-state chips (P5) — completed / in progress reflect the learner's
+    // actual completion; the plain chip stays the decorative admin label.
+    .sfs-mission__badge--completed {
+        background: var(--sfs-success);
+        color: var(--sfs-on-dark);
+    }
+
+    .sfs-mission__badge--incomplete {
+        background: var(--sfs-accent);
+        color: var(--sfs-on-light);
+    }
+
     .sfs-mission__duration {
         background: color-mix(in srgb, var(--sfs-on-light) 45%, transparent);
         color: var(--sfs-on-dark);

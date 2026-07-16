@@ -117,14 +117,27 @@ foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
     }
 }
 
-// Completed plan courses feed the XP total — summed across every plan the
-// user belongs to, via the MUC-cached progress records (no per-course
-// completion queries; Phase 6.5).
+// Completed plan courses feed the XP total. Counted over the DISTINCT set of
+// courses across every plan the user belongs to — a course shared by two
+// plans must only be counted once (P8), so we resolve real per-course
+// completion rather than summing each plan's cached completed count.
 $completed = 0;
 if (class_exists('\local_learningplans\infrastructure\moodle\factory\learning_plan_service_factory')) {
+    require_once($CFG->libdir . '/completionlib.php');
     $service = \local_learningplans\infrastructure\moodle\factory\learning_plan_service_factory::create();
+    $seencourses = [];
     foreach ($service->get_user_memberships($userid) as $membership) {
-        $completed += $service->get_user_progress($membership->plan_id(), $userid)->completed_courses();
+        foreach ($service->get_plan_courses($membership->plan_id()) as $plancourse) {
+            $cid = $plancourse->course_id();
+            if (isset($seencourses[$cid])) {
+                continue;
+            }
+            $seencourses[$cid] = true;
+            $course = get_course($cid, false);
+            if ($course && (new completion_info($course))->is_course_complete($userid)) {
+                $completed++;
+            }
+        }
     }
 }
 
@@ -169,8 +182,25 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         }
     }
     $link = $missionlink($mission['url']);
+
+    // Thumb chip: when the mission is a real tracked activity, show the
+    // learner's actual state (P5) so it can't contradict their progress;
+    // otherwise fall back to the decorative admin-set badge label.
+    if ($completion['state'] === \local_sfsgame\mission_completion::STATE_COMPLETED) {
+        $chip = get_string('missionchip:completed', 'local_sfsgame');
+        $chipstate = 'completed';
+    } else if ($completion['state'] === \local_sfsgame\mission_completion::STATE_INCOMPLETE) {
+        $chip = get_string('missionchip:incomplete', 'local_sfsgame');
+        $chipstate = 'incomplete';
+    } else {
+        $chip = format_string($mission['badge']);
+        $chipstate = 'label';
+    }
+
     $missions[] = [
         'completed' => $missioncompleted,
+        'chip' => $chip,
+        'chipstate' => $chipstate,
         'badge' => format_string($mission['badge']),
         'title' => format_string($mission['title']),
         'text' => format_string($mission['text']),
