@@ -12,6 +12,14 @@
     }
 }
 
+// Bootstrap `lg` up. Matches the login split, whose left column is
+// `d-none d-lg-flex` (shown from 992px up).
+@mixin sfs-media-min-lg {
+    @media (min-width: 992px) {
+        @content;
+    }
+}
+
 // Motion guard: wrap every transition/animation in this.
 @mixin sfs-motion {
     @media (prefers-reduced-motion: no-preference) {

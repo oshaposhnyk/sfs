@@ -30,18 +30,7 @@ body.pagelayout-login {
         box-shadow: none;
     }
 
-    .login-wrapper {
-        min-height: 100vh;
-        align-items: stretch;
-    }
-
-    // Keep the branded panel in view while a tall login form scrolls, so it
-    // never scrolls away and leaves a bare strip of page background.
     .login-layout-left {
-        position: sticky;
-        top: 0;
-        align-self: start;
-        max-height: 100vh;
         overflow: hidden;
         padding: clamp(32px, 5vw, 72px);
         color: var(--sfs-on-dark);
@@ -169,6 +158,24 @@ body.pagelayout-login {
         background:
             radial-gradient(circle at 84% 16%, color-mix(in srgb, var(--sfs-accent50) 70%, transparent), transparent 26%),
             linear-gradient(180deg, var(--sfs-bg), var(--sfs-bg2));
+    }
+
+    // Desktop split: pin the branded panel to the left half so it never
+    // scrolls (a tall login form scrolls the right column / page only). The
+    // panel is out of flow, so the right column is nudged over to keep the
+    // two-up layout. Mobile (<lg) hides the left panel and is untouched.
+    @include sfs-media-min-lg {
+        .login-layout-left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100vh;
+        }
+
+        .login-layout-right {
+            margin-left: 50%;
+        }
     }
 
     .login-layout-right-content {
