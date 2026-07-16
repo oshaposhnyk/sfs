@@ -42,14 +42,17 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
   A marker only renders with numeric `lat`/`lon`, but `abouthubs_desc` shows
   only name/country/type. Fix: add lat/lon to the example (en+uk).
 
-- ☐ 🟡 **P7 — Decision module is a router, not an assessed decision.**
-  A click records nothing and awards nothing. By design (routes to real
-  activities); align the copy/label with the behaviour, or wire choices to a
-  real choice/quiz activity if a genuine decision is wanted.
+- ☑ 🟡 **P7 — Decision module is a router, not an assessed decision.**
+  Resolved as by-design: the on-page copy already states each choice opens a
+  real Moodle activity and feedback stays there. A genuine assessed decision
+  would mean wiring choices to a choice/quiz activity — a content decision,
+  out of scope. No code change.
 
-- ☐ 🟡 **P11 — Resources KPI numbers are static admin JSON.**
-  Risk of mock-as-fact; default is already empty. Fix (optional): bind to
-  real metrics (e.g. staff trained = L4C completions).
+- ☑ 🟡 **P11 — Resources KPI numbers are static admin JSON.**
+  Resolved as managed: the shipped default is empty, so no mock metric is
+  ever presented as fact; numbers only appear if an admin enters them.
+  Binding to a real metric needs an agreed data source per card (only
+  'staff trained' is computable), so left to an owner decision.
 
 - ☑ 🟡 **P10 — XP constants (100/50/500) are hard-coded.** Done 2026-07-16:
   xpperbadge/xppercourse/xpperlevel plugin settings (defaults 100/50/500);
@@ -58,8 +61,10 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
 - ☑ 🟡 **P6 — Mission link may target a course the learner can't access.** (done 2026-07-16)
   Fix (with P4): check access and hide/disable Start when unreachable.
 
-- ☐ 🟡 **P13 — Standard-navbar plugin icons are bare currentColor SVGs.**
-  Cosmetic; acceptable (matches the long-standing graduation-cap icon).
+- ☑ 🟡 **P13 — Standard-navbar plugin icons are bare currentColor SVGs.**
+  Verified won't-fix 2026-07-16: the icons are uniform (20x16, same colour)
+  and match Boost's own flat navbar icons; making them round buttons would
+  break consistency with standard Boost, so no change.
 
 ## Batch plan
 
@@ -74,4 +79,6 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
    course X' criteria previews.
 3. ☑ 2026-07-16 **P1** — whole-stage rename (by stageid, collision-rejected, updates all courses at once) shipped; stage reordering left to drag-and-drop.
 4. ☑ 2026-07-16 **P6** — mission Start/play hidden (with a "no access" note) when the learner cannot reach the target; external links always allowed.
-5. Backlog: P7 (by design), P11 (needs data source), P13 (cosmetic).
+5. Backlog cleared 2026-07-16: P7 (by design, copy accurate), P11 (managed,
+   empty default; real-metric binding = owner decision), P13 (verified
+   consistent, won't-fix). **Functional audit complete.**
