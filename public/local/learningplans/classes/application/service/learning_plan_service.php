@@ -475,6 +475,25 @@ final class learning_plan_service {
     }
 
     /**
+     * Rename a whole stage (every course in it) by stage id.
+     *
+     * Presentation-only grouping change: no enrolment/progress impact, so no
+     * member recalculation or event — just a progress-cache invalidation.
+     *
+     * @param int $planid Plan id.
+     * @param int $stageid Stage id.
+     * @param string $name New stage name.
+     * @param int $actorid Actor id (permission context).
+     * @return void
+     */
+    public function rename_stage(int $planid, int $stageid, string $name, int $actorid): void {
+        $this->permissionchecker->require_manage();
+        $this->require_plan($planid);
+        $this->planrepository->rename_stage($planid, $stageid, $name);
+        $this->progressrepository->invalidate_plan($planid);
+    }
+
+    /**
      * Apply a full new structure: course order plus stage assignment
      * (drag-and-drop between stage blocks).
      *

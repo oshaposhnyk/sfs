@@ -30,6 +30,17 @@
                         <div class="learning-plan__stage-heading">
                             <span class="learning-plan__stage-heading-name">{{heading}}</span>
                             <span class="learning-plan__stage-heading-count">{{countlabel}}</span>
+                            {{#isstage}}
+                                <form class="learning-plan__stage-rename" method="post" action="{{stageformurl}}">
+                                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                    <input type="hidden" name="action" value="renamestage">
+                                    <input type="hidden" name="stageid" value="{{stageid}}">
+                                    <label class="visually-hidden" for="lp-rename-{{stageid}}">{{labelrenamestage}}</label>
+                                    <input id="lp-rename-{{stageid}}" class="form-control form-control-sm learning-plan__stage-rename-input"
+                                           type="text" name="stagename" value="{{heading}}" maxlength="255">
+                                    <button class="btn btn-secondary btn-sm" type="submit">{{labelrenamestage}}</button>
+                                </form>
+                            {{/isstage}}
                         </div>
                     {{/showheadings}}
                     <ul class="learning-plan__course-list learning-plan__stage-list" data-stageid="{{stageid}}">

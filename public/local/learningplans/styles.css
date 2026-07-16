@@ -129,6 +129,35 @@
     margin-top: 0;
 }
 
+/* Whole-stage rename control, pushed to the right of the heading. */
+.learning-plan__stage-rename {
+    display: flex;
+    align-items: center;
+    gap: .375rem;
+    margin-left: auto;
+}
+
+.learning-plan__stage-rename .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.learning-plan__stage-rename-input {
+    width: 12rem;
+    max-width: 100%;
+}
+
+@media (max-width: 767px) {
+    .learning-plan__stage-heading {
+        flex-wrap: wrap;
+    }
+
+    .learning-plan__stage-rename {
+        margin-left: 0;
+        flex-wrap: wrap;
+    }
+}
+
 .learning-plan__stage-list {
     margin: 0;
     padding: 0;

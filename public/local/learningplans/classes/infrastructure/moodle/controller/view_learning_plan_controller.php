@@ -88,6 +88,24 @@ final class view_learning_plan_controller {
             redirect($url);
         }
 
+        if ($action === 'renamestage') {
+            require_sesskey();
+            $stageid = required_param('stageid', PARAM_INT);
+            $stagename = trim((string)optional_param('stagename', '', PARAM_TEXT));
+            try {
+                $service->rename_stage($planid, $stageid, $stagename, (int)$USER->id);
+                \core\notification::success(get_string('stage:renamed', 'local_learningplans'));
+            } catch (\Throwable $exception) {
+                $messagekey = (string)$exception->getMessage();
+                if (get_string_manager()->string_exists($messagekey, 'local_learningplans')) {
+                    \core\notification::error(get_string($messagekey, 'local_learningplans'));
+                } else {
+                    \core\notification::error(s($messagekey));
+                }
+            }
+            redirect($url);
+        }
+
         $courseid = optional_param('courseid', 0, PARAM_INT);
         if ($action !== '' && $courseid > 0) {
             require_sesskey();
@@ -310,6 +328,7 @@ final class view_learning_plan_controller {
             'labelmovedown' => get_string('plan:view:movedown', 'local_learningplans'),
             'labelstage' => get_string('course:stagename', 'local_learningplans'),
             'labelsavestage' => get_string('plan:view:savestage', 'local_learningplans'),
+            'labelrenamestage' => get_string('plan:view:renamestage', 'local_learningplans'),
             'stageplaceholder' => get_string('plan:view:stageplaceholder', 'local_learningplans'),
             'stageformurl' => $url->out(false),
             'hascourses' => !empty($courserows),

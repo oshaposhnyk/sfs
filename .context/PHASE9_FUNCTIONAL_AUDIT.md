@@ -26,7 +26,7 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
   never earns them by doing anything. Fix (production): switch to course /
   activity completion criteria (as done for Pathfinder).
 
-- ☐ 🟠 **P1 — No whole-stage rename / stage ordering on the plan page.**
+- ☑ 🟠 **P1 — No whole-stage rename / stage ordering on the plan page.**
   Stage grouping is by exact name match, so renaming means retyping the name
   on every course in the stage; a typo splits the stage. Fix: a stage-level
   rename (updates all courses by stageid, not by name) + order controls;
@@ -65,4 +65,5 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
 1. Low-risk code — ☑ DONE 2026-07-16: **P8** (distinct completed courses; verified 700→650 XP), **P12** (lat/lon in hint), **P5** (chip from real state, admin label fallback).
 2. Discuss config-shape changes before: **P4**, **P9** (change how admins
    set missions / badge criteria).
-3. Backlog: P1 (stage UI), P7, P11, P10, P6, P13.
+3. ☑ 2026-07-16 **P1** — whole-stage rename (by stageid, collision-rejected, updates all courses at once) shipped; stage reordering left to drag-and-drop.
+4. Backlog: P7, P11, P10, P6, P13.

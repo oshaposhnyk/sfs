@@ -158,6 +158,35 @@ final class moodle_learning_plan_repository implements learning_plan_repository_
     /**
      * @inheritDoc
      */
+    public function rename_stage(int $planid, int $stageid, string $name): void {
+        global $DB;
+        $name = trim($name);
+        if ($name === '') {
+            throw new \moodle_exception('error:emptystagename', 'local_learningplans');
+        }
+        $stage = $DB->get_record(self::TABLE_STAGE, ['id' => $stageid, 'planid' => $planid]);
+        if (!$stage) {
+            throw new \moodle_exception('error:stagenotfound', 'local_learningplans');
+        }
+        // Names are unique within a plan (find-or-create groups by name).
+        $clash = $DB->record_exists_select(
+            self::TABLE_STAGE,
+            'planid = :planid AND ' . $DB->sql_equal('name', ':name') . ' AND id <> :id',
+            ['planid' => $planid, 'name' => $name, 'id' => $stageid]
+        );
+        if ($clash) {
+            throw new \moodle_exception('error:stagenameexists', 'local_learningplans');
+        }
+        $DB->update_record(self::TABLE_STAGE, (object)[
+            'id' => $stageid,
+            'name' => $name,
+            'timemodified' => time(),
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function restructure_courses(int $planid, array $orderedcourseids, array $stageids): void {
         global $DB;
         if (count($orderedcourseids) !== count($stageids)) {

@@ -153,6 +153,19 @@ interface learning_plan_repository_interface {
     public function get_stages(int $planid): array;
 
     /**
+     * Rename a stage — updates every course in it at once (by stage id).
+     *
+     * Names are unique within a plan, so a clash with another stage of the
+     * same plan is rejected.
+     *
+     * @param int $planid Plan id.
+     * @param int $stageid Stage id.
+     * @param string $name New stage name (non-empty).
+     * @return void
+     */
+    public function rename_stage(int $planid, int $stageid, string $name): void;
+
+    /**
      * Apply a full new structure: course order plus stage assignment.
      *
      * $stageids is parallel to $orderedcourseids (0/null = unstaged). The

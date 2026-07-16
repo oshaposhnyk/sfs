@@ -132,6 +132,49 @@ final class moodle_learning_plan_repository_test extends \advanced_testcase {
     }
 
     /**
+     * Whole-stage rename: updates every course in the stage; rejects a clash
+     * with another stage name in the same plan.
+     */
+    public function test_rename_stage(): void {
+        $this->resetAfterTest();
+        $repository = new moodle_learning_plan_repository();
+
+        $plan = $repository->create(new learning_plan(
+            null, 'Plan D', '', true, true, enrolment_mode::IMMEDIATE, 1, time(), time()
+        ));
+        $planid = (int)$plan->id();
+
+        $c1 = $this->getDataGenerator()->create_course();
+        $c2 = $this->getDataGenerator()->create_course();
+        $c3 = $this->getDataGenerator()->create_course();
+        $repository->add_course($planid, (int)$c1->id, 'Alpha');
+        $repository->add_course($planid, (int)$c2->id, 'Alpha');
+        $repository->add_course($planid, (int)$c3->id, 'Beta');
+
+        $stages = $repository->get_stages($planid);
+        $alpha = (int)$stages[0]->id();
+        $beta = (int)$stages[1]->id();
+
+        // Rename updates both courses in the stage at once.
+        $repository->rename_stage($planid, $alpha, 'Foundations');
+        $names = array_map(static fn($c) => $c->stage_name(), $repository->get_courses($planid));
+        $this->assertSame(['Foundations', 'Foundations', 'Beta'], $names);
+        $this->assertCount(2, $repository->get_stages($planid));
+
+        // Renaming Beta to an existing name in the plan is rejected.
+        try {
+            $repository->rename_stage($planid, $beta, 'Foundations');
+            $this->fail('Expected a clash exception');
+        } catch (\moodle_exception $e) {
+            $this->assertStringContainsString('stagenameexists', $e->errorcode);
+        }
+
+        // Empty name is rejected.
+        $this->expectException(\moodle_exception::class);
+        $repository->rename_stage($planid, $beta, '  ');
+    }
+
+    /**
      * Restructure: order + stage assignment in one operation, with the
      * contiguity invariant and stage sortorder mirroring block order.
      */
