@@ -51,8 +51,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
     /**
      * Add data-theme to <html> when the SecureFood shell is active.
      *
-     * 'light' and 'dark' are stamped explicitly; 'system' omits the attribute
-     * and the prefers-color-scheme fallback in _tokens.scss takes over.
+     * Always stamps the scheme (light/dark/system) in shell mode so the dark
+     * tokens are scoped to the shell: standard Boost pages carry no attribute
+     * and therefore never inherit the SecureFood dark palette even when the
+     * OS prefers dark ('system' + prefers-color-scheme owns the dark fallback
+     * via _tokens.scss `[data-theme="system"]`).
      *
      * @return string HTML attributes for the html element.
      */
@@ -65,9 +68,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if (isloggedin() && !isguestuser()) {
             $scheme = get_user_preferences('theme_securefood_colourscheme', 'system');
         }
-        if ($scheme === 'light' || $scheme === 'dark') {
-            $attributes .= ' data-theme="' . $scheme . '"';
+        if (!in_array($scheme, ['light', 'dark', 'system'], true)) {
+            $scheme = 'system';
         }
+        $attributes .= ' data-theme="' . $scheme . '"';
         return $attributes;
     }
 

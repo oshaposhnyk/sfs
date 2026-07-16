@@ -102,8 +102,12 @@
     @include sfs-dark-tokens;
 }
 
+// Scoped to the shell's explicit "system" scheme so standard Boost pages
+// (no data-theme attribute) never inherit the dark palette on an OS that
+// prefers dark — otherwise --sfs-* consumers (e.g. plugin status pills)
+// would flip dark while the surrounding Boost UI stayed light.
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+    :root[data-theme="system"] {
         @include sfs-dark-tokens;
     }
 }

@@ -21,9 +21,15 @@
 .learning-plan__header {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
     justify-content: space-between;
     gap: .75rem;
     margin-bottom: 1rem;
+}
+
+.learning-plan__intro {
+    max-width: 60ch;
+    color: var(--sfs-muted, #5D7079);
 }
 
 .learning-plan__header--list {
@@ -152,6 +158,11 @@
     display: flex;
     align-items: center;
     gap: .375rem;
+}
+
+.learning-plan__stage-form .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .learning-plan__stage-input {

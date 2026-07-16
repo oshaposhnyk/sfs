@@ -155,19 +155,16 @@ const toggleSidebar = (button) => {
 /**
  * Apply the colour-scheme preference to the current document.
  *
- * Explicit light/dark preferences are stamped on <html>; system removes the
- * attribute so the CSS prefers-color-scheme fallback owns the effective theme.
+ * All three preferences are stamped on <html> (data-theme="system" included)
+ * so the dark palette stays scoped to the shell: the CSS `[data-theme="system"]`
+ * rule under prefers-color-scheme owns the system dark fallback, and standard
+ * Boost pages — which carry no attribute — never inherit the dark tokens.
  *
  * @param {HTMLElement} button The scheme toggle button.
  * @param {string} preference One of light, dark, system.
  */
 const applySchemePreference = (button, preference) => {
-    const root = document.documentElement;
-    if (preference === 'system') {
-        root.removeAttribute('data-theme');
-    } else {
-        root.dataset.theme = preference;
-    }
+    document.documentElement.dataset.theme = preference;
     button.dataset.sfsSchemePreference = preference;
 };
 

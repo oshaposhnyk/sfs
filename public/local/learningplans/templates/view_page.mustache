@@ -1,13 +1,12 @@
 <section class="learning-plan">
+    {{! The plan name is already the page heading (set_heading); the template
+        only carries the description and the management actions. }}
     <div class="learning-plan__header">
-        <div>
-            <h2>{{title}}</h2>
-            <div>{{{description}}}</div>
-        </div>
+        {{#description}}<div class="learning-plan__intro">{{{description}}}</div>{{/description}}
         <div class="learning-plan__actions">
-            <a class="btn btn-secondary" href="{{editurl}}">{{labeledit}}</a>
-            <a class="btn btn-secondary" href="{{cohortsurl}}">{{labelmanagecohorts}}</a>
-            <a class="btn btn-primary" href="{{enrolurl}}">{{labelmanageenrolments}}</a>
+            <a class="btn btn-secondary learning-plan__action-btn" href="{{editurl}}">{{labeledit}}</a>
+            <a class="btn btn-secondary learning-plan__action-btn" href="{{cohortsurl}}">{{labelmanagecohorts}}</a>
+            <a class="btn btn-primary learning-plan__action-btn" href="{{enrolurl}}">{{labelmanageenrolments}}</a>
         </div>
     </div>
 
