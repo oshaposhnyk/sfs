@@ -61,7 +61,18 @@ class core_renderer extends \theme_boost\output\core_renderer {
      */
     public function htmlattributes() {
         $attributes = parent::htmlattributes();
+
+        // Pre-auth login page: no user preference exists, so the scheme is
+        // driven by a cookie the on-page toggle writes (default 'system' so
+        // the page follows the OS). Stamped server-side to avoid a flash.
         if (!mode_manager::uses_shell($this->page)) {
+            if ($this->page->pagelayout === 'login') {
+                $scheme = $_COOKIE['theme_securefood_loginscheme'] ?? 'system';
+                if (!in_array($scheme, ['light', 'dark', 'system'], true)) {
+                    $scheme = 'system';
+                }
+                $attributes .= ' data-theme="' . $scheme . '"';
+            }
             return $attributes;
         }
         $scheme = 'system';

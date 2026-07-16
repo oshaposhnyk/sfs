@@ -25,6 +25,13 @@
         "leftinstructions": "<p>Custom login instructions.</p>"
     }
 }}
+<button type="button" class="sfs-loginscheme" data-sfs-loginscheme
+        aria-label="{{#str}}togglescheme, theme_securefood{{/str}}"
+        title="{{#str}}togglescheme, theme_securefood{{/str}}">
+    <span class="sfs-icon sfs-loginscheme__icon--dark" aria-hidden="true">dark_mode</span>
+    <span class="sfs-icon sfs-loginscheme__icon--light" aria-hidden="true">light_mode</span>
+    <span class="sfs-icon sfs-loginscheme__icon--system" aria-hidden="true">brightness_auto</span>
+</button>
 <div class="login-layout-left-content sfs-loginpanel">
     {{^leftinstructions}}
         <span class="sfs-loginpanel__kicker">{{#str}}loginpanel_kicker, theme_securefood{{/str}}</span>
@@ -42,3 +49,8 @@
         </div>
     {{/leftinstructions}}
 </div>
+{{#js}}
+require(['theme_securefood/loginscheme'], function(loginscheme) {
+    loginscheme.init();
+});
+{{/js}}

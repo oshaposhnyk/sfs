@@ -4,6 +4,11 @@
 body.pagelayout-login {
     background: var(--sfs-bg);
     color: var(--sfs-ink2);
+    // Re-point Bootstrap's secondary-colour variable at the SecureFood muted
+    // token: `.text-muted` is `color: var(--bs-secondary-color) !important`, so
+    // overriding the variable (not the property) makes it track the active
+    // scheme without needing our own !important.
+    --bs-secondary-color: var(--sfs-muted);
     font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
 
@@ -27,9 +32,16 @@ body.pagelayout-login {
 
     .login-wrapper {
         min-height: 100vh;
+        align-items: stretch;
     }
 
+    // Keep the branded panel in view while a tall login form scrolls, so it
+    // never scrolls away and leaves a bare strip of page background.
     .login-layout-left {
+        position: sticky;
+        top: 0;
+        align-self: start;
+        max-height: 100vh;
         overflow: hidden;
         padding: clamp(32px, 5vw, 72px);
         color: var(--sfs-on-dark);
@@ -202,6 +214,7 @@ body.pagelayout-login {
         line-height: 1.05;
     }
 
+    .login-container .text-muted,
     .loginform .text-muted,
     .login-form-forgotpassword,
     .login-signup,
@@ -431,5 +444,56 @@ body#page-login-index.pagelayout-login #page .login-layout-left::after {
         #loginlogo img {
             max-height: 82px;
         }
+    }
+}
+
+// Colour-scheme toggle (pre-auth; persisted via cookie, see loginscheme.js).
+body.pagelayout-login {
+    .sfs-loginscheme {
+        position: fixed;
+        top: 18px;
+        right: 20px;
+        z-index: 10;
+        display: inline-grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--sfs-line);
+        border-radius: 999px;
+        background: var(--sfs-surface);
+        color: var(--sfs-ink2);
+        box-shadow: var(--sfs-shadow-1);
+        cursor: pointer;
+
+        &:hover {
+            border-color: var(--sfs-linestrong);
+            color: var(--sfs-primary);
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+
+        .sfs-icon {
+            font-size: 22px;
+        }
+    }
+
+    // Show only the icon matching the active scheme.
+    .sfs-loginscheme .sfs-loginscheme__icon--dark,
+    .sfs-loginscheme .sfs-loginscheme__icon--light,
+    .sfs-loginscheme .sfs-loginscheme__icon--system {
+        display: none;
+    }
+
+    .sfs-loginscheme[data-sfs-scheme="dark"] .sfs-loginscheme__icon--dark,
+    .sfs-loginscheme[data-sfs-scheme="light"] .sfs-loginscheme__icon--light,
+    .sfs-loginscheme[data-sfs-scheme="system"] .sfs-loginscheme__icon--system {
+        display: inline-block;
+    }
+
+    // Before JS sets the state, show the system icon as the default.
+    .sfs-loginscheme:not([data-sfs-scheme]) .sfs-loginscheme__icon--system {
+        display: inline-block;
     }
 }
