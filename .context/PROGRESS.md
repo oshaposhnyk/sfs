@@ -80,6 +80,27 @@ uk string review (9.6) owner takes it.
 
 ## Recent work
 
+- **2026-07-16** — **Owner feedback batch (4 fixes)**:
+  1. *Plan page double heading* — the plan name showed as both the core page
+     heading and a template `<h2>`; dropped the template duplicate (kept the
+     lead description + actions), and stopped the 'Save stage' buttons
+     wrapping.
+  2. *Status pill "weird colour"* — root cause was the SFS dark-token media
+     query (`:root:not([data-theme="light"])`) leaking into standard Boost
+     pages under OS dark, flipping `--sfs-*` consumers dark on a light page.
+     Shell now always stamps data-theme (light/dark/**system**) and the dark
+     fallback is scoped to `:root[data-theme="system"]`; standard-mode pages
+     (no attribute) stay light. Verified SFS system-dark still works.
+  3. *Plugin navbar icons* — added `pix/icon.svg` to learningplans, sfsgame,
+     sfsresources and attached each to its global-navigation node (added
+     nav hooks to sfsgame/sfsresources). Icons render in the admin plugin
+     list; the SFS sidebar already had per-plugin glyphs.
+  4. *Login page* — added a persisted colour-scheme toggle (cookie read
+     server-side in htmlattributes; default 'system' follows OS), made the
+     branded left panel sticky so it no longer scrolls away, and fixed the
+     dark subtitle contrast by re-pointing `--bs-secondary-color` at
+     `--sfs-muted` (no !important).
+
 - **2026-07-14** — **Login page styling `[~]`**:
   owner reported the login page still uses the Moodle/Boost visual treatment
   ("Welcome to Moodle" marketing panel and generic form styling). Completed:
