@@ -45,6 +45,26 @@ if ($hassiteconfig) {
         ));
     }
 
+    // XP economy (P10) — no-code tuning of the rates the level system uses.
+    $settings->add(new admin_setting_heading(
+        'local_sfsgame/xpheading',
+        get_string('settings:xpheading', 'local_sfsgame'),
+        get_string('settings:xpheading_desc', 'local_sfsgame')
+    ));
+    foreach ([
+        'xpperbadge' => \local_sfsgame\domain\xp_policy::XP_PER_BADGE,
+        'xppercourse' => \local_sfsgame\domain\xp_policy::XP_PER_COURSE,
+        'xpperlevel' => \local_sfsgame\domain\xp_policy::XP_PER_LEVEL,
+    ] as $name => $default) {
+        $settings->add(new admin_setting_configtext(
+            "local_sfsgame/{$name}",
+            get_string("setting:{$name}", 'local_sfsgame'),
+            get_string("setting:{$name}_desc", 'local_sfsgame'),
+            (string)$default,
+            PARAM_INT
+        ));
+    }
+
     foreach (['pagekicker', 'pagetitle', 'achievementstitle', 'missionstitle'] as $name) {
         $settings->add(new admin_setting_configtext(
             "local_sfsgame/{$name}",

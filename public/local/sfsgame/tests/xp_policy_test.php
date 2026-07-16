@@ -56,4 +56,18 @@ final class xp_policy_test extends \basic_testcase {
         $this->assertSame(0, xp_policy::level_progress(0));
         $this->assertSame(50, xp_policy::level_progress(250));
     }
+
+    public function test_configurable_rates(): void {
+        // Custom per-badge (10) and per-course (5): 2*10 + 3*5 + 7 = 42.
+        $this->assertSame(42, xp_policy::xp(2, 3, 7, 10, 5));
+        // Custom per-level (200): level, remaining, progress track it.
+        $this->assertSame(2, xp_policy::level(200, 200));
+        $this->assertSame(3, xp_policy::level(400, 200));
+        $this->assertSame(50, xp_policy::level_progress(100, 200));
+        $this->assertSame(150, xp_policy::to_next_level(50, 200));
+        // Null / non-positive rates fall back to the defaults.
+        $this->assertSame(100, xp_policy::xp(1, 0, 0, null, null));
+        $this->assertSame(100, xp_policy::xp(1, 0, 0, 0, -5));
+        $this->assertSame(2, xp_policy::level(500, 0));
+    }
 }

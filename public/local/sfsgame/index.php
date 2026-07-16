@@ -55,6 +55,15 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(format_string($pagetitle));
 $PAGE->set_heading(format_string($pagetitle));
 
+// Admin-configurable XP rates (P10); positive int or the policy default.
+$rate = static function (string $name, int $default): int {
+    $value = (int)get_config('local_sfsgame', $name);
+    return $value > 0 ? $value : $default;
+};
+$xpperbadge = $rate('xpperbadge', \local_sfsgame\domain\xp_policy::XP_PER_BADGE);
+$xppercourse = $rate('xppercourse', \local_sfsgame\domain\xp_policy::XP_PER_COURSE);
+$xpperlevel = $rate('xpperlevel', \local_sfsgame\domain\xp_policy::XP_PER_LEVEL);
+
 // Earned + available site badges.
 $earned = badges_get_user_badges($userid);
 $earnedids = [];
@@ -102,7 +111,7 @@ foreach ($earned as $badge) {
         'name' => format_string($badge->name),
         'earned' => true,
         'imageurl' => $badgeimage((int)$badge->id),
-        'xplabel' => '+' . \local_sfsgame\domain\xp_policy::XP_PER_BADGE . ' XP',
+        'xplabel' => '+' . $xpperbadge . ' XP',
     ];
 }
 foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
@@ -248,8 +257,8 @@ if (!$showmissions) {
     }
 }
 
-$xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed, $missionxp);
-$level = \local_sfsgame\domain\xp_policy::level($xp);
+$xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed, $missionxp, $xpperbadge, $xppercourse);
+$level = \local_sfsgame\domain\xp_policy::level($xp, $xpperlevel);
 $decisionchoices = \local_sfsgame\decision::parse((string)get_config('local_sfsgame', 'decisionchoices'));
 
 echo $OUTPUT->header();
@@ -281,11 +290,11 @@ echo $OUTPUT->render_from_template('local_sfsgame/futurefood_page', [
         get_string('totalxp', 'local_sfsgame')), true, ['escape' => false]),
     'level' => $level,
     'xp' => $xp,
-    'levelprogress' => \local_sfsgame\domain\xp_policy::level_progress($xp),
+    'levelprogress' => \local_sfsgame\domain\xp_policy::level_progress($xp, $xpperlevel),
     'xptonext' => get_string('progresstolevel', 'local_sfsgame', [
         'next' => $level + 1,
-        'current' => $xp % \local_sfsgame\domain\xp_policy::XP_PER_LEVEL,
-        'target' => \local_sfsgame\domain\xp_policy::XP_PER_LEVEL,
+        'current' => $xp % $xpperlevel,
+        'target' => $xpperlevel,
     ]),
     'badgecount' => get_string('badgecount', 'local_sfsgame', count($earnedids)),
     'achievementstitle' => format_string($get('achievementstitle',

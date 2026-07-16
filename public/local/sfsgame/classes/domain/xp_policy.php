@@ -43,16 +43,38 @@ final class xp_policy {
     public const XP_PER_LEVEL = 500;
 
     /**
+     * Normalise a configurable rate to a positive int, or fall back.
+     *
+     * @param int|null $value Configured value.
+     * @param int $default Default (the per-* constant).
+     * @return int
+     */
+    private static function rate(?int $value, int $default): int {
+        return ($value !== null && $value > 0) ? $value : $default;
+    }
+
+    /**
      * Total XP.
+     *
+     * Rates are optional (admin-configurable, ADR-007); null uses the default
+     * constant, so the domain stays pure — callers pass the resolved rates.
      *
      * @param int $badges Earned badge count.
      * @param int $completedcourses Completed course count.
      * @param int $missionxp XP from completed mission activities.
+     * @param int|null $perbadge XP per badge (default XP_PER_BADGE).
+     * @param int|null $percourse XP per completed course (default XP_PER_COURSE).
      * @return int
      */
-    public static function xp(int $badges, int $completedcourses, int $missionxp = 0): int {
-        return max(0, $badges) * self::XP_PER_BADGE
-            + max(0, $completedcourses) * self::XP_PER_COURSE
+    public static function xp(
+        int $badges,
+        int $completedcourses,
+        int $missionxp = 0,
+        ?int $perbadge = null,
+        ?int $percourse = null
+    ): int {
+        return max(0, $badges) * self::rate($perbadge, self::XP_PER_BADGE)
+            + max(0, $completedcourses) * self::rate($percourse, self::XP_PER_COURSE)
             + max(0, $missionxp);
     }
 
@@ -60,29 +82,34 @@ final class xp_policy {
      * Level for an XP total (level 1 at 0 XP).
      *
      * @param int $xp XP total.
+     * @param int|null $perlevel XP per level (default XP_PER_LEVEL).
      * @return int
      */
-    public static function level(int $xp): int {
-        return intdiv(max(0, $xp), self::XP_PER_LEVEL) + 1;
+    public static function level(int $xp, ?int $perlevel = null): int {
+        return intdiv(max(0, $xp), self::rate($perlevel, self::XP_PER_LEVEL)) + 1;
     }
 
     /**
      * XP still needed for the next level.
      *
      * @param int $xp XP total.
+     * @param int|null $perlevel XP per level (default XP_PER_LEVEL).
      * @return int
      */
-    public static function to_next_level(int $xp): int {
-        return self::XP_PER_LEVEL - (max(0, $xp) % self::XP_PER_LEVEL);
+    public static function to_next_level(int $xp, ?int $perlevel = null): int {
+        $perlevel = self::rate($perlevel, self::XP_PER_LEVEL);
+        return $perlevel - (max(0, $xp) % $perlevel);
     }
 
     /**
      * Progress towards the next level, 0–100.
      *
      * @param int $xp XP total.
+     * @param int|null $perlevel XP per level (default XP_PER_LEVEL).
      * @return int
      */
-    public static function level_progress(int $xp): int {
-        return (int)round((max(0, $xp) % self::XP_PER_LEVEL) / self::XP_PER_LEVEL * 100);
+    public static function level_progress(int $xp, ?int $perlevel = null): int {
+        $perlevel = self::rate($perlevel, self::XP_PER_LEVEL);
+        return (int)round((max(0, $xp) % $perlevel) / $perlevel * 100);
     }
 }
