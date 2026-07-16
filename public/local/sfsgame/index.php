@@ -182,6 +182,11 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         }
     }
     $link = $missionlink($mission['url']);
+    // Can the learner actually reach the target? (P6) Hide Start when a
+    // mission points at a course/activity they cannot access.
+    $canstart = $link !== null
+        && \local_sfsgame\mission_completion::is_accessible((string)$mission['url'], $userid);
+    $noaccess = $link !== null && !$canstart;
 
     // Thumb chip: when the mission is a real tracked activity, show the
     // learner's actual state (P5) so it can't contradict their progress;
@@ -217,6 +222,8 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         'hasxp' => $mission['xp'] > 0,
         'showxp' => $mission['xp'] > 0 && $trackable,
         'url' => $link['url'] ?? null,
+        'canstart' => $canstart,
+        'noaccess' => $noaccess,
         'external' => $link['external'] ?? false,
         'reward' => format_string($reward),
         'hasrewardmeta' => $mission['xp'] > 0 || $reward !== '',

@@ -84,6 +84,7 @@ $string['missionrewardawarded'] = 'Нараховано: +{$a} XP';
 $string['missionrewardnottracked'] = 'Автоматичний XP для цього посилання не нараховується. Використайте Moodle-активність з completion, щоб нарахувати +{$a} XP.';
 $string['missionchip:completed'] = 'Завершено';
 $string['missionchip:incomplete'] = 'У процесі';
+$string['missionnoaccess'] = 'У вас поки немає доступу до цієї місії.';
 $string['missioncompletion:completed'] = 'Завершено · XP нараховано';
 $string['missioncompletion:incomplete'] = 'Завершіть активність, щоб отримати XP';
 $string['missioncompletion:notcompletable'] = 'Completion для активності не увімкнено';

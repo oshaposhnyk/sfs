@@ -112,7 +112,7 @@
                     <article class="sfs-mission {{#completed}}sfs-mission--completed{{/completed}}">
                         <div class="sfs-mission__thumb sfs-mission__thumb--{{variant}}">
                             {{#chip}}<span class="sfs-mission__badge sfs-mission__badge--{{chipstate}}">{{chip}}</span>{{/chip}}
-                            {{#url}}<span class="sfs-mission__play" aria-hidden="true"></span>{{/url}}
+                            {{#canstart}}<span class="sfs-mission__play" aria-hidden="true"></span>{{/canstart}}
                             {{#duration}}<span class="sfs-mission__duration">{{duration}}</span>{{/duration}}
                         </div>
                         <div class="sfs-mission__body">
@@ -129,12 +129,15 @@
                                         {{#completionlabel}}<small class="sfs-mission__completion sfs-mission__completion--{{completionstate}}">{{completionlabel}}</small>{{/completionlabel}}
                                     </span>
                                 {{/hasrewardmeta}}
-                                {{#url}}
+                                {{#canstart}}
                                     <a class="sfs-mission__action btn btn-primary" href="{{url}}"
                                        {{#external}}target="_blank" rel="noopener noreferrer"{{/external}}>
                                         {{startmissionlabel}}
                                     </a>
-                                {{/url}}
+                                {{/canstart}}
+                                {{#noaccess}}
+                                    <span class="sfs-mission__noaccess">{{#str}}missionnoaccess, local_sfsgame{{/str}}</span>
+                                {{/noaccess}}
                             </div>
                         </div>
                     </article>

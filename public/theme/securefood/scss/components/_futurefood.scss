@@ -316,6 +316,15 @@
         line-height: 1.35;
     }
 
+    // Shown instead of Start when the learner can't reach the target (P6).
+    .sfs-mission__noaccess {
+        align-self: center;
+        color: var(--sfs-muted);
+        font-size: 0.78rem;
+        font-weight: 600;
+        font-style: italic;
+    }
+
     .sfs-mission__completion {
         display: inline-flex;
         align-items: center;

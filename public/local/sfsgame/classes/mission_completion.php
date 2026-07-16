@@ -94,6 +94,62 @@ final class mission_completion {
     }
 
     /**
+     * Whether the learner can actually reach a mission target (P6).
+     *
+     * External links are always "reachable" (they open elsewhere). For a
+     * local activity the course-module must be uservisible; for a course link
+     * the learner must be able to access the course. Anything we cannot
+     * resolve defaults to reachable so a mission is never hidden by mistake.
+     *
+     * @param string $url Raw configured URL.
+     * @param int $userid User id.
+     * @return bool
+     */
+    public static function is_accessible(string $url, int $userid): bool {
+        $url = trim($url);
+        if ($url === '') {
+            return false;
+        }
+
+        // External URL: reachable (opens in a new tab).
+        try {
+            $moodleurl = new \moodle_url($url);
+        } catch (\Throwable $exception) {
+            return false;
+        }
+        if (preg_match('~^https?://~i', $url) === 1 && !$moodleurl->is_local_url()) {
+            return true;
+        }
+
+        // Local activity link: the course-module must be visible to the user.
+        $cmid = self::cmid_from_url($url);
+        if ($cmid !== null) {
+            $record = get_coursemodule_from_id('', $cmid, 0, false, IGNORE_MISSING);
+            if (!$record) {
+                return false;
+            }
+            try {
+                $modinfo = get_fast_modinfo((int)$record->course, $userid);
+                return $modinfo->get_cm($cmid)->uservisible;
+            } catch (\Throwable $exception) {
+                return false;
+            }
+        }
+
+        // Local course link: the learner must be able to access the course.
+        if ($moodleurl->get_path(false) === '/course/view.php') {
+            $courseid = (int)$moodleurl->get_param('id');
+            if ($courseid > 0) {
+                $course = get_course($courseid, false);
+                return $course && can_access_course($course, \core_user::get_user($userid) ?: null);
+            }
+        }
+
+        // Any other internal route: don't second-guess it.
+        return true;
+    }
+
+    /**
      * Extract a course-module id from a Moodle activity URL.
      *
      * @param string $url Raw configured URL.

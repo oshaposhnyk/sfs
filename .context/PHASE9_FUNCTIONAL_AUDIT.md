@@ -54,7 +54,7 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
 - ☐ 🟡 **P10 — XP constants (100/50/500) are hard-coded.** Optional: expose
   as plugin settings.
 
-- ☐ 🟡 **P6 — Mission link may target a course the learner can't access.**
+- ☑ 🟡 **P6 — Mission link may target a course the learner can't access.** (done 2026-07-16)
   Fix (with P4): check access and hide/disable Start when unreachable.
 
 - ☐ 🟡 **P13 — Standard-navbar plugin icons are bare currentColor SVGs.**
@@ -72,4 +72,5 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
    Rookie via real SFS101 completion, the rest are locked with 'complete
    course X' criteria previews.
 3. ☑ 2026-07-16 **P1** — whole-stage rename (by stageid, collision-rejected, updates all courses at once) shipped; stage reordering left to drag-and-drop.
-4. Backlog: P7, P11, P10, P6, P13.
+4. ☑ 2026-07-16 **P6** — mission Start/play hidden (with a "no access" note) when the learner cannot reach the target; external links always allowed.
+5. Backlog: P7, P11, P10, P13.
