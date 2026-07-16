@@ -21,7 +21,7 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
   membership, so a course in 2 plans = 2×50 XP. Fix: count DISTINCT completed
   course ids across the learner's plans.
 
-- ☐ 🟠 **P9 — Demo achievement badges can't be earned by activity.**
+- ☑ 🟠 **P9 — Demo achievement badges can't be earned by activity.** (done 2026-07-16, config)
   The seeded badges use a manual "award by Manager" criterion, so a learner
   never earns them by doing anything. Fix (production): switch to course /
   activity completion criteria (as done for Pathfinder).
@@ -63,9 +63,13 @@ Priority: 🔴 high (misleading / wrong data) · 🟠 medium (UX / management) �
 ## Batch plan
 
 1. Low-risk code — ☑ DONE 2026-07-16: **P8** (distinct completed courses; verified 700→650 XP), **P12** (lat/lon in hint), **P5** (chip from real state, admin label fallback).
-2. ◐ **P4** — variant A (settings hint spells out activity-vs-course) + C
-   (hide "+XP" when the mission is not completion-tracked) DONE; the model
-   itself (activity URL required for XP) is unchanged. **P9** still needs the
-   owner's badge→course/activity mapping.
+2. ◐ **P4** — A (settings hint) + C (hide "+XP" when untracked) DONE; the
+   underlying model (activity URL required for XP) is unchanged by choice.
+   ☑ **P9** DONE — demo badges moved to course-completion (courseset)
+   criteria (data only, no code): Lab Rookie→SFS101, Guardian→SFS102,
+   Eco Pioneer→SFS103, Streak Keeper→SFS104, Protein Pathfinder→SFS101+102+103
+   (all), Validator→all four. Manual issues revoked; learner now earns Lab
+   Rookie via real SFS101 completion, the rest are locked with 'complete
+   course X' criteria previews.
 3. ☑ 2026-07-16 **P1** — whole-stage rename (by stageid, collision-rejected, updates all courses at once) shipped; stage reordering left to drag-and-drop.
 4. Backlog: P7, P11, P10, P6, P13.
