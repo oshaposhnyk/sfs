@@ -94,6 +94,41 @@ final class mission_completion {
     }
 
     /**
+     * Real course progress (0–100) for a mission that links to a course (FF-4).
+     *
+     * Only for `/course/view.php?id=X` links where the course has completion
+     * enabled and the learner is enrolled; returns null otherwise (activity /
+     * external / no completion) so no fake progress bar is shown.
+     *
+     * @param string $url Raw configured URL.
+     * @param int $userid User id.
+     * @return int|null Percentage 0–100, or null when not applicable.
+     */
+    public static function course_progress_for_url(string $url, int $userid): ?int {
+        global $CFG;
+        require_once($CFG->libdir . '/completionlib.php');
+
+        try {
+            $moodleurl = new \moodle_url(trim($url));
+        } catch (\Throwable $exception) {
+            return null;
+        }
+        if ($moodleurl->get_path(false) !== '/course/view.php') {
+            return null;
+        }
+        $courseid = (int)$moodleurl->get_param('id');
+        if ($courseid <= 1) {
+            return null;
+        }
+        $course = get_course($courseid, false);
+        if (!$course || !(new \completion_info($course))->is_enabled()) {
+            return null;
+        }
+        $percentage = \core_completion\progress::get_course_progress_percentage($course, $userid);
+        return $percentage === null ? null : (int)round($percentage);
+    }
+
+    /**
      * Whether the learner can actually reach a mission target (P6).
      *
      * External links are always "reachable" (they open elsewhere). For a

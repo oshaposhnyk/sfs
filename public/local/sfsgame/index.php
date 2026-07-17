@@ -238,6 +238,10 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         \local_sfsgame\mission_completion::STATE_COMPLETED,
     ], true);
 
+    // Real course progress for a course-linked mission (FF-4); null otherwise.
+    $courseprogress = \local_sfsgame\mission_completion::course_progress_for_url(
+        (string)$mission['url'], $userid);
+
     $missions[] = [
         'completed' => $missioncompleted,
         'chip' => $chip,
@@ -252,6 +256,8 @@ foreach (\local_sfsgame\missions::parse((string)get_config('local_sfsgame', 'mis
         'url' => $link['url'] ?? null,
         'canstart' => $canstart,
         'noaccess' => $noaccess,
+        'hasprogress' => $courseprogress !== null,
+        'progress' => $courseprogress ?? 0,
         'external' => $link['external'] ?? false,
         'reward' => format_string($reward),
         'hasrewardmeta' => $mission['xp'] > 0 || $reward !== '',

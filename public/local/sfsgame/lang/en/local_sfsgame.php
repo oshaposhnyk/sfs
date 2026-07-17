@@ -94,6 +94,7 @@ $string['missionrewardawarded'] = 'Awarded: +{$a} XP';
 $string['missionrewardnottracked'] = 'No automatic XP for this link. Use a Moodle activity with completion to award +{$a} XP.';
 $string['missionchip:completed'] = 'Completed';
 $string['missionchip:incomplete'] = 'In progress';
+$string['missionprogress'] = '{$a}% complete';
 $string['missionnoaccess'] = 'You do not have access to this mission yet.';
 $string['missioncompletion:completed'] = 'Completed · XP awarded';
 $string['missioncompletion:incomplete'] = 'Complete the activity to earn XP';

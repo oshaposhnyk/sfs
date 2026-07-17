@@ -766,3 +766,35 @@
         position: relative;
     }
 }
+
+// Course-linked mission progress (FF-4) — real course completion %.
+.sfs-mode {
+    .sfs-mission__progress {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px;
+    }
+
+    .sfs-mission__progressbar {
+        flex: 1 1 auto;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--sfs-surface2);
+        overflow: hidden;
+    }
+
+    .sfs-mission__progressfill {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--sfs-accent);
+    }
+
+    .sfs-mission__progresslabel {
+        flex: 0 0 auto;
+        color: var(--sfs-muted);
+        font-size: 0.74rem;
+        font-weight: 600;
+    }
+}

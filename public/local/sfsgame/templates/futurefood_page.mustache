@@ -121,6 +121,14 @@
                             </div>
                             <h4 class="sfs-mission__name">{{title}}</h4>
                             <p class="sfs-mission__text">{{text}}</p>
+                            {{#hasprogress}}
+                                <div class="sfs-mission__progress">
+                                    <span class="sfs-mission__progressbar" role="presentation">
+                                        <span class="sfs-mission__progressfill" style="width: {{progress}}%;"></span>
+                                    </span>
+                                    <span class="sfs-mission__progresslabel">{{#str}}missionprogress, local_sfsgame, {{progress}}{{/str}}</span>
+                                </div>
+                            {{/hasprogress}}
                             <div class="sfs-mission__foot">
                                 {{#hasrewardmeta}}
                                     <span class="sfs-mission__metafoot">

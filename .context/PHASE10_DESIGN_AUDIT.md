@@ -33,8 +33,8 @@ stage headings — all match.
 - ☑ [fixed] **FF-2 Per-badge XP** via a badgexp name→XP settings map (FF-2).
 - 🟠 [deferred] **FF-3 "New!" badge state + notification pip** on a freshly
   earned badge — no "recently earned" concept.
-- 🟠 [gap] **FF-4 Per-mission progress.** Prototype's in-progress mission shows
-  a "40% complete" bar + "Resume"; live shows only a completion note (no % bar).
+- ☑ [fixed] **FF-4 Per-mission progress** — course-linked missions show the
+  learner's real course completion % as a bar (FF-4).
 - 🟠 [intent] **FF-5 Decision Point differs by design (P7 owner decision).**
   Prototype = an in-page multiple-choice question ("A supplier offers cheaper
   vegetables… What do you do?" → Buy / Reject / Ignore). Live = a scenario
@@ -96,9 +96,9 @@ deliberately avoids):
   its XP (unlisted badges use the flat xpperbadge); xp_policy takes a summed
   badge-XP override. Demo map set (Guardian 25 / Eco Pioneer 30 / Lab Rookie
   15 / …). Verified: earned badges show varied XP; total recomputes.
-- ❓ **FF-4 per-mission progress bar** — an activity is complete/not (binary),
-  no % to show; a real bar only makes sense for course-linked missions, which
-  P4-C intentionally strips of XP. Needs a decision on the mission data model.
+- ☑ **FF-4 per-mission progress bar** — done: a course-linked mission shows the
+  learner's real course-completion % (mission_completion::course_progress_for_url);
+  activity/external missions have no % (binary) so no bar, avoiding fake data.
 - ❓ **FF-5 inline MCQ decision** — owner already chose the activity-router (P7);
   adding the prototype's inline multiple-choice is an additional feature, not a
   fix. Decide if both are wanted.
