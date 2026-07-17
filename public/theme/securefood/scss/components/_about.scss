@@ -514,6 +514,24 @@
         overflow-y: auto;
     }
 
+    .sfs-hubs__cardhead {
+        padding: 6px 8px 12px;
+        border-bottom: 1px solid var(--sfs-line);
+        margin-bottom: 8px;
+    }
+
+    .sfs-hubs__cardtitle {
+        margin: 0;
+        font-size: 1.05rem;
+    }
+
+    .sfs-hubs__cardlede {
+        margin: 6px 0 0;
+        color: var(--sfs-muted);
+        font-size: 0.82rem;
+        line-height: 1.45;
+    }
+
     .sfs-hubs__list {
         list-style: none;
         margin: 0;

@@ -121,6 +121,10 @@
                 {{/hubs}}
             </div>
             <div class="sfs-hubs__card">
+            <div class="sfs-hubs__cardhead">
+                <h4 class="sfs-hubs__cardtitle">{{hubsnetworktitle}}</h4>
+                {{#hubsnetworklede}}<p class="sfs-hubs__cardlede">{{hubsnetworklede}}</p>{{/hubsnetworklede}}
+            </div>
             <ul class="sfs-hubs__list">
                 {{#hubs}}
                     <li id="{{hubid}}" class="sfs-hubs__row {{#islab}}sfs-hubs__row--lab{{/islab}}"

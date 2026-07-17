@@ -223,6 +223,20 @@ if ($ADMIN->fulltree) {
         '',
         PARAM_TEXT
     ));
+    $page->add(new admin_setting_configtext(
+        'theme_securefood/abouthubsnetworktitle',
+        get_string('abouthubsnetworktitle', 'theme_securefood'),
+        get_string('aboutfallback_desc', 'theme_securefood'),
+        '',
+        PARAM_TEXT
+    ));
+    $page->add(new admin_setting_configtextarea(
+        'theme_securefood/abouthubsnetworklede',
+        get_string('abouthubsnetworklede', 'theme_securefood'),
+        get_string('aboutfallback_desc', 'theme_securefood'),
+        '',
+        PARAM_TEXT
+    ));
     $page->add(new admin_setting_configtextarea(
         'theme_securefood/abouthubs',
         get_string('abouthubs', 'theme_securefood'),
