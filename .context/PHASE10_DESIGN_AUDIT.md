@@ -86,14 +86,23 @@ format) — match (Phase 8 C1/C2).
 - Cohort→plan auto-enrolment and badge award verified via cron earlier. ✓
 
 ## Actionable backlog (design conformance)
-- 🔴 **R-2** investigate/repair the "Select all" control (coordinate with the
-  parallel sfsresources refactor).
-- 🔴 **R-1** decide: ship demo/curated content for Resources so the learner page
-  isn't blank, OR accept the no-mock empty state (owner call — same family as P11).
-- 🟠 **A-1** add the "Network" heading + lede to the About hubs panel.
-- 🟠 **FF-4 / FF-2** per-mission progress bar and per-badge XP (need a model for
-  each; FF-2 could reuse the mission/xp settings).
-- 🟠 **FF-5** decide whether to add the prototype's inline MCQ decision alongside
-  the activity-router.
-- 🟡 **FF-1 / FF-3 / Student-Lab extras** remain deferred (no data source):
-  streak, leaderboard, "New!" state, per-course icons, effort, plan level.
+- ☑ **R-2** filter label fixed (filter:all).
+- ☑ **R-1** learner Resources page populated (curated docs + KPI, data).
+- ☑ **A-1** About "Network" heading + lede added.
+
+Remaining — each needs a data source or a design decision, so NOT done as a
+plain fidelity fix (implementing would mean fabricating data the project
+deliberately avoids):
+- ❓ **FF-2 per-badge XP** — needs a model: a badge→XP mapping in settings
+  (default XP_PER_BADGE). Doable as a no-code feature, but it changes the XP
+  economy just reworked in P8/P10. Awaiting go-ahead.
+- ❓ **FF-4 per-mission progress bar** — an activity is complete/not (binary),
+  no % to show; a real bar only makes sense for course-linked missions, which
+  P4-C intentionally strips of XP. Needs a decision on the mission data model.
+- ❓ **FF-5 inline MCQ decision** — owner already chose the activity-router (P7);
+  adding the prototype's inline multiple-choice is an additional feature, not a
+  fix. Decide if both are wanted.
+- 🟡 **FF-1 / FF-3 / Student-Lab extras / Course rail cards** — deferred, no data
+  source: streak, leaderboard, "New!" state, per-course icons, effort/duration,
+  plan level, mentor/peers/resources cards. Building these means inventing a
+  backend, out of scope for a fidelity pass.
