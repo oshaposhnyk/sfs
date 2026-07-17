@@ -64,6 +64,23 @@ $xpperbadge = $rate('xpperbadge', \local_sfsgame\domain\xp_policy::XP_PER_BADGE)
 $xppercourse = $rate('xppercourse', \local_sfsgame\domain\xp_policy::XP_PER_COURSE);
 $xpperlevel = $rate('xpperlevel', \local_sfsgame\domain\xp_policy::XP_PER_LEVEL);
 
+// Optional per-badge XP (FF-2): admin maps a badge name to its XP; badges not
+// listed use the flat xpperbadge. Lets different achievements be worth
+// different XP, as in the design.
+$badgexpmap = [];
+$badgexpraw = json_decode((string)get_config('local_sfsgame', 'badgexp'), true);
+if (is_array($badgexpraw)) {
+    foreach ($badgexpraw as $badgename => $value) {
+        if (is_string($badgename) && (int)$value > 0) {
+            $badgexpmap[trim($badgename)] = (int)$value;
+        }
+    }
+}
+$badgexpfor = static function (string $name) use ($badgexpmap, $xpperbadge): int {
+    return $badgexpmap[trim($name)] ?? $xpperbadge;
+};
+$badgexptotal = 0;
+
 // Earned + available site badges.
 $earned = badges_get_user_badges($userid);
 $earnedids = [];
@@ -107,11 +124,13 @@ $criteriapreview = static function(\core_badges\badge $badge): string {
 };
 foreach ($earned as $badge) {
     $earnedids[(int)$badge->id] = true;
+    $badgexp = $badgexpfor((string)$badge->name);
+    $badgexptotal += $badgexp;
     $achievements[] = [
         'name' => format_string($badge->name),
         'earned' => true,
         'imageurl' => $badgeimage((int)$badge->id),
-        'xplabel' => '+' . $xpperbadge . ' XP',
+        'xplabel' => '+' . $badgexp . ' XP',
     ];
 }
 foreach (badges_get_badges(BADGE_TYPE_SITE) as $badge) {
@@ -257,7 +276,8 @@ if (!$showmissions) {
     }
 }
 
-$xp = \local_sfsgame\domain\xp_policy::xp(count($earnedids), $completed, $missionxp, $xpperbadge, $xppercourse);
+$xp = \local_sfsgame\domain\xp_policy::xp(
+    count($earnedids), $completed, $missionxp, $xpperbadge, $xppercourse, $badgexptotal);
 $level = \local_sfsgame\domain\xp_policy::level($xp, $xpperlevel);
 // Decision choices become a real assessed decision (P7): each choice reflects
 // the completion state of its linked activity, so a completed quiz/choice

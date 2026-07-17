@@ -30,8 +30,7 @@ stage headings — all match.
 - Hero, achievements grid, mission cards, decision section all present.
 - 🟠 [deferred] **FF-1 Hero extras missing:** "Leaderboard" button and the
   "N-day streak" chip (no streak/leaderboard backend).
-- 🟠 [gap] **FF-2 Per-badge XP.** Prototype shows different XP per badge
-  (+25/+30/+15); live is a flat +100 (XP_PER_BADGE). Badge XP is not per-badge.
+- ☑ [fixed] **FF-2 Per-badge XP** via a badgexp name→XP settings map (FF-2).
 - 🟠 [deferred] **FF-3 "New!" badge state + notification pip** on a freshly
   earned badge — no "recently earned" concept.
 - 🟠 [gap] **FF-4 Per-mission progress.** Prototype's in-progress mission shows
@@ -93,9 +92,10 @@ format) — match (Phase 8 C1/C2).
 Remaining — each needs a data source or a design decision, so NOT done as a
 plain fidelity fix (implementing would mean fabricating data the project
 deliberately avoids):
-- ❓ **FF-2 per-badge XP** — needs a model: a badge→XP mapping in settings
-  (default XP_PER_BADGE). Doable as a no-code feature, but it changes the XP
-  economy just reworked in P8/P10. Awaiting go-ahead.
+- ☑ **FF-2 per-badge XP** — done: `badgexp` JSON setting maps a badge name to
+  its XP (unlisted badges use the flat xpperbadge); xp_policy takes a summed
+  badge-XP override. Demo map set (Guardian 25 / Eco Pioneer 30 / Lab Rookie
+  15 / …). Verified: earned badges show varied XP; total recomputes.
 - ❓ **FF-4 per-mission progress bar** — an activity is complete/not (binary),
   no % to show; a real bar only makes sense for course-linked missions, which
   P4-C intentionally strips of XP. Needs a decision on the mission data model.

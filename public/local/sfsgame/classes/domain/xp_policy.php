@@ -64,6 +64,9 @@ final class xp_policy {
      * @param int $missionxp XP from completed mission activities.
      * @param int|null $perbadge XP per badge (default XP_PER_BADGE).
      * @param int|null $percourse XP per completed course (default XP_PER_COURSE).
+     * @param int|null $badgexptotal Pre-summed XP of the earned badges. When
+     *        given (per-badge XP mapping, FF-2) it replaces $badges*$perbadge,
+     *        so different badges can be worth different XP. Null = flat model.
      * @return int
      */
     public static function xp(
@@ -71,9 +74,13 @@ final class xp_policy {
         int $completedcourses,
         int $missionxp = 0,
         ?int $perbadge = null,
-        ?int $percourse = null
+        ?int $percourse = null,
+        ?int $badgexptotal = null
     ): int {
-        return max(0, $badges) * self::rate($perbadge, self::XP_PER_BADGE)
+        $badgexp = $badgexptotal !== null
+            ? max(0, $badgexptotal)
+            : max(0, $badges) * self::rate($perbadge, self::XP_PER_BADGE);
+        return $badgexp
             + max(0, $completedcourses) * self::rate($percourse, self::XP_PER_COURSE)
             + max(0, $missionxp);
     }

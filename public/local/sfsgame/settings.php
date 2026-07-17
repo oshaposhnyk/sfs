@@ -64,6 +64,15 @@ if ($hassiteconfig) {
             PARAM_INT
         ));
     }
+    // Optional per-badge XP (FF-2): a JSON name→XP map; unlisted badges use
+    // the flat "XP per badge" above.
+    $settings->add(new admin_setting_configtextarea(
+        'local_sfsgame/badgexp',
+        get_string('setting:badgexp', 'local_sfsgame'),
+        get_string('setting:badgexp_desc', 'local_sfsgame'),
+        '',
+        PARAM_RAW
+    ));
 
     foreach (['pagekicker', 'pagetitle', 'achievementstitle', 'missionstitle'] as $name) {
         $settings->add(new admin_setting_configtext(

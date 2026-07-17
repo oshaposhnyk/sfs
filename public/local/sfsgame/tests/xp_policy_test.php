@@ -70,4 +70,14 @@ final class xp_policy_test extends \basic_testcase {
         $this->assertSame(100, xp_policy::xp(1, 0, 0, 0, -5));
         $this->assertSame(2, xp_policy::level(500, 0));
     }
+
+    public function test_per_badge_xp_total(): void {
+        // With a badge-XP total (FF-2) the count/perbadge is ignored for badges.
+        // 25+30+15 badges + 2*50 courses + 10 mission = 70 + 100 + 10 = 180.
+        $this->assertSame(180, xp_policy::xp(3, 2, 10, 100, 50, 70));
+        // Null total keeps the flat model: 3*100 + 0 + 0 = 300.
+        $this->assertSame(300, xp_policy::xp(3, 0, 0, 100, 50, null));
+        // Negative total clamps to 0 (courses still count).
+        $this->assertSame(50, xp_policy::xp(3, 1, 0, 100, 50, -5));
+    }
 }
