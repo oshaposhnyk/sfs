@@ -11,7 +11,8 @@ deliberate deviation · **[gap]** actionable fidelity gap · **[bug]** defect.
 ## About — insights.html  ✅ close to 1:1
 - Hero, shield card, "Three reinforcing layers", "Learning for Change" (4 steps),
   hubs map + list all match.
-- 🟠 [gap] **A-1 Network panel header missing.** Prototype's side panel has a
+- ☑ [fixed] **A-1 Network panel header + lede added** (settings-driven).
+- 🟠 [was] **A-1 Network panel header missing.** Prototype's side panel has a
   "Network" heading + lede ("SecureFood spans 21 partners… Click a row to focus
   the map."); live lists the labs with no heading/description.
 - 🟡 [intent] Help "?" in the top bar is settings-driven (hidden by default);
@@ -49,12 +50,18 @@ Prototype: "System operational" pill + "Download report", 3 KPI cards, 4
 Management-tool cards with counts, a 7-row resource library with audience tags +
 downloads + role filters, a "Quick validation" card and side stats.
 Live (learner): only the "Resource library" card with the single uploaded PDF.
-- 🔴 [intent+gap] **R-1 Learner page is nearly empty.** Causes: KPI cards default
+- ☑ [fixed] **R-1 Learner page populated.** Demo curated documents + KPI JSON
+  set (data/config) so the learner page mirrors governance.html; management
+  tools remain staff-only. Original cause below kept for reference.
+- 🔴 [was] **R-1 Learner page is nearly empty.** Causes: KPI cards default
   empty (no-mock hardening, P11); management tools are `learningplans:manage`-only
   (correctly hidden from learners); curated documents default empty (no-mock), so
   only real uploads show; audience filters need docs to exist. Net effect: the
   learner sees an almost-blank page unlike the rich prototype.
-- 🔴 [bug?] **R-2 Unexpected "Вибрати все" (Select all) control** top-right of the
+- ☑ [fixed] **R-2 filter label.** The "All" filter used core get_string('all'),
+  which renders "Вибрати все" (Select all) in uk; replaced with a plugin
+  string filter:all (All / Всі).
+- 🔴 [was] **R-2 Unexpected "Вибрати все" (Select all) control** top-right of the
   library card — not produced by the current template (filters render as outline
   pills). sfsresources appears to be mid-refactor by the parallel session
   (`showlibrary` / `showfilters` toggles are new). Needs investigation.

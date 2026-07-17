@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Resources & Standards';
 $string['resources'] = 'Resources & Standards';
 $string['kicker'] = 'Governance hub';
+$string['filter:all'] = 'All';
 $string['lede'] = 'All protocols, contracts and reference documents in one place — searchable, role-tagged, and ready to share with school staff and suppliers.';
 $string['library'] = 'Resource library';
 $string['open'] = 'Open';

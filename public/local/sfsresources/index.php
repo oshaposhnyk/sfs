@@ -68,7 +68,9 @@ foreach ($alldocs as $doc) {
     }
 }
 $filters = [[
-    'label' => get_string('all'),
+    // Own string: core get_string('all') renders "Вибрати все" (Select all)
+    // in uk, which is wrong for a "show all" filter pill.
+    'label' => get_string('filter:all', 'local_sfsresources'),
     'url' => (new moodle_url('/local/sfsresources/index.php'))->out(false),
     'active' => $audfilter === '',
 ]];
