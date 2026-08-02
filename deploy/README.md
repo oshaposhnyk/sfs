@@ -59,14 +59,54 @@ curl -fsSL https://get.docker.com | sudo sh
 sudo usermod -aG docker "$USER"   # log out/in afterwards
 ```
 
-## 3. Get the code onto the server
+## 3. Git access on the server (SSH deploy key)
+
+The server needs SSH access to the repo to clone/pull. Best practice is a
+dedicated **deploy key** generated *on the server* — the private key never
+leaves it, and it is scoped **read-only** to this one repo. Do **not** copy your
+personal SSH key onto the server.
 
 ```bash
+# On the PROD server: generate a dedicated key (no passphrase → unattended pulls)
+ssh-keygen -t ed25519 -f ~/.ssh/sfs_deploy -C "sfs-prod-deploy" -N ""
+cat ~/.ssh/sfs_deploy.pub          # copy this whole line
+```
+
+Register the **public** key on the git host as a **read-only** deploy key:
+
+- **GitHub:** repo ▸ Settings ▸ Deploy keys ▸ *Add deploy key* — leave
+  "Allow write access" **unchecked**.
+- **GitLab:** repo ▸ Settings ▸ Repository ▸ Deploy keys — grant read only.
+
+Tell SSH to use this key for the git host — add to `~/.ssh/config` on the server:
+
+```
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/sfs_deploy
+    IdentitiesOnly yes
+```
+
+Test the connection, then clone over SSH:
+
+```bash
+ssh -T git@github.com              # "Hi <repo>! You've successfully authenticated"
 sudo mkdir -p /opt/sfs && sudo chown "$USER" /opt/sfs
-git clone <your-repo-url> /opt/sfs
+git clone git@github.com:<org>/<repo>.git /opt/sfs
 cd /opt/sfs
 cp deploy/.dockerignore .dockerignore     # required at repo root
 ```
+
+> **Why a deploy key, not your personal key:** read-only + single-repo scope
+> means a compromised server can only *read* this one repo — it cannot push, and
+> cannot reach your other repos or your account.
+>
+> **Passphrase trade-off:** a passphrase-less key lets `git pull` (step 10) run
+> unattended; the read-only, single-repo scope is the mitigation. If you prefer
+> zero private key on the server, skip this step and use **SSH agent
+> forwarding** instead — `ssh -A youruser@server` from your laptop, then clone;
+> your local key is used only for that session and nothing persists on the box.
 
 ## 4. Secrets (strong, generated, file-based — never in env or git)
 
