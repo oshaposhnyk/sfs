@@ -1,0 +1,24 @@
+# This file must live at the REPO ROOT to take effect for `docker build .`.
+# Copy it there:  cp deploy/.dockerignore .dockerignore
+#
+# Keeps dev-only, large, or secret material OUT of the production image.
+.git
+.github
+.idea
+.grunt
+.phpunit.cache
+node_modules
+**/node_modules
+SecureFood School/
+deploy/
+backups/
+moodledata/
+.env
+.env.*
+*.log
+composer.phar
+docker-compose.yml
+Makefile
+securefood-school-ai-agent-prompt.txt
+**/tests/
+**/*.md

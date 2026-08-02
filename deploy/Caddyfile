@@ -1,0 +1,37 @@
+# Caddy = TLS edge. Automatically obtains + renews Let's Encrypt certs.
+# Terminates HTTPS and reverse-proxies plain HTTP to the internal nginx.
+# Domain and ACME email come from environment variables.
+
+{
+	email {$ACME_EMAIL}
+	# Uncomment to test against staging (avoids LE rate limits during setup):
+	# acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+	servers {
+		# Do not leak the Caddy version.
+		protocols h1 h2
+	}
+}
+
+{$MOODLE_DOMAIN} {
+	encode zstd gzip
+
+	# Security headers applied to every response.
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+		-X-Powered-By
+	}
+
+	reverse_proxy nginx:80 {
+		header_up X-Forwarded-Proto https
+		header_up X-Real-IP {remote_host}
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}

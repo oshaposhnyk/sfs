@@ -1,0 +1,231 @@
+# Production stack for SecureFood School (single VPS).
+#
+#   caddy (TLS/LE)  ──edge──▶  nginx  ──internal──▶  php-fpm ──▶ mysql / redis
+#                                                        cron ──▶ mysql / redis
+#
+# Secrets are files under ./secrets (git-ignored, chmod 600). Non-secret config
+# is in .env.prod. Bring up with:
+#   docker compose --env-file .env.prod -f docker-compose.prod.yml up -d
+#
+# Hardening applied to every service: no-new-privileges, cap_drop ALL, pinned
+# images/build, read-only rootfs where possible, log rotation, resource limits,
+# no host-published DB/Redis ports.
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+x-hardening: &hardening
+  security_opt:
+    - no-new-privileges:true
+  restart: unless-stopped
+  logging: *default-logging
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    <<: *hardening
+    ports:
+      - "80:80"     # ACME HTTP-01 + redirect to HTTPS
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # certificates + ACME account (persist!)
+      - caddy_config:/config
+    environment:
+      MOODLE_DOMAIN: ${MOODLE_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    depends_on:
+      - nginx
+    networks:
+      - edge
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # nginx: on edge (from caddy) and app (to php-fpm).
+  nginx:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: web
+    image: ${IMAGE_PREFIX:-sfs}-web:${IMAGE_TAG:-latest}
+    <<: *hardening
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETGID, SETUID, NET_BIND_SERVICE]
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+    networks:
+      - edge
+      - app
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  php-fpm:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: app
+    image: ${IMAGE_PREFIX:-sfs}-app:${IMAGE_TAG:-latest}
+    <<: *hardening
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
+    volumes:
+      - moodledata:/var/www/moodledata
+    environment: &moodle-env
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${MOODLE_DB_NAME}
+      DB_USER: ${MOODLE_DB_USER}
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      REDIS_HOST: redis
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+      MOODLE_REDIS_SESSIONS: "1"
+      MOODLE_WWWROOT: https://${MOODLE_DOMAIN}
+      MOODLE_DEBUG: "0"
+    secrets:
+      - db_password
+      - redis_password
+    cap_drop: [ALL]
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm -t 2>&1 | grep -q 'test is successful'"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app     # outbound internet (email, update checks)
+      - data    # reach mysql + redis
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+  cron:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: app
+    image: ${IMAGE_PREFIX:-sfs}-app:${IMAGE_TAG:-latest}
+    <<: *hardening
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
+    volumes:
+      - moodledata:/var/www/moodledata
+    environment: *moodle-env
+    secrets:
+      - db_password
+      - redis_password
+    cap_drop: [ALL]
+    # Run Moodle cron once a minute as www-data (image default user).
+    entrypoint: ["/bin/sh", "-c", "while true; do php admin/cli/cron.php >/proc/1/fd/1 2>&1; sleep 60; done"]
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+    networks:
+      - app
+      - data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  mysql:
+    image: mysql:8.4
+    <<: *hardening
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-name-resolve
+      - --local-infile=0
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE: ${MOODLE_DB_NAME}
+      MYSQL_USER: ${MOODLE_DB_USER}
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_root_password
+      - db_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETGID, SETUID, DAC_OVERRIDE]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$(cat /run/secrets/db_root_password)\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - data
+    deploy:
+      resources:
+        limits:
+          memory: 1536M
+
+  redis:
+    image: redis:7-alpine
+    <<: *hardening
+    entrypoint: ["/bin/sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$(cat /run/secrets/redis_password)\""]
+    secrets:
+      - redis_password
+    volumes:
+      - redis_data:/data
+    cap_drop: [ALL]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$(cat /run/secrets/redis_password)\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - data
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password
+  db_password:
+    file: ./secrets/db_password
+  redis_password:
+    file: ./secrets/redis_password
+
+volumes:
+  mysql_data:
+  redis_data:
+  moodledata:
+  caddy_data:
+  caddy_config:
+
+networks:
+  edge:
+    driver: bridge          # caddy ⇄ nginx
+  app:
+    driver: bridge          # nginx ⇄ php-fpm/cron, plus outbound internet
+  data:
+    driver: bridge
+    internal: true          # mysql + redis: no internet, reachable only by php/cron
