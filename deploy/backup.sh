@@ -14,7 +14,7 @@ mkdir -p "$DEST"
 echo "[$(date -Is)] DB dump…"
 # --single-transaction = consistent snapshot without locking (InnoDB).
 $COMPOSE exec -T mysql sh -c \
-  'exec mysqldump --single-transaction --quick --routines --triggers \
+  'exec mariadb-dump --single-transaction --quick --routines --triggers \
      -uroot -p"$(cat /run/secrets/db_root_password)" "$MYSQL_DATABASE"' \
   | gzip > "$DEST/db-$STAMP.sql.gz"
 

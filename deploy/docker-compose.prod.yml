@@ -176,7 +176,8 @@ services:
     cap_drop: [ALL]
     cap_add: [CHOWN, SETGID, SETUID, DAC_OVERRIDE]
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$(cat /run/secrets/db_root_password)\" --silent"]
+      # MariaDB 11.4 dropped the legacy mysqladmin symlink; use mariadb-admin.
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -uroot -p\"$$(cat /run/secrets/db_root_password)\" --silent"]
       interval: 10s
       timeout: 5s
       retries: 20
