@@ -24,7 +24,7 @@ $secret = static function (string $name, string $default) use ($env): string {
     return $env($name, $default);
 };
 
-$CFG->dbtype    = 'mysqli';
+$CFG->dbtype    = 'mariadb';   // Moodle's dedicated MariaDB driver (not 'mysqli')
 $CFG->dblibrary = 'native';
 $CFG->dbhost    = $env('DB_HOST', 'mysql');
 $CFG->dbname    = $env('DB_DATABASE', 'moodle');
