@@ -10,7 +10,15 @@
 node_modules
 **/node_modules
 SecureFood School/
-deploy/
+# Exclude everything under deploy/ EXCEPT the files the Dockerfile copies.
+# (Use deploy/* not deploy/ so specific files can be re-included below.)
+deploy/*
+!deploy/moodle.prod.ini
+!deploy/config.prod.php
+!deploy/nginx.prod.conf
+# Never let secrets or the real env into the build context.
+deploy/secrets
+deploy/.env.prod
 backups/
 moodledata/
 .env
