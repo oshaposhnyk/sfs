@@ -60,6 +60,10 @@ RUN rm -rf \
         /var/www/html/.env /var/www/html/.env.example \
     && find /var/www/html -type d -name node_modules -prune -exec rm -rf {} + 2>/dev/null || true
 
+# Own the moodledata mount point so a fresh named volume inherits www-data
+# ownership (php-fpm runs as www-data with all caps dropped and must write here).
+RUN mkdir -p /var/www/moodledata && chown www-data:www-data /var/www/moodledata
+
 USER www-data
 EXPOSE 9000
 CMD ["php-fpm"]

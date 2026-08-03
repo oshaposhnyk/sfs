@@ -152,8 +152,11 @@ services:
         limits:
           memory: 512M
 
+  # Service key kept as "mysql" so DB_HOST=mysql still resolves. Image is
+  # MariaDB: the official MySQL 8.4 image requires x86-64-v2 CPU instructions
+  # and crashes on older/virtualised CPUs. Moodle uses the same mysqli driver.
   mysql:
-    image: mysql:8.4
+    image: mariadb:11.4
     <<: *hardening
     command:
       - --character-set-server=utf8mb4
@@ -188,6 +191,9 @@ services:
   redis:
     image: redis:7-alpine
     <<: *hardening
+    # Run as the image's own redis user (uid 999) so, with all caps dropped, it
+    # can still read the secret and write /data (owned by redis in the image).
+    user: redis
     entrypoint: ["/bin/sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$(cat /run/secrets/redis_password)\""]
     secrets:
       - redis_password
