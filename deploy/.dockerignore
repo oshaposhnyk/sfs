@@ -25,5 +25,6 @@ composer.phar
 docker-compose.yml
 Makefile
 securefood-school-ai-agent-prompt.txt
-**/tests/
+# NOTE: do NOT exclude **/tests/ — Moodle core require()s some files that live
+# under tests/ dirs at runtime (e.g. analytics/tests/classes/*_trait.php).
 **/*.md
