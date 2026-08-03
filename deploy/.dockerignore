@@ -10,13 +10,10 @@
 node_modules
 **/node_modules
 SecureFood School/
-# Exclude everything under deploy/ EXCEPT the files the Dockerfile copies.
-# (Use deploy/* not deploy/ so specific files can be re-included below.)
-deploy/*
-!deploy/moodle.prod.ini
-!deploy/config.prod.php
-!deploy/nginx.prod.conf
-# Never let secrets or the real env into the build context.
+# Keep deploy/ IN the build context (the Dockerfile copies three files from it,
+# and the deploy/ dir is later removed from the image by `rm -rf …/deploy`).
+# Do NOT blanket-exclude deploy/ — BuildKit negation (!deploy/x) is unreliable.
+# Only keep secrets and the real env OUT of the context:
 deploy/secrets
 deploy/.env.prod
 backups/
