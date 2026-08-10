@@ -74,4 +74,21 @@ $CFG->debug = 0;
 $CFG->debugdisplay = 0;
 // $CFG->disableupdatenotifications kept default; keep update checks ON.
 
+// --- Email: outbound via Google Workspace SMTP relay (IP-authenticated). -----
+// php-fpm/cron reach smtp-relay.gmail.com directly over the `app` network.
+// The server's public IP is whitelisted in Workspace, so NO SMTP AUTH is used:
+// keeping smtpuser/smtppass empty makes Moodle connect without credentials.
+$CFG->smtphosts    = $env('MOODLE_SMTP_HOSTS', 'smtp-relay.gmail.com:587');
+$CFG->smtpsecure   = 'tls';   // STARTTLS on port 587
+$CFG->smtpauthtype = 'LOGIN'; // ignored while smtpuser is empty (no AUTH sent)
+$CFG->smtpuser     = '';
+$CFG->smtppass     = '';
+$CFG->smtpmaxbulk  = 10;       // recipients per SMTP connection
+// System sender. MUST be a domain authenticated in Workspace (SPF
+// include:_spf.google.com + DKIM). Defaults to the LMS host; override with
+// MOODLE_NOREPLY if the authorised mail domain is the apex (e.g. the parent
+// domain rather than the lms.* subdomain).
+$mailhost = parse_url($CFG->wwwroot, PHP_URL_HOST) ?: 'localhost';
+$CFG->noreplyaddress = $env('MOODLE_NOREPLY', 'noreply@' . $mailhost);
+
 require_once(__DIR__ . '/lib/setup.php');
