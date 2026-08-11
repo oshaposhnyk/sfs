@@ -558,7 +558,7 @@
         }
     }
 
-    @media (max-width: 820px) {
+    @include sfs-media-mobile {
         .notification-area {
             grid-template-columns: 1fr;
             min-height: auto;

@@ -188,7 +188,7 @@
             &.btn-success,
             &[data-toggletype="manual:mark-done"].btn-success {
                 background: var(--sfs-teal50);
-                color: var(--sfs-teal);
+                color: var(--sfs-teal-ink);
                 border-color: transparent;
             }
         }
@@ -332,6 +332,10 @@
             background: var(--sfs-primary);
             color: var(--sfs-on-dark);
             text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
         }
     }
 
@@ -524,7 +528,7 @@
         font-size: 0.94rem;
     }
 
-    @media (max-width: 1100px) {
+    @include sfs-media-compact {
         .sfs-courselayout {
             grid-template-columns: 1fr;
         }

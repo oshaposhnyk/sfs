@@ -41,6 +41,11 @@
     --sfs-teal:         #2A8C8A;
     --sfs-teal300:      #4FC3C0;
     --sfs-teal50:       #E1F1F0;
+    // Text-safe status inks (WCAG AA) for small status text on light surfaces
+    // and soft pills; the dark scheme lightens them (see sfs-dark-tokens).
+    --sfs-success-ink:  #2F6F46;
+    --sfs-teal-ink:     #1C6664;
+    --sfs-danger-ink:   #B8463F;
 
     // Semantic.
     --sfs-success:      #3F8C5A;
@@ -96,6 +101,9 @@
     --sfs-accent-ink:   #E0A458;
     --sfs-teal:         #4FC3C0;
     --sfs-teal50:       rgba(79, 195, 192, 0.14);
+    --sfs-success-ink:  #6FBF8E;
+    --sfs-teal-ink:     #4FC3C0;
+    --sfs-danger-ink:   #E5837C;
 }
 
 :root[data-theme="dark"] {

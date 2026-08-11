@@ -136,6 +136,11 @@
         box-shadow: var(--sfs-shadow-2);
     }
 
+    // Off-screen polite live region (announced, never seen).
+    .sfs-live {
+        @include sfs-visually-hidden;
+    }
+
     // ---------------------------------------------------------------
     // Sidebar.
     // ---------------------------------------------------------------
@@ -161,6 +166,10 @@
         padding: 4px 8px 18px;
         border-bottom: 1px solid var(--sfs-line);
         margin-bottom: 16px;
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
     }
 
     .sfs-sidebar__logo {
@@ -185,7 +194,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--sfs-muted2);
+        color: var(--sfs-muted);
         padding: 14px 12px 6px;
     }
 
@@ -713,6 +722,10 @@
         &:hover {
             color: var(--sfs-ink);
         }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
     }
 
     .sfs-breadcrumbs__item--current {
@@ -738,6 +751,11 @@
         padding: 7px 14px;
         width: 280px;
         color: var(--sfs-muted);
+
+        // The input clears its own outline, so the ring lives on the wrapper.
+        &:focus-within {
+            @include sfs-focus-ring;
+        }
     }
 
     .sfs-search__input {
@@ -1152,6 +1170,15 @@
         .sfs-topbar__actions {
             gap: 6px;
             flex-wrap: wrap;
+        }
+
+        // Touch-friendly 44×44 controls on mobile (T5.1 / brand touch guidance).
+        // The popover row buttons keep their own full-width sizing (higher
+        // specificity), so this only affects the inline bar controls.
+        .sfs-iconbtn,
+        .sfs-topbar__plugins .nav-link.popover-region-toggle {
+            width: 44px;
+            height: 44px;
         }
 
         // Collapsible "More" popover (ADR-013). Only active once JS adds

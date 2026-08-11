@@ -639,7 +639,7 @@
         }
     }
 
-    @media (max-width: 820px) {
+    @include sfs-media-mobile {
         .sfs-hub__grid {
             grid-template-columns: 1fr;
         }

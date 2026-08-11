@@ -237,7 +237,7 @@
     }
 
     .lp-stage--done .lp-stage__status {
-        color: var(--sfs-success);
+        color: var(--sfs-success-ink);
     }
 
     .lp-stage--active .lp-stage__status {
@@ -309,6 +309,10 @@
             &:hover {
                 color: var(--sfs-primary);
             }
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
         }
     }
 
@@ -355,7 +359,7 @@
     }
 
     .lp-coursetile--done .lp-coursetile__state {
-        color: var(--sfs-success);
+        color: var(--sfs-success-ink);
         font-weight: 600;
     }
 

@@ -33,11 +33,6 @@
         align-items: center;
     }
 
-    .sfs-hero__title {
-        font-size: 2.6rem;
-        max-width: 16ch;
-    }
-
     .sfs-hero__accent {
         color: var(--sfs-accent-ondark);
     }
@@ -73,6 +68,7 @@
     .sfs-hero__title {
         color: var(--sfs-on-dark);
         margin: 8px 0 12px;
+        max-width: 16ch;
         font-size: 1.85rem;
         line-height: 1.15;
         letter-spacing: -0.02em;
@@ -471,6 +467,15 @@
         color: inherit;
         text-decoration: none;
 
+        // 24px tap target (WCAG 2.5.8) without enlarging the visual dot; the
+        // hub list rows stay the large-target alternative for clustered pins.
+        &::after {
+            content: '';
+            position: absolute;
+            inset: -7px;
+            border-radius: 50%;
+        }
+
         &:focus-visible {
             @include sfs-focus-ring;
             outline-offset: 6px;
@@ -564,6 +569,10 @@
     .sfs-hubs__name {
         font-size: 0.9rem;
         font-weight: 600;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .sfs-hubs__country {
@@ -582,7 +591,7 @@
         padding: 3px 9px;
         border-radius: 999px;
         background: var(--sfs-teal50);
-        color: var(--sfs-teal);
+        color: var(--sfs-teal-ink);
         white-space: nowrap;
     }
 
@@ -770,6 +779,19 @@
         #page-header,
         .secondary-navigation {
             display: none;
+        }
+    }
+}
+
+// Honour reduced-motion for the vendored Leaflet transitions (not gated by the
+// sfs-motion mixin); scoped to the live map (WCAG 2.3.3).
+.sfs-mode {
+    @media (prefers-reduced-motion: reduce) {
+        .sfs-hubs__map--live {
+            .leaflet-fade-anim .leaflet-tile,
+            .leaflet-zoom-anim .leaflet-zoom-animated {
+                transition: none;
+            }
         }
     }
 }

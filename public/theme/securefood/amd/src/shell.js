@@ -26,6 +26,7 @@
 
 import Carousel from 'theme_boost/bootstrap/carousel';
 import {setUserPreference} from 'core_user/repository';
+import {announce} from 'theme_securefood/live';
 
 const CLASSES = {
     collapsed: 'sfs-sidebar-collapsed',
@@ -204,6 +205,10 @@ const toggleScheme = (button) => {
     const next = nextSchemePreference(current);
     applySchemePreference(button, next);
     persist('theme_securefood_colourscheme', next);
+    const label = button.dataset['sfsScheme' + next.charAt(0).toUpperCase() + next.slice(1)];
+    if (label) {
+        announce(label);
+    }
 };
 
 /**

@@ -56,6 +56,9 @@
 
 <a class="sfs-skip visually-hidden-focusable" href="#sfs-main">{{#str}}skiptocontent, theme_securefood{{/str}}</a>
 
+{{! Shared polite live region for async status (scheme change, map selection). }}
+<div id="sfs-live" class="sfs-live" role="status" aria-live="polite"></div>
+
 {{! Anything core injects here must stay OUTSIDE the .sfs-shell grid container,
     otherwise it becomes a grid item and breaks the two-column placement. }}
 <div class="sfs-shell__systemarea">{{{ output.standard_top_of_body_html }}}</div>

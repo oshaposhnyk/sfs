@@ -88,7 +88,7 @@
 
     .sfsres-doc__icon--pdf {
         background: color-mix(in srgb, var(--sfs-danger) 12%, transparent);
-        color: var(--sfs-danger);
+        color: var(--sfs-danger-ink);
     }
 
     .sfsres-doc__icon--xls {
@@ -139,6 +139,10 @@
             color: var(--sfs-on-dark);
             border-color: var(--sfs-primary);
             text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
         }
     }
 
@@ -231,6 +235,10 @@
             box-shadow: var(--sfs-shadow-2);
             border-color: var(--sfs-primary);
             text-decoration: none;
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
         }
     }
 

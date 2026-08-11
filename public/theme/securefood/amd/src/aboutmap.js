@@ -30,6 +30,7 @@
  */
 
 import * as L from 'theme_securefood/leaflet';
+import {announce} from 'theme_securefood/live';
 
 const token = (name, fallback) => {
     const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -160,10 +161,16 @@ export const init = async(config) => {
             }
             element.addEventListener('mouseenter', () => highlightHub(hub.hubid));
             element.addEventListener('mouseleave', clearHubHighlight);
-            element.addEventListener('focus', () => highlightHub(hub.hubid, true));
+            element.addEventListener('focus', () => {
+                highlightHub(hub.hubid, true);
+                announce(label);
+            });
             element.addEventListener('blur', clearHubHighlight);
         });
-        marker.on('click', () => highlightHub(hub.hubid, true));
+        marker.on('click', () => {
+            highlightHub(hub.hubid, true);
+            announce(label);
+        });
         marker.bindPopup(
             '<strong>' + safe(hub.name) + '</strong><br>' + safe(hub.country) + '<br><em>' + safe(status) + '</em>'
         );

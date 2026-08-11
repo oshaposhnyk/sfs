@@ -173,7 +173,7 @@
 
     .sfs-mission-list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
         gap: 18px;
     }
 
@@ -343,7 +343,7 @@
     }
 
     .sfs-mission__completion--completed {
-        color: var(--sfs-success);
+        color: var(--sfs-success-ink);
 
         &::before {
             content: 'check_circle';
@@ -492,7 +492,7 @@
     .sfs-decision__state {
         display: inline-block;
         margin-top: 4px;
-        color: var(--sfs-success);
+        color: var(--sfs-success-ink);
         font-size: 0.74rem;
         font-weight: 700;
     }
