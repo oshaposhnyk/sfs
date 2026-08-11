@@ -46,10 +46,12 @@
             <div class="sfs-sidebar__label">{{label}}</div>
         {{/haslabel}}
         {{#items}}
+            {{! aria-label keeps the link named when the label is hidden in the
+                desktop-collapsed rail (A1); it matches the visible label (2.5.3). }}
             <a href="{{url}}" class="sfs-nav__item{{#active}} sfs-nav__item--active{{/active}}"
-               data-sfs-tip="{{title}}"{{#active}} aria-current="page"{{/active}}>
+               data-sfs-tip="{{title}}" aria-label="{{title}}"{{#active}} aria-current="page"{{/active}}>
                 {{> theme_securefood/icon }}
-                <span class="sfs-nav__label">{{title}}</span>
+                <span class="sfs-nav__label" aria-hidden="true">{{title}}</span>
             </a>
         {{/items}}
     {{/navsections}}
@@ -132,7 +134,7 @@
     {{/usermenu}}
     {{^usermenu}}
         {{#usercard}}
-            <a class="sfs-usercard" href="{{profileurl}}">
+            <a class="sfs-usercard" href="{{profileurl}}" aria-label="{{fullname}}">
                 <span class="sfs-usercard__avatar" aria-hidden="true">{{initials}}</span>
                 <span class="sfs-usercard__meta">
                     <span class="sfs-usercard__name">{{fullname}}</span>

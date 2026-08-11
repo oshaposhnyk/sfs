@@ -50,6 +50,7 @@ const USER_MENU_SELECTORS = {
     carouselItem: '.carousel-item',
     activeCarouselItem: '.carousel-item.active',
     carouselNavigationLink: '.carousel-navigation-link',
+    menuitem: '[role="menuitem"]',
 };
 
 /**
@@ -325,6 +326,91 @@ const resetUserMenuCarousel = (userMenu) => {
 };
 
 /**
+ * The [role=menuitem] elements in the user menu's active carousel pane.
+ *
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ * @return {HTMLElement[]} Ordered menu items (possibly empty).
+ */
+const activePaneItems = (userMenu) => {
+    const pane = userMenu.querySelector(USER_MENU_SELECTORS.activeCarouselItem);
+    return pane ? Array.from(pane.querySelectorAll(USER_MENU_SELECTORS.menuitem)) : [];
+};
+
+/**
+ * Apply a roving tabindex to a set of menu items and focus one of them.
+ *
+ * @param {HTMLElement[]} items The menu items.
+ * @param {number} index Target index (wraps around).
+ */
+const rovingFocus = (items, index) => {
+    if (!items.length) {
+        return;
+    }
+    const target = (index + items.length) % items.length;
+    items.forEach((item, i) => item.setAttribute('tabindex', i === target ? '0' : '-1'));
+    items[target].focus();
+};
+
+/**
+ * Move focus to the first item of the active pane (menu open / pane switch).
+ *
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ */
+const focusFirstMenuItem = (userMenu) => {
+    const items = activePaneItems(userMenu);
+    if (items.length) {
+        rovingFocus(items, 0);
+        return;
+    }
+    const pane = userMenu.querySelector(USER_MENU_SELECTORS.activeCarouselItem);
+    if (pane) {
+        pane.focus();
+    }
+};
+
+/**
+ * WAI-ARIA menu keyboard handling: Up/Down/Home/End roving focus and Escape to
+ * close (returning focus to the summary). Enter/Space activation stays native
+ * for links or is handled by the carousel-navigation bridge.
+ *
+ * @param {KeyboardEvent} e The keydown event.
+ * @param {HTMLElement} userMenu The SFS user menu wrapper.
+ */
+const handleUserMenuKeydown = (e, userMenu) => {
+    const details = userMenu.querySelector(USER_MENU_SELECTORS.details);
+    if (!details || !details.open) {
+        return;
+    }
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        details.open = false;
+        const summary = details.querySelector('summary');
+        if (summary) {
+            summary.focus();
+        }
+        return;
+    }
+    const items = activePaneItems(userMenu);
+    if (!items.length) {
+        return;
+    }
+    const current = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        rovingFocus(items, current < 0 ? 0 : current + 1);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        rovingFocus(items, current < 0 ? items.length - 1 : current - 1);
+    } else if (e.key === 'Home') {
+        e.preventDefault();
+        rovingFocus(items, 0);
+    } else if (e.key === 'End') {
+        e.preventDefault();
+        rovingFocus(items, items.length - 1);
+    }
+};
+
+/**
  * Handle a click/keyboard activation on any nested part of a carousel link.
  *
  * Moodle core/user-menu checks event.target directly, which misses clicks on
@@ -381,10 +467,14 @@ const initUserMenuCarouselBridge = () => {
             handleUserMenuCarouselNavigation(e, userMenu);
         }, true);
 
+        userMenu.addEventListener('keydown', (e) => {
+            handleUserMenuKeydown(e, userMenu);
+        });
+
         details.addEventListener('toggle', () => {
             if (details.open) {
                 syncUserMenuCarouselSize(userMenu);
-                userMenu.querySelector(USER_MENU_SELECTORS.activeCarouselItem)?.focus();
+                focusFirstMenuItem(userMenu);
                 return;
             }
             resetUserMenuCarousel(userMenu);
@@ -392,7 +482,7 @@ const initUserMenuCarouselBridge = () => {
 
         carousel.addEventListener('slid.bs.carousel', () => {
             syncUserMenuCarouselSize(userMenu);
-            userMenu.querySelector(USER_MENU_SELECTORS.activeCarouselItem)?.focus();
+            focusFirstMenuItem(userMenu);
         });
     });
 };

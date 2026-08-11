@@ -561,6 +561,12 @@
         gap: 8px;
     }
 
+    // Row labels only appear inside the mobile "More" popover; the inline
+    // desktop controls stay icon-only.
+    .sfs-topbar__morelabel {
+        display: none;
+    }
+
     // Scoped under the wrapper (0,3,0) so it beats `.sfs-iconbtn { display: grid }`
     // (0,2,0) regardless of source order — the toggle carries both classes.
     .sfs-topbar__more .sfs-topbar__moretoggle {
@@ -1077,7 +1083,10 @@
                 display: inline-block;
             }
 
-            .sfs-sidebar__logo--icon {
+            // Compound selectors (0,4,0) so the mobile drawer beats the
+            // desktop-collapsed icon-logo rule and never shows two logos.
+            .sfs-sidebar__logo--icon.sfs-sidebar__logo--light,
+            .sfs-sidebar__logo--icon.sfs-sidebar__logo--dark {
                 display: none;
             }
 
@@ -1176,6 +1185,43 @@
             .sfs-topbar__moretoggle[aria-expanded="true"] + .sfs-topbar__secondary {
                 display: flex;
             }
+
+            // Inside the popover the icon buttons read as full-width labelled
+            // rows (the user's feedback: bare icons looked empty/odd).
+            .sfs-topbar__secondary .sfs-iconbtn {
+                display: flex;
+                width: 100%;
+                height: auto;
+                min-height: 44px;
+                justify-content: flex-start;
+                gap: 12px;
+                padding: 8px 12px;
+                border-color: transparent;
+                border-radius: var(--sfs-radius-sm);
+                background: transparent;
+
+                &:hover {
+                    border-color: transparent;
+                    background: var(--sfs-surface2);
+                }
+            }
+
+            .sfs-topbar__morelabel {
+                display: inline;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--sfs-ink2);
+                white-space: normal;
+                text-align: left;
+            }
+
+            // The language menu fills the row too.
+            .sfs-topbar__secondary .langmenu,
+            .sfs-topbar__secondary .langmenu .dropdown,
+            .sfs-topbar__secondary .langmenu .btn.dropdown-toggle {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
         .sfs-search {
@@ -1235,6 +1281,22 @@
         .sfs-sidebar__logo--icon.sfs-sidebar__logo--light,
         .sfs-sidebar__logo--full {
             display: none;
+        }
+    }
+
+    // Mobile drawer is always expanded: show the full dark logo, never the icon
+    // rail logo. Compound selectors match the collapsed rules above and come
+    // later, so they win in the dark scheme too (no double logo).
+    @include sfs-media-mobile {
+        .sfs-mode.sfs-sidebar-collapsed {
+            .sfs-sidebar__logo--full.sfs-sidebar__logo--dark {
+                display: inline-block;
+            }
+
+            .sfs-sidebar__logo--icon.sfs-sidebar__logo--dark,
+            .sfs-sidebar__logo--icon.sfs-sidebar__logo--light {
+                display: none;
+            }
         }
     }
 }
