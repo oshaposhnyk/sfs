@@ -37,23 +37,21 @@
         color: var(--sfs-accent-ondark);
     }
 
+    // No framing block — the logo sits straight on the hero and fills its column.
     .sfs-hero__panel {
-        justify-self: center;
-        width: 200px;
-        height: 200px;
-        border-radius: var(--sfs-radius-lg);
-        background: color-mix(in srgb, var(--sfs-on-dark) 7%, transparent);
-        border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 14%, transparent);
+        justify-self: stretch;
+        width: 100%;
         display: grid;
         place-items: center;
-        backdrop-filter: blur(4px);
         position: relative;
         z-index: 1;
     }
 
     .sfs-hero__logo {
-        width: 96px;
-        height: 96px;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 300px;
         object-fit: contain;
     }
 

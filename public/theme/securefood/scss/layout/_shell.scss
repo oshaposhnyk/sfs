@@ -173,14 +173,16 @@
     }
 
     .sfs-sidebar__logo {
-        height: 36px;
+        height: 44px;
         width: auto;
         max-width: 100%;
     }
 
     .sfs-sidebar__logo--icon {
         height: 40px;
-        width: 40px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
         display: none;
     }
 
@@ -1179,6 +1181,14 @@
         .sfs-topbar__plugins .nav-link.popover-region-toggle {
             width: 44px;
             height: 44px;
+        }
+
+        // Plugin nav icons (Student Lab / Future Food / Resources — the
+        // `local-*__nav-link` links) duplicate the sidebar drawer nav, so hide
+        // them on mobile to keep the bar one clean row. Notifications and
+        // messages (popover toggles) stay.
+        .sfs-topbar__plugins a.nav-link:not(.popover-region-toggle) {
+            display: none;
         }
 
         // Collapsible "More" popover (ADR-013). Only active once JS adds
