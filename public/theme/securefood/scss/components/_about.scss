@@ -327,19 +327,6 @@
     }
 }
 
-// Hubs grid collapses on smaller screens.
-.sfs-mode {
-    @include sfs-media-compact {
-        .sfs-hubs__grid {
-            grid-template-columns: 1fr;
-        }
-
-        .sfs-hubs__map {
-            min-height: 260px;
-        }
-    }
-}
-
 // Updates feed (insights.html "feed").
 .sfs-mode {
     .sfs-feed__title {
@@ -462,6 +449,7 @@
     // Europe window (no external tiles — CDN-free by design).
     .sfs-hubs__map {
         position: relative;
+        min-width: 0;
         min-height: 380px;
         border-radius: var(--sfs-radius-md);
         border: 1px solid var(--sfs-line);
@@ -510,6 +498,7 @@
         border: 1px solid var(--sfs-line);
         border-radius: var(--sfs-radius-md);
         padding: 12px;
+        min-width: 0;
         max-height: 380px;
         overflow-y: auto;
     }
@@ -600,6 +589,21 @@
     .sfs-hubs__row--lab .sfs-hubs__status {
         background: var(--sfs-accent50);
         color: var(--sfs-accent-ink);
+    }
+
+    // Responsive collapse — MUST stay after the base grid/map rules above.
+    // A media query adds no specificity, so an override placed *before* the
+    // two-column base (as it was) loses the cascade on equal specificity and
+    // never applies: the map + Network panel then keep the desktop two-column
+    // layout on phones and overflow horizontally (F6).
+    @include sfs-media-compact {
+        .sfs-hubs__grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sfs-hubs__map {
+            min-height: 260px;
+        }
     }
 }
 

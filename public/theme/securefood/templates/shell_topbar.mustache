@@ -61,29 +61,45 @@
     {{/searchurl}}
 
     <div class="sfs-topbar__actions">
-        <button class="sfs-iconbtn" type="button" data-sfs-action="scheme"
-                data-sfs-scheme-preference="{{schemepreference}}"
-                aria-label="{{#str}}togglescheme, theme_securefood{{/str}}">
-            <span class="sfs-icon sfs-iconbtn__icon--dark" aria-hidden="true">dark_mode</span>
-            <span class="sfs-icon sfs-iconbtn__icon--light" aria-hidden="true">light_mode</span>
-        </button>
-        {{#modeswitch}}
-            <a class="sfs-iconbtn" href="{{url}}" title="{{#str}}switchtostandard, theme_securefood{{/str}}"
-               aria-label="{{#str}}switchtostandard, theme_securefood{{/str}}">
-                <span class="sfs-icon" aria-hidden="true">swap_horiz</span>
-            </a>
-        {{/modeswitch}}
-        {{#helpurl}}
-            <a class="sfs-iconbtn" href="{{helpurl}}" title="{{#str}}help, core{{/str}}"
-               aria-label="{{#str}}help, core{{/str}}">
-                <span class="sfs-icon" aria-hidden="true">help</span>
-            </a>
-        {{/helpurl}}
+        {{! Core plugin cluster (notifications/messages/plugin nav) stays inline at
+            every width — its Bootstrap popovers must not be nested (ADR-013). }}
         {{#output.navbar_plugin_output}}
             <div class="sfs-topbar__plugins">{{{ . }}}</div>
         {{/output.navbar_plugin_output}}
-        {{#langmenu}}
-            {{> theme_boost/language_menu }}
-        {{/langmenu}}
+
+        {{! Theme-owned secondary controls: inline on desktop, collapsed into the
+            "More" popover on mobile (ADR-013). Rendered once; only JS adds the
+            collapsible class, so without JS these stay visible and the bar wraps. }}
+        <div class="sfs-topbar__more" data-region="sfs-topbar-more">
+            <button class="sfs-iconbtn sfs-topbar__moretoggle" type="button"
+                    data-sfs-action="more" aria-expanded="false"
+                    aria-controls="sfs-topbar-secondary"
+                    aria-label="{{#str}}moreactions, theme_securefood{{/str}}">
+                <span class="sfs-icon" aria-hidden="true">more_vert</span>
+            </button>
+            <div class="sfs-topbar__secondary" id="sfs-topbar-secondary">
+                <button class="sfs-iconbtn" type="button" data-sfs-action="scheme"
+                        data-sfs-scheme-preference="{{schemepreference}}"
+                        aria-label="{{#str}}togglescheme, theme_securefood{{/str}}">
+                    <span class="sfs-icon sfs-iconbtn__icon--dark" aria-hidden="true">dark_mode</span>
+                    <span class="sfs-icon sfs-iconbtn__icon--light" aria-hidden="true">light_mode</span>
+                </button>
+                {{#modeswitch}}
+                    <a class="sfs-iconbtn" href="{{url}}" title="{{#str}}switchtostandard, theme_securefood{{/str}}"
+                       aria-label="{{#str}}switchtostandard, theme_securefood{{/str}}">
+                        <span class="sfs-icon" aria-hidden="true">swap_horiz</span>
+                    </a>
+                {{/modeswitch}}
+                {{#helpurl}}
+                    <a class="sfs-iconbtn" href="{{helpurl}}" title="{{#str}}help, core{{/str}}"
+                       aria-label="{{#str}}help, core{{/str}}">
+                        <span class="sfs-icon" aria-hidden="true">help</span>
+                    </a>
+                {{/helpurl}}
+                {{#langmenu}}
+                    {{> theme_boost/language_menu }}
+                {{/langmenu}}
+            </div>
+        </div>
     </div>
 </header>

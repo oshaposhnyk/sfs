@@ -49,6 +49,7 @@ $string['defaultmode'] = 'Default experience mode';
 $string['defaultmode_desc'] = 'The experience users get before they make their own choice.';
 $string['mode_standard'] = 'Standard Moodle';
 $string['mode_securefood'] = 'SecureFood mode';
+$string['moreactions'] = 'More';
 $string['switchmode'] = 'Switch experience mode';
 $string['switchtostandard'] = 'Switch to the standard Moodle interface';
 $string['switchtosecurefood'] = 'Switch to the SecureFood interface';

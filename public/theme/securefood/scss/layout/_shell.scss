@@ -117,6 +117,13 @@
         display: none;
     }
 
+    // Sticky-topbar scroll offset: the skip link (#sfs-main) and in-page anchors
+    // must not land behind the ~57px sticky bar (F3 / WCAG 2.4.1). The scroll
+    // container itself gets scroll-padding-top at the :root:has() rule below.
+    #sfs-main {
+        scroll-margin-top: 72px;
+    }
+
     .sfs-skip {
         position: absolute;
         top: 8px;
@@ -534,9 +541,30 @@
 
     .sfs-topbar__actions {
         margin-left: auto;
+        min-width: 0;
         display: flex;
         align-items: center;
         gap: 8px;
+    }
+
+    // Theme-owned secondary controls (ADR-013). Desktop: the wrapper is
+    // transparent to layout so the controls sit inline in the actions row, and
+    // the "More" toggle is hidden. Mobile turns this into a popover (see the
+    // sfs-media-mobile block) but only once JS adds --collapsible.
+    .sfs-topbar__more {
+        display: contents;
+    }
+
+    .sfs-topbar__secondary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    // Scoped under the wrapper (0,3,0) so it beats `.sfs-iconbtn { display: grid }`
+    // (0,2,0) regardless of source order — the toggle carries both classes.
+    .sfs-topbar__more .sfs-topbar__moretoggle {
+        display: none;
     }
 
     .sfs-topbar__plugins {
@@ -667,6 +695,7 @@
         gap: 6px;
         color: var(--sfs-muted);
         font-size: 0.85rem;
+        flex: 0 1 auto;
         min-width: 0;
         flex-wrap: wrap;
     }
@@ -956,6 +985,19 @@
     }
 
     // ---------------------------------------------------------------
+    // Compact (≤1100px): let the search shrink so the action cluster and
+    // breadcrumb never push the topbar into horizontal overflow (F2). Search
+    // is only fully hidden at the mobile breakpoint below.
+    // ---------------------------------------------------------------
+    @include sfs-media-compact {
+        .sfs-search {
+            width: auto;
+            min-width: 0;
+            flex: 0 1 200px;
+        }
+    }
+
+    // ---------------------------------------------------------------
     // Mobile drawer (≤820px).
     // ---------------------------------------------------------------
     @include sfs-media-mobile {
@@ -1079,6 +1121,9 @@
         .sfs-topbar {
             padding: 8px 12px;
             gap: 8px;
+            // Belt-and-braces: with no JS (or a very wide core plugin cluster)
+            // the row wraps instead of forcing page-level horizontal scroll.
+            flex-wrap: wrap;
         }
 
         // Compact breadcrumbs: current page only.
@@ -1088,6 +1133,8 @@
         }
 
         .sfs-breadcrumbs__item--current {
+            flex: 0 1 auto;
+            min-width: 0;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -1095,6 +1142,40 @@
 
         .sfs-topbar__actions {
             gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        // Collapsible "More" popover (ADR-013). Only active once JS adds
+        // --collapsible; without JS the wrapper stays display:contents and the
+        // secondary controls remain inline (and wrap), so nothing is lost.
+        .sfs-topbar__more--collapsible {
+            display: block;
+            position: relative;
+
+            .sfs-topbar__moretoggle {
+                display: grid;
+            }
+
+            .sfs-topbar__secondary {
+                position: absolute;
+                top: calc(100% + 10px);
+                right: 0;
+                z-index: 60;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 4px;
+                min-width: 208px;
+                padding: 8px;
+                background: var(--sfs-surface);
+                border: 1px solid var(--sfs-line);
+                border-radius: var(--sfs-radius-md);
+                box-shadow: var(--sfs-shadow-3);
+            }
+
+            .sfs-topbar__moretoggle[aria-expanded="true"] + .sfs-topbar__secondary {
+                display: flex;
+            }
         }
 
         .sfs-search {
@@ -1109,6 +1190,12 @@
             margin: 0 16px 24px;
         }
     }
+}
+
+// Sticky-topbar scroll offset on the scroll container itself, scoped to SFS
+// pages only so standard Boost pages are untouched (F3 / WCAG 2.4.1).
+:root:has(.sfs-mode) {
+    scroll-padding-top: 72px;
 }
 
 // ---------------------------------------------------------------

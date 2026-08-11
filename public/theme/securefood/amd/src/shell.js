@@ -32,6 +32,15 @@ const CLASSES = {
     drawerOpen: 'sfs-drawer-open',
 };
 
+// Topbar "More" disclosure (ADR-013). The collapsible class is added by JS only,
+// so without this module the secondary controls stay inline (progressive
+// enhancement) and nothing is hidden behind an inert toggle.
+const MORE_COLLAPSIBLE = 'sfs-topbar__more--collapsible';
+const MORE_SELECTORS = {
+    wrap: '.sfs-topbar__more',
+    toggle: '[data-sfs-action="more"]',
+};
+
 const isMobile = () => window.matchMedia('(max-width: 820px)').matches;
 
 const USER_MENU_SELECTORS = {
@@ -197,6 +206,58 @@ const toggleScheme = (button) => {
 };
 
 /**
+ * Get the topbar "More" wrapper and its toggle button.
+ *
+ * @return {?{wrap: HTMLElement, toggle: HTMLElement}}
+ */
+const getMore = () => {
+    const wrap = document.querySelector(MORE_SELECTORS.wrap);
+    const toggle = wrap ? wrap.querySelector(MORE_SELECTORS.toggle) : null;
+    return wrap && toggle ? {wrap, toggle} : null;
+};
+
+/**
+ * Open or close the "More" popover, keeping aria-expanded in sync.
+ *
+ * @param {boolean} open Whether the popover should be open.
+ */
+const setMoreOpen = (open) => {
+    const more = getMore();
+    if (more) {
+        more.toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+};
+
+/**
+ * Close the "More" popover if it is open, optionally returning focus.
+ *
+ * @param {boolean} refocus Whether to move focus back to the toggle.
+ */
+const closeMore = (refocus = false) => {
+    const more = getMore();
+    if (!more || more.toggle.getAttribute('aria-expanded') !== 'true') {
+        return;
+    }
+    setMoreOpen(false);
+    if (refocus) {
+        more.toggle.focus();
+    }
+};
+
+/**
+ * Switch the "More" control between inline (desktop) and collapsible popover
+ * (mobile). Always leaves the popover closed.
+ */
+const applyMoreMode = () => {
+    const more = getMore();
+    if (!more) {
+        return;
+    }
+    more.wrap.classList.toggle(MORE_COLLAPSIBLE, isMobile());
+    setMoreOpen(false);
+};
+
+/**
  * Resize inactive user-menu carousel panes to the currently visible pane.
  *
  * Moodle core normally does this on Bootstrap dropdown lifecycle events. The
@@ -342,8 +403,14 @@ const initUserMenuCarouselBridge = () => {
 export const init = () => {
     syncSidebarAccessibility(document.body.classList.contains(CLASSES.drawerOpen));
     initUserMenuCarouselBridge();
+    applyMoreMode();
 
     document.addEventListener('click', (e) => {
+        // Click-away closes the "More" popover before any action handling.
+        if (!e.target.closest(MORE_SELECTORS.wrap)) {
+            closeMore();
+        }
+
         const target = e.target.closest('[data-sfs-action]');
         if (!target) {
             return;
@@ -355,14 +422,20 @@ export const init = () => {
         } else if (action === 'scheme') {
             e.preventDefault();
             toggleScheme(target);
+        } else if (action === 'more') {
+            e.preventDefault();
+            setMoreOpen(target.getAttribute('aria-expanded') !== 'true');
         } else if (action === 'backdrop') {
             closeDrawer();
         }
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.body.classList.contains(CLASSES.drawerOpen)) {
-            closeDrawer();
+        if (e.key === 'Escape') {
+            if (document.body.classList.contains(CLASSES.drawerOpen)) {
+                closeDrawer();
+            }
+            closeMore(true);
         }
         trapFocus(e);
     });
@@ -371,5 +444,6 @@ export const init = () => {
         document.body.classList.remove(CLASSES.drawerOpen);
         lastfocus = null;
         syncSidebarAccessibility(false);
+        applyMoreMode();
     });
 };

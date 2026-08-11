@@ -49,6 +49,7 @@ $string['defaultmode'] = 'Типовий режим інтерфейсу';
 $string['defaultmode_desc'] = 'Режим, який отримують користувачі, доки не зроблять власний вибір.';
 $string['mode_standard'] = 'Стандартний Moodle';
 $string['mode_securefood'] = 'Режим SecureFood';
+$string['moreactions'] = 'Ще';
 $string['switchmode'] = 'Перемкнути режим інтерфейсу';
 $string['switchtostandard'] = 'Перемкнутися на стандартний інтерфейс Moodle';
 $string['switchtosecurefood'] = 'Перемкнутися на інтерфейс SecureFood';
