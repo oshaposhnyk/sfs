@@ -30,10 +30,17 @@
     --sfs-primary700:   #0B3A48;
     --sfs-primary800:   #143E4D;
     --sfs-primary50:    #E6F0F2;
+    // Text/hover on SOLID primary backgrounds. In dark the primary flips to a
+    // bright teal, so text must go dark and the hover must go lighter (AA).
+    --sfs-on-primary:   #FFFFFF;
+    --sfs-primary-hover: #0B3A48;
     --sfs-accent:       #C68A3B;
     --sfs-accent300:    #E0A458;
     --sfs-accent100:    #F2D08E;
     --sfs-accent50:     #F8EFDF;
+    // Dark ink for text/icons ON a solid accent (amber) button. One value works
+    // in both schemes: 5.6:1 on the light accent, 7.6:1 on the dark accent.
+    --sfs-on-accent:    #08252E;
     // Derived text-safe accents (WCAG AA): accent as TEXT on light surfaces
     // needs a darker amber; on dark panels a lighter one. Not admin-facing.
     --sfs-accent-ink:   #8A5E20;
@@ -96,6 +103,8 @@
     --sfs-primary:      #4FC3C0;
     --sfs-primary700:   #2A8C8A;
     --sfs-primary50:    rgba(79, 195, 192, 0.12);
+    --sfs-on-primary:   #08252E;
+    --sfs-primary-hover: #6FD6D3;
     --sfs-accent:       #E0A458;
     --sfs-accent50:     rgba(224, 164, 88, 0.16);
     --sfs-accent-ink:   #E0A458;
@@ -106,8 +115,87 @@
     --sfs-danger-ink:   #E5837C;
 }
 
+// Bootstrap 5 bakes its semantic variables (--bs-body-bg, --bs-border-color, …)
+// to LIGHT values at compile time; they are NOT part of the --sfs-* runtime
+// swap. So any core Boost component that reads them (message drawer, dashboard
+// blocks, dropdowns, list groups, plain .btn) stays light-on-light in the dark
+// scheme. Remap the Bootstrap vars onto SFS dark tokens so unstyled core UI
+// follows the scheme too. The *-rgb triples mirror the dark tokens above
+// because Bootstrap consumes them inside rgba(); keep them in sync with any
+// token change. Scoped to the SFS shell (dark only ever applies there) so
+// standard Boost pages are never touched.
+@mixin sfs-dark-bootstrap {
+    --bs-body-bg:            var(--sfs-surface);
+    --bs-body-bg-rgb:        16, 44, 54;
+    --bs-body-color:         var(--sfs-ink);
+    --bs-body-color-rgb:     242, 239, 233;
+    --bs-emphasis-color:     var(--sfs-ink);
+    --bs-emphasis-color-rgb: 242, 239, 233;
+    --bs-secondary-bg:       var(--sfs-surface2);
+    --bs-secondary-bg-rgb:   20, 55, 68;
+    --bs-secondary-color:    var(--sfs-muted);
+    --bs-secondary-color-rgb: 155, 174, 182;
+    --bs-tertiary-bg:        var(--sfs-bg2);
+    --bs-tertiary-bg-rgb:    14, 37, 48;
+    --bs-tertiary-color:     var(--sfs-muted2);
+    --bs-border-color:       var(--sfs-line);
+    --bs-border-color-translucent: var(--sfs-line);
+    --bs-heading-color:      var(--sfs-ink);
+    --bs-link-color:         var(--sfs-primary);
+    --bs-link-color-rgb:     79, 195, 192;
+    --bs-link-hover-color:   var(--sfs-primary-hover);
+    --bs-link-hover-color-rgb: 111, 214, 211;
+    --bs-light:              var(--sfs-surface2);
+    --bs-light-rgb:          20, 55, 68;
+    // .bg-white / .bg-secondary are !important utilities reading these shared
+    // *-rgb vars; remap them to dark surfaces so panels (e.g. the message
+    // drawer) follow the scheme. .bg-dark keeps its default so it stays dark.
+    --bs-white-rgb:          16, 44, 54;
+    --bs-secondary-rgb:      20, 55, 68;
+
+    // Bootstrap's "subtle" colour system (alerts, badges, focus/active list
+    // rows such as the recently-accessed block) is baked light: -bg-subtle are
+    // pale tints and -text-emphasis are near-black. Rebuild them for dark by
+    // tinting the dark surface with each semantic hue and pairing a light ink.
+    --bs-primary-bg-subtle:      color-mix(in srgb, var(--sfs-primary) 18%, var(--sfs-surface));
+    --bs-primary-text-emphasis:  var(--sfs-teal-ink);
+    --bs-primary-border-subtle:  color-mix(in srgb, var(--sfs-primary) 35%, var(--sfs-surface));
+    --bs-secondary-bg-subtle:    var(--sfs-surface2);
+    --bs-secondary-text-emphasis: var(--sfs-ink2);
+    --bs-secondary-border-subtle: var(--sfs-line);
+    --bs-success-bg-subtle:      color-mix(in srgb, var(--sfs-success) 18%, var(--sfs-surface));
+    --bs-success-text-emphasis:  var(--sfs-success-ink);
+    --bs-success-border-subtle:  color-mix(in srgb, var(--sfs-success) 35%, var(--sfs-surface));
+    --bs-info-bg-subtle:         color-mix(in srgb, var(--sfs-teal) 18%, var(--sfs-surface));
+    --bs-info-text-emphasis:     var(--sfs-teal-ink);
+    --bs-info-border-subtle:     color-mix(in srgb, var(--sfs-teal) 35%, var(--sfs-surface));
+    --bs-warning-bg-subtle:      color-mix(in srgb, var(--sfs-warn) 18%, var(--sfs-surface));
+    --bs-warning-text-emphasis:  var(--sfs-accent-ink);
+    --bs-warning-border-subtle:  color-mix(in srgb, var(--sfs-warn) 35%, var(--sfs-surface));
+    --bs-danger-bg-subtle:       color-mix(in srgb, var(--sfs-danger) 18%, var(--sfs-surface));
+    --bs-danger-text-emphasis:   var(--sfs-danger-ink);
+    --bs-danger-border-subtle:   color-mix(in srgb, var(--sfs-danger) 35%, var(--sfs-surface));
+    --bs-light-bg-subtle:        var(--sfs-surface2);
+    --bs-light-border-subtle:    var(--sfs-line);
+    --bs-dark-bg-subtle:         var(--sfs-bg2);
+    --bs-dark-text-emphasis:     var(--sfs-ink);
+    --bs-dark-border-subtle:     var(--sfs-linestrong);
+
+    // The .text-* twins share the same *-rgb variable, so the remaps above would
+    // also darken text that is meant to stay light. Restore the light value
+    // locally on the text utilities — we only change the variable each utility
+    // already reads, so no !important is needed to win over Bootstrap.
+    .text-white { --bs-white-rgb: 255, 255, 255; }
+    .text-light { --bs-light-rgb: 242, 239, 233; }
+    .text-dark  { --bs-dark-rgb: 242, 239, 233; }
+}
+
 :root[data-theme="dark"] {
     @include sfs-dark-tokens;
+}
+
+:root[data-theme="dark"] body.sfs-mode {
+    @include sfs-dark-bootstrap;
 }
 
 // Scoped to the shell's explicit "system" scheme so standard Boost pages
@@ -117,5 +205,9 @@
 @media (prefers-color-scheme: dark) {
     :root[data-theme="system"] {
         @include sfs-dark-tokens;
+    }
+
+    :root[data-theme="system"] body.sfs-mode {
+        @include sfs-dark-bootstrap;
     }
 }

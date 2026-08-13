@@ -448,6 +448,17 @@
             }
         }
 
+        // A plugin nav wrapper can hold more than one link (e.g. Future Food +
+        // achievements). Space them like the rest of the topbar row (the
+        // .sfs-topbar__plugins gap only applies between wrappers, not inside them).
+        .local-learningplans__nav-item,
+        .local-sfsgame__nav-item,
+        .local-sfsresources__nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         // Dark text on the accent so the number reads in both schemes
         // (was accent-on-accent, near-invisible).
         .count-container {

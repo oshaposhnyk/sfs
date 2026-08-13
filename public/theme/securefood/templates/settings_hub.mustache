@@ -51,9 +51,9 @@
                             {{/facts}}
                         </dl>
                     {{/hasfacts}}
-                    {{^hasfacts}}
-                        <div class="sfs-hub__empty" aria-hidden="true"></div>
-                    {{/hasfacts}}
+                    {{#description}}
+                        <p class="sfs-hub__desc">{{description}}</p>
+                    {{/description}}
                 </div>
                 <footer class="sfs-hub__links">
                     {{#links}}

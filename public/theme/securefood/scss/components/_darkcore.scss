@@ -89,7 +89,10 @@
             color: var(--sfs-muted);
         }
 
-        .sfs-shell__page a:not(.btn):not(.sfs-nav__item):not(.nav-link) {
+        // Content links go teal in dark. Exclude link-buttons that carry their
+        // own solid background (e.g. the Future Food CTA on amber), where teal
+        // text would clash — they set their own on-accent ink.
+        .sfs-shell__page a:not(.btn):not(.sfs-nav__item):not(.nav-link):not(.sfs-ffhero__cta):not(.sfsres__filter) {
             color: var(--sfs-primary);
         }
 
@@ -100,9 +103,32 @@
             border-color: var(--sfs-linestrong);
         }
 
+        // Core icon buttons (mform section collapse/expand, etc.) ship a light
+        // blue background that leaves the (now light) glyph invisible in dark.
+        .btn-icon {
+            background-color: var(--sfs-surface2);
+            color: var(--sfs-ink);
+
+            &:hover,
+            &:focus {
+                background-color: var(--sfs-surface);
+                color: var(--sfs-ink);
+            }
+        }
+
         .close,
         .btn-close {
             filter: invert(1) grayscale(100%);
+        }
+
+        // Plugin nav icons in the topbar are SVGs loaded via <img> (e.g.
+        // local_sfsgame), so their fill="currentColor" resolves to black — an
+        // <img> can't read the page text colour — and they vanish on the dark
+        // topbar. Brighten them to sit alongside the Font Awesome glyph icons.
+        // Light mode keeps the dark icon on its light button, so this is
+        // dark-scoped only.
+        .sfs-topbar__plugins img {
+            filter: brightness(0) invert(0.85);
         }
     }
 }

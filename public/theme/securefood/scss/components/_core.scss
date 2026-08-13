@@ -1,0 +1,243 @@
+// Generic SecureFood skin for core Moodle content rendered inside the shell
+// (ADR-002). Any page that gets the SFS shell but keeps core Boost markup
+// (data requests, change password, and other user-facing admin/tool pages)
+// picks up consistent SFS buttons, tables and notices here. Page-specific
+// refinements (e.g. the account forms in _preferences, scoped by body id) have
+// higher specificity and still win. Everything uses tokens, so it adapts to the
+// dark scheme automatically.
+
+.sfs-mode {
+    // Core utility pages (account/preferences/admin tools) in the shell already
+    // show breadcrumbs in the topbar and their own content heading, so the core
+    // context header (#page-header, the "avatar + heading + Message" block) is a
+    // duplicate. Hide it — the designed SFS pages already hide it per path/layout,
+    // and course pages keep it (higher specificity in _course) as their banner.
+    // These selectors only match when shelled (.sfs-mode is present).
+    &.pagelayout-admin #page-header,
+    &.pagelayout-base #page-header,
+    &.pagelayout-standard #page-header,
+    &.path-badges #page-header,
+    &.path-blog #page-header {
+        display: none;
+    }
+
+    // The topbar owns breadcrumbs — never render the core navbar breadcrumb in
+    // the shell (it duplicated the topbar trail on course/standard pages).
+    #page-header #page-navbar {
+        display: none;
+    }
+
+    .sfs-shell__maincontent {
+        // -----------------------------------------------------------
+        // Buttons.
+        // -----------------------------------------------------------
+        .btn {
+            border-radius: 999px;
+            font-weight: 700;
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
+        }
+
+        .btn-primary {
+            border-color: var(--sfs-primary);
+            background: var(--sfs-primary);
+            color: var(--sfs-on-primary);
+
+            &:hover,
+            &:focus {
+                border-color: var(--sfs-primary-hover);
+                background: var(--sfs-primary-hover);
+                color: var(--sfs-on-primary);
+            }
+        }
+
+        .btn-secondary,
+        .btn-outline-secondary {
+            border-color: var(--sfs-linestrong);
+            background: var(--sfs-surface);
+            color: var(--sfs-primary);
+
+            &:hover,
+            &:focus {
+                border-color: var(--sfs-linestrong);
+                background: var(--sfs-surface2);
+                color: var(--sfs-primary);
+            }
+        }
+
+        // Core "simple search" submit button (message app, admin search boxes)
+        // ships a hardcoded light-grey background/icon; drive it from tokens so
+        // it fits both schemes instead of floating as a pale chip in the dark UI.
+        .simplesearchform .btn-submit {
+            border-color: var(--sfs-linestrong);
+            background: var(--sfs-surface2);
+            color: var(--sfs-ink2);
+
+            &:hover,
+            &:focus {
+                background: var(--sfs-surface);
+                color: var(--sfs-primary);
+            }
+        }
+
+        // -----------------------------------------------------------
+        // General tables (data requests, reports, list pages).
+        // -----------------------------------------------------------
+        .generaltable,
+        table.table {
+            width: 100%;
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            background: var(--sfs-surface);
+
+            th,
+            td {
+                border-color: var(--sfs-line);
+                color: var(--sfs-ink2);
+                vertical-align: middle;
+            }
+
+            thead th {
+                background: var(--sfs-surface2);
+                color: var(--sfs-ink);
+                font-weight: 700;
+            }
+
+            tbody tr:hover {
+                background: var(--sfs-surface2);
+            }
+
+            a {
+                color: var(--sfs-primary);
+                font-weight: 600;
+            }
+        }
+
+        // -----------------------------------------------------------
+        // Core notices / alerts.
+        // -----------------------------------------------------------
+        .alert {
+            border: 1px solid var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            background: var(--sfs-surface2);
+            color: var(--sfs-ink2);
+        }
+
+        .alert-info {
+            border-color: color-mix(in srgb, var(--sfs-primary) 30%, var(--sfs-line));
+            background: var(--sfs-primary50);
+            color: var(--sfs-ink);
+        }
+
+        .alert-success {
+            border-color: color-mix(in srgb, var(--sfs-success) 40%, var(--sfs-line));
+            background: color-mix(in srgb, var(--sfs-success) 10%, var(--sfs-surface));
+            color: var(--sfs-ink);
+        }
+
+        .alert-warning {
+            border-color: color-mix(in srgb, var(--sfs-warn) 40%, var(--sfs-line));
+            background: color-mix(in srgb, var(--sfs-warn) 10%, var(--sfs-surface));
+            color: var(--sfs-ink);
+        }
+
+        .alert-danger,
+        .alert-error {
+            border-color: color-mix(in srgb, var(--sfs-danger) 40%, var(--sfs-line));
+            background: color-mix(in srgb, var(--sfs-danger) 10%, var(--sfs-surface));
+            color: var(--sfs-ink);
+        }
+
+        // -----------------------------------------------------------
+        // Badges.
+        // -----------------------------------------------------------
+        .badge {
+            border-radius: 999px;
+            font-weight: 700;
+            background: var(--sfs-surface2);
+            color: var(--sfs-ink2);
+        }
+
+        .badge.bg-primary,
+        .badge.badge-primary {
+            background: var(--sfs-primary);
+            color: var(--sfs-on-primary);
+        }
+
+        // -----------------------------------------------------------
+        // Pagination.
+        // -----------------------------------------------------------
+        .page-link {
+            border-color: var(--sfs-line);
+            background: var(--sfs-surface);
+            color: var(--sfs-primary);
+
+            &:hover,
+            &:focus {
+                background: var(--sfs-surface2);
+                color: var(--sfs-primary);
+            }
+
+            &:focus-visible {
+                @include sfs-focus-ring;
+            }
+        }
+
+        .page-item.active .page-link {
+            border-color: var(--sfs-primary);
+            background: var(--sfs-primary);
+            color: var(--sfs-on-primary);
+        }
+
+        // -----------------------------------------------------------
+        // Generic cards (light; dark handled by _darkcore).
+        // -----------------------------------------------------------
+        .card {
+            border-color: var(--sfs-line);
+            border-radius: var(--sfs-radius-md);
+            background: var(--sfs-surface);
+        }
+
+        // -----------------------------------------------------------
+        // Generic form controls (any shelled core page; per-page account
+        // forms in _preferences refine these via higher-specificity body ids).
+        // -----------------------------------------------------------
+        .form-control,
+        .form-select,
+        .custom-select,
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="search"],
+        input[type="url"],
+        textarea,
+        select {
+            border-color: var(--sfs-line);
+            border-radius: var(--sfs-radius-sm);
+            background-color: var(--sfs-surface2);
+            color: var(--sfs-ink);
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        .custom-select:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--sfs-primary);
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--sfs-primary) 18%, transparent);
+        }
+
+        // Table links get the shared focus ring for consistency (a11y).
+        .generaltable a:focus-visible,
+        table.table a:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+}

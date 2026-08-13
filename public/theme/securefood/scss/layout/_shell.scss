@@ -388,7 +388,7 @@
 
             .sfs-usercard-menu__itemicon {
                 background: var(--sfs-primary);
-                color: var(--sfs-on-dark);
+                color: var(--sfs-on-primary);
             }
         }
 
@@ -469,7 +469,7 @@
         height: 36px;
         border-radius: 50%;
         background: var(--sfs-primary);
-        color: var(--sfs-on-dark);
+        color: var(--sfs-on-primary);
         display: grid;
         place-items: center;
         font-weight: 700;
@@ -497,7 +497,7 @@
             display: grid;
             place-items: center;
             background: var(--sfs-primary);
-            color: var(--sfs-on-dark);
+            color: var(--sfs-on-primary);
             font-size: 0.82rem;
         }
     }
@@ -673,8 +673,8 @@
     }
 
     .sfs-iconbtn {
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         border: 1px solid var(--sfs-line);
         background: var(--sfs-surface);
@@ -737,7 +737,9 @@
 
     .sfs-breadcrumbs__sep {
         font-size: 14px;
-        color: var(--sfs-muted2);
+        // --sfs-muted2 was only ~2.4:1 on the light page background; --sfs-muted
+        // (AA-tuned) keeps the separator subtle but legible in both schemes.
+        color: var(--sfs-muted);
     }
 
     // ---------------------------------------------------------------
@@ -894,8 +896,8 @@
         gap: 8px;
 
         .nav-link.popover-region-toggle {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 1px solid var(--sfs-line);
             background: var(--sfs-surface);
@@ -981,13 +983,13 @@
         .stickyfooter .btn-primary {
             border-color: var(--sfs-primary);
             background: var(--sfs-primary);
-            color: var(--sfs-on-dark);
+            color: var(--sfs-on-primary);
 
             &:hover,
             &:focus {
-                border-color: var(--sfs-primary700);
-                background: var(--sfs-primary700);
-                color: var(--sfs-on-dark);
+                border-color: var(--sfs-primary-hover);
+                background: var(--sfs-primary-hover);
+                color: var(--sfs-on-primary);
             }
         }
 

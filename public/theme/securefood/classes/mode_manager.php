@@ -50,19 +50,29 @@ final class mode_manager {
     ];
 
     /**
-     * Admin-layout pages that are user-facing enough to keep inside SFS.
-     *
-     * Most admin-layout pages remain Boost because core forms and admin
-     * furniture are not fully shell-safe. Keep this list explicit so fixes for
-     * user-facing preference/profile pages do not silently wrap site admin
-     * screens.
+     * User-facing pages kept inside the SFS shell even though their page layout
+     * (admin, or maintenance for the advanced profile editor) would otherwise
+     * fall back to Boost. These are the pages reachable from the SecureFood
+     * settings hub and /user/preferences.php. Keep the list explicit so it never
+     * silently wraps unrelated site-admin screens.
      *
      * @var string[]
      */
     private const ADMIN_SHELL_PATHS = [
+        '/admin/roles/check.php',
+        '/admin/roles/permissions.php',
+        '/admin/roles/usersroles.php',
+        '/blog/external_blog_edit.php',
+        '/blog/preferences.php',
+        '/login/change_password.php',
+        '/message/edit.php',
         '/message/notificationpreferences.php',
         '/message/output/popup/notifications.php',
+        '/user/calendar.php',
+        '/user/contentbank.php',
         '/user/edit.php',
+        '/user/editadvanced.php',
+        '/user/editor.php',
         '/user/forum.php',
         '/user/language.php',
         '/user/preferences.php',
@@ -125,19 +135,21 @@ final class mode_manager {
      * @param \moodle_page $page The current page.
      */
     public static function uses_shell(\moodle_page $page): bool {
-        if (in_array($page->pagelayout, self::EXCLUDED_LAYOUTS, true)) {
+        $path = null;
+        try {
+            $path = $page->url->get_path();
+        } catch (\Throwable $exception) {
+            $path = null;
+        }
+        // Curated user-facing pages may keep the shell even when their layout
+        // would normally force Boost (admin, or maintenance for editadvanced).
+        $allowed = $path !== null && in_array($path, self::ADMIN_SHELL_PATHS, true);
+
+        if (in_array($page->pagelayout, self::EXCLUDED_LAYOUTS, true) && !$allowed) {
             return false;
         }
-        if ($page->pagelayout === 'admin') {
-            try {
-                $path = $page->url->get_path();
-            } catch (\Throwable $exception) {
-                return false;
-            }
-
-            if (!in_array($path, self::ADMIN_SHELL_PATHS, true)) {
-                return false;
-            }
+        if ($page->pagelayout === 'admin' && !$allowed) {
+            return false;
         }
         if ($page->user_is_editing()) {
             return false;

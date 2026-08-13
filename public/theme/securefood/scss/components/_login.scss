@@ -192,6 +192,20 @@ body.pagelayout-login {
         box-shadow: var(--sfs-shadow-3);
     }
 
+    // Brand logo atop the login form. Rendered here (not just the left panel)
+    // so it shows on small screens where the branded panel is hidden. The light
+    // logo suits the light surface; the dark scheme swaps it below.
+    .login-container::before {
+        content: '';
+        display: block;
+        width: 210px;
+        max-width: 100%;
+        height: 54px;
+        margin: 0 auto 22px;
+        background: url([[pix:theme|logo-full-light]]) no-repeat center;
+        background-size: contain;
+    }
+
     .login-container,
     .loginform {
         color: var(--sfs-ink2);
@@ -502,5 +516,16 @@ body.pagelayout-login {
     // Before JS sets the state, show the system icon as the default.
     .sfs-loginscheme:not([data-sfs-scheme]) .sfs-loginscheme__icon--system {
         display: inline-block;
+    }
+}
+
+// Login form logo follows the colour scheme (the form surface flips in dark).
+:root[data-theme="dark"] body.pagelayout-login .login-container::before {
+    background-image: url([[pix:theme|logo-full-dark]]);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root[data-theme="system"] body.pagelayout-login .login-container::before {
+        background-image: url([[pix:theme|logo-full-dark]]);
     }
 }

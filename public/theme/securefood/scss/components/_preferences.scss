@@ -52,10 +52,12 @@
         .btn-primary {
             background: var(--sfs-primary);
             border-color: var(--sfs-primary);
+            color: var(--sfs-on-primary);
 
             &:hover {
-                background: var(--sfs-primary700);
-                border-color: var(--sfs-primary700);
+                background: var(--sfs-primary-hover);
+                border-color: var(--sfs-primary-hover);
+                color: var(--sfs-on-primary);
             }
         }
     }
@@ -188,9 +190,17 @@
     // User-facing core account forms that still use Moodle's admin layout.
     // They stay core Form API pages; the shell only provides SFS visual chrome.
     &#page-user-edit,
+    &#page-user-editadvanced,
+    &#page-user-editor,
+    &#page-user-calendar,
+    &#page-user-contentbank,
     &#page-user-language,
     &#page-user-forum,
-    &#page-message-notificationpreferences {
+    &#page-login-change-password,
+    &#page-message-edit,
+    &#page-message-notificationpreferences,
+    &#page-blog-preferences,
+    &#page-blog-external_blog_edit {
         .sfs-shell__maincontent {
             max-width: 1280px;
         }
@@ -324,13 +334,13 @@
         .preferences-page-container .btn-primary {
             border-color: var(--sfs-primary);
             background: var(--sfs-primary);
-            color: var(--sfs-on-dark);
+            color: var(--sfs-on-primary);
 
             &:hover,
             &:focus {
-                border-color: var(--sfs-primary700);
-                background: var(--sfs-primary700);
-                color: var(--sfs-on-dark);
+                border-color: var(--sfs-primary-hover);
+                background: var(--sfs-primary-hover);
+                color: var(--sfs-on-primary);
             }
         }
 
@@ -560,6 +570,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        gap: 12px;
     }
 
     .sfs-hub__facts {
@@ -593,14 +604,11 @@
         }
     }
 
-    .sfs-hub__empty {
-        flex: 1 1 auto;
-        min-height: 24px;
-        border-radius: var(--sfs-radius-sm);
-        background:
-            linear-gradient(90deg, var(--sfs-surface2), transparent),
-            radial-gradient(circle at 18px 18px, var(--sfs-primary50), transparent 24px);
-        opacity: 0.72;
+    .sfs-hub__desc {
+        margin: 0;
+        color: var(--sfs-muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
     }
 
     .sfs-hub__links {
@@ -629,7 +637,7 @@
 
         &:hover {
             background: var(--sfs-primary);
-            color: var(--sfs-on-dark);
+            color: var(--sfs-on-primary);
             border-color: var(--sfs-primary);
             text-decoration: none;
         }

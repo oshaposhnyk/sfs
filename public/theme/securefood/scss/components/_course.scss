@@ -30,8 +30,15 @@
         // Core page header becomes the course banner.
         #page-header {
             background: linear-gradient(135deg, var(--sfs-primary) 0%, var(--sfs-primary800) 100%);
-            border-radius: var(--sfs-radius-lg);
-            padding: 26px 30px;
+            // Full-bleed banner (owner decision): break out of the shell content's
+            // side padding so the header runs edge-to-edge, while the content below
+            // keeps its gutter. The negative margin tracks .sfs-shell__content's
+            // horizontal padding in layout/_shell.scss (36px here, 16px on mobile);
+            // the matching 36px inline padding keeps the title on the content column.
+            margin-left: -36px;
+            margin-right: -36px;
+            border-radius: 0;
+            padding: 26px 36px;
             margin-bottom: 24px;
             color: var(--sfs-on-dark);
             position: relative;
@@ -213,7 +220,9 @@
     // ---------------------------------------------------------------
     &.path-mod {
         #page-header {
-            padding: 20px 26px;
+            // Inline padding matches the desktop gutter so the full-bleed banner's
+            // heading stays aligned with the content column (see the shared block).
+            padding: 20px 36px;
 
             .page-header-headings h1 {
                 font-size: 1.5rem;
@@ -257,8 +266,12 @@
         &.path-course,
         &.path-mod {
             #page-header {
+                // Mobile gutter is 16px (layout/_shell.scss), so the full-bleed
+                // banner breaks out by that much and keeps 16px inline padding.
+                margin-left: -16px;
+                margin-right: -16px;
                 padding: 18px 16px;
-                border-radius: var(--sfs-radius-md);
+                border-radius: 0;
                 margin-bottom: 18px;
 
                 .page-header-headings h1 {
@@ -317,6 +330,8 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        min-width: 0;
+        max-width: 100%;
         padding: 5px 12px;
         border-radius: 999px;
         background: var(--sfs-primary50);

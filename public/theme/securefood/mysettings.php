@@ -75,6 +75,7 @@ $cards = [
         'icon' => 'lock',
         'title' => get_string('hub_password', 'theme_securefood'),
         'facts' => [],
+        'description' => get_string('hub_password_desc', 'theme_securefood'),
         'links' => [$link('/login/change_password.php', 'hub_changepassword')],
     ],
     [
@@ -91,12 +92,14 @@ $cards = [
         'icon' => 'notifications',
         'title' => get_string('hub_notifications', 'theme_securefood'),
         'facts' => [],
+        'description' => get_string('hub_notifications_desc', 'theme_securefood'),
         'links' => [$link('/message/notificationpreferences.php', 'hub_notificationprefs')],
     ],
     [
         'icon' => 'verified_user',
         'title' => get_string('hub_privacy', 'theme_securefood'),
         'facts' => [],
+        'description' => get_string('hub_privacy_desc', 'theme_securefood'),
         'links' => [
             $link('/admin/tool/dataprivacy/mydatarequests.php', 'hub_datarequests'),
             $link('/user/preferences.php', 'hub_allpreferences'),

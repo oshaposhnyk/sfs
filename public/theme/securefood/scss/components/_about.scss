@@ -330,7 +330,7 @@
 
     .sfs-feed__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
         gap: 18px;
         margin-bottom: 22px;
     }
@@ -500,14 +500,20 @@
         background: var(--sfs-surface);
         border: 1px solid var(--sfs-line);
         border-radius: var(--sfs-radius-md);
-        padding: 12px;
+        padding: 0 12px 12px;
         min-width: 0;
         max-height: 380px;
         overflow-y: auto;
     }
 
+    // The card scrolls internally; keep its title/lede pinned so the "Network"
+    // heading stays visible while the hub list scrolls under it.
     .sfs-hubs__cardhead {
-        padding: 6px 8px 12px;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 12px 8px;
+        background: var(--sfs-surface);
         border-bottom: 1px solid var(--sfs-line);
         margin-bottom: 8px;
     }

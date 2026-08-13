@@ -100,10 +100,6 @@ export const init = async(config) => {
     container.setAttribute('role', 'region');
     container.setAttribute('aria-label', config.maplabel);
 
-    const land = token('--sfs-primary50', '#E6F0F2');
-    const border = token('--sfs-line', '#E8E1D4');
-    const ink = token('--sfs-muted', '#5D7079');
-
     const map = L.map(container, {
         attributionControl: false,
         scrollWheelZoom: false,
@@ -115,14 +111,34 @@ export const init = async(config) => {
     // no clip bounds until the first view is set).
     map.setView([50, 15], 4);
 
-    L.geoJSON(geojson, {
+    const geoLayer = L.geoJSON(geojson, {
         style: {
-            color: border,
+            color: token('--sfs-line', '#E8E1D4'),
             weight: 1,
-            fillColor: land,
+            fillColor: token('--sfs-primary50', '#E6F0F2'),
             fillOpacity: 1,
         },
     }).addTo(map);
+
+    // Re-read tokens and recolour land/border/background so the map tracks
+    // colour-scheme changes (markers and popups follow via CSS custom properties).
+    const applyColors = () => {
+        geoLayer.setStyle({
+            color: token('--sfs-line', '#E8E1D4'),
+            fillColor: token('--sfs-primary50', '#E6F0F2'),
+        });
+        const el = map.getContainer();
+        el.style.background = token('--sfs-surface2', '#F1EBE0');
+        el.style.setProperty('--sfs-map-ink', token('--sfs-muted', '#5D7079'));
+    };
+    applyColors();
+    new MutationObserver(applyColors).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+    });
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyColors);
+    }
 
     const points = [];
     const safe = (text) => {
@@ -198,6 +214,4 @@ export const init = async(config) => {
         .addAttribution('Leaflet · Natural Earth')
         .addTo(map);
 
-    map.getContainer().style.background = token('--sfs-surface2', '#F1EBE0');
-    map.getContainer().style.setProperty('--sfs-map-ink', ink);
 };

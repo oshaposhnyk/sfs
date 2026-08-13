@@ -653,16 +653,19 @@
     .sfs-ffhero__cta {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         padding: 10px 20px;
         border-radius: 999px;
         background: var(--sfs-accent);
-        color: var(--sfs-on-dark);
+        // Dark ink on the amber button — white failed contrast in both schemes
+        // (~3:1). The icon (a child span) inherits this colour.
+        color: var(--sfs-on-accent);
         font-weight: 700;
         font-size: 0.9rem;
 
         &:hover {
             filter: brightness(0.95);
-            color: var(--sfs-on-dark);
+            color: var(--sfs-on-accent);
             text-decoration: none;
         }
 
@@ -710,6 +713,7 @@
     .sfs-xp__chip {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         padding: 5px 12px;
         border-radius: 999px;
         background: color-mix(in srgb, var(--sfs-on-dark) 10%, transparent);
