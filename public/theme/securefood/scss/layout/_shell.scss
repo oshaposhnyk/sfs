@@ -714,12 +714,19 @@
         font-size: 0.85rem;
         flex: 0 1 auto;
         min-width: 0;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
 
     .sfs-breadcrumbs__item {
         color: var(--sfs-muted);
         text-decoration: none;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        vertical-align: middle;
+        flex-shrink: 1;
 
         &:hover {
             color: var(--sfs-ink);
@@ -733,6 +740,13 @@
     .sfs-breadcrumbs__item--current {
         color: var(--sfs-ink);
         font-weight: 600;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        vertical-align: middle;
+        flex-shrink: 0;
     }
 
     .sfs-breadcrumbs__sep {
@@ -740,6 +754,80 @@
         // --sfs-muted2 was only ~2.4:1 on the light page background; --sfs-muted
         // (AA-tuned) keeps the separator subtle but legible in both schemes.
         color: var(--sfs-muted);
+        flex-shrink: 0;
+    }
+
+    .sfs-breadcrumbs__dropdown {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .sfs-breadcrumbs__ellipsis {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 22px;
+        min-width: 26px;
+        padding: 0 6px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 1px;
+        color: var(--sfs-muted);
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: var(--sfs-radius-sm);
+        cursor: pointer;
+        transition: var(--sfs-transition);
+
+        &:hover,
+        &:focus {
+            color: var(--sfs-ink);
+            background: var(--sfs-surface-sunken);
+            border-color: var(--sfs-line);
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
+        }
+    }
+
+    .sfs-breadcrumbs__menu {
+        font-size: 0.85rem;
+        min-width: 180px;
+        max-width: 320px;
+        padding: 6px 0;
+        background: var(--sfs-surface);
+        border: 1px solid var(--sfs-line);
+        border-radius: var(--sfs-radius-md);
+        box-shadow: var(--sfs-shadow-2);
+        z-index: 1050;
+
+        .sfs-breadcrumbs__menuitem {
+            color: var(--sfs-ink);
+            padding: 6px 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            text-decoration: none;
+            max-width: 100%;
+
+            &:hover,
+            &:focus {
+                background: var(--sfs-surface-sunken);
+                color: var(--sfs-primary);
+            }
+        }
+
+        .dropdown-item-text {
+            padding: 6px 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 100%;
+        }
     }
 
     // ---------------------------------------------------------------
@@ -1159,7 +1247,8 @@
 
         // Compact breadcrumbs: current page only.
         .sfs-breadcrumbs__item:not(.sfs-breadcrumbs__item--current),
-        .sfs-breadcrumbs__sep {
+        .sfs-breadcrumbs__sep,
+        .sfs-breadcrumbs__dropdown {
             display: none;
         }
 

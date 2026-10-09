@@ -3,7 +3,7 @@
 > Update this file every time you start or finish work. Newest entries first in
 > "Recent work". Keep it honest — blocked is blocked.
 
-Last updated: 2026-07-14 (login page styling implemented; final cache purge pending)
+Last updated: 2026-08-11 (Phase 11 mobile/a11y audit + Phase 0 map-overflow fix)
 
 ## Domain status
 
@@ -78,7 +78,339 @@ uk string review (9.6) owner takes it.
   container in docker-compose (60s loop over admin/cli/cron.php); task_log
   confirms fresh successful runs.
 
-## Recent work
+- **2026-10-09** — **Topbar breadcrumbs single-line collapse & Course index / Block drawer stabilization**:
+  - Implemented responsive ellipsis collapsing for long breadcrumbs trails in the topbar (`sfs.php`, `shell_topbar.mustache`, `_shell.scss`). When trail exceeds 3 items, intermediate items are neatly tucked into a Bootstrap dropdown behind an ellipsis button (`...`), keeping first crumb, penultimate crumb, and active page visible in a single row without wrapping.
+  - Added text truncation (`text-overflow: ellipsis`) and `flex-wrap: nowrap` so breadcrumb chains never break into a second line or deform the topbar height.
+  - Fixed Course Index drawer initialization in `shell.mustache` (removed invalid direct `Drawers.init()` call on the ES-module, guaranteed `standard_top_of_body_html` presence) and refined drawer slide transitions for closed (`left: -320px`) vs open (`left: var(--sfs-sidebar-w)`) states.
+  - Fixed right-hand course block drawer: decoupled block drawer toggler from `courseindex` presence via `hasdrawertoggles`, defaulted `drawer-open-block` to open on desktop when blocks exist, added a standard course block (`calendar_upcoming`) to test course, suppressed duplicate bottom-of-page blocks rendering on drawer layouts, and styled drawer card blocks with SFS tokens.
+- **2026-10-09** — **Course & module experience pivot to standard Boost visual with accent colours (ADR-014)**:
+  - Replaced invasive CSS restyling in `_course.scss` with standard Boost course and module formatting, strictly scoped to `.path-course` and `.path-mod` in `.sfs-mode`.
+  - Restored native Moodle course features: `.secondary-navigation` tabs (Course, Settings, Participants, Grades), section collapse/expand controls (`.section-collapsemenu`, `.icons-collapse-expand`), bulk selection, and native accordion collapse states (removed forced `display: block`).
+  - Restored native activity icons (`.activityiconcontainer`) with their semantic purpose colours (content, assessment, collaboration, communication) — removed the uniform colour-filter hack.
+  - Removed artificial full-bleed negative-margin course banner; standard `#page-header` typography styled with `--sfs-ink`.
+  - Retained high-value integrations: learning plan context strip (`.sfs-plancontext`) from `local_learningplans`, right course rail (`courserail`), and section completion fraction (`.sfs-secprog`).
+  - SFS brand identity applied cleanly via accent colours (links, buttons, tabs, completion badges, availability alerts, dark mode tokens). All other pages (Student Lab, About, Future Food, Resources, Preferences, Shell) remain 100% untouched.
+  - Verified SCSS compilation via `build_theme_css.php` and purged caches via `purge_caches.php`.
+
+- **2026-08-13** — **Dark-mode contrast/readability audit + full-bleed course banner**:
+  Owner reported dark-scheme readability defects (topbar icons, course section
+  card, FutureFood CTA, recently-accessed focus row, message drawer, notification
+  button) and asked for a 100% dark-mode sweep; also chose a full-bleed course
+  banner for the "#6 side padding" question.
+  - *Root cause:* the dark scheme swaps `--sfs-*` tokens but Bootstrap 5's own
+    `--bs-*` semantic vars stay baked-light, so un-themed core Boost components
+    (message drawer, dashboard blocks, dropdowns, plain buttons) render
+    light-on-light. Added `@mixin sfs-dark-bootstrap` in `_tokens.scss` remapping
+    the `--bs-*` surface/text/border/link vars + the whole `-bg-subtle` /
+    `-text-emphasis` / `-border-subtle` colour system onto SFS dark tokens,
+    scoped to `body.sfs-mode` under both dark triggers. `.bg-white`/`.bg-secondary`
+    fixed via their shared `*-rgb` vars with the light value restored locally on
+    `.text-white/.text-light/.text-dark` — **no `!important`** needed anywhere.
+  - Recently-accessed focus row (was `--bs-primary-bg-subtle` #cfe2f2 light-blue)
+    now dark; message drawer (`.bg-white`) now dark; Completion dropdown text now
+    light. Added `.btn-icon` + `.simplesearchform .btn-submit` dark handling
+    (`_darkcore.scss`/`_core.scss`).
+  - *FutureFood CTA:* teal-on-amber (1.03:1) — a dark-mode content-link rule
+    (`_darkcore.scss` `.sfs-shell__page a:not(...)`) was painting the `<a>` button
+    teal. Added `--sfs-on-accent` (#08252E, one value AA on both accent shades),
+    set the CTA + `.sfsres__filter--active` to it, and excluded both link-buttons
+    from the content-link rule. CTA now 7.32:1 (dark) / 5.4:1 (light); play icon
+    inherits the ink and is centred. Resources XLS icon → `--sfs-success-ink`.
+  - Settings-hub button hover + topbar icons/badges verified already AA (6.9–9.9:1)
+    via the earlier `--sfs-on-primary` work — those images reflected pre-fix stale
+    CSS.
+  - *Course banner (#6):* made full-bleed — breaks out of the shell's 32/36px
+    (16px mobile) side padding via negative margins + `border-radius:0`, inline
+    padding aligned to the content column; content cards keep their gutter.
+  - *Topbar plugin icon:* the Future Food quicklink is a `local_sfsgame` SVG
+    loaded via `<img>`, so its `fill="currentColor"` resolved to black (an `<img>`
+    can't read the page text colour) and vanished on the dark topbar while the
+    Font Awesome glyph icons stayed light. Added a dark-scoped
+    `.sfs-topbar__plugins img { filter: brightness(0) invert(.85) }` in
+    `_darkcore.scss` so it matches the other icons; light mode keeps the dark
+    icon on its light button. Also fixed its spacing: the two links in
+    `.local-sfsgame__nav-item` (Future Food + achievements) sat flush (0px) while
+    every other topbar pair had 8px — `.sfs-topbar__plugins`'s `gap` only applies
+    between wrappers, not inside them. Added `gap: 8px` to the `.local-*__nav-item`
+    wrappers (`_messaging.scss`) so all topbar icons are evenly spaced.
+  - *Light-mode follow-up:* breadcrumb separator (`.sfs-breadcrumbs__sep`) was
+    `--sfs-muted2` (~2.4:1 on the light page bg) → `--sfs-muted` (~4.8:1, AA).
+  - *Audit:* scanned dashboard, messages, settings, preferences, course, activity/
+    forum, FutureFood, profile-edit, badges, calendar, Student Lab, Resources,
+    My courses, Grades, notification popover and user menu in dark — **0 text
+    contrast fails** after fixes (calendar event-type pastels left: readable
+    dark-on-pastel, intentional Moodle colour-coding). Method: CSSOM relative-
+    luminance scanner with transitions disabled (transitions don't advance
+    without a paint in the automation tab, which produced false "white" reads).
+  Verified: theme compiles clean; zero raw hex / `!important` in theme SCSS
+  (only vendored `_leaflet.scss`); served CSS (rev bumped) carries every fix
+  confirmed in a clean tab; theme PHPUnit 22/22 (111 assertions); designer mode
+  restored off; caches purged. No git commit. NOTE: `_core.scss` is still
+  untracked (created last session) — commit alongside these when approved.
+
+- **2026-08-13** — **QA sweep fixes + 6 owner UI tasks**:
+  Acting on a 4-dimension QA review (CSS breakage / styling consistency /
+  accessibility / breadcrumbs+shadows) plus 6 owner items.
+  - *QA HIGH:* breadcrumb duplication removed — core `#page-header #page-navbar`
+    hidden globally in the shell (topbar owns breadcrumbs); `#page-header` hide
+    extended to `pagelayout-standard`. Dark-scheme `.btn-primary` was white-on-teal
+    (~2.1:1) → added `--sfs-on-primary` (#FFFFFF light / #08252E dark) +
+    `--sfs-primary-hover` (#0B3A48 / #6FD6D3); applied to every solid-primary
+    control (btn-primary in `_core`/`_preferences`/stickyfooter, hub-link hover,
+    usercard avatar/initials). Verified in dark: primary=#4FC3C0, on-primary=#08252E.
+  - *QA MEDIUM:* extended `_core.scss` with token-based `.badge`/`.pagination`/
+    `.card`/form-control styling for shelled core pages; unified topbar control
+    heights to 44px (`.sfs-iconbtn` + core popover toggles).
+  - *QA LOW:* `aria-haspopup="menu"` on the user-menu summary; `.btn-secondary`
+    border → `--sfs-linestrong`; `.sfs-feed__grid` min() overflow guard;
+    `.sfs-plancontext__chip` min-width:0/max-width; table-link focus ring.
+  - *Owner #1:* login form now shows the brand logo (`.login-container::before`
+    via `[[pix:theme|logo-full-{light,dark}]]`, scheme-aware; shows on all
+    viewports since the branded left panel is hidden on small screens).
+  - *Owner #2:* the About "Network" card header (`.sfs-hubs__cardhead`) is now
+    `position:sticky` so the title/lede stay pinned while the hub list scrolls.
+  - *Owner #3:* the Leaflet map now re-colours on colour-scheme change —
+    `aboutmap.js` extracts `applyColors()` (re-reads tokens, restyles the geojson
+    layer + container) and re-runs it on a `data-theme` MutationObserver +
+    `prefers-color-scheme` change. Verified: fill/bg switch to dark tokens live.
+  - *Owner #4/#5:* `.sfs-ffhero__cta` ("Start daily mission") and `.sfs-xp__chip`
+    ("0 badges") got `justify-content:center` so content centres when the control
+    is wider than its content. Verified via zoom.
+  - *Owner #6 (open):* couldn't reproduce the "header empty side padding" on the
+    Data Quality Checks course at desktop — the course banner (#page-header) spans
+    the full content width correctly. Needs owner clarification (viewport? or make
+    the course banner full-bleed to remove the content-padding side gaps?).
+  Verified: JS `node --check` (src+build ×3); theme compiles clean (1,287,324
+  bytes); zero raw hex outside `_tokens.scss`; en/uk in sync; theme PHPUnit 22/22;
+  designer mode restored off; caches purged. No git commit.
+
+- **2026-08-12** — **Closed all preferences-hub SFS gaps (owner: shell them all incl. editadvanced)**:
+  Expanded `mode_manager::ADMIN_SHELL_PATHS` with every remaining preference-hub
+  target: `/admin/roles/{check,permissions,usersroles}.php`, `/blog/preferences.php`,
+  `/blog/external_blog_edit.php`, `/message/edit.php`, `/user/calendar.php`,
+  `/user/contentbank.php`, `/user/editadvanced.php`, `/user/editor.php`.
+  Restructured `uses_shell()`: the curated list now overrides BOTH the admin-layout
+  gate and the excluded-layout gate (so `editadvanced` — which resolves to admin
+  here, but the override also covers the maintenance case — is shelled). All 18
+  linked pages now render in the SFS shell. Extended the account-form card styling
+  in `_preferences.scss` to the new form bodies (editadvanced/editor/calendar/
+  contentbank/message-edit/blog-preferences/blog-external_blog_edit); the
+  `#page-header` hide (added earlier) already covers them (admin layout), so each
+  shows a single heading + teal buttons + SFS tables/notices via `_core`.
+  Verified live (designer mode): editadvanced, message/edit, roles/usersroles,
+  data requests, badges, notif prefs all shelled + single heading + consistent;
+  message/edit is inherently sparse in this Moodle (content lives in notif prefs) —
+  not a regression. PHP lint clean; theme PHPUnit 22/22 (111 assertions); theme
+  compiles clean (1,285,028 bytes); caches purged; designer mode restored off.
+  No git commit.
+
+- **2026-08-12** — **Preferences-hub audit + duplicate-heading removal**:
+  Audited the 18 pages linked from `/user/preferences.php` for SFS-shell support
+  (via `mode_manager`: admin-layout → SFS only if in `ADMIN_SHELL_PATHS`; else
+  layout-driven). **Shelled (SFS):** change_password, user/language, user/forum,
+  message/notificationpreferences, user/preferences (allowlisted admin);
+  dataprivacy/mydatarequests (base); badges mybadges/preferences/mybackpack +
+  blog/external_blogs (standard). **NOT shelled (Boost gaps):** user/editadvanced
+  (admin's Edit profile — `maintenance` layout, excluded); user/editor,
+  user/calendar, user/contentbank, message/edit, admin/roles/{usersroles,
+  permissions,check}, blog/preferences, blog/external_blog_edit (admin layout, not
+  allowlisted). ~10 admin preference forms fall back to Boost.
+  - *Duplicate heading removed (owner request).* Core utility pages showed the
+    core `#page-header` context block ("avatar + heading + Message") AND the
+    content's own heading. The designed SFS pages already hide `#page-header` per
+    path/layout; extended that to shelled core utility pages in `_core.scss`:
+    `.sfs-mode.pagelayout-admin/-base #page-header`, `.sfs-mode.path-badges/-blog
+    #page-header { display:none }`. Only matches when shelled; course pages keep
+    their banner (higher specificity), dashboard/designed pages untouched.
+    Verified: notif prefs, data requests, badges now show a single heading.
+  Theme compiles clean (1,253,935 bytes); SCSS-only this round; caches purged.
+  **Open (owner decision):** allowlist the ~10 Boost preference forms so they
+  render in the shell too (they are user-facing forms like the ones already
+  shelled); editadvanced needs the maintenance-layout exclusion handled
+  separately. No git commit.
+
+- **2026-08-12** — **Settings hub + consistent SFS styling for linked pages**:
+  Owner: settings hub had empty placeholder blocks, and pages linked from it must
+  be SFS-styled.
+  - *Empty blocks (Part 2).* Dropped the decorative `.sfs-hub__empty` shimmer;
+    the three factless cards (Password/Notifications/Privacy) now show a concise
+    localised description (`hub_*_desc`, en+uk). Template shows facts and/or a
+    description; SCSS `.sfs-hub__desc` replaces the placeholder. Verified live.
+  - *Shell coverage (Part 1).* Audited the 7 linked destinations. Shelled OK:
+    `/user/edit.php`, `/user/language.php`, `/user/preferences.php`,
+    `/message/notificationpreferences.php` (allowlisted), `/theme/securefood/preferences.php`
+    (standard layout), `/admin/tool/dataprivacy/mydatarequests.php` (base layout).
+    Gap: `/login/change_password.php` was pagelayout-admin and NOT allowlisted →
+    Boost. Added it to `mode_manager::ADMIN_SHELL_PATHS` (now shelled) and to the
+    account-form styling list in `_preferences.scss`.
+  - *Generic core skin.* Even shelled pages showed raw Boost content (blue
+    buttons, plain tables, notices) because form styling was scoped per body-id.
+    Added `components/_core.scss` (registered in `post.scss`): token-based SFS
+    skin for `.btn`/`.btn-primary`/`.btn-secondary` (teal pills), `.generaltable`/
+    `table.table`, and `.alert*`, scoped to `.sfs-mode .sfs-shell__maincontent`
+    so it adapts to dark and covers any shelled core page. Verified live: change
+    password (teal buttons, shelled), Data requests (teal button + SFS table +
+    tinted notice), settings hub (clean cards).
+  Theme compiles clean (1,253,775 bytes); PHP lint clean; en+uk in sync (246
+  keys); theme PHPUnit 22/22 (111 assertions); zero raw hex outside `_tokens.scss`;
+  caches purged. Known polish left: core pages still show a duplicate heading
+  (SFS context header + the page's own `<h1>`/`<h2>`) — a Moodle pattern, deferred.
+  No git commit.
+
+- **2026-08-12** — **Owner assets + mobile header refinement**:
+  - *Brand logos replaced.* Swapped the four bundled default logos
+    (`pix/logo-{full,icon}-{light,dark}`) from the old SVGs to the owner's new
+    PNGs (wheat + open-book mark, teal/amber). Downscaled with `sips` (1–1.2 MB →
+    72–84 KB, alpha preserved); old SVGs moved to `~/.Trash/`. Moodle resolves
+    `image_url('logo-*','theme')` to the PNGs now the SVGs are gone. Fixed the
+    collapsed-rail icon logo distorting a portrait image (`.sfs-sidebar__logo--icon`
+    `width:40px`→`auto`+`object-fit:contain`). Verified: all four load at the new
+    natural sizes; drawer shows a single correct dark logo (the two-logo bug stays
+    fixed). Covers every default-logo usage (sidebar/drawer/collapsed rail + About
+    hero); login uses a separate mechanism; admin-uploaded logos still override.
+  - *Mobile header (owner choice).* On ≤820px the plugin nav icons
+    (`.sfs-topbar__plugins a.nav-link:not(.popover-region-toggle)` — Student Lab /
+    Future Food / Resources, which duplicate the drawer nav) are hidden; the bar
+    keeps hamburger + title + notifications + messages + More on one row. Markup
+    confirmed from the plugins' `render_navbar_output` (`local-*__nav-link`).
+  Theme compiles clean (1,246,340 bytes); SCSS/assets only; caches purged. No git
+  commit.
+  - *About hero emblem (owner request).* Removed the glassy `.sfs-hero__panel`
+    box (background/border/backdrop-blur/fixed 200×200) — the logo now sits
+    directly on the hero gradient and fills its column (icon logo enlarged from
+    96×96 to a `max-height:300px` emblem, ~200×300). Verified via designer-mode
+    reload: panel transparent, no border/blur, logo 200×300, balanced layout.
+    Mobile keeps the panel hidden (compact). SCSS-only.
+  - *Logo glow trim (owner: sidebar logo looked poor).* The provided PNGs had huge
+    transparent glow padding (full logos were ~50% dead vertical space). Trimmed
+    each to its alpha bounding box + 4% margin via PHP GD in the container (no
+    ImageMagick/Pillow available): full 640×426→~600×200, icon 320×480→~300×384.
+    So the mark now fills the frame and reads crisply at small sizes. Bumped the
+    sidebar logo height 36→44px. Verified via designer-mode reload + zoom: sidebar
+    logo is now large and sharp; hero emblem stays clean.
+
+- **2026-08-11** — **Phase 11 Phase 6 `[x]` (motion & convention hygiene) — audit programme complete**:
+  Reduced-motion override for the vendored Leaflet transitions (theme-owned,
+  scoped to the live map; A8/2.3.3). Confirmed the `local_sfsgame` decision locked
+  choice already carries a textual `missionnoaccess` note (§2.4 OK, no change).
+  Hygiene: `.sfs-hubs__name` `min-width:0`+ellipsis (F7); mission grid
+  `minmax(min(320px,100%),1fr)` (F10); consolidated the duplicate
+  `.sfs-hero__title` (F9); three raw `@media` blocks → `sfs-media-*` mixins
+  (`_course`/`_preferences`/`_messaging`; `_login` Bootstrap breakpoints left
+  documented). Theme compiles clean (1,246,223 bytes); zero raw hex outside
+  `_tokens.scss`; theme PHPUnit 22/22 (111 assertions); purged. No git commit.
+  **Phase 11 now: 0/1/3/4/5/6 done; 2 implemented with user-menu live QA owed.**
+  Remaining owed verification (non-blocking): real ≤820px screenshot, user-menu
+  keyboard/SR walkthrough, login scheme toggle live-region, live map marker
+  announce — see `PHASE11_MOBILE_A11Y_AUDIT.md`.
+
+- **2026-08-11** — **Phase 11 Phase 3 `[~]` (state exposure + live regions)**:
+  Added a shared polite live region (`#sfs-live`, visually hidden) + a small
+  `theme_securefood/live` AMD module (`announce()`), reused by shell and map. The
+  colour-scheme toggle now announces the new scheme (reusing the existing
+  `scheme_light/dark/system` strings — removed the duplicate keys I'd mistakenly
+  added); the About hero is now the page's sole a11y `<h1>` (core `#page-header`
+  h1 stays display:none on the front page); the map announces the focused/clicked
+  hub. Verified live: scheme toggle announced "Light"; hero is the only visible
+  h1. Two real bugs caught in verification: `announce()` used
+  `requestAnimationFrame` (paused in background tabs) → switched to
+  `setTimeout(…,50)`; and disabling `cachejs` breaks ALL theme AMD in this env
+  (requirejs.php returns a "cannot be loaded" stub for every theme module) → keep
+  `cachejs=1`. Owed: login-page scheme toggle (separate layout) + live marker
+  interaction test. All JS node-checked; en/uk in sync (243 keys); cachejs=1 /
+  designer mode off restored; purged. No git commit.
+
+- **2026-08-11** — **Phase 11 Phase 5 `[x]` (touch targets & focus, WCAG 2.5.x/2.4.7)**:
+  Mobile (≤820px) icon buttons + topbar core popover toggles bumped to 44×44
+  (desktop keeps 36px; popover rows keep full-width). Added the missing focus
+  affordances: `.sfs-search` focus-within ring (input had `outline:none` with no
+  replacement) and `:focus-visible` rings on `.sfs-breadcrumbs__item`,
+  `.sfs-sidebar__brand`, `.sfs-plancontext__chip`, `.lp-coursetile__link`,
+  `.sfsres-tool`, `.sfsres-doc__open`. Static hub markers got a 24px tap target
+  (`::after` inset, WCAG 2.5.8) without enlarging the dot — 44px would overlap on
+  the clustered map, so the hub-list rows stay the large-target alternative.
+  SCSS-only; compiles clean (1,245,849 bytes); zero raw hex outside `_tokens.scss`;
+  no PHPUnit affected. No git commit.
+
+- **2026-08-11** — **Phase 11 Phase 4 `[x]` (colour contrast, WCAG 1.4.3)**:
+  Fixed A6/A7/A8 contrast failures at token level. Added three text-safe semantic
+  tokens in `_tokens.scss` with lightened dark-scheme values (mirroring
+  `--sfs-accent-ink`): `--sfs-success-ink` (#2F6F46/#6FBF8E), `--sfs-teal-ink`
+  (#1C6664/#4FC3C0), `--sfs-danger-ink` (#B8463F/#E5837C). Retargeted text-as-colour
+  usages: sidebar section label + dark placeholder `--sfs-muted2`→`--sfs-muted`;
+  done-state text (Student Lab stage/tile, Future Food mission/decision) →
+  success-ink; teal status pills (About hubs, course "Done") → teal-ink; PDF label
+  → danger-ink. Ratios computed with the WCAG formula against each surface; all now
+  ≥4.5:1 in light and dark. Backgrounds/gradients untouched. Verified: compiles
+  clean (1,244,937 bytes), all token defs + usages present, zero new raw hex
+  outside `_tokens.scss`. No git commit.
+
+- **2026-08-11** — **Phase 11 Phase 1 follow-up (owner mobile feedback)**:
+  Owner tested on a real phone and flagged two topbar/drawer issues. (1) *Two
+  logos rendered in the drawer* — the mobile-collapsed logo overrides had lower
+  specificity (0,3,0) than the desktop-collapsed (0,4,0) and dark-mixin (0,6,0)
+  rules, so both the full and icon logos showed. Fixed with compound scheme
+  selectors after the base rules (light) + a mobile override inside the dark
+  mixin (dark); verified deterministically from the compiled CSS that the icon
+  `display:none` wins at ≤820px in both schemes. (2) *"More" popover looked
+  empty (bare icons)* — popover items now render as full-width labelled rows
+  (icon + text via a `.sfs-topbar__morelabel` span shown only in the popover) and
+  the language menu spans the row; labels reuse existing strings so no new lang
+  keys. Theme compiles clean (1,244,690 bytes). Same cascade-order class of bug
+  as Phase 0/F6 — flagged for a Phase 6 sweep.
+
+- **2026-08-11** — **Phase 11 Phase 2 `[~]` (keyboard operability of menus)**:
+  A1/A2/§1.5. Nav links now carry `aria-label` with the visible label
+  `aria-hidden` so they stay named in the desktop-collapsed rail without double
+  announcement (chose aria-label over CSS visually-hidden because the mobile
+  drawer only re-flips `display`, so visually-hidden would have leaked). Fallback
+  usercard link gets `aria-label`. `<main id="sfs-main">` gained `tabindex="-1"`
+  so the skip link moves focus. User menu got WAI-ARIA keyboard support in the
+  `shell` AMD (roving `tabindex` Up/Down/Home/End across the active pane's
+  `[role=menuitem]`, Escape closes the `<details>` + returns focus to the summary,
+  open/pane-switch focuses the first item). Verified: `node --check` src+build;
+  nav `aria-label` + `main tabindex=-1` confirmed live on the public About page.
+  **Owed:** live keyboard/SR test of the user menu — it renders only for
+  authenticated users and the dev admin session had logged out (do not log in on
+  the owner's behalf). No git commit.
+
+- **2026-08-11** — **Phase 11 Phase 1 `[~]` (topbar overflow, ADR-013)**:
+  Fixed the overcrowded mobile topbar (F1/F2/F3/F5). ADR-013 accepted: the core
+  `navbar_plugin_output` cluster stays inline; the theme-owned controls
+  (colour-scheme, mode switch, help, language) are rendered once inside a
+  `sfs-topbar__more` disclosure — inline on desktop, collapsed into a popover at
+  ≤820px, gated behind a JS-only `--collapsible` class so no-JS keeps them inline
+  and wrapping (progressive enhancement). `shell` AMD extended (open/close +
+  `aria-expanded` + Escape + click-away + matchMedia reset); breadcrumb now
+  ellipses instead of pushing (`min-width:0`); search shrinks at ≤1100px instead
+  of the whole cluster overflowing; sticky topbar gained
+  `scroll-padding-top`/`scroll-margin-top` so the skip link and anchors clear the
+  bar (WCAG 2.4.1). Cascade gotcha (same class as Phase 0): the toggle hide rule
+  needed `.sfs-topbar__more .sfs-topbar__moretoggle` (0,3,0) to beat
+  `.sfs-iconbtn` (0,2,0). New string `moreactions` (en+uk). Verified: theme
+  compiles clean (1,242,897 bytes); `node --check` src+build; PHP lang lint clean;
+  desktop browser shows a single clean topbar row (toggle hidden, controls
+  inline, no horizontal overflow); CSSOM confirms the ≤820px popover rules; JS
+  open/close/Escape/click-away verified end-to-end. **Owed:** real ≤820px
+  screenshot — tooling can't shrink the viewport here. No git commit (awaiting
+  owner). Remaining Phase 11: Phases 2–6 (keyboard menus, state exposure,
+  contrast, touch targets, motion).
+
+- **2026-08-11** — **Phase 11 mobile & accessibility audit + Phase 0 fix**:
+  Owner reported mobile defects (overcrowded topbar; Living Labs map + "Network"
+  panel overflowing horizontally, "Ukraine"→"Ukr"). Ran a full mobile-layout sweep
+  (all component SCSS + templates + shell JS) and a WCAG 2.1 AA pass; backlog +
+  6-phase remediation plan recorded in `.context/PHASE11_MOBILE_A11Y_AUDIT.md`
+  (findings F1–F10 mobile, A1–A8 a11y). **Phase 0 `[x]`** — root-caused the map
+  overflow to a CSS source-order bug in `components/_about.scss`: the ≤1100px
+  single-column collapse for `.sfs-hubs__grid` was written *before* the two-column
+  base, so (equal specificity, media adds none) the two-column rule won at every
+  width. Fix: moved the collapse (+ map `min-height:260px`) after the base and
+  added `min-width:0` to `.sfs-hubs__map`/`__card`. Verified: standalone Sass repro
+  + Moodle compile clean (1,241,840 bytes) + browser CSSOM proof that the `1fr`
+  media rule now wins at ≤1100px. Caches purged. No template/JS/PHP changes; no new
+  `!important`/raw hex. Remaining phases (topbar overflow, keyboard menus, state
+  exposure, contrast, touch targets, motion) are queued in the audit doc.
 
 - **2026-07-16** — **Owner feedback batch (4 fixes)**:
   1. *Plan page double heading* — the plan name showed as both the core page

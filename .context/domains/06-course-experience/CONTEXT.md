@@ -1,24 +1,20 @@
 # Domain 06 — course-experience (Phase 3)
 
-Status: `[~]` v1 done (2026-07-12): CSS-only restyle (`components/_course.scss`),
-**no template overrides** — course banner from core `#page-header`, flat
-secondary-nav tabs, section cards, activity rows with icon tiles and pill
-completion buttons, activity-page banner/typography/navigation. Verified with
-screenshots (light + dark) on a seeded course incl. a real view-completion
-round-trip (To do → Done). Owner decisions applied 2026-07-12: Moodle chrome (secondary nav tabs,
-collapse-all, section chevrons) hidden in SFS mode — staff manage via standard
-mode; sections always expanded; content full-width (no max-width). Mobile pass
-done (compact banner/sections/rows).
-Remaining: right rail (progress/teacher/info),
-plan-context chips (needs domain 09 read model), Bootstrap link-colour
-tokenisation, big-five mods visual pass (only mod_page verified), Behat.
+Status: `[x]` done (updated 2026-10-09 per ADR-014): pivoted from invasive CSS restyle
+to **Standard Moodle course/mod visual with SecureFood accent colour theming**.
+Native course formats (accordion collapse/expand, section chevrons, bulk select,
+secondary nav tabs) and native activity icons (retaining their semantic purpose colours)
+are preserved 100% untouched. SFS styling applies brand tokens (primary teal, accent amber,
+completion badges, links, focus rings, dark scheme Bootstrap tokens). Plan context strip
+(`local_learningplans`) and course rail (`courserail`) remain active.
 
 ## Purpose
 
-Course and activity pages in SecureFood mode. Prototypes: `course.html`
-(banner, section cards, progress rail) and `activity.html` (player look).
-Strategy: restyle standard Moodle course/mod rendering — do **not** rebuild a
-custom player (see `design/page-mapping.md`).
+Course and activity pages in SecureFood mode (ADR-014).
+Strategy: Preserve standard Moodle course and module rendering for maximum reliability,
+accessibility, and compatibility across course formats and all activity types (Quiz, H5P,
+Assign, Forum, etc.), applying SecureFood design tokens purely as an accent colour layer.
+
 
 ## Course page
 

@@ -38,16 +38,56 @@
 
     {{#hascrumbs}}
         <nav class="sfs-breadcrumbs" aria-label="{{#str}}breadcrumb, access{{/str}}">
-            {{#crumbs}}
-                {{^last}}
-                    {{#url}}<a class="sfs-breadcrumbs__item" href="{{url}}">{{{text}}}</a>{{/url}}
-                    {{^url}}<span class="sfs-breadcrumbs__item">{{{text}}}</span>{{/url}}
+            {{#hascollapsedcrumbs}}
+                {{#firstcrumb}}
+                    {{#url}}<a class="sfs-breadcrumbs__item" href="{{url}}" title="{{{text}}}">{{{text}}}</a>{{/url}}
+                    {{^url}}<span class="sfs-breadcrumbs__item" title="{{{text}}}">{{{text}}}</span>{{/url}}
                     <span class="sfs-icon sfs-breadcrumbs__sep" aria-hidden="true">chevron_right</span>
-                {{/last}}
-                {{#last}}
-                    <span class="sfs-breadcrumbs__item sfs-breadcrumbs__item--current" aria-current="page">{{{text}}}</span>
-                {{/last}}
-            {{/crumbs}}
+                {{/firstcrumb}}
+
+                <div class="dropdown sfs-breadcrumbs__dropdown d-inline-flex align-items-center">
+                    <button class="sfs-breadcrumbs__ellipsis"
+                            type="button"
+                            id="sfs-breadcrumbs-menu-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            aria-label="{{#str}}showmore, core{{/str}}"
+                            title="{{#str}}showmore, core{{/str}}">
+                        &hellip;
+                    </button>
+                    <div class="dropdown-menu sfs-breadcrumbs__menu shadow-sm" aria-labelledby="sfs-breadcrumbs-menu-toggle">
+                        {{#collapsedcrumbs}}
+                            {{#url}}<a class="dropdown-item sfs-breadcrumbs__menuitem" href="{{url}}" title="{{{text}}}">{{{text}}}</a>{{/url}}
+                            {{^url}}<span class="dropdown-item-text text-muted" title="{{{text}}}">{{{text}}}</span>{{/url}}
+                        {{/collapsedcrumbs}}
+                    </div>
+                </div>
+                <span class="sfs-icon sfs-breadcrumbs__sep" aria-hidden="true">chevron_right</span>
+
+                {{#penultimatecrumb}}
+                    {{#url}}<a class="sfs-breadcrumbs__item" href="{{url}}" title="{{{text}}}">{{{text}}}</a>{{/url}}
+                    {{^url}}<span class="sfs-breadcrumbs__item" title="{{{text}}}">{{{text}}}</span>{{/url}}
+                    <span class="sfs-icon sfs-breadcrumbs__sep" aria-hidden="true">chevron_right</span>
+                {{/penultimatecrumb}}
+
+                {{#lastcrumb}}
+                    <span class="sfs-breadcrumbs__item sfs-breadcrumbs__item--current" aria-current="page" title="{{{text}}}">{{{text}}}</span>
+                {{/lastcrumb}}
+            {{/hascollapsedcrumbs}}
+
+            {{^hascollapsedcrumbs}}
+                {{#crumbs}}
+                    {{^last}}
+                        {{#url}}<a class="sfs-breadcrumbs__item" href="{{url}}" title="{{{text}}}">{{{text}}}</a>{{/url}}
+                        {{^url}}<span class="sfs-breadcrumbs__item" title="{{{text}}}">{{{text}}}</span>{{/url}}
+                        <span class="sfs-icon sfs-breadcrumbs__sep" aria-hidden="true">chevron_right</span>
+                    {{/last}}
+                    {{#last}}
+                        <span class="sfs-breadcrumbs__item sfs-breadcrumbs__item--current" aria-current="page" title="{{{text}}}">{{{text}}}</span>
+                    {{/last}}
+                {{/crumbs}}
+            {{/hascollapsedcrumbs}}
         </nav>
     {{/hascrumbs}}
 

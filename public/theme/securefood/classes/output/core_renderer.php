@@ -49,23 +49,20 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
-     * Add data-theme to <html> when the SecureFood shell is active.
+     * Add data-theme to <html> when the SecureFood mode is active.
      *
-     * Always stamps the scheme (light/dark/system) in shell mode so the dark
-     * tokens are scoped to the shell: standard Boost pages carry no attribute
-     * and therefore never inherit the SecureFood dark palette even when the
-     * OS prefers dark ('system' + prefers-color-scheme owns the dark fallback
-     * via _tokens.scss `[data-theme="system"]`).
+     * Stamps the scheme (light/dark/system) whenever SecureFood mode is active,
+     * including on standard Boost drawer layouts (course/activity pages), so
+     * dark tokens apply. Standard mode requests never inherit data-theme.
      *
      * @return string HTML attributes for the html element.
      */
     public function htmlattributes() {
         $attributes = parent::htmlattributes();
 
-        // Pre-auth login page: no user preference exists, so the scheme is
-        // driven by a cookie the on-page toggle writes (default 'system' so
-        // the page follows the OS). Stamped server-side to avoid a flash.
-        if (!mode_manager::uses_shell($this->page)) {
+        $issfs = mode_manager::effective_mode() === mode_manager::MODE_SECUREFOOD;
+        if (!$issfs) {
+            // Pre-auth login page in standard mode: driven by cookie.
             if ($this->page->pagelayout === 'login') {
                 $scheme = $_COOKIE['theme_securefood_loginscheme'] ?? 'system';
                 if (!in_array($scheme, ['light', 'dark', 'system'], true)) {
@@ -75,6 +72,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
             return $attributes;
         }
+
         $scheme = 'system';
         if (isloggedin() && !isguestuser()) {
             $scheme = get_user_preferences('theme_securefood_colourscheme', 'system');
@@ -84,6 +82,25 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         $attributes .= ' data-theme="' . $scheme . '"';
         return $attributes;
+    }
+
+    /**
+     * Ensure .sfs-mode class is stamped on body whenever SecureFood mode is active.
+     *
+     * Enables SecureFood token theming and typography across both the SFS shell
+     * and the Boost drawers layout (Option 1 for course/activity pages).
+     * Standard mode leaves body classes untouched.
+     *
+     * @param string[] $additionalclasses
+     * @return string
+     */
+    public function body_attributes($additionalclasses = []) {
+        if (mode_manager::effective_mode() === mode_manager::MODE_SECUREFOOD) {
+            if (!in_array('sfs-mode', $additionalclasses, true)) {
+                $additionalclasses[] = 'sfs-mode';
+            }
+        }
+        return parent::body_attributes($additionalclasses);
     }
 
     /**
@@ -102,7 +119,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $output = parent::course_content_header($onlyifnotcalledbefore);
 
-        if (!mode_manager::uses_shell($this->page)
+        if (mode_manager::effective_mode() !== mode_manager::MODE_SECUREFOOD
                 || $this->page->pagelayout !== 'course'
                 || empty($this->page->course->id)
                 || (int)$this->page->course->id === (int)$SITE->id
@@ -128,31 +145,38 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
-     * Navbar control returning the user to SecureFood mode (ADR-002).
+     * Navbar control returning the user to SecureFood or Standard mode (ADR-002).
      *
-     * Rendered by the theme's navbar override, i.e. only in standard mode;
-     * the SecureFood topbar carries its own switch. Empty when the user is
-     * not allowed to switch or is already in SecureFood mode.
+     * Rendered in the Boost navbar. Shows "Standard" button when in SecureFood
+     * mode to return to stock Boost, and "SFS" when in Standard mode. Empty when
+     * inside the SFS shell (which has its own topbar toggle) or when switching is
+     * disabled.
      *
      * @return string HTML fragment for the Boost navbar.
      */
     public function sfs_mode_switch(): string {
-        if (!mode_manager::can_user_switch()
-                || mode_manager::effective_mode() === mode_manager::MODE_SECUREFOOD) {
+        if (!mode_manager::can_user_switch() || mode_manager::uses_shell($this->page)) {
             return '';
         }
+        $currentmode = mode_manager::effective_mode();
+        $targetmode = $currentmode === mode_manager::MODE_SECUREFOOD
+            ? mode_manager::MODE_STANDARD
+            : mode_manager::MODE_SECUREFOOD;
         try {
             $returnurl = $this->page->url->out_as_local_url(false);
         } catch (\moodle_exception $e) {
             $returnurl = '/';
         }
         $url = new \moodle_url('/theme/securefood/mode.php', [
-            'mode' => mode_manager::MODE_SECUREFOOD,
+            'mode' => $targetmode,
             'sesskey' => sesskey(),
             'returnurl' => $returnurl,
         ]);
-        $label = get_string('switchtosecurefood', 'theme_securefood');
-        return \html_writer::link($url, 'SFS', [
+        $label = $targetmode === mode_manager::MODE_STANDARD
+            ? get_string('switchtostandard', 'theme_securefood')
+            : get_string('switchtosecurefood', 'theme_securefood');
+        $text = $targetmode === mode_manager::MODE_STANDARD ? 'Standard' : 'SFS';
+        return \html_writer::link($url, $text, [
             'class' => 'nav-link px-2 fw-bold align-self-center',
             'title' => $label,
             'aria-label' => $label,

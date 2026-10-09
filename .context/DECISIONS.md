@@ -288,3 +288,83 @@ to isolate.
 orchestrates data, the theme skins the output, and future gamification engine
 work can move into a separate `local_` plugin without breaking the page
 contract.
+
+## ADR-013 — Mobile topbar overflow: "More" disclosure for theme-owned controls
+
+**Status.** Accepted (2026-08-11).
+
+**Context.** On phones the topbar overflows horizontally (Phase 11, F1): it is a
+non-wrapping flex row of fixed-size controls — sidebar toggle, breadcrumb,
+search, colour-scheme toggle, mode switch, help, the core `navbar_plugin_output`
+cluster (notifications/messages and plugin nav nodes, an *uncontrolled* count),
+and the language menu. Only the search box is hidden on mobile, so the rest drag
+a page-wide horizontal scrollbar and squeeze the breadcrumb to "Ho…". The core
+plugin cluster is opaque HTML rendered by Moodle and carries its own Bootstrap
+popovers, so it cannot be safely restructured or nested inside another disclosure.
+
+**Decision.**
+- Topbar actions split into two groups:
+  - **Core plugin cluster** (`navbar_plugin_output`) stays inline at every width —
+    its own popovers must not be nested inside a theme disclosure.
+  - **Theme-owned secondary controls** (colour-scheme toggle, mode switch, help,
+    language menu) are rendered **once** inside `.sfs-topbar__secondary`.
+- `> 820px`: the secondary controls display inline (wrapper is `display:contents`);
+  the "More" toggle is hidden.
+- `≤ 820px`: a `.sfs-topbar__moretoggle` (`more_vert`) button appears and the
+  secondary controls collapse into an absolutely-positioned popover it opens.
+- **Progressive enhancement (mandatory, `frontend.md`):** the toggle is
+  CSS-hidden by default and the popover behaviour is gated behind a
+  `sfs-topbar__more--collapsible` class that **only JS adds** (on mobile). With
+  no JS the secondary controls stay visible and the topbar wraps
+  (`flex-wrap`), so every control remains reachable and nothing overflows. JS
+  (`theme_securefood/shell`) manages `aria-expanded`, Escape-to-close,
+  click-away, and focus return to the toggle.
+- Belt-and-braces: `.sfs-topbar` / `.sfs-topbar__actions` get `min-width:0` and a
+  mobile `flex-wrap`, so no admin navigation configuration can force page-level
+  horizontal scroll regardless of how many nodes core injects.
+- The sticky topbar gets a matching `scroll-padding-top` (via `:has(.sfs-mode)`)
+  and `#sfs-main` a `scroll-margin-top`, so the skip link and in-page anchors no
+  longer land behind it (F3 / WCAG 2.4.1).
+
+**Consequences.** No duplicated controls and no `<details>` closed-hiding hacks;
+core notifications/messages keep working untouched. The disclosure is a small
+addition to the existing `shell` AMD module (no new module, no jQuery). If the
+core cluster alone is very wide, the wrap fallback still prevents page overflow.
+Mobile-viewport visual QA is not reproducible in the current tooling (window
+resize does not shrink the render viewport); verification is by SCSS compile,
+`node --check`, DOM/CSSOM inspection, and keyboard checks, with a real-device
+screenshot owed before this is called visually done.
+
+---
+
+## ADR-014 — Standard course & module visual with accent colour theming in SFS mode
+
+**Status.** Accepted (2026-10-09).
+
+**Context.** The initial implementation of domain 06 attempted a deep CSS restyling
+of course and module pages (`course.html`, `activity.html`) — custom section cards,
+forced `collapse: block`, hiding `.secondary-navigation` and collapse controls, and
+replacing activity icons with uniform-tinted squares. This approach introduced
+significant technical debt, broke native Moodle course formats (accordion behavior,
+bulk edit, accessibility ARIA contracts), and stripped semantic color coding from
+Moodle 4/5 activity modules. Furthermore, modules like Quiz, Assignment, H5P, and
+Forum risk broken layouts under opinionated containers.
+
+**Decision.**
+- Retain standard Boost/Moodle course and module markup and visual structure in SFS mode.
+- Do NOT override course sections into custom cards, do NOT hide secondary navigation
+  or collapse toggles, do NOT force `collapse: block`, and do NOT force uniform color
+  filters on activity icons.
+- Apply the SecureFood theme identity purely via design tokens and accent colours:
+  primary teal, accent amber, link colors, focus states, badge/completion tints, and
+  dark mode Bootstrap remappings.
+- Plan context (`local_learningplans`) and course rail continue to enhance the course
+  experience without mutating standard course format internals.
+- Changes are strictly isolated to `path-course` and `path-mod` — other pages
+  (Student Lab, About, Future Food, Resources, Preferences, Shell) are untouched.
+
+**Consequences.** Zero regressions across course formats and all 30+ Moodle activity
+modules (Quiz, H5P, Assign, SCORM, etc.). Preserved WCAG 2.1 AA accessibility (native
+ARIA contracts). Clean upgradability with future Moodle releases. Highly maintainable
+and robust learner experience.
+

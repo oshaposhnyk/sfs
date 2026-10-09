@@ -63,6 +63,50 @@
     otherwise it becomes a grid item and breaks the two-column placement. }}
 <div class="sfs-shell__systemarea">{{{ output.standard_top_of_body_html }}}</div>
 
+{{#courseindex}}
+    {{< theme_boost/drawer }}
+        {{$id}}theme_boost-drawers-courseindex{{/id}}
+        {{$drawerheadercontent}}
+            {{> theme_boost/courseindexdrawercontrols}}
+        {{/drawerheadercontent}}
+        {{$drawerheading}}{{> theme_boost/courseindexdrawerheading}}{{/drawerheading}}
+        {{$drawerclasses}}drawer drawer-left sfs-drawer-courseindex {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
+        {{$drawercontent}}
+            {{{courseindex}}}
+        {{/drawercontent}}
+        {{$drawerpreferencename}}drawer-open-index{{/drawerpreferencename}}
+        {{$drawerstate}}show-drawer-left{{/drawerstate}}
+        {{$tooltipplacement}}right{{/tooltipplacement}}
+        {{$closebuttontext}}{{#str}}closecourseindex, core{{/str}}{{/closebuttontext}}
+        {{$closebuttonicon}}
+            <span class="dir-rtl-hide">{{#pix}} e/sidebar_left, core {{/pix}}</span>
+            <span class="dir-ltr-hide">{{#pix}} e/sidebar_right, core {{/pix}}</span>
+        {{/closebuttonicon}}
+    {{/ theme_boost/drawer}}
+{{/courseindex}}
+{{#hasblocks}}
+    {{< theme_boost/drawer }}
+        {{$id}}theme_boost-drawers-blocks{{/id}}
+        {{$drawerclasses}}drawer drawer-right sfs-drawer-blocks{{#blockdraweropen}} show{{/blockdraweropen}}{{/drawerclasses}}
+        {{$drawercontent}}
+            <div class="d-print-none">
+                {{{ addblockbutton }}}
+                {{{ sidepreblocks }}}
+            </div>
+        {{/drawercontent}}
+        {{$drawerpreferencename}}drawer-open-block{{/drawerpreferencename}}
+        {{$forceopen}}{{forceblockdraweropen}}{{/forceopen}}
+        {{$drawerstate}}show-drawer-right{{/drawerstate}}
+        {{$tooltipplacement}}left{{/tooltipplacement}}
+        {{$drawercloseonresize}}1{{/drawercloseonresize}}
+        {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
+        {{$closebuttonicon}}
+            <span class="dir-rtl-hide">{{#pix}} e/sidebar_right, core {{/pix}}</span>
+            <span class="dir-ltr-hide">{{#pix}} e/sidebar_left, core {{/pix}}</span>
+        {{/closebuttonicon}}
+    {{/ theme_boost/drawer}}
+{{/hasblocks}}
+
 <div id="page-wrapper" class="sfs-shell">
 
     {{> theme_securefood/shell_sidebar }}
@@ -78,6 +122,34 @@
                         {{> core/moremenu}}
                     </div>
                 {{/secondarymoremenu}}
+                {{#hasdrawertoggles}}
+                    <div class="sfs-course-drawertoggles d-flex align-items-center mb-3 gap-2">
+                        {{#courseindex}}
+                            <button
+                                class="btn btn-outline-secondary sfs-btn-courseindex d-inline-flex align-items-center gap-2"
+                                data-toggler="drawers"
+                                data-action="toggle"
+                                data-target="theme_boost-drawers-courseindex"
+                                aria-expanded="{{#courseindexopen}}true{{/courseindexopen}}{{^courseindexopen}}false{{/courseindexopen}}"
+                            >
+                                <span class="sfs-icon">format_list_bulleted</span>
+                                <span>{{#str}}opendrawerindex, core{{/str}}</span>
+                            </button>
+                        {{/courseindex}}
+                        {{#hasblocks}}
+                            <button
+                                class="btn btn-outline-secondary sfs-btn-blockdrawer ms-auto d-inline-flex align-items-center gap-2"
+                                data-toggler="drawers"
+                                data-action="toggle"
+                                data-target="theme_boost-drawers-blocks"
+                                aria-expanded="{{#blockdraweropen}}true{{/blockdraweropen}}{{^blockdraweropen}}false{{/blockdraweropen}}"
+                            >
+                                <span class="sfs-icon">widgets</span>
+                                <span>{{#str}}blocks, core{{/str}}</span>
+                            </button>
+                        {{/hasblocks}}
+                    </div>
+                {{/hasdrawertoggles}}
                 <div id="page-content" class="sfs-shell__pagecontent d-print-block">
                     <div id="region-main-box">
                         {{#hasregionmainsettingsmenu}}
@@ -109,17 +181,7 @@
                                     </div>
                                 {{/hascontenttopblocks}}
                                 {{#showmaincontent}}
-                                    {{#railhtml}}
-                                        <div class="sfs-courselayout">
-                                            <div class="sfs-courselayout__main">{{{ output.main_content }}}</div>
-                                            <aside class="sfs-courselayout__rail" aria-label="{{#str}}rail_aria, theme_securefood{{/str}}">
-                                                {{{railhtml}}}
-                                            </aside>
-                                        </div>
-                                    {{/railhtml}}
-                                    {{^railhtml}}
-                                        {{{ output.main_content }}}
-                                    {{/railhtml}}
+                                    {{{ output.main_content }}}
                                 {{/showmaincontent}}
                                 {{^showmaincontent}}
                                     <div class="sfs-shell__suppressed-main" hidden aria-hidden="true">{{{ output.main_content }}}</div>
@@ -135,12 +197,14 @@
                             {{{ output.course_content_footer }}}
                         </div>
                     </div>
-                    {{#hasblocks}}
-                        <aside class="sfs-shell__blocks d-print-none" aria-label="{{#str}}blocks, core{{/str}}">
-                            {{{ addblockbutton }}}
-                            {{{ sidepreblocks }}}
-                        </aside>
-                    {{/hasblocks}}
+                    {{^hasdrawerblocks}}
+                        {{#hasblocks}}
+                            <aside class="sfs-shell__blocks d-print-none" aria-label="{{#str}}blocks, core{{/str}}">
+                                {{{ addblockbutton }}}
+                                {{{ sidepreblocks }}}
+                            </aside>
+                        {{/hasblocks}}
+                    {{/hasdrawerblocks}}
                 </div>
             </div>
             {{#footerhtml}}
@@ -160,7 +224,7 @@
 </html>
 {{#js}}
 M.util.js_pending('theme_securefood/shell');
-require(['theme_boost/loader', 'theme_securefood/shell'], function(Loader, Shell) {
+require(['theme_boost/loader', 'theme_securefood/shell', 'theme_boost/drawers'], function(Loader, Shell) {
     Shell.init();
     M.util.js_complete('theme_securefood/shell');
 });

@@ -51,9 +51,27 @@ if (!in_array($schemepreference, ['light', 'dark', 'system'], true)) {
     $schemepreference = 'system';
 }
 
+// Course Index drawer and right-hand block drawer on course pages.
+$courseindex = null;
+$courseindexopen = false;
+$blockdraweropen = false;
+$forceblockdraweropen = false;
+if (in_array($PAGE->pagelayout, ['course', 'incourse'], true)) {
+    $courseindex = core_course_drawer();
+    $courseindexopen = isloggedin() && (get_user_preferences('drawer-open-index', false) == true);
+    $blockdraweropen = isloggedin() && (get_user_preferences('drawer-open-block', true) == true);
+    $forceblockdraweropen = $OUTPUT->firstview_fakeblocks();
+}
+
 $extraclasses = ['sfs-mode'];
 if ($sidebarcollapsed) {
     $extraclasses[] = 'sfs-sidebar-collapsed';
+}
+if ($courseindex !== null) {
+    $extraclasses[] = 'uses-drawers';
+    if ($courseindexopen) {
+        $extraclasses[] = 'drawer-open-index';
+    }
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 
@@ -73,7 +91,7 @@ $emptyblockregion = ['html' => '', 'addblockbutton' => '', 'hascontent' => false
 $contenttopblocks = $settingsprovider->enabled('showblockcontenttop')
     ? $blockregion('content-top', ['sfs-shell__blockregion', 'sfs-shell__blockregion--content-top'], 'section')
     : $emptyblockregion;
-$sidepreblocks = $settingsprovider->enabled('showblockside')
+$sidepreblocks = ($settingsprovider->enabled('showblockside') || in_array($PAGE->pagelayout, ['course', 'incourse'], true))
     ? $blockregion('side-pre', ['sfs-shell__blockregion', 'sfs-shell__blockregion--side'], 'aside')
     : $emptyblockregion;
 $contentbottomblocks = $settingsprovider->enabled('showblockcontentbottom')
@@ -106,16 +124,39 @@ $header = $PAGE->activityheader;
 $headercontent = $header->export_for_template($renderer);
 
 // Breadcrumbs for the topbar.
-$crumbs = [];
+$rawcrumbs = [];
 foreach ($PAGE->navbar->get_items() as $item) {
     $title = trim((string)$item->get_title()) !== '' ? $item->get_title() : $item->text;
-    $crumbs[] = [
+    $rawcrumbs[] = [
         'text' => $title,
         'url' => $item->action instanceof moodle_url ? $item->action->out(false) : null,
     ];
 }
-if ($crumbs !== []) {
-    $crumbs[count($crumbs) - 1]['last'] = true;
+
+$hascollapsedcrumbs = false;
+$firstcrumb = null;
+$penultimatecrumb = null;
+$lastcrumb = null;
+$collapsedcrumbs = [];
+$crumbs = [];
+
+$totalcrumbs = count($rawcrumbs);
+if ($totalcrumbs > 3) {
+    // When there are 4 or more breadcrumbs, collapse the intermediate items behind '...'
+    // so the entire breadcrumbs trail always stays on a single line.
+    $hascollapsedcrumbs = true;
+    $firstcrumb = $rawcrumbs[0];
+    $penultimatecrumb = $rawcrumbs[$totalcrumbs - 2];
+    $lastcrumb = $rawcrumbs[$totalcrumbs - 1];
+    $lastcrumb['last'] = true;
+    $collapsedcrumbs = array_values(array_slice($rawcrumbs, 1, $totalcrumbs - 3));
+    $crumbs = $rawcrumbs;
+    $crumbs[$totalcrumbs - 1]['last'] = true;
+} else {
+    $crumbs = $rawcrumbs;
+    if ($crumbs !== []) {
+        $crumbs[$totalcrumbs - 1]['last'] = true;
+    }
 }
 
 // Sidebar navigation model (settings-driven, ADR-007).
@@ -245,17 +286,8 @@ if ($footerrawhtml !== '') {
     $footerhtml = format_text($footerrawhtml, FORMAT_HTML, ['context' => context_system::instance()]);
 }
 
-// Course pages: right rail (audit C1) + section fractions (audit C2).
+// Course pages now render via Boost drawers layout without the custom rail (Option 1).
 $railhtml = '';
-if ($PAGE->pagelayout === 'course' && $isloggedin
-        && !empty($PAGE->course->id) && (int)$PAGE->course->id !== (int)$SITE->id) {
-    global $USER;
-    $raildata = \theme_securefood\courserail::context($PAGE->course, (int)$USER->id);
-    $railhtml = $OUTPUT->render_from_template('theme_securefood/course_rail', $raildata['rail']);
-    if ($raildata['sections'] !== []) {
-        $PAGE->requires->js_call_amd('theme_securefood/sectionprogress', 'init', [$raildata['sections']]);
-    }
-}
 
 $themefileurl = static function(string $setting, string $filearea, string $fallbackpix) use ($PAGE, $OUTPUT, $settingsprovider): string {
     return $settingsprovider->theme_file_url(
@@ -318,6 +350,11 @@ $templatecontext = [
     'usercard' => $usercard,
     'crumbs' => $crumbs,
     'hascrumbs' => $crumbs !== [],
+    'hascollapsedcrumbs' => $hascollapsedcrumbs,
+    'firstcrumb' => $firstcrumb,
+    'collapsedcrumbs' => $collapsedcrumbs,
+    'penultimatecrumb' => $penultimatecrumb,
+    'lastcrumb' => $lastcrumb,
     'searchurl' => $searchurl,
     'helpurl' => $helpurl,
     'footerhtml' => $footerhtml,
@@ -343,6 +380,12 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'overflow' => $overflow,
     'headercontent' => $headercontent,
+    'courseindex' => $courseindex,
+    'courseindexopen' => $courseindexopen,
+    'blockdraweropen' => $blockdraweropen,
+    'forceblockdraweropen' => $forceblockdraweropen,
+    'hasdrawertoggles' => ($courseindex !== null) || !empty($sidepreblocks['hascontent']),
+    'hasdrawerblocks' => in_array($PAGE->pagelayout, ['course', 'incourse'], true) && !empty($sidepreblocks['hascontent']),
 ];
 
 echo $OUTPUT->render_from_template('theme_securefood/shell', $templatecontext);
