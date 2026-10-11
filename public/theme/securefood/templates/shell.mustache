@@ -114,7 +114,7 @@
     <div class="sfs-shell__main">
         {{> theme_securefood/shell_topbar }}
 
-        <div id="page" data-region="mainpage" data-usertour="scroller" class="sfs-shell__page drag-container">
+        <div id="page" data-region="mainpage" data-usertour="scroller" class="sfs-shell__page drag-container {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}}">
             <div id="topofscroll" class="sfs-shell__content">
                 {{{ output.full_header }}}
                 {{#secondarymoremenu}}
@@ -123,29 +123,39 @@
                     </div>
                 {{/secondarymoremenu}}
                 {{#hasdrawertoggles}}
-                    <div class="sfs-course-drawertoggles d-flex align-items-center mb-3 gap-2">
+                    <div class="sfs-course-drawertoggles d-print-none">
                         {{#courseindex}}
                             <button
-                                class="btn btn-outline-secondary sfs-btn-courseindex d-inline-flex align-items-center gap-2"
+                                class="sfs-btn-courseindex"
+                                type="button"
                                 data-toggler="drawers"
                                 data-action="toggle"
                                 data-target="theme_boost-drawers-courseindex"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                                title="{{#str}}opendrawerindex, core{{/str}}"
+                                aria-label="{{#str}}opendrawerindex, core{{/str}}"
                                 aria-expanded="{{#courseindexopen}}true{{/courseindexopen}}{{^courseindexopen}}false{{/courseindexopen}}"
                             >
-                                <span class="sfs-icon">format_list_bulleted</span>
-                                <span>{{#str}}opendrawerindex, core{{/str}}</span>
+                                <span class="sfs-icon" aria-hidden="true">format_list_bulleted</span>
+                                <span class="visually-hidden">{{#str}}opendrawerindex, core{{/str}}</span>
                             </button>
                         {{/courseindex}}
                         {{#hasblocks}}
                             <button
-                                class="btn btn-outline-secondary sfs-btn-blockdrawer ms-auto d-inline-flex align-items-center gap-2"
+                                class="sfs-btn-blockdrawer ms-auto"
+                                type="button"
                                 data-toggler="drawers"
                                 data-action="toggle"
                                 data-target="theme_boost-drawers-blocks"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="left"
+                                title="{{#str}}opendrawerblocks, core{{/str}}"
+                                aria-label="{{#str}}opendrawerblocks, core{{/str}}"
                                 aria-expanded="{{#blockdraweropen}}true{{/blockdraweropen}}{{^blockdraweropen}}false{{/blockdraweropen}}"
                             >
-                                <span class="sfs-icon">widgets</span>
-                                <span>{{#str}}blocks, core{{/str}}</span>
+                                <span class="sfs-icon" aria-hidden="true">widgets</span>
+                                <span class="visually-hidden">{{#str}}opendrawerblocks, core{{/str}}</span>
                             </button>
                         {{/hasblocks}}
                     </div>

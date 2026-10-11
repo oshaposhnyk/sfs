@@ -173,29 +173,95 @@
 
     // ---------------------------------------------------------------
     // Drawer buttons (Course Index toggle & Blocks toggle).
+    // Floating fixed icon-only buttons that stay accessible on scroll.
     // ---------------------------------------------------------------
+    .sfs-course-drawertoggles {
+        position: fixed;
+        top: calc(57px + 16px);
+        left: calc(var(--sfs-sidebar-w) + 20px);
+        right: 20px;
+        z-index: 35;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: none;
+        margin: 0;
+        padding: 0;
+
+        .sfs-btn-courseindex,
+        .sfs-btn-blockdrawer {
+            pointer-events: auto;
+        }
+    }
+
+    &.sfs-sidebar-collapsed .sfs-course-drawertoggles {
+        left: calc(var(--sfs-sidebar-w-collapsed) + 20px);
+    }
+
+    @include sfs-media-compact {
+        .sfs-course-drawertoggles {
+            left: 16px;
+            right: 16px;
+            top: calc(57px + 12px);
+        }
+    }
+
     .sfs-btn-courseindex,
     .sfs-btn-blockdrawer {
-        border-radius: 999px;
-        font-size: 0.86rem;
-        font-weight: 600;
-        padding: 7px 16px;
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 50%;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         color: var(--sfs-ink);
-        border-color: var(--sfs-linestrong);
+        border: 1px solid var(--sfs-linestrong);
         background: var(--sfs-surface);
-        box-shadow: var(--sfs-shadow-1);
+        box-shadow: var(--sfs-shadow-2);
+        cursor: pointer;
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+        transition: transform var(--sfs-duration-fast) ease,
+                    background var(--sfs-duration-fast) ease,
+                    border-color var(--sfs-duration-fast) ease,
+                    box-shadow var(--sfs-duration-fast) ease,
+                    opacity var(--sfs-duration-fast) ease;
 
         &:hover,
         &:focus {
             background: var(--sfs-surface2);
             color: var(--sfs-primary);
             border-color: var(--sfs-primary);
+            box-shadow: var(--sfs-shadow-3);
+            transform: scale(1.06);
+        }
+
+        &:focus-visible {
+            @include sfs-focus-ring;
         }
 
         .sfs-icon {
-            font-size: 18px;
-            vertical-align: middle;
+            font-size: 20px;
+            line-height: 1;
         }
+    }
+
+    // Hide drawer openers when their respective drawer is open.
+    #page.show-drawer-left .sfs-btn-courseindex {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: scale(0.8);
+    }
+
+    #page.show-drawer-right .sfs-btn-blockdrawer {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: scale(0.8);
     }
 
     // ---------------------------------------------------------------

@@ -1,8 +1,14 @@
 // Future Food (local_sfsgame) skin — spec: ffs.html.
-.sfs-mode {
+.sfs-mode,
+.path-local-sfsgame {
     // Template owns the page head (as on Student Lab).
     &.path-local-sfsgame #page-header {
         display: none;
+    }
+
+    // Boost drawers layout column width in standard mode.
+    #page.drawers .main-inner {
+        max-width: 1200px;
     }
 
     .sfs-ffhero {
@@ -165,7 +171,8 @@
 }
 
 // Missions grid (ffs.html "mission-grid").
-.sfs-mode {
+.sfs-mode,
+.path-local-sfsgame {
     .sfs-mission-list__title {
         font-size: 1.4rem;
         margin: 28px 0 16px;
@@ -378,7 +385,8 @@
 }
 
 // Future Food decision block (real activity links only; no quiz engine here).
-.sfs-mode {
+.sfs-mode,
+.path-local-sfsgame {
     .sfs-decision {
         margin-top: 32px;
         padding: 24px;
@@ -574,7 +582,8 @@
 }
 
 // Badge artwork inside the achievement circle (Phase 7.1).
-.sfs-mode .sfs-achievement__badge {
+.sfs-mode .sfs-achievement__badge,
+.path-local-sfsgame .sfs-achievement__badge {
     overflow: hidden;
 
     .sfs-achievement__img {
@@ -585,13 +594,15 @@
     }
 }
 
-.sfs-mode .sfs-achievement--locked .sfs-achievement__img {
+.sfs-mode .sfs-achievement--locked .sfs-achievement__img,
+.path-local-sfsgame .sfs-achievement--locked .sfs-achievement__img {
     filter: grayscale(1);
     opacity: 0.55;
 }
 
 // Audit fixes F1–F3: page head, mission hero, XP panel captions, play circles.
-.sfs-mode {
+.sfs-mode,
+.path-local-sfsgame {
     .sfs-ffhead {
         margin-bottom: 22px;
     }
@@ -772,7 +783,8 @@
 }
 
 // Course-linked mission progress (FF-4) — real course completion %.
-.sfs-mode {
+.sfs-mode,
+.path-local-sfsgame {
     .sfs-mission__progress {
         display: flex;
         align-items: center;
