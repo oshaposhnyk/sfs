@@ -51,9 +51,10 @@ A real XP/levelling engine (events → points ledger) is a **future `local_` plu
       `SFS101`, issued to `sfstestuser`; operator guide lives in
       `BADGE_SETUP.md`. Decision badge remains deferred because no real
       quiz/choice activity exists yet.
-- [x] Renderables + templates + SCSS (2026-07-13): Future Food markup/SCSS
+- [x] Renderables + templates + SCSS (2026-07-13, updated 2026-10-11): Future Food markup/SCSS
       normalised from legacy `ffg-*` to `sfs-*` BEM; XP inline width replaced
-      by a native `<progress>` element. Browser QA skipped by owner request.
+      by a native `<progress>` element. In 2026-10-11, enabled styles in Standard Boost
+      mode via `.path-local-sfsgame` and suppressed duplicate core `#page-header`.
 - [x] Level policy + PHPUnit: `local_sfsgame\domain\xp_policy` derives XP,
       level and level progress from earned badges + completed courses.
 - [x] Empty states (no badges yet, no missions configured).

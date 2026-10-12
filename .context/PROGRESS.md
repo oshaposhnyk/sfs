@@ -78,6 +78,27 @@ uk string review (9.6) owner takes it.
   container in docker-compose (60s loop over admin/cli/cron.php); task_log
   confirms fresh successful runs.
 
+- **2026-10-12** — **Login page input consistency & left brand card improvements**:
+  - Refactored `.toggle-sensitive-wrapper` so the outer container owns the border, 10px radius (`var(--sfs-radius-sm)`), background, and `:focus-within` glow, while the inner input and eye button are borderless with transparent backgrounds. This completely eliminates chopped seams, split borders, and mismatched active states.
+  - Added autofill synchronization (`:has(.form-control:-webkit-autofill)` / `overflow: hidden`) so browser credential autofill smoothly fills the entire 10px rounded container including the eye toggle button, eliminating square corner clipping and dark block seams. Fixed hover/active contrast on the eye button when autofilled so the icon stays deep dark teal (`#051d24`) instead of turning invisible light cream.
+  - Overrode Boost's desktop rule (`@media (min-width: 576px) { .toggle-sensitive-btn { display: none } }`) so the toggle button stays visible across all screen sizes with seamless integration.
+  - Widened the left-panel card on desktop from 560px to 680px (720px on XL screens) with optimized padding.
+  - Added the SecureFood School project logo (`logo-full-dark`) atop the left branded card in `login_panel.mustache` and `_login.scss`.
+  - Rebuilt theme CSS and purged Moodle caches.
+
+- **2026-10-11** — **Future Food (/local/sfsgame/index.php) styling in Standard mode**:
+  - Fixed unstyled layout of Future Food page in Standard mode: expanded selectors in `_futurefood.scss` from `.sfs-mode` to `.sfs-mode, .path-local-sfsgame`.
+  - Added `#page.drawers .main-inner { max-width: 1200px }` for standard Boost layout so the 2-column hero card and mission grid have proper layout width.
+  - Ensured `#page-header` duplicate heading is suppressed on `.path-local-sfsgame` across both modes, letting `futurefood_page.mustache` own its header.
+  - Rebuilt theme CSS and purged Moodle caches.
+
+- **2026-10-11** — **Course index & Block drawer floating icon buttons**:
+  - Converted `.sfs-btn-courseindex` and `.sfs-btn-blockdrawer` to fixed floating circular icon-only buttons (`format_list_bulleted`, `widgets`) with accessible tooltips and screen-reader labels (`visually-hidden`).
+  - Positioned `.sfs-course-drawertoggles` as a fixed overlay below the topbar (`top: calc(57px + 16px)`, `left: calc(var(--sfs-sidebar-w) + 20px)`, `right: 20px`, `z-index: 35`, `pointer-events: none` with `pointer-events: auto` on buttons) so buttons remain easily accessible during long-page scrolling.
+  - Added responsive positioning for collapsed sidebar state and compact screens.
+  - Configured micro-interactions and transitions: buttons scale up on hover/focus and automatically hide with scale-down when their corresponding drawer is open (`#page.show-drawer-left` / `#page.show-drawer-right`).
+  - Synchronized initial `#page` drawer classes in `shell.mustache` with `courseindexopen` and `blockdraweropen` template context.
+
 - **2026-10-09** — **Topbar breadcrumbs single-line collapse & Course index / Block drawer stabilization**:
   - Implemented responsive ellipsis collapsing for long breadcrumbs trails in the topbar (`sfs.php`, `shell_topbar.mustache`, `_shell.scss`). When trail exceeds 3 items, intermediate items are neatly tucked into a Bootstrap dropdown behind an ellipsis button (`...`), keeping first crumb, penultimate crumb, and active page visible in a single row without wrapping.
   - Added text truncation (`text-overflow: ellipsis`) and `flex-wrap: nowrap` so breadcrumb chains never break into a second line or deform the topbar height.

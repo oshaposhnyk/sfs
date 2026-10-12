@@ -20,6 +20,13 @@
     }
 }
 
+// Bootstrap `xl` up (1200px and above).
+@mixin sfs-media-min-xl {
+    @media (min-width: 1200px) {
+        @content;
+    }
+}
+
 // Motion guard: wrap every transition/animation in this.
 @mixin sfs-motion {
     @media (prefers-reduced-motion: no-preference) {

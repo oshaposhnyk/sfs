@@ -32,7 +32,7 @@ body.pagelayout-login {
 
     .login-layout-left {
         overflow: hidden;
-        padding: clamp(32px, 5vw, 72px);
+        padding: clamp(24px, 4vw, 56px);
         color: var(--sfs-on-dark);
         background-color: var(--sfs-primary800);
         background-image:
@@ -62,10 +62,10 @@ body.pagelayout-login {
     .login-layout-left-content {
         position: relative;
         z-index: 1;
-        width: min(100%, 560px);
-        max-width: 560px;
+        width: min(100%, 680px);
+        max-width: 680px;
         margin: 0;
-        padding: clamp(26px, 4vw, 44px);
+        padding: clamp(28px, 4.5vw, 48px);
         border: 1px solid color-mix(in srgb, var(--sfs-on-dark) 16%, transparent);
         border-radius: var(--sfs-radius-lg);
         background: color-mix(in srgb, var(--sfs-primary800) 76%, transparent);
@@ -73,6 +73,24 @@ body.pagelayout-login {
         color: var(--sfs-on-dark);
         text-align: left;
         backdrop-filter: saturate(140%) blur(10px);
+
+        @include sfs-media-min-xl {
+            width: min(100%, 720px);
+            max-width: 720px;
+        }
+    }
+
+    .sfs-loginpanel__brand {
+        margin-bottom: 1.5rem;
+    }
+
+    .sfs-loginpanel__logo {
+        display: block;
+        width: 240px;
+        max-width: 100%;
+        height: 72px;
+        background: url([[pix:theme|logo-full-dark]]) no-repeat left center;
+        background-size: contain;
     }
 
     .sfs-loginpanel__kicker {
@@ -100,15 +118,15 @@ body.pagelayout-login {
         margin: 1rem 0 0;
         color: var(--sfs-on-dark);
         font-family: "Manrope", "Inter", system-ui, sans-serif;
-        font-size: clamp(2.4rem, 4.6vw, 4.9rem);
+        font-size: clamp(2.2rem, 3.8vw, 4.2rem);
         font-weight: 800;
-        letter-spacing: -0.055em;
-        line-height: 0.98;
+        letter-spacing: -0.045em;
+        line-height: 1.05;
     }
 
     .sfs-loginpanel__lede,
     .sfs-loginpanel__instructions {
-        max-width: 34rem;
+        max-width: 44rem;
         margin: 1.25rem 0 0;
         color: color-mix(in srgb, var(--sfs-on-dark) 78%, transparent);
         font-size: clamp(1rem, 1.35vw, 1.18rem);
@@ -277,18 +295,147 @@ body.pagelayout-login {
         outline: 0;
     }
 
-    .toggle-sensitive-wrapper .form-control {
-        border-start-end-radius: 0;
-        border-end-end-radius: 0;
+    .toggle-sensitive-wrapper {
+        position: relative;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        width: 100%;
+        min-height: 52px;
+        border: 1px solid var(--sfs-linestrong);
+        border-radius: var(--sfs-radius-sm);
+        background: var(--sfs-surface2);
+        overflow: hidden;
+        transition: border-color var(--sfs-transition-fast), box-shadow var(--sfs-transition-fast), background-color var(--sfs-transition-fast);
+
+        .form-control {
+            flex: 1 1 auto;
+            width: auto;
+            min-width: 0;
+            min-height: 50px;
+            padding: 0.375rem 0.75rem;
+            border: 0;
+            border-top-left-radius: var(--sfs-radius-sm);
+            border-bottom-left-radius: var(--sfs-radius-sm);
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            background: transparent;
+            color: var(--sfs-ink);
+            font-weight: 600;
+            box-shadow: none;
+
+            &:focus {
+                border: 0;
+                box-shadow: none;
+                outline: 0;
+            }
+        }
+
+        &.input-group > .toggle-sensitive-btn,
+        &.small-screens-only.input-group:not(.has-validation) > .toggle-sensitive-btn,
+        .btn.toggle-sensitive-btn,
+        .toggle-sensitive-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            min-width: 52px;
+            min-height: 50px;
+            padding: 0 1rem;
+            border: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: var(--sfs-radius-sm);
+            border-bottom-right-radius: var(--sfs-radius-sm);
+            background: transparent;
+            color: var(--sfs-muted);
+            box-shadow: none;
+            transition: color var(--sfs-transition-fast), background-color var(--sfs-transition-fast);
+
+            .icon {
+                margin: 0;
+                font-size: 1.15rem;
+                color: inherit;
+            }
+
+            &:hover,
+            &:active {
+                border: 0;
+                background: color-mix(in srgb, var(--sfs-ink) 8%, transparent);
+                color: var(--sfs-ink);
+                box-shadow: none;
+            }
+
+            &:focus,
+            &:focus-visible {
+                border: 0;
+                background: transparent;
+                color: var(--sfs-primary);
+                box-shadow: none;
+                outline: 0;
+            }
+        }
+
+        // When the input inside is autofilled (Chrome, 1Password, Safari, Edge):
+        // 1. Sync the wrapper background to match the browser autofill background (#e7f0fe)
+        //    so the eye button seamlessly extends the filled input instead of staying a dark block.
+        // 2. Adjust the eye icon color so it has high contrast and clarity on the light background,
+        //    including on :hover and :active.
+        &:has(.form-control:-webkit-autofill),
+        &:has(.form-control:autofill) {
+            background-color: #e7f0fe;
+
+            &.input-group > .toggle-sensitive-btn,
+            &.small-screens-only.input-group:not(.has-validation) > .toggle-sensitive-btn,
+            .btn.toggle-sensitive-btn,
+            .toggle-sensitive-btn {
+                background: transparent;
+                color: #2a4a56;
+
+                &:hover,
+                &:active {
+                    background: color-mix(in srgb, #2a4a56 12%, transparent);
+                    color: #051d24;
+                }
+
+                &:focus,
+                &:focus-visible {
+                    background: transparent;
+                    color: var(--sfs-primary);
+                }
+            }
+        }
+
+        &:focus-within {
+            border-color: var(--sfs-primary);
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--sfs-primary) 18%, transparent);
+        }
     }
 
-    .toggle-sensitive-wrapper .toggle-sensitive-btn {
-        min-width: 52px;
-        border-color: var(--sfs-linestrong);
-        border-start-end-radius: var(--sfs-radius-sm);
-        border-end-end-radius: var(--sfs-radius-sm);
-        background: var(--sfs-surface2);
-        color: var(--sfs-muted);
+    .login-form .toggle-sensitive-wrapper .form-control:focus {
+        border: 0;
+        box-shadow: none;
+        outline: 0;
+    }
+
+    // Boost hides `.toggle-sensitive-btn` on screens >= 576px when `.small-screens-only` is set.
+    // Override that here so the toggle button stays visible on desktop and seamlessly integrates with
+    // the password container without conflicting borders or focus styles.
+    @media (min-width: 576px) {
+        .toggle-sensitive-wrapper.small-screens-only.input-group:not(.has-validation) > {
+            .form-control:not(:last-child) {
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .toggle-sensitive-btn {
+                display: inline-flex;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
     }
 
     .login-form a,
@@ -327,7 +474,7 @@ body.pagelayout-login {
     }
 
     .login-identityprovider-btn,
-    .loginform .btn-secondary,
+    .loginform .btn-secondary:not(.toggle-sensitive-btn),
     .loginform .btn-outline-secondary {
         min-height: 50px;
         border: 1px solid var(--sfs-line);
@@ -339,7 +486,7 @@ body.pagelayout-login {
     }
 
     .login-identityprovider-btn:hover,
-    .loginform .btn-secondary:hover,
+    .loginform .btn-secondary:not(.toggle-sensitive-btn):hover,
     .loginform .btn-outline-secondary:hover {
         border-color: var(--sfs-linestrong);
         background: var(--sfs-primary50);
